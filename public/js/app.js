@@ -12788,7 +12788,7 @@ module.exports = "/images/avatar9.jpg?f309470a601a42f688833da2d0976013";
 /* 53 */
 /***/ (function(module, exports) {
 
-module.exports = "/images/logo.png?2457399eab2fb72f1cfb153712ca2ff3";
+module.exports = "/images/logo.png?6a46e533962877ff7b622f0aee3436d3";
 
 /***/ }),
 /* 54 */,

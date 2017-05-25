@@ -62,17 +62,17 @@
                     <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" /> </div>
                 <div class="form-actions">
                     <button type="submit" class="btn green uppercase">Login</button>
-                    <label class="rememberme check mt-checkbox mt-checkbox-outline">
+                    {{-- <label class="rememberme check mt-checkbox mt-checkbox-outline">
                         <input type="checkbox" name="remember" value="1" />Remember
                         <span></span>
-                    </label>
+                    </label> --}}
                     <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
                 </div>
-                <div class="create-account">
+               {{--  <div class="create-account">
                     <p>
                         <a href="javascript:;" id="register-btn" class="uppercase">Create an account</a>
                     </p>
-                </div>
+                </div> --}}
             </form>
             <!-- END LOGIN FORM -->
             <!-- BEGIN FORGOT PASSWORD FORM -->
@@ -98,16 +98,6 @@
                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                     <label class="control-label visible-ie8 visible-ie9">Email</label>
                     <input class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email" /> </div>
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">Address</label>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="Address" name="address" /> </div>
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">City/Town</label>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="City/Town" name="city" /> </div>
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">Country</label>
-                    <country-selector></country-selector>
-                </div>
                 <p class="hint"> Enter your account details below: </p>
                 <div class="form-group">
                     <label class="control-label visible-ie8 visible-ie9">Username</label>
@@ -134,7 +124,7 @@
             </form>
             <!-- END REGISTRATION FORM -->
         </div>
-        <div class="copyright"> 2014 © Metronic. Admin Dashboard Template. </div>
+        <div class="copyright"> 2017 © Nau Admin. </div>
     </div>
     <!--[if lt IE 9]>
 <script src="../assets/global/plugins/respond.min.js"></script>
