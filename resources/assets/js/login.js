@@ -15,17 +15,12 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('pageHeader', require('./components/PageHeader.vue'));
-Vue.component('pageSidebar', require('./components/PageSidebar.vue'));
-Vue.component('pageFooter', require('./components/PageFooter.vue'));
-Vue.component('pageBar', require('./components/PageBar.vue'));
-Vue.component('pageTitle', require('./components/PageTitle.vue'));
-Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
+Vue.component('countrySelector', require('./components/CountrySelector.vue'));
 
 const app = new Vue({
-    el: '#app',
+    el: '#login',
 
     mounted() {
-    	location.href = '/login';
+    	console.log('Login app mounted...');
     }
 });
