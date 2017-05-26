@@ -26,6 +26,6 @@ const app = new Vue({
     el: '#app',
 
     mounted() {
-    	location.href = '/login';
+    	// location.href = '/login';
     }
 });
