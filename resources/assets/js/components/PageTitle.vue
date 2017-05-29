@@ -1,13 +1,15 @@
 <template>
-    <!-- BEGIN PAGE TITLE-->
-    <h1 class="page-title"> Blank Page Layout
-                            <small>blank page layout</small>
-                        </h1>
-    <!-- END PAGE TITLE-->
+	<h1 class="page-title"> 
+		{{ title }}
+		<small>{{ sub }}</small>
+	</h1>
 </template>
 
 <script>
 	export default {
-		
+		props: [
+			'title',
+			'sub'
+		]
 	}
 </script>

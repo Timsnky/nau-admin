@@ -48,11 +48,8 @@
                 <div class="page-content">
                     <!-- BEGIN PAGE HEADER-->
                     <page-bar></page-bar>
-                    <page-title></page-title>
                     <!-- END PAGE HEADER-->
-                    <div class="note note-info">
-                        <p> A black page template with a minimal dependency assets to use as a base for any custom page you create </p>
-                    </div>
+                    <router-view></router-view>
                 </div>
                 <!-- END CONTENT BODY -->
             </div>
