@@ -9,8 +9,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import Vuex from 'vuex';
-Vue.use(Vuex);
+import {store} from './store/Store';
 
 
 
@@ -29,6 +28,8 @@ Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
 
 const app = new Vue({
     el: '#app',
+
+    store,
 
     mounted() {
     	// location.href = '/login';
