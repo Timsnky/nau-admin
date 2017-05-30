@@ -58,7 +58,6 @@
 
         methods: {
             handleSubmit() {
-                console.log('submit', this.idea);
                 const { title, body } = this.idea;
 
                 if (title && body) {

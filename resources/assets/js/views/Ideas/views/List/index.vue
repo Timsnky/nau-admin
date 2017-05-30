@@ -11,7 +11,9 @@
                         <input
                             type="search"
                             class="form-control"
-                            placeholder="Search">
+                            placeholder="Search"
+                            name="searchTerm"
+                            v-model.trim="searchTerm">
                     </div>
                 </form>
 
@@ -70,12 +72,13 @@
                 currentPage: 1,
                 pagesCount: 1,
                 itemsPerPage: 15,
-                indexStartsFrom: 1
+                indexStartsFrom: 1,
+                searchTerm: ''
             }
         },
 
         mounted() {
-            this.getPaginatedData()
+            this.getPaginatedData(this.currentPage)
                 .then(response => {
                     const { data, current_page, per_page, last_page, from } = response.data;
 
@@ -97,13 +100,19 @@
             pagination: Pagination
         },
 
+        watch: {
+            searchTerm(newVal) {
+                console.log(newVal);
+
+                this.navigate(1);
+            }
+        },
+
         methods: {
             deleteIdea(idea) {
-                this.ideas = this.ideas.filter(item => item.id !== idea.id);
-
                 axios
                     .delete(`https://api-naut.livesystems.ch/ideas/${idea.id}`)
-                    .then(response => console.log(response))
+                    .then(response => this.ideas = this.ideas.filter(item => item.id !== idea.id))
                     .catch(err => console.log('Show some error message here'));
             },
 
@@ -120,7 +129,11 @@
                     .catch(err => console.log('Show some error message here'));
             },
 
-            getPaginatedData(page = 1) {
+            getPaginatedData(page) {
+                if (this.searchTerm !== '') {
+                    return axios.get(`https://api-naut.livesystems.ch/ideas/search?query=${this.searchTerm}&page=${page}`);
+                }
+
                 return axios.get(`https://api-naut.livesystems.ch/ideas?page=${page}`);
             }
         }
