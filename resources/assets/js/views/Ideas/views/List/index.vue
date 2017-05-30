@@ -1,29 +1,27 @@
 <template>
     <div>
         <page-title title="Idea List" sub="sub heading"/>
+        <div v-if="ideas.length > 0 || searchTerm !== ''" class="clearfix">
+            <div class="input-icon pull-left">
+                <i class="fa fa-search"></i>
+                <input
+                    type="search"
+                    class="form-control"
+                    placeholder="Search"
+                    name="searchTerm"
+                    v-model.trim="searchTerm">
+            </div>
+
+            <router-link
+                :to="{name: 'ideas.create'}"
+                class="btn btn-primary pull-right">
+                Create
+            </router-link>
+        </div>
+
         <h2 v-if="!isLoaded" class="text-center">Loading...</h2>
 
         <div v-else-if="ideas.length > 0">
-            <div class="clearfix">
-                <form class="form-inline pull-left">
-                    <div class="input-icon">
-                        <i class="fa fa-search"></i>
-                        <input
-                            type="search"
-                            class="form-control"
-                            placeholder="Search"
-                            name="searchTerm"
-                            v-model.trim="searchTerm">
-                    </div>
-                </form>
-
-                <router-link
-                    :to="{name: 'ideas.create'}"
-                    class="btn btn-primary pull-right">
-                    Create
-                </router-link>
-            </div>
-
             <div class="table-scrollable">
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -37,9 +35,8 @@
                     </thead>
                     <tbody>
                     <item
-                        v-for="(idea, index) in ideas"
+                        v-for="idea in ideas"
                         :key="idea.id"
-                        :index="indexStartsFrom + index"
                         :idea="idea"
                         @deleteIdea="deleteIdea"/>
                     </tbody>
@@ -72,7 +69,6 @@
                 currentPage: 1,
                 pagesCount: 1,
                 itemsPerPage: 15,
-                indexStartsFrom: 1,
                 searchTerm: ''
             }
         },
@@ -80,13 +76,12 @@
         mounted() {
             this.getPaginatedData(this.currentPage)
                 .then(response => {
-                    const { data, current_page, per_page, last_page, from } = response.data;
+                    const { data, current_page, per_page, last_page } = response.data;
 
                     this.ideas = data;
                     this.currentPage = current_page;
                     this.itemsPerPage = per_page;
                     this.pagesCount = last_page;
-                    this.indexStartsFrom = from;
                     this.isLoaded = true;
                 })
                 .catch(err => {
@@ -101,9 +96,7 @@
         },
 
         watch: {
-            searchTerm(newVal) {
-                console.log(newVal);
-
+            searchTerm() {
                 this.navigate(1);
             }
         },
@@ -124,7 +117,6 @@
                         this.ideas = data;
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
-                        this.indexStartsFrom = from;
                     })
                     .catch(err => console.log('Show some error message here'));
             },

@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td>{{ index }}</td>
+        <td>{{ idea.id }}</td>
         <td>{{ date }}</td>
         <td>{{ idea.title }}</td>
         <td>{{ idea.author.display_name }}</td>
