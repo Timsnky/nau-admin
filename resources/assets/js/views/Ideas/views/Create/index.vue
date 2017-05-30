@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Create Idea" sub="sub heading"></page-title>
+        <page-title title="Create Idea" sub="sub heading"/>
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
@@ -10,17 +10,17 @@
                         id="title"
                         type="text"
                         name="title"
-                        v-model="idea.title"
+                        v-model.trim="idea.title"
                         placeholder="Add title"
                         class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="text">Idea</label>
+                    <label for="body">Idea</label>
                     <textarea
-                        id="text"
-                        name="text"
-                        v-model="idea.text"
+                        id="body"
+                        name="body"
+                        v-model.trim="idea.body"
                         placeholder="Add idea"
                         class="form-control"
                         rows="5"></textarea>
@@ -28,8 +28,18 @@
             </div>
 
             <div class="form-actions">
-                <button class="btn blue" type="submit">Submit</button>
-                <button class="btn default" type="button" @click="reset">Reset</button>
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                    :disabled="!idea.title || !idea.body">
+                    Submit
+                </button>
+                <button
+                    class="btn btn-default"
+                    type="button"
+                    @click="reset">
+                    Reset
+                </button>
             </div>
         </form>
     </div>
@@ -41,7 +51,7 @@
             return {
                 idea: {
                     title: '',
-                    text: ''
+                    body: ''
                 }
             }
         },
@@ -49,12 +59,12 @@
         methods: {
             handleSubmit() {
                 console.log('submit', this.idea);
-                const { title, text } = this.idea;
+                const { title, body } = this.idea;
 
-                if (title && text) {
+                if (title && body) {
                     axios
-                        .post('https://api-naut.livesystems.ch/ideas', { title, text })
-                        .then(response => this.$router.push('/customers'))
+                        .post('https://api-naut.livesystems.ch/ideas', { title, body })
+                        .then(response => this.$router.push('/ideas'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -64,7 +74,7 @@
             reset() {
                 this.idea = {
                     title: '',
-                    text: ''
+                    body: ''
                 }
             }
         }

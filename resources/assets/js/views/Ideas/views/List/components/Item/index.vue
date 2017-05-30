@@ -1,9 +1,9 @@
 <template>
     <tr>
-        <td>{{ index + 1 }}</td>
-        <td>{{ idea.date }}</td>
+        <td>{{ index }}</td>
+        <td>{{ date }}</td>
         <td>{{ idea.title }}</td>
-        <td>{{ idea.author }}</td>
+        <td>{{ idea.author.display_name }}</td>
         <td>
             <router-link
                 :to="{name: 'ideas.show', params: {id: idea.id}}"
@@ -30,6 +30,12 @@
         props: {
             idea: Object,
             index: Number,
+        },
+
+        computed: {
+            date() {
+                return moment(this.idea.created_at).format('DD.MM.YYYY');
+            }
         },
 
         methods: {

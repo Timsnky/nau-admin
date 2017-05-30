@@ -1,17 +1,21 @@
 <template>
     <div>
-        <page-title title="Show Idea" sub="sub heading"></page-title>
+        <page-title title="Idea Show" sub="sub heading"/>
 
         <form>
             <div class="form-body">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <div id="title" class="form-control-static">{{ idea.title }}</div>
+                    <div id="title">
+                        <div class="form-control-static">{{ idea.title }}</div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="text">Text</label>
-                    <div id="text" class="form-control-static">{{ idea.text }}</div>
+                    <label for="body">Idea</label>
+                    <div id="body">
+                        <div class="form-control-static">{{ idea.body }}</div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -29,9 +33,7 @@
         mounted() {
             axios
                 .get(`https://api-naut.livesystems.ch/ideas/${this.$route.params.id}`)
-                .then(response => {
-                    this.idea = response.data;
-                })
+                .then(response => this.idea = response.data)
                 .catch(err => console.log('Show some error message here'));
         }
     }

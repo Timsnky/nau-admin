@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Edit Idea" sub="sub heading"></page-title>
+        <page-title title="Edit Idea" sub="sub heading"/>
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
@@ -10,17 +10,17 @@
                         id="title"
                         type="text"
                         name="title"
-                        v-model="newIdea.title"
+                        v-model.trim="newIdea.title"
                         placeholder="Add title"
                         class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="text">Idea</label>
+                    <label for="body">Idea</label>
                     <textarea
-                        id="text"
-                        name="text"
-                        v-model="newIdea.text"
+                        id="body"
+                        name="body"
+                        v-model.trim="newIdea.body"
                         placeholder="Edit idea"
                         class="form-control"
                         rows="5"></textarea>
@@ -28,8 +28,18 @@
             </div>
 
             <div class="form-actions">
-                <button class="btn blue" type="submit">Submit</button>
-                <button class="btn default" type="button" @click="reset">Reset</button>
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                    :disabled="!newIdea.title || !newIdea.body">
+                    Submit
+                </button>
+                <button
+                    class="btn btn-default"
+                    type="button"
+                    @click="reset">
+                    Reset
+                </button>
             </div>
         </form>
     </div>
@@ -51,7 +61,7 @@
                 .get(`https://api-naut.livesystems.ch/ideas/${this.$route.params.id}`)
                 .then(response => {
                     this.idea = response.data;
-                    this.newIdea = _pick(this.idea, ['title', 'text']);
+                    this.newIdea = _pick(this.idea, ['title', 'body']);
                 })
                 .catch(err => console.log('Show some error message here'));
         },
@@ -59,11 +69,11 @@
         methods: {
             handleSubmit() {
                 console.log('submit', this.newIdea);
-                const { title, text } = this.newIdea;
+                const { title, body } = this.newIdea;
 
-                if (title && text) {
+                if (title && body) {
                     axios
-                        .put(`https://api-naut.livesystems.ch/ideas/${this.idea.id}`, { title, text })
+                        .put(`https://api-naut.livesystems.ch/ideas/${this.idea.id}`, { title, body })
                         .then(response => this.$router.push('/ideas'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
@@ -72,7 +82,7 @@
             },
 
             reset() {
-                this.newIdea = _pick(this.idea, ['title', 'text']);
+                this.newIdea = _pick(this.idea, ['title', 'body']);
             }
         }
     }
