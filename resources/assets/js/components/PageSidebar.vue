@@ -79,6 +79,25 @@
                         </router-link>
                     </ul>
                 </li>
+                <li class="nav-item  ">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="icon-diamond"></i>
+                        <span class="title">Ideas</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <router-link :to="{name: 'ideas.list'}" tag="li" exact>
+                            <a>
+                                <span class="title">All Ideas</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'ideas.create'}" tag="li" exact>
+                            <a>
+                                <span class="title">Create Idea</span>
+                            </a>
+                        </router-link>
+                    </ul>
+                </li>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->
