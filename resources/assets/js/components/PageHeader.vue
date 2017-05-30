@@ -344,7 +344,7 @@
                                     <i class="icon-lock"></i> Lock Screen </a>
                             </li>
                             <li>
-                                <a href="page_user_login_1.html">
+                                <a @click.prevent="logout">
                                     <i class="icon-key"></i> Log Out </a>
                             </li>
                         </ul>
@@ -369,6 +369,12 @@
 
 <script>
     export default {
-        
+        methods: {
+            logout() {
+                console.log('logging out');
+                localStorage.removeItem('token');
+                location.href="/login";
+            }
+        }
     }
 </script>

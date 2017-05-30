@@ -2060,7 +2060,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {
+        logout: function logout() {
+            console.log('logging out');
+            localStorage.removeItem('token');
+            location.href = "/login";
+        }
+    }
+});
 
 /***/ }),
 
@@ -18923,13 +18931,32 @@ module.exports = function normalizeComponent (
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "page-header navbar navbar-fixed-top"
   }, [_c('div', {
     staticClass: "page-header-inner "
-  }, [_c('div', {
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('div', {
+    staticClass: "top-menu"
+  }, [_c('ul', {
+    staticClass: "nav navbar-nav pull-right"
+  }, [_vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), _c('li', {
+    staticClass: "dropdown dropdown-user"
+  }, [_vm._m(5), _vm._v(" "), _c('ul', {
+    staticClass: "dropdown-menu dropdown-menu-default"
+  }, [_vm._m(6), _vm._v(" "), _vm._m(7), _vm._v(" "), _vm._m(8), _vm._v(" "), _vm._m(9), _vm._v(" "), _c('li', {
+    staticClass: "divider"
+  }), _vm._v(" "), _vm._m(10), _vm._v(" "), _c('li', [_c('a', {
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.logout($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "icon-key"
+  }), _vm._v(" Log Out ")])])])]), _vm._v(" "), _vm._m(11)])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "page-logo"
   }, [_c('a', {
     attrs: {
@@ -18943,18 +18970,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })]), _vm._v(" "), _c('div', {
     staticClass: "menu-toggler sidebar-toggler"
-  }, [_c('span')])]), _vm._v(" "), _c('a', {
+  }, [_c('span')])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
     staticClass: "menu-toggler responsive-toggler",
     attrs: {
       "href": "javascript:;",
       "data-toggle": "collapse",
       "data-target": ".navbar-collapse"
     }
-  }, [_c('span')]), _vm._v(" "), _c('div', {
-    staticClass: "top-menu"
-  }, [_c('ul', {
-    staticClass: "nav navbar-nav pull-right"
-  }, [_c('li', {
+  }, [_c('span')])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
     staticClass: "dropdown dropdown-extended dropdown-notification",
     attrs: {
       "id": "header_notification_bar"
@@ -19097,7 +19124,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "label label-sm label-icon label-danger"
   }, [_c('i', {
     staticClass: "fa fa-bolt"
-  })]), _vm._v(" Storage server failed. ")])])])])])])]), _vm._v(" "), _c('li', {
+  })]), _vm._v(" Storage server failed. ")])])])])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
     staticClass: "dropdown dropdown-extended dropdown-inbox",
     attrs: {
       "id": "header_inbox_bar"
@@ -19232,7 +19261,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "time"
   }, [_vm._v("46 mins ")])]), _vm._v(" "), _c('span', {
     staticClass: "message"
-  }, [_vm._v(" Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh... ")])])])])])])]), _vm._v(" "), _c('li', {
+  }, [_vm._v(" Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh... ")])])])])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
     staticClass: "dropdown dropdown-extended dropdown-tasks",
     attrs: {
       "id": "header_task_bar"
@@ -19435,9 +19466,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "sr-only"
-  }, [_vm._v("38% Complete")])])])])])])])])]), _vm._v(" "), _c('li', {
-    staticClass: "dropdown dropdown-user"
-  }, [_c('a', {
+  }, [_vm._v("38% Complete")])])])])])])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
     staticClass: "dropdown-toggle",
     attrs: {
       "href": "javascript:;",
@@ -19455,21 +19486,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "username username-hide-on-mobile"
   }, [_vm._v(" Nick ")]), _vm._v(" "), _c('i', {
     staticClass: "fa fa-angle-down"
-  })]), _vm._v(" "), _c('ul', {
-    staticClass: "dropdown-menu dropdown-menu-default"
-  }, [_c('li', [_c('a', {
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
     attrs: {
       "href": "page_user_profile_1.html"
     }
   }, [_c('i', {
     staticClass: "icon-user"
-  }), _vm._v(" My Profile ")])]), _vm._v(" "), _c('li', [_c('a', {
+  }), _vm._v(" My Profile ")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
     attrs: {
       "href": "app_calendar.html"
     }
   }, [_c('i', {
     staticClass: "icon-calendar"
-  }), _vm._v(" My Calendar ")])]), _vm._v(" "), _c('li', [_c('a', {
+  }), _vm._v(" My Calendar ")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
     attrs: {
       "href": "app_inbox.html"
     }
@@ -19477,7 +19512,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon-envelope-open"
   }), _vm._v(" My Inbox\n                                "), _c('span', {
     staticClass: "badge badge-danger"
-  }, [_vm._v(" 3 ")])])]), _vm._v(" "), _c('li', [_c('a', {
+  }, [_vm._v(" 3 ")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
     attrs: {
       "href": "app_todo.html"
     }
@@ -19485,21 +19522,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon-rocket"
   }), _vm._v(" My Tasks\n                                "), _c('span', {
     staticClass: "badge badge-success"
-  }, [_vm._v(" 7 ")])])]), _vm._v(" "), _c('li', {
-    staticClass: "divider"
-  }), _vm._v(" "), _c('li', [_c('a', {
+  }, [_vm._v(" 7 ")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
     attrs: {
       "href": "page_user_lock_1.html"
     }
   }, [_c('i', {
     staticClass: "icon-lock"
-  }), _vm._v(" Lock Screen ")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "page_user_login_1.html"
-    }
-  }, [_c('i', {
-    staticClass: "icon-key"
-  }), _vm._v(" Log Out ")])])])]), _vm._v(" "), _c('li', {
+  }), _vm._v(" Lock Screen ")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
     staticClass: "dropdown dropdown-quick-sidebar-toggler"
   }, [_c('a', {
     staticClass: "dropdown-toggle",
@@ -19508,7 +19541,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "icon-logout"
-  })])])])])])])
+  })])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -33857,6 +33890,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+__WEBPACK_IMPORTED_MODULE_2__router_Router__["a" /* default */].beforeEach(function (to, from, next) {
+    if (localStorage.getItem("token") === null) {
+        location.href = '/login';
+    }
+    next();
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

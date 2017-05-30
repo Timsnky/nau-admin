@@ -1,7 +1,14 @@
 import './bootstrap';
 
-import {store} from './store/Store';
+import { store } from './store/Store';
 import router from './router/Router';
+
+router.beforeEach((to, from, next) => {
+    if (localStorage.getItem("token") === null) {
+        location.href = '/login';
+    }
+    next();
+})
 
 
 
@@ -26,6 +33,6 @@ const app = new Vue({
     router,
 
     mounted() {
-    	console.log(this.$store.state, this.$router);
+        console.log(this.$store.state, this.$router);
     }
 });
