@@ -3317,11 +3317,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         hasArticles: function hasArticles() {
             return this.idea.hasOwnProperty('articles') && this.idea.articles.length > 0;
-        },
-        bodyLines: function bodyLines() {
-            return this.idea.hasOwnProperty('body') ? this.idea.body.split('\n').filter(function (el) {
-                return el !== '';
-            }) : [];
         }
     }
 });
@@ -3340,7 +3335,7 @@ exports.push([module.i, "\n.table > tbody > tr > td {\n    vertical-align: middl
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")();
-exports.push([module.i, "\n.form-control-static[data-v-ce23155c] {\n    display: block;\n}\n", ""]);
+exports.push([module.i, "\nlabel[data-v-ce23155c] {\n    font-weight: 700;\n}\n.form-control-static[data-v-ce23155c] {\n    display: block;\n    white-space: pre-line;\n}\n", ""]);
 
 /***/ }),
 
@@ -24104,7 +24099,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-body"
   }, [_c('div', {
     staticClass: "form-group"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  }, [_c('label', {
+    attrs: {
+      "for": "title"
+    }
+  }, [_vm._v("Title")]), _vm._v(" "), _c('div', {
     attrs: {
       "id": "title"
     }
@@ -24112,32 +24111,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control-static"
   }, [_vm._v(_vm._s(_vm.idea.title))])])]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_vm._m(1), _vm._v(" "), _c('div', {
+  }, [_c('label', {
+    attrs: {
+      "for": "body"
+    }
+  }, [_vm._v("Idea")]), _vm._v(" "), _c('div', {
     attrs: {
       "id": "body"
     }
-  }, _vm._l((_vm.bodyLines), function(line) {
-    return _c('div', {
-      staticClass: "form-control-static"
-    }, [_vm._v(_vm._s(line))])
-  }))])])]), _vm._v(" "), (_vm.hasArticles) ? _c('div', [_c('h2', [_vm._v("Articles")]), _vm._v(" "), _c('ul', _vm._l((_vm.idea.articles), function(article) {
+  }, [_c('div', {
+    staticClass: "form-control-static"
+  }, [_vm._v(_vm._s(_vm.idea.body))])])])])]), _vm._v(" "), (_vm.hasArticles) ? _c('div', [_c('h2', [_vm._v("Articles")]), _vm._v(" "), _c('ul', _vm._l((_vm.idea.articles), function(article) {
     return _c('li', {
       key: article.id
     }, [_vm._v("\n                " + _vm._s(article.title) + "\n            ")])
   }))]) : _vm._e()], 1)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('label', {
-    attrs: {
-      "for": "title"
-    }
-  }, [_c('strong', [_vm._v("Title")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('label', {
-    attrs: {
-      "for": "body"
-    }
-  }, [_c('strong', [_vm._v("Idea")])])
-}]}
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()

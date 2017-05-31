@@ -5,16 +5,16 @@
         <form>
             <div class="form-body">
                 <div class="form-group">
-                    <label for="title"><strong>Title</strong></label>
+                    <label for="title">Title</label>
                     <div id="title">
                         <div class="form-control-static">{{ idea.title }}</div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="body"><strong>Idea</strong></label>
+                    <label for="body">Idea</label>
                     <div id="body">
-                        <div class="form-control-static" v-for="line in bodyLines">{{ line }}</div>
+                        <div class="form-control-static">{{ idea.body }}</div>
                     </div>
                 </div>
             </div>
@@ -51,17 +51,18 @@
         computed: {
             hasArticles() {
                 return this.idea.hasOwnProperty('articles') && this.idea.articles.length > 0;
-            },
-
-            bodyLines() {
-                return this.idea.hasOwnProperty('body') ? this.idea.body.split('\n').filter(el => el !== '') : [];
             }
         }
     }
 </script>
 
 <style scoped>
+    label {
+        font-weight: 700;
+    }
+
     .form-control-static {
         display: block;
+        white-space: pre-line;
     }
 </style>
