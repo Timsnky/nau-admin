@@ -16,17 +16,13 @@
                         placeholder="Add name"
                         class="form-control">
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="date">Date</label>
-                    <input
-                        id="date"
-                        type="text"
-                        name="date"
-                        v-model.trim="holiday.date"
-                        placeholder="Add date"
-                        class="form-control">
-                </div>
+            <div class="form-group">
+                <label>Date</label>
+                <date-time
+                    @changeDate="changeDate"
+                    :date="holiday.date" />
             </div>
 
             <div class="form-actions">
@@ -48,6 +44,7 @@
 </template>
 
 <script>
+    import DateTime from 'views/components/DateTime';
     import request from 'utils/request';
 
     export default {
@@ -55,9 +52,13 @@
             return {
                 holiday: {
                     name: '',
-                    date: ''
+                    date: moment().format('YYYY-MM-DD')
                 }
             }
+        },
+
+        components: {
+            dateTime: DateTime,
         },
 
         methods: {
@@ -67,7 +68,7 @@
                 if (name && date) {
                     request
                         .post('/holidays', { name, date })
-                        .then(response => console.log(response))
+                        .then(response => this.$router.push('/holidays'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -76,8 +77,13 @@
 
             reset() {
                 this.holiday = {
-                    name: ''
+                    name: '',
+                    date: moment().format('YYYY-MM-DD')
                 }
+            },
+
+            changeDate(date) {
+                this.holiday.date = date;
             }
         }
     }

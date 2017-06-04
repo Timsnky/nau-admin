@@ -16,7 +16,7 @@ let routes = [
         component: require('./../views/Articles')
     },
     {
-        path: '/resources',
+        path: '/resource-management',
         component: require('../views/Resources'),
         children: [{
             path: 'week',
@@ -65,6 +65,10 @@ let routes = [
             path: ':id/edit',
             name: 'holidays.edit',
             component: require('../views/Holidays/views/Edit'),
+        }, {
+            path: '',
+            name: 'holidays.list',
+            component: require('../views/Holidays/views/List'),
         }],
     },
 ];

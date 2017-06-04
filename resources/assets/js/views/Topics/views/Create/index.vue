@@ -7,14 +7,10 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label for="date">Date</label>
-                    <input
-                        id="date"
-                        type="text"
-                        name="date"
-                        v-model.trim="topic.date"
-                        placeholder="Add date"
-                        class="form-control">
+                    <label>Date</label>
+                    <date-time
+                        @changeDate="changeDate"
+                        :date="topic.date"/>
                 </div>
 
                 <div class="form-group">
@@ -48,6 +44,7 @@
 </template>
 
 <script>
+    import DateTime from 'views/components/DateTime';
     import request from 'utils/request';
 
     export default {
@@ -55,9 +52,13 @@
             return {
                 topic: {
                     name: '',
-                    date: ''
+                    date: moment().format('YYYY-MM-DD')
                 }
             }
+        },
+
+        components: {
+            dateTime: DateTime,
         },
 
         methods: {
@@ -67,7 +68,7 @@
                 if (name && date) {
                     request
                         .post('/topics', { name, date })
-                        .then(response => console.log(response))
+                        .then(response => this.$router.push({name: 'resources.week'}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -76,8 +77,13 @@
 
             reset() {
                 this.topic = {
-                    name: ''
+                    name: '',
+                    date: moment().format('YYYY-MM-DD')
                 }
+            },
+
+            changeDate(date) {
+                this.topic.date = date;
             }
         }
     }

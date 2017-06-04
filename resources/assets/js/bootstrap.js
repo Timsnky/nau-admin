@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
 
 window.Vue = Vue;
 Vue.use(VueRouter);

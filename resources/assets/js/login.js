@@ -17,9 +17,11 @@ window.Vue = require('vue');
 const app = new Vue({
     el: '#login',
 
-    data: {
-        email: '',
-        password: ''
+    data() {
+        return {
+            email: '',
+            password: ''
+        };
     },
 
     methods: {
@@ -28,18 +30,9 @@ const app = new Vue({
                 .post('https://api-naut.livesystems.ch/token', {
                     'email': this.email,
                     'password': this.password
-                }, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
                 })
-                .then((response) => {
-                    // const token = response.data.token;
-                    // const base64Url = token.split('.')[1];
-                    // const base64 = base64Url.replace('-', '+').replace('_', '/');
-                    // console.log(JSON.parse(window.atob(base64)));
+                .then(response => {
                     localStorage.setItem('token', response.data.token);
-                    // this.$store.state.authenticated = true;
                     location.href = '/';
                 })
                 .catch(function(error) {

@@ -84,7 +84,7 @@
 
         methods: {
             setData() {
-                console.log(111, this.start, this.end);
+                console.log(this.start, this.end);
                 request
                     .get('/work-shifts', {
                         start: this.start,
@@ -112,7 +112,7 @@
                 this.navigate(start, end);
             },
             navigate(start, end) {
-                this.$router.push(`/resources/week?start=${start}&end=${end}`);
+                this.$router.push({name: 'resources.week', query: { start, end }});
             }
         }
     }

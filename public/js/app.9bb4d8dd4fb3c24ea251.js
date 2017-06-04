@@ -2741,104 +2741,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            holiday: {
-                name: '',
-                date: ''
-            }
-        };
-    },
-
-
-    methods: {
-        handleSubmit: function handleSubmit() {
-            var _holiday = this.holiday,
-                name = _holiday.name,
-                date = _holiday.date;
-
-
-            if (name && date) {
-                __WEBPACK_IMPORTED_MODULE_0_utils_request__["a" /* default */].post('/holidays', { name: name, date: date }).then(function (response) {
-                    return console.log(response);
-                }).catch(function (err) {
-                    return console.log('Show some error message here');
-                });
-            } else {
-                console.log('Show some error message here');
-            }
-        },
-        reset: function reset() {
-            this.holiday = {
-                name: ''
-            };
-        }
-    }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/Edit/index.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick__ = __webpack_require__("./node_modules/lodash/pick.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash_pick__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime__ = __webpack_require__("./resources/assets/js/views/components/DateTime/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_views_components_DateTime__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
 //
 //
@@ -2885,10 +2789,114 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            holiday: {
+                name: '',
+                date: moment().format('YYYY-MM-DD')
+            }
+        };
+    },
+
+
+    components: {
+        dateTime: __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime___default.a
+    },
+
+    methods: {
+        handleSubmit: function handleSubmit() {
+            var _this = this;
+
+            var _holiday = this.holiday,
+                name = _holiday.name,
+                date = _holiday.date;
+
+
+            if (name && date) {
+                __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].post('/holidays', { name: name, date: date }).then(function (response) {
+                    return _this.$router.push('/holidays');
+                }).catch(function (err) {
+                    return console.log('Show some error message here');
+                });
+            } else {
+                console.log('Show some error message here');
+            }
+        },
+        reset: function reset() {
+            this.holiday = {
+                name: '',
+                date: moment().format('YYYY-MM-DD')
+            };
+        },
+        changeDate: function changeDate(date) {
+            this.holiday.date = date;
+        }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/Edit/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick__ = __webpack_require__("./node_modules/lodash/pick.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash_pick__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime__ = __webpack_require__("./resources/assets/js/views/components/DateTime/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_views_components_DateTime__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2900,12 +2908,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             newHoliday: {}
         };
     },
+
+
+    components: {
+        dateTime: __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime___default.a
+    },
+
     created: function created() {
         var _this = this;
 
-        __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].get('/holidays/' + this.$route.params.id).then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_2_utils_request__["a" /* default */].get('/holidays/' + this.$route.params.id).then(function (response) {
             _this.holiday = response.data;
-            _this.newHoliday = __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default()(_this.holiday, ['name', 'date']);
+            _this.newHoliday = {
+                name: _this.holiday.name,
+                date: moment(_this.holiday.date).format('YYYY-MM-DD')
+            };
         }).catch(function (err) {
             return console.log('Show some error message here');
         });
@@ -2914,14 +2931,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         handleSubmit: function handleSubmit() {
+            var _this2 = this;
+
             var _newHoliday = this.newHoliday,
                 name = _newHoliday.name,
                 date = _newHoliday.date;
 
 
             if (name && date) {
-                __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].put('/holidays/' + this.holiday.id, { name: name, date: date }).then(function (response) {
-                    return console.log(response);
+                __WEBPACK_IMPORTED_MODULE_2_utils_request__["a" /* default */].put('/holidays/' + this.holiday.id, { name: name, date: date }).then(function (response) {
+                    return _this2.$router.push('/holidays');
                 }).catch(function (err) {
                     return console.log('Show some error message here');
                 });
@@ -2930,7 +2949,156 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         reset: function reset() {
-            this.newHoliday = __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default()(this.holiday, ['name', 'date']);
+            this.newHoliday = {
+                name: this.holiday.name,
+                date: moment(this.holiday.date).format('YYYY-MM-DD')
+            };
+        },
+        changeDate: function changeDate(date) {
+            this.newHoliday.date = date;
+        }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        holiday: Object
+    },
+
+    computed: {
+        date: function date() {
+            return moment(this.holiday.date).format('DD.MM.YYYY');
+        }
+    },
+
+    methods: {
+        handleDeleteHoliday: function handleDeleteHoliday() {
+            this.$emit('deleteHoliday', this.holiday);
+        }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/List/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Item__ = __webpack_require__("./resources/assets/js/views/Holidays/views/List/components/Item/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Item___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Item__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            holidays: [],
+            isLoaded: false
+        };
+    },
+    created: function created() {
+        var _this = this;
+
+        __WEBPACK_IMPORTED_MODULE_0_utils_request__["a" /* default */].get('/holidays').then(function (response) {
+            _this.holidays = response.data;
+            _this.isLoaded = true;
+        }).catch(function (err) {
+            console.log('Show some error message here');
+            _this.isLoaded = true;
+        });
+    },
+
+
+    components: {
+        item: __WEBPACK_IMPORTED_MODULE_1__components_Item___default.a
+    },
+
+    methods: {
+        deleteHoliday: function deleteHoliday(holiday) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0_utils_request__["a" /* default */].delete('/holidays/' + holiday.id).then(function (response) {
+                return _this2.holidays = _this2.holidays.filter(function (item) {
+                    return item.id !== holiday.id;
+                });
+            }).catch(function (err) {
+                return console.log('Show some error message here');
+            });
         }
     }
 });
@@ -3128,7 +3296,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         setData: function setData() {
-            console.log(111, this.start, this.end);
+            console.log(this.start, this.end);
             __WEBPACK_IMPORTED_MODULE_0_utils_request__["a" /* default */].get('/work-shifts', {
                 start: this.start,
                 end: this.end
@@ -3157,7 +3325,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.navigate(start, end);
         },
         navigate: function navigate(start, end) {
-            this.$router.push('/resources/week?start=' + start + '&end=' + end);
+            this.$router.push({ name: 'resources.week', query: { start: start, end: end } });
         }
     }
 });
@@ -3268,104 +3436,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            topic: {
-                name: '',
-                date: ''
-            }
-        };
-    },
-
-
-    methods: {
-        handleSubmit: function handleSubmit() {
-            var _topic = this.topic,
-                name = _topic.name,
-                date = _topic.date;
-
-
-            if (name && date) {
-                __WEBPACK_IMPORTED_MODULE_0_utils_request__["a" /* default */].post('/topics', { name: name, date: date }).then(function (response) {
-                    return console.log(response);
-                }).catch(function (err) {
-                    return console.log('Show some error message here');
-                });
-            } else {
-                console.log('Show some error message here');
-            }
-        },
-        reset: function reset() {
-            this.topic = {
-                name: ''
-            };
-        }
-    }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Topics/views/Edit/index.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick__ = __webpack_require__("./node_modules/lodash/pick.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash_pick__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime__ = __webpack_require__("./resources/assets/js/views/components/DateTime/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_views_components_DateTime__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
 //
 //
@@ -3412,10 +3484,114 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            topic: {
+                name: '',
+                date: moment().format('YYYY-MM-DD')
+            }
+        };
+    },
+
+
+    components: {
+        dateTime: __WEBPACK_IMPORTED_MODULE_0_views_components_DateTime___default.a
+    },
+
+    methods: {
+        handleSubmit: function handleSubmit() {
+            var _this = this;
+
+            var _topic = this.topic,
+                name = _topic.name,
+                date = _topic.date;
+
+
+            if (name && date) {
+                __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].post('/topics', { name: name, date: date }).then(function (response) {
+                    return _this.$router.push({ name: 'resources.week' });
+                }).catch(function (err) {
+                    return console.log('Show some error message here');
+                });
+            } else {
+                console.log('Show some error message here');
+            }
+        },
+        reset: function reset() {
+            this.topic = {
+                name: '',
+                date: moment().format('YYYY-MM-DD')
+            };
+        },
+        changeDate: function changeDate(date) {
+            this.topic.date = date;
+        }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Topics/views/Edit/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick__ = __webpack_require__("./node_modules/lodash/pick.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash_pick__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime__ = __webpack_require__("./resources/assets/js/views/components/DateTime/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_views_components_DateTime__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_utils_request__ = __webpack_require__("./resources/assets/js/utils/request.js");
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -3427,12 +3603,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             newTopic: {}
         };
     },
+
+
+    components: {
+        dateTime: __WEBPACK_IMPORTED_MODULE_1_views_components_DateTime___default.a
+    },
+
     created: function created() {
         var _this = this;
 
-        __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].get('/topics/' + this.$route.params.id).then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_2_utils_request__["a" /* default */].get('/topics/' + this.$route.params.id).then(function (response) {
             _this.topic = response.data;
-            _this.newTopic = __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default()(_this.topic, ['name', 'date']);
+            _this.newTopic = {
+                name: _this.topic.name,
+                date: moment(_this.topic.date).format('YYYY-MM-DD')
+            };
         }).catch(function (err) {
             return console.log('Show some error message here');
         });
@@ -3441,14 +3626,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         handleSubmit: function handleSubmit() {
+            var _this2 = this;
+
             var _newTopic = this.newTopic,
                 name = _newTopic.name,
                 date = _newTopic.date;
 
 
             if (name && date) {
-                __WEBPACK_IMPORTED_MODULE_1_utils_request__["a" /* default */].put('/topics/' + this.topic.id, { name: name, date: date }).then(function (response) {
-                    return console.log(response);
+                __WEBPACK_IMPORTED_MODULE_2_utils_request__["a" /* default */].put('/topics/' + this.topic.id, { name: name, date: date }).then(function (response) {
+                    return _this2.$router.push({ name: 'resources.week' });
                 }).catch(function (err) {
                     return console.log('Show some error message here');
                 });
@@ -3457,8 +3644,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         reset: function reset() {
-            this.newTopic = __WEBPACK_IMPORTED_MODULE_0_lodash_pick___default()(this.topic, ['name', 'date']);
+            this.newTopic = {
+                name: this.topic.name,
+                date: moment(this.topic.date).format('YYYY-MM-DD')
+            };
+        },
+        changeDate: function changeDate(date) {
+            this.newTopic.date = date;
         }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/components/DateTime/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        date: String
+    },
+
+    mounted: function mounted() {
+        var _this = this;
+
+        var $datetime = $('input[name="date"]');
+
+        $datetime.datepicker({
+            format: "yyyy-mm-dd",
+            orientation: "bottom left",
+            autoclose: true,
+            toggleActive: true
+        }).on("changeDate", function () {
+            _this.$emit('changeDate', $datetime.val());
+        });
     }
 });
 
@@ -3469,6 +3702,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")();
 exports.push([module.i, "\nlabel[data-v-141a3c9e] {\n    font-weight: 700;\n}\n.form-control-static[data-v-141a3c9e] {\n    display: block;\n    white-space: pre-line;\n}\n", ""]);
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")();
+exports.push([module.i, "\n.table > tbody > tr > td[data-v-33d74976] {\n    vertical-align: middle;\n}\n", ""]);
 
 /***/ }),
 
@@ -22146,40 +22387,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-body"
   }, [_c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
+  }, [_c('label', [_vm._v("Date")]), _vm._v(" "), _c('date-time', {
     attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Date")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: (_vm.newTopic.date),
-      expression: "newTopic.date",
-      modifiers: {
-        "trim": true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "date",
-      "type": "text",
-      "name": "date",
-      "placeholder": "Add date"
-    },
-    domProps: {
-      "value": (_vm.newTopic.date)
+      "date": _vm.newTopic.date
     },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newTopic.date = $event.target.value.trim()
-      },
-      "blur": function($event) {
-        _vm.$forceUpdate()
-      }
+      "changeDate": _vm.changeDate
     }
-  })]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
     attrs: {
@@ -22423,16 +22638,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "title"
   }, [_vm._v("All Articles")])])])], 1)]), _vm._v(" "), _c('li', {
     staticClass: "nav-item"
+  }, [_vm._m(5), _vm._v(" "), _c('ul', {
+    staticClass: "sub-menu"
   }, [_c('router-link', {
     attrs: {
       "to": {
         name: 'resources.week'
       },
+      "tag": "li",
       "exact": ""
     }
-  }, [_c('i', {
-    staticClass: "icon-diamond"
-  }), _vm._v("\n                    Resources\n                ")])], 1)])])])
+  }, [_c('a', [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("Calendar")])])]), _vm._v(" "), _c('router-link', {
+    attrs: {
+      "to": {
+        name: 'holidays.list'
+      },
+      "tag": "li",
+      "exact": ""
+    }
+  }, [_c('a', [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("Holidays")])])])], 1)])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
     staticClass: "sidebar-toggler-wrapper hide"
@@ -22505,6 +22733,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Articles")]), _vm._v(" "), _c('span', {
     staticClass: "arrow"
   })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
+    staticClass: "nav-link nav-toggle",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_c('i', {
+    staticClass: "icon-diamond"
+  }), _vm._v(" "), _c('span', {
+    staticClass: "title"
+  }, [_vm._v("Resource management")]), _vm._v(" "), _c('span', {
+    staticClass: "arrow"
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -22571,40 +22812,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
+  }, [_c('label', [_vm._v("Date")]), _vm._v(" "), _c('date-time', {
     attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Date")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: (_vm.newHoliday.date),
-      expression: "newHoliday.date",
-      modifiers: {
-        "trim": true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "date",
-      "type": "text",
-      "name": "date",
-      "placeholder": "Add date"
-    },
-    domProps: {
-      "value": (_vm.newHoliday.date)
+      "date": _vm.newHoliday.date
     },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newHoliday.date = $event.target.value.trim()
-      },
-      "blur": function($event) {
-        _vm.$forceUpdate()
-      }
+      "changeDate": _vm.changeDate
     }
-  })])]), _vm._v(" "), _c('div', {
+  })], 1)]), _vm._v(" "), _c('div', {
     staticClass: "form-actions"
   }, [_c('button', {
     staticClass: "btn btn-primary",
@@ -22669,6 +22884,40 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-33d74976\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', [_vm._v(_vm._s(_vm.holiday.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.date))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.holiday.name))]), _vm._v(" "), _c('td', [_c('router-link', {
+    staticClass: "btn btn-warning",
+    attrs: {
+      "to": {
+        name: 'holidays.edit',
+        params: {
+          id: _vm.holiday.id
+        }
+      }
+    }
+  }, [_vm._v("\n            Edit\n        ")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-danger",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.handleDeleteHoliday
+    }
+  }, [_vm._v("\n            Delete\n        ")])], 1)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-33d74976", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-35b8bb94\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Resources/views/Week/components/WeekDay/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22678,14 +22927,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "m-grid-col m-grid-col-middle m-grid-col-center"
   }, [_c('div', {
-    staticClass: "m-grid m-grid-full-height"
-  }, [_c('div', {
-    staticClass: "m-grid-col m-grid-col-middle m-grid-col-center"
-  }, [_vm._v("\n            Col\n        ")])]), _vm._v(" "), _c('div', {
-    staticClass: "m-grid m-grid-full-height"
-  }, [_c('div', {
-    staticClass: "m-grid-col m-grid-col-middle m-grid-col-center"
-  }, [_vm._v("\n            Col\n        ")])]), _vm._v(" "), _c('div', {
     staticClass: "m-grid m-grid-full-height"
   }, [_c('div', {
     staticClass: "m-grid-col m-grid-col-middle m-grid-col-center"
@@ -23726,6 +23967,56 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-458f1708\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Holidays/views/List/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('page-title', {
+    attrs: {
+      "title": "Holidays List",
+      "sub": "sub heading"
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-xs-12 text-right"
+  }, [_c('router-link', {
+    staticClass: "btn btn-primary pull-right",
+    attrs: {
+      "to": {
+        name: 'holidays.create'
+      }
+    }
+  }, [_vm._v("\n                Create\n            ")])], 1)]), _vm._v(" "), (!_vm.isLoaded) ? _c('h2', {
+    staticClass: "text-center"
+  }, [_vm._v("Loading...")]) : (_vm.holidays.length > 0) ? _c('div', [_c('div', {
+    staticClass: "table-scrollable"
+  }, [_c('table', {
+    staticClass: "table table-hover table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("#")]), _vm._v(" "), _c('th', [_vm._v("Date")]), _vm._v(" "), _c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Options")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.holidays), function(holiday) {
+    return _c('item', {
+      key: holiday.id,
+      attrs: {
+        "holiday": holiday
+      },
+      on: {
+        "deleteHoliday": _vm.deleteHoliday
+      }
+    })
+  }))])])]) : _c('h2', {
+    staticClass: "text-center"
+  }, [_vm._v("No holidays found")])], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-458f1708", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-45d67508\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/PageHeader.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24403,40 +24694,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-body"
   }, [_c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
+  }, [_c('label', [_vm._v("Date")]), _vm._v(" "), _c('date-time', {
     attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Date")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: (_vm.topic.date),
-      expression: "topic.date",
-      modifiers: {
-        "trim": true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "date",
-      "type": "text",
-      "name": "date",
-      "placeholder": "Add date"
-    },
-    domProps: {
-      "value": (_vm.topic.date)
+      "date": _vm.topic.date
     },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.topic.date = $event.target.value.trim()
-      },
-      "blur": function($event) {
-        _vm.$forceUpdate()
-      }
+      "changeDate": _vm.changeDate
     }
-  })]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
     attrs: {
@@ -24664,6 +24929,51 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7b16056e\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/components/DateTime/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "input-group date"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.date),
+      expression: "date"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "date"
+    },
+    domProps: {
+      "value": (_vm.date)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.date = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._m(0)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "input-group-addon"
+  }, [_c('i', {
+    staticClass: "fa fa-calendar"
+  })])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-7b16056e", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-97909bb4\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Holidays/views/Create/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24717,42 +25027,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$forceUpdate()
       }
     }
-  })]), _vm._v(" "), _c('div', {
+  })])]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
+  }, [_c('label', [_vm._v("Date")]), _vm._v(" "), _c('date-time', {
     attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Date")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: (_vm.holiday.date),
-      expression: "holiday.date",
-      modifiers: {
-        "trim": true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "date",
-      "type": "text",
-      "name": "date",
-      "placeholder": "Add date"
-    },
-    domProps: {
-      "value": (_vm.holiday.date)
+      "date": _vm.holiday.date
     },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.holiday.date = $event.target.value.trim()
-      },
-      "blur": function($event) {
-        _vm.$forceUpdate()
-      }
+      "changeDate": _vm.changeDate
     }
-  })])]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "form-actions"
   }, [_c('button', {
     staticClass: "btn btn-primary",
@@ -27385,6 +27669,33 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../../../../node_modules/css-loader/index.js!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-141a3c9e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue", function() {
      var newContent = require("!!../../../../../../../node_modules/css-loader/index.js!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-141a3c9e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("5a924b39", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../../../../node_modules/css-loader/index.js!../../../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue", function() {
+     var newContent = require("!!../../../../../../../../../node_modules/css-loader/index.js!../../../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -38235,6 +38546,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 __WEBPACK_IMPORTED_MODULE_2__router_Router__["a" /* default */].beforeEach(function (to, from, next) {
+    console.log('token existence check => ' + !!localStorage.getItem("token"));
     if (localStorage.getItem("token") === null) {
         location.href = '/login';
     }
@@ -38645,7 +38957,7 @@ var routes = [{
     path: '/articles',
     component: __webpack_require__("./resources/assets/js/views/Articles.vue")
 }, {
-    path: '/resources',
+    path: '/resource-management',
     component: __webpack_require__("./resources/assets/js/views/Resources/index.vue"),
     children: [{
         path: 'week',
@@ -38691,6 +39003,10 @@ var routes = [{
         path: ':id/edit',
         name: 'holidays.edit',
         component: __webpack_require__("./resources/assets/js/views/Holidays/views/Edit/index.vue")
+    }, {
+        path: '',
+        name: 'holidays.list',
+        component: __webpack_require__("./resources/assets/js/views/Holidays/views/List/index.vue")
     }]
 }];
 
@@ -38727,11 +39043,25 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
 var request = axios.create({
     baseURL: 'https://api-naut.livesystems.ch/'
 });
-var token = localStorage.getItem('token');
 
-if (token) {
-    request.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-}
+request.interceptors.request.use(function (config) {
+    var token = localStorage.getItem('token');
+
+    if (token) {
+        config.headers.common['Authorization'] = 'Bearer ' + token;
+    }
+
+    return config;
+});
+
+request.interceptors.response.use(undefined, function (error) {
+    var status = error.response.status;
+
+    if (status === 401) {
+        localStorage.removeItem('token');
+        location.href = "/login";
+    }
+});
 
 /* harmony default export */ __webpack_exports__["a"] = (request);
 
@@ -38904,6 +39234,80 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-22fefd74", Component.options)
   } else {
     hotAPI.reload("data-v-22fefd74", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/views/Holidays/views/List/components/Item/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-33d74976\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue")
+
+var Component = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")(
+  /* script */
+  __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue"),
+  /* template */
+  __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-33d74976\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Holidays/views/List/components/Item/index.vue"),
+  /* scopeId */
+  "data-v-33d74976",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Applications/MAMP/htdocs/nau-admin/resources/assets/js/views/Holidays/views/List/components/Item/index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-33d74976", Component.options)
+  } else {
+    hotAPI.reload("data-v-33d74976", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/views/Holidays/views/List/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")(
+  /* script */
+  __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/Holidays/views/List/index.vue"),
+  /* template */
+  __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-458f1708\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/Holidays/views/List/index.vue"),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Applications/MAMP/htdocs/nau-admin/resources/assets/js/views/Holidays/views/List/index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-458f1708", Component.options)
+  } else {
+    hotAPI.reload("data-v-458f1708", Component.options)
   }
 })()}
 
@@ -39293,6 +39697,41 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-032fa4ea", Component.options)
   } else {
     hotAPI.reload("data-v-032fa4ea", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/views/components/DateTime/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")(
+  /* script */
+  __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/views/components/DateTime/index.vue"),
+  /* template */
+  __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7b16056e\"}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/views/components/DateTime/index.vue"),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Applications/MAMP/htdocs/nau-admin/resources/assets/js/views/components/DateTime/index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7b16056e", Component.options)
+  } else {
+    hotAPI.reload("data-v-7b16056e", Component.options)
   }
 })()}
 

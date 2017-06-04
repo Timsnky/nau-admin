@@ -82,10 +82,23 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <router-link :to="{name: 'resources.week' }" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="icon-diamond"></i>
-                        Resources
-                    </router-link>
+                        <span class="title">Resource management</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <router-link :to="{name: 'resources.week' }" tag="li" exact>
+                            <a>
+                                <span class="title">Calendar</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'holidays.list' }" tag="li" exact>
+                            <a>
+                                <span class="title">Holidays</span>
+                            </a>
+                        </router-link>
+                    </ul>
                 </li>
             </ul>
             <!-- END SIDEBAR MENU -->

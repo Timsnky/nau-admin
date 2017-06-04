@@ -30824,27 +30824,21 @@ window.Vue = __webpack_require__("./node_modules/vue/dist/vue.common.js");
 var app = new Vue({
     el: '#login',
 
-    data: {
-        email: '',
-        password: ''
+    data: function data() {
+        return {
+            email: '',
+            password: ''
+        };
     },
+
 
     methods: {
         signIn: function signIn() {
             axios.post('https://api-naut.livesystems.ch/token', {
                 'email': this.email,
                 'password': this.password
-            }, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
             }).then(function (response) {
-                // const token = response.data.token;
-                // const base64Url = token.split('.')[1];
-                // const base64 = base64Url.replace('-', '+').replace('_', '/');
-                // console.log(JSON.parse(window.atob(base64)));
                 localStorage.setItem('token', response.data.token);
-                // this.$store.state.authenticated = true;
                 location.href = '/';
             }).catch(function (error) {
                 console.log(error);

@@ -18,14 +18,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="date">Date</label>
-                    <input
-                        id="date"
-                        type="text"
-                        name="date"
-                        v-model.trim="newHoliday.date"
-                        placeholder="Add date"
-                        class="form-control">
+                    <label>Date</label>
+                    <date-time
+                        @changeDate="changeDate"
+                        :date="newHoliday.date" />
                 </div>
             </div>
 
@@ -49,6 +45,7 @@
 
 <script>
     import _pick from 'lodash/pick';
+    import DateTime from 'views/components/DateTime';
     import request from 'utils/request';
 
     export default {
@@ -59,12 +56,19 @@
             }
         },
 
+        components: {
+            dateTime: DateTime,
+        },
+
         created() {
             request
                 .get(`/holidays/${this.$route.params.id}`)
                 .then(response => {
                     this.holiday = response.data;
-                    this.newHoliday = _pick(this.holiday, ['name', 'date']);
+                    this.newHoliday = {
+                        name: this.holiday.name,
+                        date: moment(this.holiday.date).format('YYYY-MM-DD')
+                    };
                 })
                 .catch(err => console.log('Show some error message here'));
         },
@@ -76,7 +80,7 @@
                 if (name && date) {
                     request
                         .put(`/holidays/${this.holiday.id}`, { name, date })
-                        .then(response => console.log(response))
+                        .then(response => this.$router.push('/holidays'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -84,7 +88,14 @@
             },
 
             reset() {
-                this.newHoliday = _pick(this.holiday, ['name', 'date']);
+                this.newHoliday = {
+                    name: this.holiday.name,
+                    date: moment(this.holiday.date).format('YYYY-MM-DD')
+                };
+            },
+
+            changeDate(date) {
+                this.newHoliday.date = date;
             }
         }
     }

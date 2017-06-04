@@ -7,14 +7,10 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label for="date">Date</label>
-                    <input
-                        id="date"
-                        type="text"
-                        name="date"
-                        v-model.trim="newTopic.date"
-                        placeholder="Add date"
-                        class="form-control">
+                    <label>Date</label>
+                    <date-time
+                        @changeDate="changeDate"
+                        :date="newTopic.date" />
                 </div>
 
                 <div class="form-group">
@@ -49,6 +45,7 @@
 
 <script>
     import _pick from 'lodash/pick';
+    import DateTime from 'views/components/DateTime';
     import request from 'utils/request';
 
     export default {
@@ -59,12 +56,19 @@
             }
         },
 
+        components: {
+            dateTime: DateTime,
+        },
+
         created() {
             request
                 .get(`/topics/${this.$route.params.id}`)
                 .then(response => {
                     this.topic = response.data;
-                    this.newTopic = _pick(this.topic, ['name', 'date']);
+                    this.newTopic = {
+                        name: this.topic.name,
+                        date: moment(this.topic.date).format('YYYY-MM-DD')
+                    };
                 })
                 .catch(err => console.log('Show some error message here'));
         },
@@ -76,7 +80,7 @@
                 if (name && date) {
                     request
                         .put(`/topics/${this.topic.id}`, { name, date })
-                        .then(response => console.log(response))
+                        .then(response => this.$router.push({name: 'resources.week'}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -84,7 +88,14 @@
             },
 
             reset() {
-                this.newTopic = _pick(this.topic, ['name', 'date']);
+                this.newTopic = {
+                    name: this.topic.name,
+                    date: moment(this.topic.date).format('YYYY-MM-DD')
+                };
+            },
+
+            changeDate(date) {
+                this.newTopic.date = date;
             }
         }
     }

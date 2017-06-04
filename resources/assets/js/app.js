@@ -4,12 +4,12 @@ import { store } from './store/Store';
 import router from './router/Router';
 
 router.beforeEach((to, from, next) => {
+    console.log(`token existence check => ${!!localStorage.getItem("token")}`);
     if (localStorage.getItem("token") === null) {
         location.href = '/login';
     }
     next();
-})
-
+});
 
 
 /**
