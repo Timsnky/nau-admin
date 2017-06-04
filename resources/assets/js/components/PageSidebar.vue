@@ -82,7 +82,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <router-link :to="{name: 'resources.week'}" exact>
+                    <router-link :to="{name: 'resources.week' }" exact>
                         <i class="icon-diamond"></i>
                         Resources
                     </router-link>

@@ -1,20 +1,20 @@
 import VueRouter from 'vue-router'
 
 let routes = [
-	{
-		path: '/',
-		component: require('./../views/Home')
-	},
+    {
+        path: '/',
+        component: require('./../views/Home')
+    },
 
-	{
-		path: '/about',
-		component: require('./../views/About')
-	},
+    {
+        path: '/about',
+        component: require('./../views/About')
+    },
 
-	{
-		path: '/articles',
-		component: require('./../views/Articles')
-	},
+    {
+        path: '/articles',
+        component: require('./../views/Articles')
+    },
     {
         path: '/resources',
         component: require('../views/Resources'),
@@ -70,7 +70,7 @@ let routes = [
 ];
 
 export default new VueRouter({
-	routes,
+    routes,
 
-	linkActiveClass: 'active'
+    linkActiveClass: 'active'
 });

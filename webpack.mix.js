@@ -12,7 +12,15 @@ const { mix } = require('laravel-mix');
  */
 
 mix
-	.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/login.js', 'public/js')
-	.sass('resources/assets/sass/app.scss', 'public/css')
-	.version();
+    .webpackConfig({
+        resolve: {
+            modules: [
+                path.resolve(__dirname, 'resources/assets/js'),
+                'node_modules'
+            ],
+        }
+    })
+    .js('resources/assets/js/app.js', 'public/js')
+    .js('resources/assets/js/login.js', 'public/js')
+    .sass('resources/assets/sass/app.scss', 'public/css')
+    .version();
