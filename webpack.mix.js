@@ -20,7 +20,7 @@ mix
             ],
         }
     })
-    .js('resources/assets/js/app.js', 'public/js')
-    .js('resources/assets/js/login.js', 'public/js')
+    .js('resources/assets/js/dashboard/app.js', 'public/js')
+    .js('resources/assets/js/authentication/login.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .version();

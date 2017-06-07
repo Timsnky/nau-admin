@@ -44,42 +44,15 @@
 <div id="login">
     <!-- BEGIN LOGO -->
     <div class="logo">
-        <a href="index.html">
-            <img src="../assets/pages/img/logo-big.png" alt=""/> </a>
+        <a href="/">
+            <img src="../assets/pages/img/logo-big.png" alt=""/>
+        </a>
     </div>
     <!-- END LOGO -->
     <!-- BEGIN LOGIN -->
     <div class="content">
         <!-- BEGIN LOGIN FORM -->
-        <form class="login-form" action="index.html" method="post">
-            <h3 class="form-title font-green">Sign In</h3>
-            <div class="alert alert-danger display-hide">
-                <button class="close" data-close="alert"></button>
-                <span> Enter your username and password. </span>
-            </div>
-            <div class="form-group">
-                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                <label class="control-label visible-ie8 visible-ie9">Username</label>
-                <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off"
-                       placeholder="Email" name="email" v-model="email"/></div>
-            <div class="form-group">
-                <label class="control-label visible-ie8 visible-ie9">Password</label>
-                <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
-                       placeholder="Password" name="password" v-model="password"/></div>
-            <div class="form-actions">
-                <button type="submit" class="btn green uppercase" @click.prevent="signIn">Login</button>
-                {{-- <label class="rememberme check mt-checkbox mt-checkbox-outline">
-                    <input type="checkbox" name="remember" value="1" />Remember
-                    <span></span>
-                </label> --}}
-                <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
-            </div>
-            {{--  <div class="create-account">
-                 <p>
-                     <a href="javascript:;" id="register-btn" class="uppercase">Create an account</a>
-                 </p>
-             </div> --}}
-        </form>
+        <router-view/>
         <!-- END LOGIN FORM -->
         <!-- BEGIN FORGOT PASSWORD FORM -->
         <form class="forget-form" action="index.html" method="post">
@@ -160,7 +133,7 @@
 <script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="../assets/pages/scripts/login.min.js" type="text/javascript"></script>
+{{--<script src="../assets/pages/scripts/login.min.js" type="text/javascript"></script>--}}
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
 <!-- END THEME LAYOUT SCRIPTS -->

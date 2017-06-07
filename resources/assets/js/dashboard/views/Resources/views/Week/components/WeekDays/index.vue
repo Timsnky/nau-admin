@@ -1,0 +1,56 @@
+<template>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="m-grid">
+                <div class="m-grid-row">
+                    <week-day-name
+                        v-for="(day, index) in dates"
+                        :day="day"
+                        :key="index"/>
+                </div>
+                <div class="m-grid-row">
+                    <week-day-redactor
+                        v-for="(day, index) in dates"
+                        :day="day"
+                        :key="index"/>
+                </div>
+                <div class="m-grid-row">
+                    <week-day-topics
+                        v-for="(day, index) in dates"
+                        :day="day"
+                        :key="index"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import WeekDayName from './components/WeekDayName';
+    import WeekDayRedactor from './components/WeekDayRedactor';
+    import WeekDayTopics from './components/WeekDayTopics';
+
+    export default {
+        props: {
+            dates: Array,
+        },
+
+        components: {
+            weekDayName: WeekDayName,
+            weekDayRedactor: WeekDayRedactor,
+            weekDayTopics: WeekDayTopics,
+        }
+    }
+</script>
+
+<style>
+    .day {
+        border: 1px solid #dddddd;
+        padding: 20px 10px;
+        height: 100px;
+    }
+
+    .day h5 {
+        margin: 5px 0;
+    }
+</style>
