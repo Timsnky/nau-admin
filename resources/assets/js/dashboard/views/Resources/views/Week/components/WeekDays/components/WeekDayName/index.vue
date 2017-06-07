@@ -30,6 +30,7 @@
 <style>
     .day__name {
         background-color: #cccccc;
+        height: auto;
         padding: 0;
     }
 

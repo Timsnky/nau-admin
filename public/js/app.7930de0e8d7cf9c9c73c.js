@@ -4386,7 +4386,7 @@ exports.push([module.i, "\n.selectpicker[data-v-644abc6d] {\n    z-index: 0 !imp
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")();
-exports.push([module.i, "\n.day__name {\n    background-color: #cccccc;\n    padding: 0;\n}\n.day__name a {\n    color: #333333;\n    display: block;\n    padding: 20px 10px;\n}\n.day__name a:hover {\n    color: #333333;\n}\n", ""]);
+exports.push([module.i, "\n.day__name {\n    background-color: #cccccc;\n    height: auto;\n    padding: 0;\n}\n.day__name a {\n    color: #333333;\n    display: block;\n    padding: 20px 10px;\n}\n.day__name a:hover {\n    color: #333333;\n}\n", ""]);
 
 /***/ }),
 
