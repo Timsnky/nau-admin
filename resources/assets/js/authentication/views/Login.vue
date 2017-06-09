@@ -43,8 +43,15 @@
                 </router-link>
             </div>
         </form>
-        <a href="https://api-naut.livesystems.ch/auth/google">Google</a>
-        <a href="https://api-naut.livesystems.ch/auth/google">Facebook</a>
+        <a href="https://api-naut.livesystems.ch/auth/twitter" class="btn btn-block btn-social btn-twitter">
+            <span class="fa fa-twitter"></span> Sign in with Twitter
+        </a>
+        <a href="https://api-naut.livesystems.ch/auth/google" class="btn btn-block btn-social btn-google">
+            <span class="fa fa-google"></span> Sign in with Google
+        </a>
+        <a href="https://api-naut.livesystems.ch/auth/facebook" class="btn btn-block btn-social btn-facebook">
+            <span class="fa fa-facebook"></span> Sign in with Facebook
+        </a>
     </div>
 </template>
 

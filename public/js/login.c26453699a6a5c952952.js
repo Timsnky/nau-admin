@@ -1728,6 +1728,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -1742,6 +1753,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
+        googleAuth: function googleAuth() {
+
+            // var GoogleAuth;
+            // gapi.load('client', function() {
+            //     gapi.client.init({
+            //         'apiKey': 'AIzaSyDiJq-tHpUYif8yhc84ssVHDQ6hAYgr6CM',
+            //         'clientId': '872844225404-lpbo7dg9oc7rsddikfs92vlvub2veha7.apps.googleusercontent.com',
+            //         'scope': 'email',
+            //     }).then(function () {
+            //         GoogleAuth = gapi.auth2.getAuthInstance();
+
+            //         if (GoogleAuth.isSignedIn.get() == true) {
+            //             // Already logged in
+            //             this.sendToken('google', GoogleAuth.currentUser.get().getAuthResponse().access_token);
+            //             return;
+            //         }
+
+            //         // Setup listener
+            //         GoogleAuth.isSignedIn.listen(function(state) {
+            //             if(state) {
+            //                 this.sendToken('google', GoogleAuth.currentUser.get().getAuthResponse().access_token)
+            //             }
+            //         });
+            //         // Login via google
+            //         GoogleAuth.signIn();
+
+            //     }.bind(this));
+            // }.bind(this));
+        },
         signIn: function signIn() {
             var _user = this.user,
                 email = _user.email,
@@ -1751,15 +1791,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (email && password) {
                 this.hasErrors = false;
 
-                axios.post('https://api-naut.livesystems.ch/token', { email: email, password: password }).then(function (response) {
-                    localStorage.setItem('token', response.data.token);
-                    location.href = '/';
-                }).catch(function (err) {
+                axios.post('/token', { email: email, password: password }).then(this.handleToken).catch(function (err) {
                     return console.log(err);
                 });
             } else {
                 this.hasErrors = true;
             }
+        },
+        handleToken: function handleToken(response) {
+            location.href = '/';
+        },
+        sendToken: function sendToken(provider, token) {
+            return axios.post('/auth/' + provider + '/token', { 'token': token }).then(this.handleToken).catch(function (err) {
+                return console.log(err);
+            });
+        }
+    },
+    mounted: function mounted() {
+        if (api.getToken() !== null) {
+            location.href = '/';
         }
     }
 });
@@ -17949,6 +17999,221 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/tiny-cookie/tiny-cookie.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * tiny-cookie - A tiny cookie manipulation plugin
+ * https://github.com/Alex1990/tiny-cookie
+ * Under the MIT license | (c) Alex Chao
+ */
+
+!(function(root, factory) {
+
+  // Uses CommonJS, AMD or browser global to create a jQuery plugin.
+  // See: https://github.com/umdjs/umd
+  if (true) {
+    // Expose this plugin as an AMD module. Register an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS module
+    module.exports = factory();
+  } else {
+    // Browser globals 
+    root.Cookie = factory();
+  }
+
+}(this, function() {
+
+  'use strict';
+
+  // The public function which can get/set/remove cookie.
+  function Cookie(key, value, opts) {
+    if (value === void 0) {
+      return Cookie.get(key);
+    } else if (value === null) {
+      Cookie.remove(key);
+    } else {
+      Cookie.set(key, value, opts);
+    }
+  }
+
+  // Check if the cookie is enabled.
+  Cookie.enabled = function() {
+    var key = '__test_key';
+    var enabled;
+
+    document.cookie = key + '=1';
+    enabled = !!document.cookie;
+
+    if (enabled) Cookie.remove(key);
+
+    return enabled;
+  };
+
+  // Get the cookie value by the key.
+  Cookie.get = function(key, raw) {
+    if (typeof key !== 'string' || !key) return null;
+
+    key = '(?:^|; )' + escapeRe(key) + '(?:=([^;]*?))?(?:;|$)';
+
+    var reKey = new RegExp(key);
+    var res = reKey.exec(document.cookie);
+
+    return res !== null ? (raw ? res[1] : decodeURIComponent(res[1])) : null;
+  };
+
+  // Get the cookie's value without decoding.
+  Cookie.getRaw = function(key) {
+    return Cookie.get(key, true);
+  };
+
+  // Set a cookie.
+  Cookie.set = function(key, value, raw, opts) {
+    if (raw !== true) {
+      opts = raw;
+      raw = false;
+    }
+    opts = opts ? convert(opts) : convert({});
+    var cookie = key + '=' + (raw ? value : encodeURIComponent(value)) + opts;
+    document.cookie = cookie;
+  };
+
+  // Set a cookie without encoding the value.
+  Cookie.setRaw = function(key, value, opts) {
+    Cookie.set(key, value, true, opts);
+  };
+
+  // Remove a cookie by the specified key.
+  Cookie.remove = function(key) {
+    Cookie.set(key, 'a', { expires: new Date() });
+  };
+
+  // Helper function
+  // ---------------
+
+  // Escape special characters.
+  function escapeRe(str) {
+    return str.replace(/[.*+?^$|[\](){}\\-]/g, '\\$&');
+  }
+
+  // Convert an object to a cookie option string.
+  function convert(opts) {
+    var res = '';
+
+    for (var p in opts) {
+      if (opts.hasOwnProperty(p)) {
+
+        if (p === 'expires') {
+          var expires = opts[p];
+          if (typeof expires !== 'object') {
+            expires += typeof expires === 'number' ? 'D' : '';
+            expires = computeExpires(expires);
+          }
+          opts[p] = expires.toUTCString();
+        }
+
+        if (p === 'secure') {
+          if (opts[p]) {
+            res += ';' + p;
+          }
+
+          continue;
+        }
+
+        res += ';' + p + '=' + opts[p];
+      }
+    }
+
+    if (!opts.hasOwnProperty('path')) {
+      res += ';path=/';
+    }
+
+    return res;
+  }
+
+  // Return a future date by the given string.
+  function computeExpires(str) {
+    var expires = new Date();
+    var lastCh = str.charAt(str.length - 1);
+    var value = parseInt(str, 10);
+
+    switch (lastCh) {
+      case 'Y': expires.setFullYear(expires.getFullYear() + value); break;
+      case 'M': expires.setMonth(expires.getMonth() + value); break;
+      case 'D': expires.setDate(expires.getDate() + value); break;
+      case 'h': expires.setHours(expires.getHours() + value); break;
+      case 'm': expires.setMinutes(expires.getMinutes() + value); break;
+      case 's': expires.setSeconds(expires.getSeconds() + value); break;
+      default: expires = new Date(str);
+    }
+
+    return expires;
+  }
+
+  return Cookie;
+
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-cookie/src/vue-cookie.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+(function () {
+    Number.isInteger = Number.isInteger || function (value) {
+        return typeof value === 'number' &&
+            isFinite(value) &&
+            Math.floor(value) === value;
+    };
+    var Cookie = __webpack_require__("./node_modules/tiny-cookie/tiny-cookie.js");
+
+    var VueCookie = {
+
+        install: function (Vue) {
+            Vue.prototype.$cookie = this;
+            Vue.cookie = this;
+        },
+        set: function (name, value, daysOrOptions) {
+            var opts = daysOrOptions;
+            if(Number.isInteger(daysOrOptions)) {
+                opts = {expires: daysOrOptions};
+            }
+            return Cookie.set(name, value, opts);
+        },
+
+        get: function (name) {
+            return Cookie.get(name);
+        },
+
+        delete: function (name, options) {
+            var opts = {expires: -1};
+            if(options !== undefined) {
+                opts = Object.assign(options, opts);
+            }
+            this.set(name, '', opts);
+        }
+    };
+
+    if (true) {
+        module.exports = VueCookie;
+    } else if (typeof define == "function" && define.amd) {
+        define([], function(){ return VueCookie; })
+    } else if (window.Vue) {
+        window.VueCookie = VueCookie;
+        Vue.use(VueCookie);
+    }
+
+})();
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/component-normalizer.js":
 /***/ (function(module, exports) {
 
@@ -18085,7 +18350,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('form', {
+  return _c('div', [_c('form', {
     staticClass: "login-form",
     on: {
       "submit": function($event) {
@@ -18163,14 +18428,41 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "type": "submit"
     }
-  }, [_vm._v("\n            Login\n        ")]), _vm._v(" "), _c('router-link', {
+  }, [_vm._v("\n                Login\n            ")]), _vm._v(" "), _c('router-link', {
     staticClass: "forget-password",
     attrs: {
       "to": "/forget-password",
       "id": "forget-password"
     }
-  }, [_vm._v("\n            Forgot Password?\n        ")])], 1)])
-},staticRenderFns: []}
+  }, [_vm._v("\n                Forgot Password?\n            ")])], 1)]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
+    staticClass: "btn btn-block btn-social btn-twitter",
+    attrs: {
+      "href": "https://api-naut.livesystems.ch/auth/twitter"
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-twitter"
+  }), _vm._v(" Sign in with Twitter\n    ")])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
+    staticClass: "btn btn-block btn-social btn-google",
+    attrs: {
+      "href": "https://api-naut.livesystems.ch/auth/google"
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-google"
+  }), _vm._v(" Sign in with Google\n    ")])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
+    staticClass: "btn btn-block btn-social btn-facebook",
+    attrs: {
+      "href": "https://api-naut.livesystems.ch/auth/facebook"
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-facebook"
+  }), _vm._v(" Sign in with Facebook\n    ")])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -31541,7 +31833,7 @@ module.exports = function(module) {
 
 
 var routes = [{
-    path: '/',
+    path: '/login',
     component: __webpack_require__("./resources/assets/js/authentication/views/Login.vue")
 }, {
     path: '/forget-password',
@@ -31549,6 +31841,7 @@ var routes = [{
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
+    mode: 'history',
     routes: routes
 }));
 
@@ -31591,7 +31884,7 @@ var Component = __webpack_require__("./node_modules/vue-loader/lib/component-nor
   /* cssModules */
   null
 )
-Component.options.__file = "/Applications/MAMP/htdocs/nau-admin/resources/assets/js/authentication/views/ForgetPassword.vue"
+Component.options.__file = "/home/michele/Code/nau-admin/resources/assets/js/authentication/views/ForgetPassword.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ForgetPassword.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -31630,7 +31923,7 @@ var Component = __webpack_require__("./node_modules/vue-loader/lib/component-nor
   /* cssModules */
   null
 )
-Component.options.__file = "/Applications/MAMP/htdocs/nau-admin/resources/assets/js/authentication/views/Login.vue"
+Component.options.__file = "/home/michele/Code/nau-admin/resources/assets/js/authentication/views/Login.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -31664,6 +31957,9 @@ module.exports = Component.exports
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__("./node_modules/moment/moment.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_cookie__ = __webpack_require__("./node_modules/vue-cookie/src/vue-cookie.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_cookie___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_cookie__);
+
 
 
 
@@ -31673,11 +31969,21 @@ module.exports = Component.exports
 window.Vue = __WEBPACK_IMPORTED_MODULE_0_vue___default.a;
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuex__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_5_vue_cookie___default.a);
 
 window.axios = __WEBPACK_IMPORTED_MODULE_3_axios___default.a;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = __WEBPACK_IMPORTED_MODULE_4_moment___default.a;
 window.moment.locale('en-gb');
+
+window.api = {
+    'getToken': function getToken() {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.cookie.get('token');
+    },
+    'deleteToken': function deleteToken() {
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.cookie.delete('token', { domain: 'nau.dev' });
+    }
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
