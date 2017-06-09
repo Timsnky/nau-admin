@@ -408,8 +408,9 @@
     export default {
         methods: {
             logout() {
-                localStorage.removeItem('token');
-                location.href = "/login";
+                console.log(api);
+                api.deleteToken();
+                // location.href = "/login";
             }
         }
     }

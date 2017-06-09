@@ -4,7 +4,7 @@ import { store } from '../store/Store';
 import router from './Router';
 
 router.beforeEach((to, from, next) => {
-    if (localStorage.getItem("token") === null) {
+    if (!api.getToken()) {
         location.href = '/login';
     }
     next();
