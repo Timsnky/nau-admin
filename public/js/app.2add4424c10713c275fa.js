@@ -40288,7 +40288,7 @@ window.api = {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.cookie.get('token');
     },
     'deleteToken': function deleteToken() {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.cookie.delete('token', { domain: 'nau.dev' });
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.cookie.delete('token', { domain: 'livesystems.ch' });
     }
 };
 

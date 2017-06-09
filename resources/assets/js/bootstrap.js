@@ -20,7 +20,7 @@ window.api = {
         return Vue.cookie.get('token');
     },
     'deleteToken': function() {
-        Vue.cookie.delete('token', {domain: 'nau.dev'});
+        Vue.cookie.delete('token', {domain: 'livesystems.ch'});
     }
 }
 
