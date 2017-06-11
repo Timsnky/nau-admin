@@ -406,8 +406,7 @@
     export default {
         methods: {
             logout() {
-                console.log('logging out');
-                localStorage.removeItem('token');
+                api.deleteToken();
                 location.href = "/login";
             }
         }

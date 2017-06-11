@@ -2167,8 +2167,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
     methods: {
         logout: function logout() {
-            console.log('logging out');
-            localStorage.removeItem('token');
+            api.deleteToken();
             location.href = "/login";
         }
     }
@@ -23281,6 +23280,221 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/tiny-cookie/tiny-cookie.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * tiny-cookie - A tiny cookie manipulation plugin
+ * https://github.com/Alex1990/tiny-cookie
+ * Under the MIT license | (c) Alex Chao
+ */
+
+!(function(root, factory) {
+
+  // Uses CommonJS, AMD or browser global to create a jQuery plugin.
+  // See: https://github.com/umdjs/umd
+  if (true) {
+    // Expose this plugin as an AMD module. Register an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS module
+    module.exports = factory();
+  } else {
+    // Browser globals 
+    root.Cookie = factory();
+  }
+
+}(this, function() {
+
+  'use strict';
+
+  // The public function which can get/set/remove cookie.
+  function Cookie(key, value, opts) {
+    if (value === void 0) {
+      return Cookie.get(key);
+    } else if (value === null) {
+      Cookie.remove(key);
+    } else {
+      Cookie.set(key, value, opts);
+    }
+  }
+
+  // Check if the cookie is enabled.
+  Cookie.enabled = function() {
+    var key = '__test_key';
+    var enabled;
+
+    document.cookie = key + '=1';
+    enabled = !!document.cookie;
+
+    if (enabled) Cookie.remove(key);
+
+    return enabled;
+  };
+
+  // Get the cookie value by the key.
+  Cookie.get = function(key, raw) {
+    if (typeof key !== 'string' || !key) return null;
+
+    key = '(?:^|; )' + escapeRe(key) + '(?:=([^;]*?))?(?:;|$)';
+
+    var reKey = new RegExp(key);
+    var res = reKey.exec(document.cookie);
+
+    return res !== null ? (raw ? res[1] : decodeURIComponent(res[1])) : null;
+  };
+
+  // Get the cookie's value without decoding.
+  Cookie.getRaw = function(key) {
+    return Cookie.get(key, true);
+  };
+
+  // Set a cookie.
+  Cookie.set = function(key, value, raw, opts) {
+    if (raw !== true) {
+      opts = raw;
+      raw = false;
+    }
+    opts = opts ? convert(opts) : convert({});
+    var cookie = key + '=' + (raw ? value : encodeURIComponent(value)) + opts;
+    document.cookie = cookie;
+  };
+
+  // Set a cookie without encoding the value.
+  Cookie.setRaw = function(key, value, opts) {
+    Cookie.set(key, value, true, opts);
+  };
+
+  // Remove a cookie by the specified key.
+  Cookie.remove = function(key) {
+    Cookie.set(key, 'a', { expires: new Date() });
+  };
+
+  // Helper function
+  // ---------------
+
+  // Escape special characters.
+  function escapeRe(str) {
+    return str.replace(/[.*+?^$|[\](){}\\-]/g, '\\$&');
+  }
+
+  // Convert an object to a cookie option string.
+  function convert(opts) {
+    var res = '';
+
+    for (var p in opts) {
+      if (opts.hasOwnProperty(p)) {
+
+        if (p === 'expires') {
+          var expires = opts[p];
+          if (typeof expires !== 'object') {
+            expires += typeof expires === 'number' ? 'D' : '';
+            expires = computeExpires(expires);
+          }
+          opts[p] = expires.toUTCString();
+        }
+
+        if (p === 'secure') {
+          if (opts[p]) {
+            res += ';' + p;
+          }
+
+          continue;
+        }
+
+        res += ';' + p + '=' + opts[p];
+      }
+    }
+
+    if (!opts.hasOwnProperty('path')) {
+      res += ';path=/';
+    }
+
+    return res;
+  }
+
+  // Return a future date by the given string.
+  function computeExpires(str) {
+    var expires = new Date();
+    var lastCh = str.charAt(str.length - 1);
+    var value = parseInt(str, 10);
+
+    switch (lastCh) {
+      case 'Y': expires.setFullYear(expires.getFullYear() + value); break;
+      case 'M': expires.setMonth(expires.getMonth() + value); break;
+      case 'D': expires.setDate(expires.getDate() + value); break;
+      case 'h': expires.setHours(expires.getHours() + value); break;
+      case 'm': expires.setMinutes(expires.getMinutes() + value); break;
+      case 's': expires.setSeconds(expires.getSeconds() + value); break;
+      default: expires = new Date(str);
+    }
+
+    return expires;
+  }
+
+  return Cookie;
+
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-cookie/src/vue-cookie.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+(function () {
+    Number.isInteger = Number.isInteger || function (value) {
+        return typeof value === 'number' &&
+            isFinite(value) &&
+            Math.floor(value) === value;
+    };
+    var Cookie = __webpack_require__("./node_modules/tiny-cookie/tiny-cookie.js");
+
+    var VueCookie = {
+
+        install: function (Vue) {
+            Vue.prototype.$cookie = this;
+            Vue.cookie = this;
+        },
+        set: function (name, value, daysOrOptions) {
+            var opts = daysOrOptions;
+            if(Number.isInteger(daysOrOptions)) {
+                opts = {expires: daysOrOptions};
+            }
+            return Cookie.set(name, value, opts);
+        },
+
+        get: function (name) {
+            return Cookie.get(name);
+        },
+
+        delete: function (name, options) {
+            var opts = {expires: -1};
+            if(options !== undefined) {
+                opts = Object.assign(options, opts);
+            }
+            this.set(name, '', opts);
+        }
+    };
+
+    if (true) {
+        module.exports = VueCookie;
+    } else if (typeof define == "function" && define.amd) {
+        define([], function(){ return VueCookie; })
+    } else if (window.Vue) {
+        window.VueCookie = VueCookie;
+        Vue.use(VueCookie);
+    }
+
+})();
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/component-normalizer.js":
 /***/ (function(module, exports) {
 
@@ -40337,16 +40551,30 @@ var _moment = __webpack_require__("./node_modules/moment/moment.js");
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _vueCookie = __webpack_require__("./node_modules/vue-cookie/src/vue-cookie.js");
+
+var _vueCookie2 = _interopRequireDefault(_vueCookie);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.Vue = _vue2.default;
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(_vuex2.default);
+_vue2.default.use(_vueCookie2.default);
 
 window.axios = _axios2.default;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = _moment2.default;
 window.moment.locale('en-gb');
+
+window.api = {
+    'getToken': function getToken() {
+        return _vue2.default.cookie.get('token');
+    },
+    'deleteToken': function deleteToken() {
+        _vue2.default.cookie.delete('token', { domain: 'nau.dev' });
+    }
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -40467,7 +40695,7 @@ var routes = [{
 
 exports.default = new _vueRouter2.default({
     routes: routes,
-
+    mode: 'history',
     linkActiveClass: 'active'
 });
 
@@ -40490,7 +40718,7 @@ var _Router2 = _interopRequireDefault(_Router);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _Router2.default.beforeEach(function (to, from, next) {
-    if (localStorage.getItem("token") === null) {
+    if (!api.getToken()) {
         location.href = '/login';
     }
     next();
@@ -40785,25 +41013,15 @@ var _Router2 = _interopRequireDefault(_Router);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var request = axios.create({
-    baseURL: 'https://api-naut.livesystems.ch/'
-});
-
-request.interceptors.request.use(function (config) {
-    var token = localStorage.getItem('token');
-
-    if (token) {
-        config.headers.common['Authorization'] = 'Bearer ' + token;
-    }
-
-    return config;
+    withCredentials: true,
+    baseURL: 'https://api-naut.livesystems.ch'
 });
 
 request.interceptors.response.use(undefined, function (error) {
     var status = error.response.status;
 
     if (status === 401) {
-        localStorage.removeItem('token');
-        location.href = "/login";
+        api.deleteToken();
     }
 
     if (status === 422) {

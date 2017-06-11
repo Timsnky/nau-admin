@@ -3,15 +3,26 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import axios from 'axios';
 import moment from 'moment';
+import VueCookie from 'vue-cookie';
 
 window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueCookie);
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = moment;
 window.moment.locale('en-gb');
+
+window.api = {
+    'getToken': function() {
+        return Vue.cookie.get('token');
+    },
+    'deleteToken': function() {
+        Vue.cookie.delete('token', { domain: 'nau.dev' });
+    }
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

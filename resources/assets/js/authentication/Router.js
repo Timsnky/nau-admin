@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 
 let routes = [
     {
-        path: '/',
+        path: '/login',
         component: require('./views/Login')
     },
     {
@@ -12,5 +12,6 @@ let routes = [
 ];
 
 export default new VueRouter({
+    mode: 'history',
     routes,
 });
