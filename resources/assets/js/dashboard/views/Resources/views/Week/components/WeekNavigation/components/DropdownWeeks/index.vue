@@ -1,6 +1,6 @@
 <template>
     <div class="input-group input-medium">
-        <select class="form-control selectpicker bs-select">
+        <select class="form-control selectpicker">
             <option
                 v-for="(option, index) in options"
                 :key="index"

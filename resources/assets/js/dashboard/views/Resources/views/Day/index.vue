@@ -85,13 +85,19 @@
 
                                             <ul
                                                 class="list-group"
-                                                v-if="article.users.length > 0">
+                                                v-if="article.authors.length > 0">
                                                 <li
                                                     class="list-group-item"
-                                                    v-for="user in article.users">
-                                                    {{ user.name }}
+                                                    v-for="author in article.authors">
+                                                    {{ author.name }}
                                                 </li>
                                             </ul>
+
+                                            <h5
+                                                v-else
+                                                class="text-center">
+                                                No authors found
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>

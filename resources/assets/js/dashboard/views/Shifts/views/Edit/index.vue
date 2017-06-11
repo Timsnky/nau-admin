@@ -15,13 +15,10 @@
 
                 <div class="form-group">
                     <label for="author">Author</label>
-                    <input
-                        id="author"
-                        type="text"
-                        name="author"
-                        v-model.trim="newShift.author"
-                        placeholder="Edit author"
-                        class="form-control">
+                    <dropdown-users
+                        :users="users"
+                        :assignments="shift.assignments"
+                        @selectAuthor="selectAuthor"/>
                 </div>
             </div>
 
@@ -46,23 +43,31 @@
 <script>
     import _pick from 'lodash/pick';
     import request from 'dashboard/utils/request';
+    import DropdownUsers from './components/DropdownUsers';
 
     export default {
         data() {
             return {
+                users: [],
                 shift: {},
                 newShift: {}
             }
         },
 
+        components: {
+            DropdownUsers
+        },
+
         created() {
             request
-                .get(`/shifts/${this.$route.params.id}`)
+                .get(`/work-shifts/${this.$route.params.id}`)
                 .then(response => {
-                    console.log(response.data);
                     this.shift = response.data;
                     this.newShift = _pick(this.shift, ['author']);
+
+                    return request.get(`/work-types/${response.data.work_type_id}/users`)
                 })
+                .then(response => this.users = response.data)
                 .catch(err => console.log('Show some error message here'));
         },
 
@@ -72,7 +77,7 @@
 
                 if (author) {
                     request
-                        .put(`/shifts/${this.shift.id}`, { author })
+                        .put(`/work-shifts/${this.shift.id}`, { author })
                         .then(response => console.log(response))
                         .catch(err => console.log('Show some error message here'));
                 } else {
@@ -82,6 +87,11 @@
 
             reset() {
                 this.newShift = _pick(this.shift, ['author']);
+            },
+
+            selectAuthor(author) {
+                this.newShift.author = author;
+                console.log(this.newShift);
             }
         }
     }

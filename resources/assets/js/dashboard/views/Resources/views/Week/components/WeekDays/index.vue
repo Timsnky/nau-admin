@@ -6,19 +6,19 @@
                     <week-day-name
                         v-for="(day, index) in dates"
                         :day="day"
-                        :key="index"/>
+                        :key="index" />
                 </div>
                 <div class="m-grid-row">
                     <week-day-redactor
                         v-for="(day, index) in dates"
                         :day="day"
-                        :key="index"/>
+                        :key="index" />
                 </div>
                 <div class="m-grid-row">
                     <week-day-topics
                         v-for="(day, index) in dates"
                         :day="day"
-                        :key="index"/>
+                        :key="index" />
                 </div>
             </div>
         </div>
@@ -29,28 +29,28 @@
     import WeekDayName from './components/WeekDayName';
     import WeekDayRedactor from './components/WeekDayRedactor';
     import WeekDayTopics from './components/WeekDayTopics';
-
+    
     export default {
         props: {
             dates: Array,
         },
-
+        
         components: {
-            weekDayName: WeekDayName,
-            weekDayRedactor: WeekDayRedactor,
-            weekDayTopics: WeekDayTopics,
+            WeekDayName,
+            WeekDayRedactor,
+            WeekDayTopics,
         }
     }
 </script>
 
-<style>
+<style lang="scss">
     .day {
         border: 1px solid #dddddd;
         padding: 20px 10px;
         height: 100px;
-    }
-
-    .day h5 {
-        margin: 5px 0;
+        
+        h5 {
+            margin: 5px 0;
+        }
     }
 </style>
