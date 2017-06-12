@@ -85,11 +85,15 @@
                 }
             },
             handleToken(response) {
+                const { token } = response.data;
+                api.setToken('token', token);
+
                 location.href = '/';
             },
             sendToken(provider, token) {
                 return request
                     .post('/auth/' + provider + '/token', { 'token': token})
+
                     .then(this.handleToken)
                     .catch(err => console.log(err));
             }

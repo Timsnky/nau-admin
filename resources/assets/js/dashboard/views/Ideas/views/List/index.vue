@@ -58,6 +58,7 @@
     </div>
 </template>
 <script>
+    import request from 'dashboard/utils/request';
     import Item from './components/Item';
     import Pagination from './components/Pagination';
 
@@ -103,8 +104,8 @@
 
         methods: {
             deleteIdea(idea) {
-                axios
-                    .delete(`https://api-naut.livesystems.ch/ideas/${idea.id}`)
+                request
+                    .delete(`/ideas/${idea.id}`)
                     .then(response => this.ideas = this.ideas.filter(item => item.id !== idea.id))
                     .catch(err => console.log('Show some error message here'));
             },
@@ -123,10 +124,10 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return axios.get(`https://api-naut.livesystems.ch/ideas/search?query=${this.searchTerm}&page=${page}`);
+                    return request.get(`/ideas/search?query=${this.searchTerm}&page=${page}`);
                 }
 
-                return axios.get(`https://api-naut.livesystems.ch/ideas?page=${page}`);
+                return request.get(`/ideas?page=${page}`);
             }
         }
     }

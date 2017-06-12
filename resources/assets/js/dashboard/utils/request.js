@@ -5,6 +5,16 @@ const request = axios.create({
     baseURL: 'https://api-naut.livesystems.ch'
 });
 
+request.interceptors.request.use(config => {
+    const token = api.getToken();
+
+    if (token) {
+        config.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+
+    return config;
+}, error => console.log(error));
+
 request.interceptors.response.use(undefined, error => {
     const status = error.response.status;
 

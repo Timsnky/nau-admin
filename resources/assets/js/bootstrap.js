@@ -16,11 +16,14 @@ window.moment = moment;
 window.moment.locale('en-gb');
 
 window.api = {
-    'getToken': function() {
-        return Vue.cookie.get('token');
+    getToken(key = 'token') {
+        return Vue.cookie.get(key);
     },
-    'deleteToken': function() {
-        Vue.cookie.delete('token', {domain: 'livesystems.ch'});
+    setToken(key, value) {
+        Vue.cookie.set(key, value, { expires: '1h' });
+    },
+    deleteToken(key = 'token') {
+        Vue.cookie.delete(key, { domain: 'livesystems.ch' });
     }
 };
 

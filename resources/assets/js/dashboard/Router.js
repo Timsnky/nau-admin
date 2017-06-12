@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 
 let routes = [{
     path: '/',
@@ -13,6 +13,26 @@ let routes = [{
         path: '',
         name: 'articles.list',
         component: require('./views/Articles/views/List'),
+    }],
+}, {
+    path: '/ideas',
+    component: require('./views/Ideas'),
+    children: [{
+        path: 'create',
+        name: 'ideas.create',
+        component: require('./views/Ideas/views/Create'),
+    }, {
+        path: ':id',
+        name: 'ideas.show',
+        component: require('./views/Ideas/views/Show'),
+    }, {
+        path: ':id/edit',
+        name: 'ideas.edit',
+        component: require('./views/Ideas/views/Edit'),
+    }, {
+        path: '',
+        name: 'ideas.list',
+        component: require('./views/Ideas/views/List'),
     }],
 }, {
     path: '/topics',

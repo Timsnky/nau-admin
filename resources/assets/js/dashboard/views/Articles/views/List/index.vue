@@ -38,7 +38,7 @@
 
         created() {
             request
-                .get('https://api-naut.livesystems.ch/articles')
+                .get('/articles')
                 .then(response => this.articles = response.data);
         }
     }
