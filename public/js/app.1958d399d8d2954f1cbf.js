@@ -4172,6 +4172,14 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     props: {
@@ -4329,6 +4337,7 @@ exports.default = {
 
             for (var i = -2; i <= 20; i++) {
                 options.push({
+                    date: date.format('WW - DD.MM.YYYY'),
                     year: date.year(),
                     week: date.week(),
                     selected: i === 0
@@ -5241,6 +5250,14 @@ exports.default = {
         }
     }
 };
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/dashboard/views/Resources/views/Week/components/WeekDays/components/WeekDayRedactor/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")();
+exports.push([module.i, "\n.day__redactor ul {\n  margin: 0;\n  padding-left: 15px;\n}\n", ""]);
 
 /***/ }),
 
@@ -24671,12 +24688,12 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "day day__redactor m-grid-col m-grid-col-middle m-grid-col-left"
-  }, [_c('h5', [_vm._v("Redactor")])])
-}]}
+    staticClass: "day day__redactor m-grid-col m-grid-col-top m-grid-col-left"
+  }, [(_vm.day.shifts.length > 0) ? _c('ul', _vm._l((_vm.day.shifts), function(shift) {
+    return _c('li', [_c('h5', [_vm._v(_vm._s(shift.name) + " "), (shift.assigned) ? _c('span', [_vm._v(" : " + _vm._s(shift.assigned.name))]) : _vm._e()])])
+  })) : _c('h5', [_vm._v("No shifts")])])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -25321,7 +25338,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "value": index,
         "selected": option.selected
       }
-    }, [_vm._v("\n            " + _vm._s(option.week) + " - " + _vm._s(option.year) + "\n        ")])
+    }, [_vm._v("\n            " + _vm._s(option.date) + "\n        ")])
   })), _vm._v(" "), _vm._m(0)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
@@ -30566,6 +30583,33 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["default"] = (VueRouter);
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/dashboard/views/Resources/views/Week/components/WeekDays/components/WeekDayRedactor/index.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/dashboard/views/Resources/views/Week/components/WeekDays/components/WeekDayRedactor/index.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("e3eab236", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../../../../../../../node_modules/css-loader/index.js!../../../../../../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../../../../../../../node_modules/sass-loader/lib/loader.js!../../../../../../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue", function() {
+     var newContent = require("!!../../../../../../../../../../../../node_modules/css-loader/index.js!../../../../../../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../../../../../../../node_modules/sass-loader/lib/loader.js!../../../../../../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 
@@ -43076,6 +43120,10 @@ module.exports = Component.exports
 
 /***/ "./resources/assets/js/dashboard/views/Resources/views/Week/components/WeekDays/components/WeekDayRedactor/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4af020c8\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/dashboard/views/Resources/views/Week/components/WeekDays/components/WeekDayRedactor/index.vue")
 
 var Component = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")(
   /* script */

@@ -6,7 +6,7 @@
                 :key="index"
                 :value="index"
                 :selected="option.selected">
-                {{ option.week }} - {{ option.year }}
+                {{ option.date }}
             </option>
         </select>
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -39,6 +39,7 @@
 
                 for (let i = -2; i <= 20; i++) {
                     options.push({
+                        date: date.format('WW - DD.MM.YYYY'),
                         year: date.year(),
                         week: date.week(),
                         selected: i === 0
