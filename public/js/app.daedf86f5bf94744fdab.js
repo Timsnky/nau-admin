@@ -24182,7 +24182,31 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('a', [_c('span', {
     staticClass: "title"
-  }, [_vm._v("Holidays")])])])], 1)])])])])
+  }, [_vm._v("Holidays")])])])], 1)]), _vm._v(" "), _c('li', {
+    staticClass: "nav-item  "
+  }, [_vm._m(6), _vm._v(" "), _c('ul', {
+    staticClass: "sub-menu"
+  }, [_c('router-link', {
+    attrs: {
+      "to": {
+        name: 'ideas.list'
+      },
+      "tag": "li",
+      "exact": ""
+    }
+  }, [_c('a', [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("All Ideas")])])]), _vm._v(" "), _c('router-link', {
+    attrs: {
+      "to": {
+        name: 'ideas.create'
+      },
+      "tag": "li",
+      "exact": ""
+    }
+  }, [_c('a', [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("Create Idea")])])])], 1)])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
     staticClass: "sidebar-toggler-wrapper hide"
@@ -24266,6 +24290,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }), _vm._v(" "), _c('span', {
     staticClass: "title"
   }, [_vm._v("Resource management")]), _vm._v(" "), _c('span', {
+    staticClass: "arrow"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
+    staticClass: "nav-link nav-toggle",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_c('i', {
+    staticClass: "icon-diamond"
+  }), _vm._v(" "), _c('span', {
+    staticClass: "title"
+  }, [_vm._v("Ideas")]), _vm._v(" "), _c('span', {
     staticClass: "arrow"
   })])
 }]}
@@ -40572,7 +40609,7 @@ window.api = {
         return _vue2.default.cookie.get('token');
     },
     'deleteToken': function deleteToken() {
-        _vue2.default.cookie.delete('token', { domain: 'nau.dev' });
+        _vue2.default.cookie.delete('token', { domain: 'livesystems.ch' });
     }
 };
 

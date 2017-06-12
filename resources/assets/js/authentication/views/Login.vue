@@ -56,6 +56,8 @@
 </template>
 
 <script>
+    import request from 'dashboard/utils/request';
+
     export default {
         data() {
             return {
@@ -68,44 +70,13 @@
         },
 
         methods: {
-            googleAuth() {
-
-
-
-                // var GoogleAuth;
-                // gapi.load('client', function() {
-                //     gapi.client.init({
-                //         'apiKey': 'AIzaSyDiJq-tHpUYif8yhc84ssVHDQ6hAYgr6CM',
-                //         'clientId': '872844225404-lpbo7dg9oc7rsddikfs92vlvub2veha7.apps.googleusercontent.com',
-                //         'scope': 'email',
-                //     }).then(function () {
-                //         GoogleAuth = gapi.auth2.getAuthInstance();
-
-                //         if (GoogleAuth.isSignedIn.get() == true) {
-                //             // Already logged in
-                //             this.sendToken('google', GoogleAuth.currentUser.get().getAuthResponse().access_token);
-                //             return;
-                //         }
-
-                //         // Setup listener
-                //         GoogleAuth.isSignedIn.listen(function(state) {
-                //             if(state) {
-                //                 this.sendToken('google', GoogleAuth.currentUser.get().getAuthResponse().access_token)
-                //             }
-                //         });
-                //         // Login via google
-                //         GoogleAuth.signIn();
-
-                //     }.bind(this));
-                // }.bind(this));
-            },
             signIn() {
                 const { email, password } = this.user;
 
                 if (email && password) {
                     this.hasErrors = false;
 
-                    axios
+                    request
                         .post('/token', { email, password })
                         .then(this.handleToken)
                         .catch(err => console.log(err));
@@ -117,8 +88,8 @@
                 location.href = '/';
             },
             sendToken(provider, token) {
-                return axios
-                    .post('/auth/' + provider + '/token', { 'token': token })
+                return request
+                    .post('/auth/' + provider + '/token', { 'token': token})
                     .then(this.handleToken)
                     .catch(err => console.log(err));
             }
