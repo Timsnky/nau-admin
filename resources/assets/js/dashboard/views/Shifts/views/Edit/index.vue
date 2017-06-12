@@ -48,6 +48,7 @@
     export default {
         data() {
             return {
+                date: this.$route.params.date,
                 users: [],
                 shift: {},
                 newShift: {}
@@ -78,7 +79,7 @@
                 if (author) {
                     request
                         .put(`/work-shifts/${this.shift.id}`, { author })
-                        .then(response => console.log(response))
+                        .then(response => this.$router.push({ name: 'resources.day', params: { date }}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -90,7 +91,7 @@
             },
 
             selectAuthor(author) {
-                this.newShift.author = author;
+//                this.newShift.author = author;
                 console.log(this.newShift);
             }
         }

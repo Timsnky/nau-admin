@@ -71,14 +71,14 @@ let routes = [{
         component: require('./views/Resources/views/Day'),
     }],
 }, {
-    path: '/shifts',
+    path: '/resource-management/day/:date/shifts',
     component: require('./views/Shifts'),
     children: [{
         path: 'create',
         name: 'shifts.create',
         component: require('./views/Shifts/views/Create'),
     }, {
-        path: ':id/edit',
+        path: ':id/assign',
         name: 'shifts.edit',
         component: require('./views/Shifts/views/Edit'),
     }],

@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import VueCookie from 'vue-cookie';
 import axios from 'axios';
 import moment from 'moment';
-import VueCookie from 'vue-cookie';
 
 window.Vue = Vue;
 Vue.use(VueRouter);
@@ -23,7 +23,7 @@ window.api = {
         Vue.cookie.set(key, value, { expires: '1h' });
     },
     deleteToken(key = 'token') {
-        Vue.cookie.delete(key, { domain: 'livesystems.ch' });
+        Vue.cookie.delete(key);
     }
 };
 

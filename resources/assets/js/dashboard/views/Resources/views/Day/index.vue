@@ -37,10 +37,11 @@
                             <li
                                 class="list-group-item clearfix"
                                 v-for="(shift, index) in day.shifts"
+                                v-if="!shift.assigned"
                                 :key="index">
                                 {{ shift.name }}
                                 <router-link
-                                    :to="{name: 'shifts.edit', params: { id: shift.id }}"
+                                    :to="{name: 'shifts.edit', params: { date, id: shift.id }}"
                                     class="btn btn-xs btn-info pull-right">
                                     Assign
                                 </router-link>

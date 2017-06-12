@@ -1674,7 +1674,7 @@ exports.default = {
             }
         },
         goBack: function goBack() {
-            this.$router.push('/');
+            this.$router.push('/login');
         }
     }
 };
@@ -3174,6 +3174,7 @@ exports.default = {
 //
 //
 //
+//
 
 /***/ }),
 
@@ -3706,6 +3707,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = {
     data: function data() {
         return {
+            date: this.$route.params.date,
             users: [],
             shift: {},
             newShift: {}
@@ -3735,12 +3737,14 @@ exports.default = {
 
     methods: {
         handleSubmit: function handleSubmit() {
+            var _this2 = this;
+
             var author = this.newShift.author;
 
 
             if (author) {
                 _request2.default.put('/work-shifts/' + this.shift.id, { author: author }).then(function (response) {
-                    return console.log(response);
+                    return _this2.$router.push({ name: 'resources.day', params: { date: date } });
                 }).catch(function (err) {
                     return console.log('Show some error message here');
                 });
@@ -3752,7 +3756,7 @@ exports.default = {
             this.newShift = (0, _pick3.default)(this.shift, ['author']);
         },
         selectAuthor: function selectAuthor(author) {
-            this.newShift.author = author;
+            //                this.newShift.author = author;
             console.log(this.newShift);
         }
     }
@@ -23433,7 +23437,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("\n                                Edit\n                            ")])], 1) : _vm._e()
   }), _vm._v(" "), _vm._l((_vm.day.shifts), function(shift, index) {
-    return _c('li', {
+    return (!shift.assigned) ? _c('li', {
       key: index,
       staticClass: "list-group-item clearfix"
     }, [_vm._v("\n                            " + _vm._s(shift.name) + "\n                            "), _c('router-link', {
@@ -23442,11 +23446,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "to": {
           name: 'shifts.edit',
           params: {
+            date: _vm.date,
             id: shift.id
           }
         }
       }
-    }, [_vm._v("\n                                Assign\n                            ")])], 1)
+    }, [_vm._v("\n                                Assign\n                            ")])], 1) : _vm._e()
   })], 2) : _c('h4', {
     staticClass: "text-center"
   }, [_vm._v("\n                        No shifts found\n                    ")])])])]), _vm._v(" "), _c('div', {
@@ -39286,6 +39291,10 @@ var _vuex = __webpack_require__("./node_modules/vuex/dist/vuex.esm.js");
 
 var _vuex2 = _interopRequireDefault(_vuex);
 
+var _vueCookie = __webpack_require__("./node_modules/vue-cookie/src/vue-cookie.js");
+
+var _vueCookie2 = _interopRequireDefault(_vueCookie);
+
 var _axios = __webpack_require__("./node_modules/axios/index.js");
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -39293,10 +39302,6 @@ var _axios2 = _interopRequireDefault(_axios);
 var _moment = __webpack_require__("./node_modules/moment/moment.js");
 
 var _moment2 = _interopRequireDefault(_moment);
-
-var _vueCookie = __webpack_require__("./node_modules/vue-cookie/src/vue-cookie.js");
-
-var _vueCookie2 = _interopRequireDefault(_vueCookie);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39322,7 +39327,7 @@ window.api = {
     deleteToken: function deleteToken() {
         var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'token';
 
-        _vue2.default.cookie.delete(key, { domain: 'livesystems.ch' });
+        _vue2.default.cookie.delete(key);
     }
 };
 
@@ -39430,14 +39435,14 @@ var routes = [{
         component: __webpack_require__("./resources/assets/js/dashboard/views/Resources/views/Day/index.vue")
     }]
 }, {
-    path: '/shifts',
+    path: '/resource-management/day/:date/shifts',
     component: __webpack_require__("./resources/assets/js/dashboard/views/Shifts/index.vue"),
     children: [{
         path: 'create',
         name: 'shifts.create',
         component: __webpack_require__("./resources/assets/js/dashboard/views/Shifts/views/Create/index.vue")
     }, {
-        path: ':id/edit',
+        path: ':id/assign',
         name: 'shifts.edit',
         component: __webpack_require__("./resources/assets/js/dashboard/views/Shifts/views/Edit/index.vue")
     }]
