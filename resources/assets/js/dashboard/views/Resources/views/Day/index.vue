@@ -29,7 +29,7 @@
                                 :key="index">
                                 {{ shift.name }} : {{ shift.assigned.name }}
                                 <router-link
-                                    :to="{name: 'shifts.edit', params: { id: shift.id }}"
+                                    :to="{name: 'shifts.associate', params: { id: shift.id }}"
                                     class="btn btn-xs btn-warning pull-right">
                                     Edit
                                 </router-link>
@@ -41,7 +41,7 @@
                                 :key="index">
                                 {{ shift.name }}
                                 <router-link
-                                    :to="{name: 'shifts.edit', params: { date, id: shift.id }}"
+                                    :to="{name: 'shifts.associate', params: { date, id: shift.id }}"
                                     class="btn btn-xs btn-info pull-right">
                                     Assign
                                 </router-link>
@@ -156,7 +156,6 @@
                 .then(response => {
                     this.day = response.data;
                     this.isLoaded = true;
-                    console.log(response.data);
                 })
                 .catch(err => {
                     this.isLoaded = true;

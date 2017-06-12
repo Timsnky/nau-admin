@@ -3,11 +3,11 @@
         class="form-control selectpicker"
         :disabled="options.length == 0">
         <option
-            v-for="option in options"
+            v-for="(option, index) in options"
             :key="option.id"
-            :value="option.id"
+            :value="index"
             :selected="option.selected">
-            {{ option.name }}
+            {{ option.display_name }}
         </option>
     </select>
 </template>
@@ -15,18 +15,9 @@
 <script>
     export default {
         props: {
-            users: {
-                type: Array,
-                default: function() {
-                    return [];
-                }
-            },
-            assignments: {
-                type: Array,
-                default: function() {
-                    return [];
-                }
-            },
+            users: Array,
+            assignments: Array,
+            newAssignment: {}
         },
 
         mounted() {
@@ -36,7 +27,7 @@
                 .selectpicker({
                     title: 'Select an author'
                 })
-                .on('changed.bs.select', () => this.$emit('selectAuthor', $selectpicker.val()));
+                .on('changed.bs.select', () => this.$emit('selectAuthor', this.users[$selectpicker.val()]));
         },
 
         updated () {
@@ -45,12 +36,13 @@
 
         computed: {
             options() {
-                const assignmentsArray = this.assignments.map(assignment => assignment.user_id);
-
-                return this.users.map(user => ({
-                    ...user,
-                    selected: assignmentsArray.includes(user.id)
+                const options = this.users.map(user => ({
+                    id: user.id,
+                    display_name: user.display_name,
+                    selected: user.id === this.newAssignment.user_id
                 }));
+
+                return options;
             }
         },
 

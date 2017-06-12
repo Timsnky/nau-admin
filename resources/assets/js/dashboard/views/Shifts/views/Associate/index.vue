@@ -1,7 +1,7 @@
 <template>
     <div>
         <page-title
-            title="Edit Shift"
+            title="Shift Association"
             sub="sub heading"/>
 
         <form @submit.prevent="handleSubmit">
@@ -17,7 +17,7 @@
                     <label for="author">Author</label>
                     <dropdown-users
                         :users="users"
-                        :assignments="shift.assignments"
+                        :newAssignment="newAssignment"
                         @selectAuthor="selectAuthor"/>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <button
                     class="btn btn-primary"
                     type="submit"
-                    :disabled="!newShift.author">
+                    :disabled="!newAssignment.user_id">
                     Associate
                 </button>
                 <button
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-    import _pick from 'lodash/pick';
     import request from 'dashboard/utils/request';
     import DropdownUsers from './components/DropdownUsers';
 
@@ -50,8 +49,11 @@
             return {
                 date: this.$route.params.date,
                 users: [],
-                shift: {},
-                newShift: {}
+                shift: {
+                    assignments: []
+                },
+                assignment: {},
+                newAssignment: {}
             }
         },
 
@@ -64,7 +66,6 @@
                 .get(`/work-shifts/${this.$route.params.id}`)
                 .then(response => {
                     this.shift = response.data;
-                    this.newShift = _pick(this.shift, ['author']);
 
                     return request.get(`/work-types/${response.data.work_type_id}/users`)
                 })
@@ -72,27 +73,66 @@
                 .catch(err => console.log('Show some error message here'));
         },
 
+        computed: {
+            assignments() {
+                return this.shift.assignments;
+            }
+        },
+
+        watch: {
+            assignments(newVal) {
+                const assignment = newVal.find(assignment => (
+                    moment(assignment.date).format('YYYY-MM-DD') === this.date
+                ));
+
+                if (assignment) {
+                    const { id, user_id } = assignment;
+
+                    this.assignment = { id, user_id };
+                    this.newAssignment = { id, user_id };
+                } else {
+                    this.assignment = {};
+                    this.newAssignment = {};
+                }
+            }
+        },
+
         methods: {
             handleSubmit() {
-                const { author } = this.newShift;
+                const { user_id } = this.newAssignment;
 
-                if (author) {
-                    request
-                        .put(`/work-shifts/${this.shift.id}`, { author })
-                        .then(response => this.$router.push({ name: 'resources.day', params: { date }}))
-                        .catch(err => console.log('Show some error message here'));
+                if (user_id) {
+                    if (this.assignment.id) {
+                        const { id } = this.newAssignment;
+
+                        request
+                            .put(`/work-shift-assignments/${id}`, { user_id })
+                            .then(response => this.$router.push({ name: 'resources.day', params: { date: this.date } }))
+                            .catch(err => console.log('Show some error message here'));
+                    } else {
+                        request
+                            .post('/work-shift-assignments', {
+                                user_id,
+                                date: this.date,
+                                work_shift_id: this.shift.id
+                            })
+                            .then(response => this.$router.push({ name: 'resources.day', params: { date: this.date } }))
+                            .catch(err => console.log('Show some error message here'));
+                    }
                 } else {
                     console.log('Show some error message here');
                 }
             },
 
             reset() {
-                this.newShift = _pick(this.shift, ['author']);
+                this.newAssignment = this.assignment;
             },
 
-            selectAuthor(author) {
-//                this.newShift.author = author;
-                console.log(this.newShift);
+            selectAuthor(user) {
+                this.newAssignment = {
+                    ...this.newAssignment,
+                    user_id: user.id
+                };
             }
         }
     }

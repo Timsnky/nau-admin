@@ -79,8 +79,8 @@ let routes = [{
         component: require('./views/Shifts/views/Create'),
     }, {
         path: ':id/assign',
-        name: 'shifts.edit',
-        component: require('./views/Shifts/views/Edit'),
+        name: 'shifts.associate',
+        component: require('./views/Shifts/views/Associate'),
     }],
 }, {
     path: '/holidays',

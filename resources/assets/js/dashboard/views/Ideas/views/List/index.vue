@@ -92,8 +92,8 @@
         },
 
         components: {
-            item: Item,
-            pagination: Pagination
+            Item,
+            Pagination
         },
 
         watch: {
