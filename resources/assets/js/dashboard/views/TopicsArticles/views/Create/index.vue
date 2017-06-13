@@ -68,6 +68,7 @@
     export default {
         data() {
             return {
+                date: this.$route.query.date,
                 article: {
                     title: '',
                     dateline: '',
@@ -89,7 +90,7 @@
                             internal_title: title,
                             internal_dateline: dateline
                         })
-                        .then(response => this.$router.push('/articles'))
+                        .then(response => this.$router.push({name: 'resources.day', params: { date: this.date }}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');

@@ -78,7 +78,7 @@
                                         <div class="panel-body">
                                             <h5 class="clearfix">{{ article.title }}
                                                 <router-link
-                                                    :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }}"
+                                                    :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
                                                     class="btn btn-xs btn-warning pull-right">
                                                     Edit
                                                 </router-link>
@@ -110,7 +110,7 @@
                                 </h4>
 
                                 <router-link
-                                    :to="{name: 'topics.articles.create', params: { topicID: topic.id }}"
+                                    :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
                                     class="btn btn-primary">
                                     Add Story
                                 </router-link>
