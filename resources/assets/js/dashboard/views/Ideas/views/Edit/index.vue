@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Create Idea" sub="sub heading"/>
+        <page-title title="Edit Idea" sub="sub heading"/>
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
@@ -10,7 +10,7 @@
                         id="title"
                         type="text"
                         name="title"
-                        v-model.trim="idea.title"
+                        v-model.trim="newIdea.title"
                         placeholder="Add title"
                         class="form-control">
                 </div>
@@ -20,8 +20,8 @@
                     <textarea
                         id="body"
                         name="body"
-                        v-model.trim="idea.body"
-                        placeholder="Add idea"
+                        v-model.trim="newIdea.body"
+                        placeholder="Edit idea"
                         class="form-control"
                         rows="5"></textarea>
                 </div>
@@ -31,7 +31,7 @@
                 <button
                     class="btn btn-primary"
                     type="submit"
-                    :disabled="!idea.title || !idea.body">
+                    :disabled="!newIdea.title || !newIdea.body">
                     Submit
                 </button>
                 <button
@@ -46,23 +46,34 @@
 </template>
 
 <script>
+    import _pick from 'lodash/pick';
+    import request from 'dashboard/utils/request';
+
     export default {
         data() {
             return {
-                idea: {
-                    title: '',
-                    body: ''
-                }
+                idea: {},
+                newIdea: {}
             }
+        },
+
+        mounted() {
+            request
+                .get(`/ideas/${this.$route.params.id}`)
+                .then(response => {
+                    this.idea = response.data;
+                    this.newIdea = _pick(this.idea, ['title', 'body']);
+                })
+                .catch(err => console.log('Show some error message here'));
         },
 
         methods: {
             handleSubmit() {
-                const { title, body } = this.idea;
+                const { title, body } = this.newIdea;
 
                 if (title && body) {
-                    axios
-                        .post('https://api-naut.livesystems.ch/ideas', { title, body })
+                    request
+                        .put(`/ideas/${this.idea.id}`, { title, body })
                         .then(response => this.$router.push('/ideas'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
@@ -71,10 +82,7 @@
             },
 
             reset() {
-                this.idea = {
-                    title: '',
-                    body: ''
-                }
+                this.newIdea = _pick(this.idea, ['title', 'body']);
             }
         }
     }

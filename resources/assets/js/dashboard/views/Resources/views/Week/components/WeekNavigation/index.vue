@@ -39,7 +39,7 @@
         },
 
         components: {
-            dropdownWeeks: DropdownWeeks,
+            DropdownWeeks,
         },
 
         methods: {

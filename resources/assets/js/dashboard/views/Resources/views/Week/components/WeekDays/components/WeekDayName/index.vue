@@ -9,7 +9,7 @@
         props: {
             day: Object
         },
-
+        
         computed: {
             url() {
                 return {
@@ -19,7 +19,7 @@
                     }
                 };
             },
-
+            
             dayName() {
                 return moment(this.day.date).format('dddd');
             }
@@ -27,20 +27,20 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     .day__name {
         background-color: #cccccc;
         height: auto;
         padding: 0;
-    }
-
-    .day__name a {
-        color: #333333;
-        display: block;
-        padding: 20px 10px;
-    }
-
-    .day__name a:hover {
-        color: #333333;
+        
+        a {
+            color: #333333;
+            display: block;
+            padding: 20px 10px;
+            
+            &:hover {
+                color: #333333;
+            }
+        }
     }
 </style>

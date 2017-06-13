@@ -34,6 +34,8 @@
 </template>
 
 <script>
+    import request from 'dashboard/utils/request';
+
     export default {
         data() {
             return {
@@ -42,8 +44,8 @@
         },
 
         mounted() {
-            axios
-                .get(`https://api-naut.livesystems.ch/ideas/${this.$route.params.id}`)
+            request
+                .get(`/ideas/${this.$route.params.id}`)
                 .then(response => this.idea = response.data)
                 .catch(err => console.log('Show some error message here'));
         },

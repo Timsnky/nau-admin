@@ -22,7 +22,8 @@
                 .datepicker({
                     format: "yyyy-mm-dd",
                     orientation: "bottom left",
-                    autoclose: true
+                    autoclose: true,
+                    weekStart: 1
                 })
                 .on("changeDate", () => this.$emit('changeDate', $datepicker.val()));
         },

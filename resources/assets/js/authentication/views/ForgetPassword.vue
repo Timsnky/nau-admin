@@ -57,7 +57,7 @@
             },
 
             goBack() {
-                this.$router.push('/');
+                this.$router.push('/login');
             }
         }
     }

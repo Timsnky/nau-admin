@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 
 let routes = [{
     path: '/',
@@ -13,6 +13,26 @@ let routes = [{
         path: '',
         name: 'articles.list',
         component: require('./views/Articles/views/List'),
+    }],
+}, {
+    path: '/ideas',
+    component: require('./views/Ideas'),
+    children: [{
+        path: 'create',
+        name: 'ideas.create',
+        component: require('./views/Ideas/views/Create'),
+    }, {
+        path: ':id',
+        name: 'ideas.show',
+        component: require('./views/Ideas/views/Show'),
+    }, {
+        path: ':id/edit',
+        name: 'ideas.edit',
+        component: require('./views/Ideas/views/Edit'),
+    }, {
+        path: '',
+        name: 'ideas.list',
+        component: require('./views/Ideas/views/List'),
     }],
 }, {
     path: '/topics',
@@ -51,16 +71,16 @@ let routes = [{
         component: require('./views/Resources/views/Day'),
     }],
 }, {
-    path: '/shifts',
+    path: '/resource-management/day/:date/shifts',
     component: require('./views/Shifts'),
     children: [{
         path: 'create',
         name: 'shifts.create',
         component: require('./views/Shifts/views/Create'),
     }, {
-        path: ':id/edit',
-        name: 'shifts.edit',
-        component: require('./views/Shifts/views/Edit'),
+        path: ':id/assign',
+        name: 'shifts.associate',
+        component: require('./views/Shifts/views/Associate'),
     }],
 }, {
     path: '/holidays',

@@ -90,7 +90,13 @@
 
                 if (title && lead && dateline) {
                     request
-                        .put(`/topics/${this.$route.params.topicID}/articles/${this.article.id}`, { title, lead, dateline })
+                        .put(`/topics/${this.$route.params.topicID}/articles/${this.article.id}`, {
+                            title,
+                            lead,
+                            dateline,
+                            internal_title: title,
+                            internal_dateline: dateline
+                        })
                         .then(response => this.$router.push('/articles'))
                         .catch(err => console.log('Show some error message here'));
                 } else {

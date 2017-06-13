@@ -29,7 +29,7 @@
                                 :key="index">
                                 {{ shift.name }} : {{ shift.assigned.name }}
                                 <router-link
-                                    :to="{name: 'shifts.edit', params: { id: shift.id }}"
+                                    :to="{name: 'shifts.associate', params: { id: shift.id }}"
                                     class="btn btn-xs btn-warning pull-right">
                                     Edit
                                 </router-link>
@@ -37,10 +37,11 @@
                             <li
                                 class="list-group-item clearfix"
                                 v-for="(shift, index) in day.shifts"
+                                v-if="!shift.assigned"
                                 :key="index">
                                 {{ shift.name }}
                                 <router-link
-                                    :to="{name: 'shifts.edit', params: { id: shift.id }}"
+                                    :to="{name: 'shifts.associate', params: { date, id: shift.id }}"
                                     class="btn btn-xs btn-info pull-right">
                                     Assign
                                 </router-link>
@@ -85,13 +86,19 @@
 
                                             <ul
                                                 class="list-group"
-                                                v-if="article.users.length > 0">
+                                                v-if="article.authors.length > 0">
                                                 <li
                                                     class="list-group-item"
-                                                    v-for="user in article.users">
-                                                    {{ user.name }}
+                                                    v-for="author in article.authors">
+                                                    {{ author.name }}
                                                 </li>
                                             </ul>
+
+                                            <h5
+                                                v-else
+                                                class="text-center">
+                                                No authors found
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +156,6 @@
                 .then(response => {
                     this.day = response.data;
                     this.isLoaded = true;
-                    console.log(response.data);
                 })
                 .catch(err => {
                     this.isLoaded = true;
