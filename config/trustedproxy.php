@@ -25,7 +25,7 @@ return [
      * subsequently passed through.
      */
     'proxies' => [
-        '192.168.168.0/24',
+        '127.0.0.1',
     ],
 
     /*
