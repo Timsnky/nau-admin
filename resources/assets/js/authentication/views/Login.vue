@@ -56,7 +56,7 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
+    import api from 'dashboard/utils/api';
 
     export default {
         data() {
@@ -76,7 +76,7 @@
                 if (email && password) {
                     this.hasErrors = false;
 
-                    request
+                    api.request
                         .post('/token', { email, password })
                         .then(this.handleToken)
                         .catch(err => console.log(err));
@@ -91,7 +91,7 @@
                 location.href = '/';
             },
             sendToken(provider, token) {
-                return request
+                return api.request
                     .post('/auth/' + provider + '/token', { 'token': token})
 
                     .then(this.handleToken)
@@ -99,7 +99,7 @@
             }
         },
         mounted() {
-            if (api.getToken() !== null) {
+            if (api.user()) {
                 location.href = '/';
             }
         }

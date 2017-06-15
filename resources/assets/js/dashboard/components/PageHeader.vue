@@ -403,10 +403,12 @@
 </template>
 
 <script>
+    import api from '../utils/api';
+
     export default {
         methods: {
             logout() {
-                api.deleteToken();
+                api.invalidateToken();
                 location.href = "/login";
             }
         }

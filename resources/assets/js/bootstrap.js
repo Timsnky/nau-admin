@@ -15,18 +15,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = moment;
 window.moment.locale('en-gb');
 
-window.api = {
-    getToken(key = 'token') {
-        return Vue.cookie.get(key);
-    },
-    setToken(key, value) {
-        Vue.cookie.set(key, value, { expires: '1h' });
-    },
-    deleteToken(key = 'token') {
-        Vue.cookie.delete(key);
-    }
-};
-
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

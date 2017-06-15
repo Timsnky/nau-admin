@@ -405,12 +405,12 @@
 </template>
 
 <script>
+    import api from '../utils/api';
+
     export default {
         methods: {
             logout() {
-                console.log(api);
                 api.deleteToken();
-                // location.href = "/login";
             }
         }
     }

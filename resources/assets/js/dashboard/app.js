@@ -1,7 +1,10 @@
 import '../bootstrap';
-
 import { store } from '../store/Store';
+import api from './utils/api';
 import router from './Router';
+
+// Check auth status
+store.dispatch('LOAD_AUTENTICATED_USER');
 
 router.beforeEach((to, from, next) => {
     if (!api.getToken()) {
@@ -26,12 +29,6 @@ Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
 
 const app = new Vue({
     el: '#app',
-
     store,
-
     router,
-
-    mounted() {
-        console.log(this.$store.state, this.$router);
-    }
 });
