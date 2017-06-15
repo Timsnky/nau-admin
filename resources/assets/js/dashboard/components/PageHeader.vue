@@ -56,8 +56,11 @@
         },
         methods: {
             logout() {
-                api.invalidateToken();
-                location.href = "/login";
+                api.invalidateToken().then((response) => {
+                    location.href = '/login';
+                }, (error) => {
+                    location.href = '/login';
+                });
             }
         }
     }

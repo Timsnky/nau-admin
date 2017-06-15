@@ -14,11 +14,17 @@ export const store = new Vuex.Store({
             })
         },
         LOGOUT: function ({ commit }) {
-            api.request.post('/token/invalidate').then((response) => {
-                commit('LOGOUT')
-            }, (err) => {
-                console.log(err)
+            return new Promise((resolve, reject) => {
+                // Do something here... lets say, a http call using vue-resource
+                api.request.post('/token/invalidate').then((response) => {
+                    commit('LOGOUT');
+                    resolve(response);
+                }, (error) => {
+                    reject(error);
+                })
             })
+
+
         }
     },
     mutations: {

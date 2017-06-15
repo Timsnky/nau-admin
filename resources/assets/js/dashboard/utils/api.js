@@ -9,7 +9,7 @@ const api = {
         Vue.cookie.set(key, value, { expires: '1h' });
     },
     invalidateToken(key = 'token') {
-        store.dispatch('LOGOUT');
+        return store.dispatch('LOGOUT');
     },
     deleteToken(key = 'token') {
         var parts = location.hostname.split('.');
