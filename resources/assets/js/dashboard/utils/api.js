@@ -11,6 +11,13 @@ const api = {
     invalidateToken(key = 'token') {
         store.dispatch('LOGOUT');
     },
+    deleteToken(key = 'token') {
+        var parts = location.hostname.split('.');
+        var subdomain = parts.shift();
+        var upperleveldomain = parts.join('.');
+
+        Vue.cookie.delete(key, {domain: upperleveldomain})
+    },
     user() {
         return store.state.user;
     }
@@ -30,14 +37,16 @@ request.interceptors.request.use(config => {
     }
 
     return config;
-}, error => console.log(error));
+}, error => { return Promise.reject(error) });
 
-request.interceptors.response.use(undefined, error => {
+request.interceptors.response.use(response => { return response } , error => {
     const status = error.response.status;
 
     if (status === 401) {
         api.deleteToken();
     }
+
+    return Promise.reject(error);
 });
 
 api.request = request;

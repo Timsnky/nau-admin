@@ -2,26 +2,21 @@
     <div>
         <form class="login-form" @submit.prevent="signIn">
             <h3 class="form-title font-green">Sign In</h3>
-            <div
-                class="alert alert-danger"
-                v-if="hasErrors">
-                <button class="close" data-close="alert"></button>
-                <span> Enter your username and password. </span>
-            </div>
-            <div class="form-group">
-                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                <label class="control-label visible-ie8 visible-ie9">Username</label>
+            <div :class="{ 'form-group': true, 'has-error': errors.email }">
                 <input
-                    class="form-control form-control-solid placeholder-no-fix"
-                    type="text"
+                    class="form-control"
+                    type="email"
                     autocomplete="off"
+                    required
+                    autofocus
                     placeholder="Email"
                     name="email"
                     v-model="user.email"/>
+                    <span v-if="errors.email" class="help-block">{{ errors.email[0] }}</span>
             </div>
-            <div class="form-group">
-                <label class="control-label visible-ie8 visible-ie9">Password</label>
+            <div :class="{ 'form-group': true, 'has-error': errors.password }">
                 <input
+                    required
                     class="form-control form-control-solid placeholder-no-fix"
                     type="password"
                     autocomplete="off"
@@ -29,18 +24,19 @@
                     name="password"
                     v-model="user.password"/>
             </div>
+            <span v-if="errors.passwordemail" class="help-block">{{ errors.password[0] }}</span>
             <div class="form-actions">
                 <button
                     type="submit"
                     class="btn green uppercase">
                     Login
                 </button>
-                <router-link
+                <!-- <router-link
                     to="/forget-password"
                     id="forget-password"
                     class="forget-password">
                     Forgot Password?
-                </router-link>
+                </router-link> -->
             </div>
         </form>
         <a :href="social('twitter')" class="btn btn-block btn-social btn-twitter">
@@ -65,7 +61,7 @@
                     email: '',
                     password: '',
                 },
-                hasErrors: false
+                errors: {}
             };
         },
 
@@ -77,24 +73,27 @@
                 const { email, password } = this.user;
 
                 if (email && password) {
-                    this.hasErrors = false;
-
                     api.request
                         .post('/token', { email, password })
-                        .then((response) => {
+                        .then(response => {
                             const { token } = response.data;
                             api.setToken('token', token);
 
                             location.href = '/';
                         })
-                        .catch(err => console.log(err));
-                } else {
-                    this.hasErrors = true;
+                        .catch((error) => {
+                            if(error.response.status === 401) {
+                                this.errors = {
+                                    'email': [error.response.data.message]
+                                };
+                            } else {
+                                this.errors = error.response.data.errors;
+                            }
+                        });
                 }
             }
         },
         mounted() {
-            console.log(api.user().id);
             if (api.user().id) {
                 location.href = '/';
             }
@@ -103,7 +102,5 @@
 </script>
 
 <style scoped>
-    .form-actions {
-        border: none !important;
-    }
+
 </style>

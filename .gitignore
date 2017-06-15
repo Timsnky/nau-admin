@@ -2,7 +2,10 @@
 /public/hot
 /public/storage
 /public/css/app*.css
+/public/css/login*.css
 /public/js/app*.js
+/public/js/login*.js
+/public/mix-manifest.json
 /storage/*.key
 /vendor
 /.idea
