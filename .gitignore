@@ -10,3 +10,4 @@ Homestead.yaml
 npm-debug.log
 .env
 Thumbs.db
+/resources/assets/js/environment.js

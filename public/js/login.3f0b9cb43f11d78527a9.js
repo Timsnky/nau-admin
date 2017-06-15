@@ -31954,6 +31954,10 @@ module.exports = Component.exports
 "use strict";
 
 
+var _environment = __webpack_require__("./resources/assets/js/environment.js");
+
+var _environment2 = _interopRequireDefault(_environment);
+
 var _vue = __webpack_require__("./node_modules/vue/dist/vue.common.js");
 
 var _vue2 = _interopRequireDefault(_vue);
@@ -31979,6 +31983,8 @@ var _moment = __webpack_require__("./node_modules/moment/moment.js");
 var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.env = _environment2.default;
 
 window.Vue = _vue2.default;
 _vue2.default.use(_vueRouter2.default);
@@ -32020,7 +32026,7 @@ Object.defineProperty(exports, "__esModule", {
 var _Store = __webpack_require__("./resources/assets/js/store/Store.js");
 
 var api = {
-    baseURL: 'https://api.nau.dev',
+    baseURL: env.API_DOMAIN,
     getToken: function getToken() {
         var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'token';
 
@@ -32067,6 +32073,21 @@ request.interceptors.response.use(undefined, function (error) {
 api.request = request;
 
 exports.default = api;
+
+/***/ }),
+
+/***/ "./resources/assets/js/environment.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    API_DOMAIN: 'http://api.nau.dev'
+};
 
 /***/ }),
 

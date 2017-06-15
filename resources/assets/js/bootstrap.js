@@ -1,9 +1,12 @@
+import env from './environment';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import VueCookie from 'vue-cookie';
 import axios from 'axios';
 import moment from 'moment';
+
+window.env = env;
 
 window.Vue = Vue;
 Vue.use(VueRouter);

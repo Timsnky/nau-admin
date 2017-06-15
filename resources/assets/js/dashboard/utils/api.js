@@ -1,7 +1,7 @@
 import { store } from '../../store/Store';
 
 const api = {
-    baseURL: 'https://api.nau.dev',
+    baseURL: env.API_DOMAIN,
     getToken(key = 'token') {
         return Vue.cookie.get(key);
     },
