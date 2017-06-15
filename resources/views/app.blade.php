@@ -55,7 +55,7 @@
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
                     <!-- BEGIN PAGE HEADER-->
-                    <page-bar></page-bar>
+                    {{-- <page-bar></page-bar> --}}
                     <!-- END PAGE HEADER-->
                     <router-view></router-view>
                 </div>
