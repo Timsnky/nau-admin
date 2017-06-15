@@ -102,5 +102,7 @@
 </script>
 
 <style scoped>
-
+    .form-actions {
+        border: none !important;
+    }
 </style>

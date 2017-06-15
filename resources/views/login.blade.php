@@ -42,6 +42,14 @@
     <!-- BEGIN THEME LAYOUT STYLES -->
     <!-- END THEME LAYOUT STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
+
+    <style type="text/css">
+        @media (max-width: 440px) {
+            .login .content {
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 <!-- END HEAD -->
 
