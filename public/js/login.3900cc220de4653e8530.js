@@ -1737,7 +1737,8 @@ exports.default = {
         }
     },
     mounted: function mounted() {
-        if (_api2.default.user()) {
+        console.log(_api2.default.user().id);
+        if (_api2.default.user().id) {
             location.href = '/';
         }
     }
@@ -31823,11 +31824,15 @@ var _vueRouter2 = _interopRequireDefault(_vueRouter);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var routes = [{
-    path: '/login',
-    component: __webpack_require__("./resources/assets/js/authentication/views/Login.vue")
-}, {
     path: '/forget-password',
     component: __webpack_require__("./resources/assets/js/authentication/views/ForgetPassword.vue")
+}, {
+    path: '/login',
+    name: 'login',
+    component: __webpack_require__("./resources/assets/js/authentication/views/Login.vue")
+}, {
+    path: '*',
+    redirect: { name: 'login' }
 }];
 
 exports.default = new _vueRouter2.default({

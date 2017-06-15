@@ -94,7 +94,8 @@
             }
         },
         mounted() {
-            if (api.user()) {
+            console.log(api.user().id);
+            if (api.user().id) {
                 location.href = '/';
             }
         }

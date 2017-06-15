@@ -3467,6 +3467,10 @@ exports.default = {
 //
 //
 //
+//
+//
+//
+//
 
 /***/ }),
 
@@ -24368,10 +24372,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": "Ideas",
       "sub": "List"
     }
-  }), _vm._v(" "), (_vm.ideas.length > 0 || _vm.searchTerm !== '') ? _c('div', {
-    staticClass: "clearfix"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row"
   }, [_c('div', {
-    staticClass: "input-icon pull-left"
+    staticClass: "col-md-6"
+  }, [(_vm.ideas.length > 0 || _vm.searchTerm !== '') ? _c('div', {
+    staticClass: "input-icon"
   }, [_c('i', {
     staticClass: "fa fa-search"
   }), _vm._v(" "), _c('input', {
@@ -24402,14 +24408,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$forceUpdate()
       }
     }
-  })]), _vm._v(" "), _c('router-link', {
+  })]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-6 text-right"
+  }, [_c('router-link', {
     staticClass: "btn btn-primary pull-right",
     attrs: {
       "to": {
         name: 'ideas.create'
       }
     }
-  }, [_vm._v("\n            Create\n        ")])], 1) : _vm._e(), _vm._v(" "), (!_vm.isLoaded) ? _c('h2', {
+  }, [_vm._v("\n                Create\n            ")])], 1)]), _vm._v(" "), (!_vm.isLoaded) ? _c('h2', {
     staticClass: "text-center"
   }, [_vm._v("Loading...")]) : (_vm.ideas.length > 0) ? _c('div', [_c('div', {
     staticClass: "table-scrollable"
@@ -40803,6 +40811,9 @@ var routes = [{
     component: __webpack_require__("./resources/assets/js/dashboard/views/Home.vue"),
     name: 'home'
 }, {
+    path: '/login',
+    redirect: { 'name': 'home' }
+}, {
     path: '/about',
     component: __webpack_require__("./resources/assets/js/dashboard/views/About.vue")
 }, {
@@ -40898,8 +40909,7 @@ var routes = [{
         component: __webpack_require__("./resources/assets/js/dashboard/views/Holidays/views/List/index.vue")
     }]
 }, {
-    path: '/error',
-    name: 'error',
+    path: "*",
     component: __webpack_require__("./resources/assets/js/dashboard/views/Error.vue")
 }];
 

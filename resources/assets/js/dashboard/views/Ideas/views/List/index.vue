@@ -1,22 +1,26 @@
 <template>
     <div>
         <page-title title="Ideas" sub="List"/>
-        <div v-if="ideas.length > 0 || searchTerm !== ''" class="clearfix">
-            <div class="input-icon pull-left">
-                <i class="fa fa-search"></i>
-                <input
-                    type="search"
-                    class="form-control"
-                    placeholder="Search"
-                    name="searchTerm"
-                    v-model.trim="searchTerm">
+        <div class="row">
+            <div class="col-md-6">
+                <div v-if="ideas.length > 0 || searchTerm !== ''" class="input-icon">
+                    <i class="fa fa-search"></i>
+                    <input
+                        type="search"
+                        class="form-control"
+                        placeholder="Search"
+                        name="searchTerm"
+                        v-model.trim="searchTerm">
+                </div>
             </div>
 
-            <router-link
-                :to="{name: 'ideas.create'}"
-                class="btn btn-primary pull-right">
-                Create
-            </router-link>
+            <div class="col-md-6 text-right">
+                <router-link
+                    :to="{name: 'ideas.create'}"
+                    class="btn btn-primary pull-right">
+                    Create
+                </router-link>
+            </div>
         </div>
 
         <h2 v-if="!isLoaded" class="text-center">Loading...</h2>

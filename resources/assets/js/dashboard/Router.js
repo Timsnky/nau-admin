@@ -3,7 +3,10 @@ import VueRouter from 'vue-router';
 let routes = [{
     path: '/',
     component: require('./views/Home'),
-    name: 'home'
+    name: 'home',
+}, {
+    path: '/login',
+    redirect: { 'name': 'home'},
 }, {
     path: '/about',
     component: require('./views/About')
@@ -99,11 +102,12 @@ let routes = [{
         name: 'holidays.list',
         component: require('./views/Holidays/views/List'),
     }],
-}, {
-    path: '/error',
-    name: 'error',
+},
+{
+    path: "*",
     component: require('./views/Error'),
-}];
+}
+];
 
 export default new VueRouter({
     routes,
