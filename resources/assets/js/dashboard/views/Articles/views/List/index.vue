@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="All Articles"
-            sub="sub heading"/>
+        <page-title title="Articles" />
 
         <div class="table-scrollable">
             <table class="table table-hover">

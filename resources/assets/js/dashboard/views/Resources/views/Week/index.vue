@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="Week View"
-            sub="sub heading"/>
+        <page-title title="Resource Management" sub="Week View"/>
 
         <week-navigation
             :year="year"

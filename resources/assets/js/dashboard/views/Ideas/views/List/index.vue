@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Idea List" sub="sub heading"/>
+        <page-title title="Ideas" sub="List"/>
         <div v-if="ideas.length > 0 || searchTerm !== ''" class="clearfix">
             <div class="input-icon pull-left">
                 <i class="fa fa-search"></i>

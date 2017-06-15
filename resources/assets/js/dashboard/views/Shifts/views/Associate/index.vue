@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="Shift Association"
-            sub="sub heading"/>
+        <page-title title="Shift Association" />
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">

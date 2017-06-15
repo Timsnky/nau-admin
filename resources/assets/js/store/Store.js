@@ -3,7 +3,7 @@ import api from '../dashboard/utils/api';
 
 export const store = new Vuex.Store({
 	state: {
-		'user': null
+		'user': {}
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {

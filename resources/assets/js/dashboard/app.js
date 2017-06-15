@@ -23,7 +23,6 @@ router.beforeEach((to, from, next) => {
 Vue.component('pageHeader', require('./components/PageHeader.vue'));
 Vue.component('pageSidebar', require('./components/PageSidebar.vue'));
 Vue.component('pageFooter', require('./components/PageFooter.vue'));
-Vue.component('pageBar', require('./components/PageBar.vue'));
 Vue.component('pageTitle', require('./components/PageTitle.vue'));
 Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
 

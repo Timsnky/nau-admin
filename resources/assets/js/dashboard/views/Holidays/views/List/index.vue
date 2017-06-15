@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="Holidays List"
-            sub="sub heading"/>
+        <page-title title="Holidays" sub="List" />
 
         <div class="row">
             <div class="col-xs-12 text-right">

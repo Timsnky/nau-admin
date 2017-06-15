@@ -43,13 +43,13 @@
                 </router-link>
             </div>
         </form>
-        <a href="https://api-naut.livesystems.ch/auth/twitter" class="btn btn-block btn-social btn-twitter">
+        <a :href="social('twitter')" class="btn btn-block btn-social btn-twitter">
             <span class="fa fa-twitter"></span> Sign in with Twitter
         </a>
-        <a href="https://api-naut.livesystems.ch/auth/google" class="btn btn-block btn-social btn-google">
+        <a :href="social('google')" class="btn btn-block btn-social btn-google">
             <span class="fa fa-google"></span> Sign in with Google
         </a>
-        <a href="https://api-naut.livesystems.ch/auth/facebook" class="btn btn-block btn-social btn-facebook">
+        <a :href="social('facebook')" class="btn btn-block btn-social btn-facebook">
             <span class="fa fa-facebook"></span> Sign in with Facebook
         </a>
     </div>
@@ -70,6 +70,9 @@
         },
 
         methods: {
+            social(provider) {
+                return api.baseURL + '/auth/' + provider + '?redirect=' + window.location.origin;
+            },
             signIn() {
                 const { email, password } = this.user;
 
@@ -78,24 +81,16 @@
 
                     api.request
                         .post('/token', { email, password })
-                        .then(this.handleToken)
+                        .then((response) => {
+                            const { token } = response.data;
+                            api.setToken('token', token);
+
+                            location.href = '/';
+                        })
                         .catch(err => console.log(err));
                 } else {
                     this.hasErrors = true;
                 }
-            },
-            handleToken(response) {
-                const { token } = response.data;
-                api.setToken('token', token);
-
-                location.href = '/';
-            },
-            sendToken(provider, token) {
-                return api.request
-                    .post('/auth/' + provider + '/token', { 'token': token})
-
-                    .then(this.handleToken)
-                    .catch(err => console.log(err));
             }
         },
         mounted() {

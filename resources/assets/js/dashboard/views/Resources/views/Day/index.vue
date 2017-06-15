@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="Day View"
-            sub="sub heading"/>
+        <page-title title="Resource Management" sub="Day View" />
 
         <h2
             v-if="!isLoaded"

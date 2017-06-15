@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Idea Show" sub="sub heading"/>
+        <page-title title="Idea"/>
 
         <form>
             <div class="form-body">

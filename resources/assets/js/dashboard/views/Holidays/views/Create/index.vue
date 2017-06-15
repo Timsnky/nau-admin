@@ -1,8 +1,6 @@
 <template>
     <div>
-        <page-title
-            title="Create Holiday"
-            sub="sub heading"/>
+        <page-title title="Holidays" sub="Create" />
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">

@@ -1710,6 +1710,9 @@ exports.default = {
 
 
     methods: {
+        social: function social(provider) {
+            return _api2.default.baseURL + '/auth/' + provider + '?redirect=' + window.location.origin;
+        },
         signIn: function signIn() {
             var _user = this.user,
                 email = _user.email,
@@ -1719,24 +1722,18 @@ exports.default = {
             if (email && password) {
                 this.hasErrors = false;
 
-                _api2.default.request.post('/token', { email: email, password: password }).then(this.handleToken).catch(function (err) {
+                _api2.default.request.post('/token', { email: email, password: password }).then(function (response) {
+                    var token = response.data.token;
+
+                    _api2.default.setToken('token', token);
+
+                    location.href = '/';
+                }).catch(function (err) {
                     return console.log(err);
                 });
             } else {
                 this.hasErrors = true;
             }
-        },
-        handleToken: function handleToken(response) {
-            var token = response.data.token;
-
-            _api2.default.setToken('token', token);
-
-            location.href = '/';
-        },
-        sendToken: function sendToken(provider, token) {
-            return _api2.default.request.post('/auth/' + provider + '/token', { 'token': token }).then(this.handleToken).catch(function (err) {
-                return console.log(err);
-            });
         }
     },
     mounted: function mounted() {
@@ -18422,35 +18419,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "to": "/forget-password",
       "id": "forget-password"
     }
-  }, [_vm._v("\n                Forgot Password?\n            ")])], 1)]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
+  }, [_vm._v("\n                Forgot Password?\n            ")])], 1)]), _vm._v(" "), _c('a', {
     staticClass: "btn btn-block btn-social btn-twitter",
     attrs: {
-      "href": "https://api-naut.livesystems.ch/auth/twitter"
+      "href": _vm.social('twitter')
     }
   }, [_c('span', {
     staticClass: "fa fa-twitter"
-  }), _vm._v(" Sign in with Twitter\n    ")])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
+  }), _vm._v(" Sign in with Twitter\n    ")]), _vm._v(" "), _c('a', {
     staticClass: "btn btn-block btn-social btn-google",
     attrs: {
-      "href": "https://api-naut.livesystems.ch/auth/google"
+      "href": _vm.social('google')
     }
   }, [_c('span', {
     staticClass: "fa fa-google"
-  }), _vm._v(" Sign in with Google\n    ")])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
+  }), _vm._v(" Sign in with Google\n    ")]), _vm._v(" "), _c('a', {
     staticClass: "btn btn-block btn-social btn-facebook",
     attrs: {
-      "href": "https://api-naut.livesystems.ch/auth/facebook"
+      "href": _vm.social('facebook')
     }
   }, [_c('span', {
     staticClass: "fa fa-facebook"
-  }), _vm._v(" Sign in with Facebook\n    ")])
-}]}
+  }), _vm._v(" Sign in with Facebook\n    ")])])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -32114,7 +32105,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var store = exports.store = new _vuex2.default.Store({
     state: {
-        'user': null
+        'user': {}
     },
     actions: {
         LOAD_AUTENTICATED_USER: function LOAD_AUTENTICATED_USER(_ref) {
