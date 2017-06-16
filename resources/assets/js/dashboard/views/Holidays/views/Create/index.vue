@@ -61,12 +61,12 @@
 
         methods: {
             handleSubmit() {
-                const { title, lead, dateline } = this.article;
+                const { name, date } = this.holiday;
 
-                if (title && lead && dateline) {
+                if (name && date) {
                     request
-                        .post('/articles', { title, lead, dateline })
-                        .then(response => this.$router.push('/articles'))
+                        .post('/holidays', { name, date })
+                        .then(response => this.$router.push('/holidays'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
