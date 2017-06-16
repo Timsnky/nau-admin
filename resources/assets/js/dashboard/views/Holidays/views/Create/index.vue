@@ -28,7 +28,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!holiday.name || !holiday.date">
-                    Submit
+                    Create
                 </button>
                 <button
                     class="btn btn-default"
@@ -36,6 +36,7 @@
                     @click="reset">
                     Reset
                 </button>
+                <router-link class="btn btn-danger" :to="{name: 'holidays.list'}">Cancel</router-link>
             </div>
         </form>
     </div>
@@ -66,7 +67,7 @@
                 if (name && date) {
                     request
                         .post('/holidays', { name, date })
-                        .then(response => this.$router.push('/holidays'))
+                        .then(response => this.$router.push({name: 'holidays.list'}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');

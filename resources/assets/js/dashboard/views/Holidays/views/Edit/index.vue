@@ -28,7 +28,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!newHoliday.name || !newHoliday.date">
-                    Submit
+                    Edit
                 </button>
                 <button
                     class="btn btn-default"
@@ -36,6 +36,7 @@
                     @click="reset">
                     Reset
                 </button>
+                <router-link class="btn btn-danger" :to="{name: 'holidays.list'}">Cancel</router-link>
             </div>
         </form>
     </div>
