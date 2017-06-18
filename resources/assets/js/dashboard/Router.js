@@ -104,6 +104,32 @@ let routes = [{
     }],
 },
 {
+    path: '/images',
+    component: require('./views/Images'),
+    children: [
+        {
+            path: 'create',
+            name: 'images.create',
+            component: require('./views/Images/views/Create'),
+        },
+        {
+            path: '',
+            name: 'images.list',
+            component: require('./views/Images/views/List'),
+        },
+        // {
+        //     path: ':id',
+        //     name: 'images.show',
+        //     component: require('./views/Images/views/Show'),
+        // },
+        // {
+        //     path: ':id/edit',
+        //     name: 'images.edit',
+        //     component: require('./views/Images/views/Edit'),
+        // }
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }

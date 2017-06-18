@@ -63,6 +63,14 @@
                         <span class="title">Ideas</span>
                     </a>
                 </router-link>
+
+                <!--Images -->
+                <router-link :to="{name: 'images.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-image"></i>
+                        <span class="title">Images</span>
+                    </a>
+                </router-link>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->
