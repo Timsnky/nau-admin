@@ -4,22 +4,23 @@
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
-                <div class="drop align-center" @dragover.prevent @drop="onDrop">
-                    <div class="helper"></div>
-                    <label v-if="!imageupload" class="fa fa-upload">
-                        SELECT OR DROP AN IMAGE
-                        <input type="file" name="imageupload" @change="onChange">
-                    </label>
-                    <div class="hidden display-inline align-center" v-else v-bind:class="{ 'image': true }">
-                        <img :src="imageupload" alt="" class="img"/>
-                        <br>
-                        <br>
-                        <button class="btn" @click="removeFile">REMOVE</button>
+                <div class="image_dropbox">
+                    <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
+                    <p v-if="!imageupload">
+                        Drag your image here to begin<br> or click to browse
+                    </p>
+                    <div class="image_hidden_section display-inline align-center" v-else v-bind:class="{ 'image': true }">
+                        <div class="image_hidden_section_image">
+                            <img :src="imageupload" alt="" class="img"/>
+                        </div>
+                        <div class="image_hidden_section_remove">
+                            <button class="btn btn-danger" @click="removeFile">Remove image</button>
+                        </div>
                     </div>
                     </label>
                 </div>
 
-                <div class="form-group">
+                <div v-if="imageupload" class="form-group">
                     <label for="name">Name</label>
                     <input
                             id="name"
@@ -30,7 +31,7 @@
                             class="form-control">
                 </div>
 
-                <div class="form-group">
+                <div v-if="imageupload" class="form-group">
                     <label for="lead">Lead</label>
                     <textarea
                             id="lead"
@@ -41,7 +42,7 @@
                             rows="3"></textarea>
                 </div>
 
-                <div class="form-group">
+                <div v-if="imageupload" class="form-group">
                     <label for="name">Source</label>
                     <input
                             id="source"
@@ -53,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="form-actions">
+            <div v-if="imageupload" class="form-actions">
                 <button
                         class="btn btn-primary"
                         type="submit"
@@ -95,9 +96,9 @@
                     request
                         .post('/images', {name, lead, source, image})
                         .then(response => this.$router.push('/images'))
-                        .catch(err => console.log('Show some error message here'));
+                        .catch(err => console.log('Error in uploading the Image. Please retry the upload'));
                 } else {
-                    console.log('Show some error message here');
+                    console.log('Please provide the name, lead and source for the image');
                 }
             },
 
@@ -108,28 +109,35 @@
                     source: '',
                     image: ''
                 }
+                this.imageupload = null;
             },
 
             onDrop(e) {
                 e.stopPropagation();
                 e.preventDefault();
                 const files = e.dataTransfer.files;
-                this.createFile(files[0]);
+                let file = files[0];
+                this.image.name = this.getFileName(file.name);
+                this.createFile(file);
+            },
+
+            getFileName(name) {
+                return name.split('.')[0];
             },
 
             onChange(e) {
                 let files = e.target.files;
                 let file = files[0];
-                this.image.name = file.name;
+                this.image.name = this.getFileName(file.name);
                 this.createFile(file);
             },
 
             createFile(file) {
                 if (!file.type.match('image.*')) {
-                    alert('Select an image');
+                    alert('The selected file is not an image. Please select and image and retry.');
                     return;
                 }
-                let img = new Video();
+                let img = new Image();
                 let reader = new FileReader();
                 let vm = this;
 
@@ -139,12 +147,64 @@
                 };
 
                 reader.readAsDataURL(file);
-                console.log(file, reader);
             },
 
             removeFile() {
-                this.imageupload = '';
+                this.reset();
             }
         }
     }
 </script>
+
+<style lang="scss">
+    .image_dropbox {
+        outline: 2px dashed grey;
+        outline-offset: -10px;
+        background: #E3E3E3;
+        color: dimgray;
+        padding: 10px 10px;
+        height: 400px;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    .input-file {
+        opacity: 0;
+        width: 100%;
+        height: 380px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .image_dropbox:hover {
+        background: #BFBFBF;
+    }
+
+    .image_dropbox p {
+        font-size: 1.2em;
+        text-align: center;
+        padding: 140px 0;
+    }
+
+    .image_hidden_section {
+        display: none;
+    }
+
+    .image_hidden_section.image {
+        display: inline-block;
+        height: 380px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .image_hidden_section_image {
+        width: 100%;
+        height: 340px;
+        margin-bottom: 6px;
+    }
+
+    .image_hidden_section_image img {
+        height: 100%;
+    }
+</style>
