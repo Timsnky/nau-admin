@@ -128,7 +128,7 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/ideas/search?query=${this.searchTerm}&page=${page}`);
+                    return request.get(`/ideas?page=${page}&search=${this.searchTerm}`);
                 }
 
                 return request.get(`/ideas?page=${page}`);
