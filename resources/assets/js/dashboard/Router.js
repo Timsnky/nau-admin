@@ -113,6 +113,11 @@ let routes = [{
             component: require('./views/Images/views/Create'),
         },
         {
+            path: ':id/edit',
+            name: 'images.edit',
+            component: require('./views/Images/views/Edit'),
+        },
+        {
             path: '',
             name: 'images.list',
             component: require('./views/Images/views/List'),
@@ -122,11 +127,32 @@ let routes = [{
         //     name: 'images.show',
         //     component: require('./views/Images/views/Show'),
         // },
+    ],
+},
+{
+    path: '/videos',
+    component: require('./views/Videos'),
+    children: [
+        {
+            path: 'create',
+            name: 'videos.create',
+            component: require('./views/Videos/views/Create'),
+        },
+        {
+            path: ':id/edit',
+            name: 'videos.edit',
+            component: require('./views/Videos/views/Edit'),
+        },
+        {
+            path: '',
+            name: 'videos.list',
+            component: require('./views/Videos/views/List'),
+        },
         // {
-        //     path: ':id/edit',
-        //     name: 'images.edit',
-        //     component: require('./views/Images/views/Edit'),
-        // }
+        //     path: ':id',
+        //     name: 'images.show',
+        //     component: require('./views/Images/views/Show'),
+        // },
     ],
 },
 {

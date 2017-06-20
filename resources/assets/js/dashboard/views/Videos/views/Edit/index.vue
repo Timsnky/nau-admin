@@ -1,11 +1,11 @@
 <template>
     <div>
-        <page-title title="Images" sub="Edit" />
+        <page-title title="Videos" sub="Edit" />
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
-                <div class="edit_image_section">
-                    <img class="media-object" :src="oldImageDetails.url" alt="...">
+                <div class="edit_video_section">
+                    <img class="media-object" :src="oldVideoDetails.url" alt="...">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -13,7 +13,7 @@
                         id="name"
                         type="text"
                         name="name"
-                        v-model.trim="newImageDetails.name"
+                        v-model.trim="newVideoDetails.name"
                         placeholder="Name"
                         class="form-control">
                 </div>
@@ -23,7 +23,7 @@
                     <textarea
                         id="lead"
                         name="lead"
-                        v-model.trim="newImageDetails.lead"
+                        v-model.trim="newVideoDetails.lead"
                         placeholder="Lead"
                         class="form-control"
                         rows="3"></textarea>
@@ -34,7 +34,7 @@
                             id="source"
                             type="text"
                             name="source"
-                            v-model.trim="newImageDetails.source"
+                            v-model.trim="newVideoDetails.source"
                             placeholder="Source"
                             class="form-control">
                 </div>
@@ -44,7 +44,7 @@
                 <button
                     class="btn btn-primary"
                     type="submit"
-                    :disabled="!newImageDetails.name || !newImageDetails.lead || !newImageDetails.source">
+                    :disabled="!newVideoDetails.name || !newVideoDetails.lead || !newVideoDetails.source">
                     Submit
                 </button>
                 <button
@@ -65,29 +65,29 @@
     export default {
         data() {
             return {
-                oldImageDetails: {},
-                newImageDetails: {}
+                oldVideoDetails: {},
+                newVideoDetails: {}
             }
         },
 
         mounted() {
             request
-                .get(`/images/${this.$route.params.id}`)
+                .get(`/videos/${this.$route.params.id}`)
                 .then(response => {
-                    this.oldImageDetails = response.data;
-                    this.newImageDetails = _pick(this.oldImageDetails, ['name', 'lead', 'source']);
+                    this.oldVideoDetails = response.data;
+                    this.newVideoDetails = _pick(this.oldVideoDetails, ['name', 'lead', 'source']);
                 })
                 .catch(err => console.log('Show some error message here'));
         },
 
         methods: {
             handleSubmit() {
-                const { name, lead, source } = this.newImageDetails;
+                const { name, lead, source } = this.newVideoDetails;
 
                 if (name && lead && source) {
                     request
-                        .put(`/images/${this.oldImageDetails.id}`, { name, lead, source })
-                        .then(response => this.$router.push('/images'))
+                        .put(`/videos/${this.newVideoDetails.id}`, { name, lead, source })
+                        .then(response => this.$router.push('/videos'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -95,19 +95,19 @@
             },
 
             reset() {
-                this.newImageDetails = _pick(this.oldImageDetails, ['name', 'lead' , 'source']);
+                this.newVideoDetails = _pick(this.oldVideoDetails, ['name', 'lead' , 'source']);
             }
         }
     }
 </script>
 
 <style lang="scss">
-    .edit_image_section {
+    .edit_video_section {
         height: 400px;
         margin-bottom: 20px;
     }
 
-    .edit_image_section img {
+    .edit_video_section img {
         height: 100%;
         display: block;
         margin: auto;

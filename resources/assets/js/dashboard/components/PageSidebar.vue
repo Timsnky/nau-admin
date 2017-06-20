@@ -71,6 +71,14 @@
                         <span class="title">Images</span>
                     </a>
                 </router-link>
+
+                <!--Videos -->
+                <router-link :to="{name: 'videos.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-video-camera"></i>
+                        <span class="title">Videos</span>
+                    </a>
+                </router-link>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->

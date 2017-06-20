@@ -33,7 +33,7 @@ let routes = [
         }, {
             path: '',
             name: 'ideas.list',
-            component: require('../views/Ideas/views/List'),
+            component: require('../views/Images/views/List'),
         }],
     },
     {
@@ -42,8 +42,13 @@ let routes = [
         children: [
             {
                 path: 'create',
-                name: 'ideas.create',
-                component: require('../views/Ideas/views/Create'),
+                name: 'images.create',
+                component: require('../views/Images/views/Create'),
+            },
+            {
+                path: ':id/edit',
+                name: 'images.edit',
+                component: require('../views/Images/views/Edit'),
             },
             {
                 path: '',
@@ -55,11 +60,32 @@ let routes = [
             //     name: 'ideas.show',
             //     component: require('./views/Ideas/views/Show'),
             // },
+        ],
+    },
+    {
+        path: '/videos',
+        component: require('../views/Videos'),
+        children: [
+            {
+                path: 'create',
+                name: 'videos.create',
+                component: require('../views/Videos/views/Create'),
+            },
+            {
+                path: ':id/edit',
+                name: 'videos.edit',
+                component: require('../views/Videos/views/Edit'),
+            },
+            {
+                path: '',
+                name: 'videos.list',
+                component: require('../views/Videos/views/List'),
+            },
             // {
-            //     path: ':id/edit',
-            //     name: 'ideas.edit',
-            //     component: require('./views/Ideas/views/Edit'),
-            // }
+            //     path: ':id',
+            //     name: 'ideas.show',
+            //     component: require('./views/Ideas/views/Show'),
+            // },
         ],
     },
 ];

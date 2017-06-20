@@ -1,27 +1,27 @@
 <template>
     <tr>
         <td>
-            <div class="image_section">
-                <div class="image_section_left">
-                    <div class="image_section_image">
+            <div class="video_section">
+                <div class="video_section_left">
+                    <div class="video_section_video">
                         <router-link
-                                :to="{name: 'images.edit', params: {id: image.id}}">
-                            <img height="100px" width="150px" class="media-object" :src="image.url" alt="...">
+                                :to="{name: 'videos.edit', params: {id: video.id}}">
+                            <img height="100px" width="150px" class="media-object" :src="video.url" alt="...">
                         </router-link>
                     </div>
-                    <div class="image_section_details">
-                        <p><strong>{{ image.name }}</strong></p>
-                        <p>{{ image.lead }}</p>
+                    <div class="video_section_details">
+                        <p><strong>{{ video.name }}</strong></p>
+                        <p>{{ video.lead }}</p>
                     </div>
                 </div>
-                <div class="image_section_right">
+                <div class="video_section_right">
                     <span>
                         {{ date }}
                     </span>
                     <button
                             class="btn btn-danger"
                             type="button"
-                            @click="handleDeleteImage">
+                            @click="handleDeleteVideo">
                         Delete
                     </button>
                 </div>
@@ -33,44 +33,44 @@
 <script>
     export default {
         props: {
-            image: Object,
+            video: Object,
             index: Number,
         },
 
         computed: {
             date() {
-                return moment(this.image.created_at).format('DD.MM.YYYY');
+                return moment(this.video.created_at).format('DD.MM.YYYY');
             }
         },
 
         methods: {
-            handleDeleteImage() {
-                this.$emit('deleteImage', this.image);
+            handleDeleteVideo() {
+                this.$emit('deleteVideo', this.video);
             }
         }
     }
 </script>
 
 <style>
-    .image_section {
+    .video_section {
         display: inline-flex;
         width: 100%;
     }
 
-    .image_section_left {
+    .video_section_left {
         display: inline-flex;
     }
 
-    .image_section_image {
+    .video_section_video {
         margin-right: 10px;
     }
 
-    .image_section_right {
+    .video_section_right {
         margin-left: auto;
         align-self: center;
     }
 
-    .image_section_right span {
+    .video_section_right span {
         margin-right: 10px;
     }
 </style>
