@@ -80,11 +80,14 @@
             return {
                 video: {
                     name: '',
-                    lead: '',
-                    source: '',
+                    lead: 'Timothy',
+                    source: 'Personal',
+                },
+                videoBlob : {
                     video: ''
                 },
-                videoupload: null
+                videoupload: null,
+                uploadToken: null
             }
         },
 
@@ -95,11 +98,41 @@
                 if (name && lead && source) {
                     request
                         .post('/videos', {name, lead, source})
-                        .then(response => this.$router.push('/videos'))
-                        .catch(err => console.log('Error in uploading the Video. Please retry the upload'));
+                        .then(response => this.handleVideoUpload(response))
+                        .catch(err => console.log(err));
                 } else {
                     console.log('Please provide the name, lead and source for the video');
                 }
+            },
+
+            handleVideoUpload(data) {
+
+                var uploadUrl = data.data.upload_url;
+                var urlArray = uploadUrl.split("api-naut.livesystems.ch");
+                var tokenString = urlArray[urlArray.length - 1];
+                console.log(tokenString);
+
+                const {video} = this.videoBlob;
+                console.log(uploadUrl);
+
+                request
+                    .put(tokenString, {video})
+                    .then(response => this.completeUpload(response))
+                    .catch(err => console.log('Error in uploading the Video2. Please retry the upload', err));
+                console.log(data.data);
+            },
+
+            completeUpload(data) {
+                console.log(data);
+                var uploadUrl = data.data.complete_url;
+                var urlArray = uploadUrl.split("api-naut.livesystems.ch");
+                var tokenString = urlArray[urlArray.length - 1];
+                console.log(tokenString);
+
+                request
+                    .post(tokenString)
+                    .then(response => this.$router.push('/videos'))
+                    .catch(err => console.log('Error in uploading the Video3. Please retry the upload', err));
             },
 
             reset() {
@@ -107,8 +140,10 @@
                     name: '',
                     lead: '',
                     source: '',
+                };
+                this.videoBlob = {
                     video: ''
-                }
+                };
                 this.videoupload = null;
             },
 
@@ -137,16 +172,20 @@
                     alert('The selected file is not an video. Please select and video and retry.');
                     return;
                 }
-                let img = new Image();
+
+                console.log("File", file);
+                let img = new Blob();
                 let reader = new FileReader();
                 let vm = this;
 
                 reader.onload = function (e) {
                     vm.videoupload = e.target.result;
-                    vm.video.video = e.target.result;
+                    vm.videoBlob.video = e.target.result;
                 };
 
                 reader.readAsDataURL(file);
+
+                console.log(reader);
             },
 
             removeFile() {

@@ -74,6 +74,7 @@
 
 <script>
     import request from 'dashboard/utils/request';
+    import api from 'dashboard/utils/api';
 
     export default {
         data() {
@@ -82,7 +83,8 @@
                     name: '',
                     lead: '',
                     source: '',
-                    image: ''
+                    image: '',
+                    user_id: ''
                 },
                 imageupload: null
             }
@@ -90,11 +92,11 @@
 
         methods: {
             handleSubmit() {
-                const {name, lead, source, image} = this.image;
+                const {name, lead, source, image, user_id} = this.image;
 
                 if (name && lead && source && image) {
                     request
-                        .post('/images', {name, lead, source, image})
+                        .post('/images', {name, lead, source, image, user_id})
                         .then(response => this.$router.push('/images'))
                         .catch(err => console.log('Error in uploading the Image. Please retry the upload'));
                 } else {
@@ -107,7 +109,8 @@
                     name: '',
                     lead: '',
                     source: '',
-                    image: ''
+                    image: '',
+                    user_id: ''
                 }
                 this.imageupload = null;
             },
@@ -144,6 +147,7 @@
                 reader.onload = function (e) {
                     vm.imageupload = e.target.result;
                     vm.image.image = e.target.result;
+                    vm.image.user_id = api.user().id;
                 };
 
                 reader.readAsDataURL(file);

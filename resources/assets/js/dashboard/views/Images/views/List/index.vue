@@ -20,6 +20,9 @@
                     class="btn btn-primary pull-right">
                     Upload
                 </router-link>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageSelectionModal">
+                    Choose Image
+                </button>
             </div>
         </div>
 
@@ -119,7 +122,7 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/images/search?query=${this.searchTerm}&page=${page}`);
+                    return request.get(`/images?search=${this.searchTerm}&page=${page}`);
                 }
 
                 return request.get(`/images?page=${page}`);

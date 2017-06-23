@@ -20,6 +20,9 @@
                     class="btn btn-primary pull-right">
                     Upload
                 </router-link>
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    Launch demo modal
+                </button>
             </div>
         </div>
 
