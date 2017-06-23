@@ -74,14 +74,16 @@
 
 <script>
     import request from 'dashboard/utils/request';
+    import api from 'dashboard/utils/api';
 
     export default {
         data() {
             return {
                 video: {
                     name: '',
-                    lead: 'Timothy',
-                    source: 'Personal',
+                    lead: '',
+                    source: '',
+                    user_id: ''
                 },
                 videoBlob : {
                     video: ''
@@ -93,11 +95,11 @@
 
         methods: {
             handleSubmit() {
-                const {name, lead, source} = this.video;
+                const {name, lead, source, user_id} = this.video;
 
                 if (name && lead && source) {
                     request
-                        .post('/videos', {name, lead, source})
+                        .post('/videos', {name, lead, source, user_id})
                         .then(response => this.handleVideoUpload(response))
                         .catch(err => console.log(err));
                 } else {
@@ -140,6 +142,7 @@
                     name: '',
                     lead: '',
                     source: '',
+                    user_id: ''
                 };
                 this.videoBlob = {
                     video: ''
@@ -181,6 +184,7 @@
                 reader.onload = function (e) {
                     vm.videoupload = e.target.result;
                     vm.videoBlob.video = e.target.result;
+                    vm.video.user_id = api.user().id;
                 };
 
                 reader.readAsDataURL(file);

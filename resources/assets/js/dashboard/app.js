@@ -26,6 +26,7 @@ Vue.component('pageFooter', require('./components/PageFooter.vue'));
 Vue.component('pageTitle', require('./components/PageTitle.vue'));
 Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
 Vue.component('imageSelectModal', require('./components/ImageSelectModal.vue'));
+Vue.component('videoSelectModal', require('./components/VideoSelectModal.vue'));
 
 const app = new Vue({
     el: '#app',

@@ -2,7 +2,7 @@
     <div>
         <div class="row image_selection_filters">
             <div class="col-md-6">
-                <div v-if="images.length > 0 || searchTerm !== ''" class="input-icon">
+                <div v-if="videos.length > 0 || searchTerm !== ''" class="input-icon">
                     <i class="fa fa-search"></i>
                     <input
                             type="search"
@@ -15,24 +15,26 @@
 
             <div class="col-md-6 text-right">
                 <select class="form-control" name="user_id" id="user_id" v-model="userId">
-                    <option :value="myUserId">My Images</option>
-                    <option :value="0">All Images</option>
+                    <option :value="myUserId">My Videos</option>
+                    <option :value="0">All Videos</option>
                 </select>
             </div>
         </div>
 
         <h2 v-if="!isLoaded" class="text-center">Loading...</h2>
 
-        <div v-else-if="images.length > 0">
+        <div v-else-if="videos.length > 0">
             <div class="row image_selection_rows">
-                <div v-for="image in images" class="col-md-6 col-lg-6 col-sm-6">
+                <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
                     <div class="image_section_left">
                         <div class="image_section_image">
-                            <img height="100px" width="150px" class="media-object" :src="image.url" alt="..." @click="dispatchImageSelected">
+                            <video width="150" height="100" controls @click="dispatchVideoSelected">
+                                <source :src="video.url" type="video/mp4">
+                            </video>
                         </div>
                         <div class="image_section_details">
-                            <p><strong>{{ image.name }}</strong></p>
-                            <p>{{ image.lead }}</p>
+                            <p><strong>{{ video.name }}</strong></p>
+                            <p>{{ video.lead }}</p>
                         </div>
                     </div>
                 </div>
@@ -41,7 +43,7 @@
             <div class="clearfix">
                 <pagination
                         class="pull-right"
-                        :items="images"
+                        :items="videos"
                         :currentPage="currentPage"
                         :pagesCount="pagesCount"
                         :itemsPerPage="itemsPerPage"
@@ -49,19 +51,19 @@
             </div>
         </div>
 
-        <h2 v-else class="text-center">No images uploaded</h2>
+        <h2 v-else class="text-center">No videos uploaded</h2>
     </div>
 </template>
 <script>
     import request from 'dashboard/utils/request';
-    import Item from 'dashboard/views/Images/views/List/components/Item';
-    import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
+    import Item from 'dashboard/views/Videos/views/List/components/Item';
+    import Pagination from 'dashboard/views/Videos/views/List/components/Pagination';
     import api from 'dashboard/utils/api';
 
     export default {
         data() {
             return {
-                images: [],
+                videos: [],
                 isLoaded: false,
                 currentPage: 1,
                 pagesCount: 1,
@@ -77,7 +79,7 @@
                 .then(response => {
                     const { data, current_page, per_page, last_page } = response.data;
 
-                    this.images = data;
+                    this.videos = data;
                     this.currentPage = current_page;
                     this.itemsPerPage = per_page;
                     this.pagesCount = last_page;
@@ -106,19 +108,12 @@
         },
 
         methods: {
-            deleteImage(image) {
-                request
-                    .delete(`/images/${image.id}`)
-                    .then(response => this.images = this.images.filter(item => item.id !== image.id))
-                    .catch(err => console.log('Show some error message here'));
-            },
-
             navigate(page) {
                 this.getPaginatedData(page)
                     .then(response => {
                         const { data, current_page, last_page, from } = response.data;
 
-                        this.images = data;
+                        this.videos = data;
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
                     })
@@ -138,11 +133,11 @@
                     userString += `user_id=${this.userId}&`;
                 }
 
-                return request.get(`/images?` + searchString + userString + `page=${page}`);
+                return request.get(`/videos?` + searchString + userString + `page=${page}`);
             },
 
-            dispatchImageSelected(id) {
-                this.$emit('imageSelected', this.image.id);
+            dispatchVideoSelected(id) {
+                this.$emit('videoSelected', this.video.id);
             }
         }
     }
