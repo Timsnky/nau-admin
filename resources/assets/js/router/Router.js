@@ -54,12 +54,7 @@ let routes = [
                 path: '',
                 name: 'images.list',
                 component: require('../views/Images/views/List'),
-            },
-            // {
-            //     path: ':id',
-            //     name: 'ideas.show',
-            //     component: require('./views/Ideas/views/Show'),
-            // },
+            }
         ],
     },
     {
@@ -80,12 +75,7 @@ let routes = [
                 path: '',
                 name: 'videos.list',
                 component: require('../views/Videos/views/List'),
-            },
-            // {
-            //     path: ':id',
-            //     name: 'ideas.show',
-            //     component: require('./views/Ideas/views/Show'),
-            // },
+            }
         ],
     },
 ];

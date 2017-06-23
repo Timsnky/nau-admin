@@ -121,12 +121,7 @@ let routes = [{
             path: '',
             name: 'images.list',
             component: require('./views/Images/views/List'),
-        },
-        // {
-        //     path: ':id',
-        //     name: 'images.show',
-        //     component: require('./views/Images/views/Show'),
-        // },
+        }
     ],
 },
 {
@@ -147,12 +142,7 @@ let routes = [{
             path: '',
             name: 'videos.list',
             component: require('./views/Videos/views/List'),
-        },
-        // {
-        //     path: ':id',
-        //     name: 'images.show',
-        //     component: require('./views/Images/views/Show'),
-        // },
+        }
     ],
 },
 {
