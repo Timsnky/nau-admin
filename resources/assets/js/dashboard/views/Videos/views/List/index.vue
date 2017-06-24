@@ -20,8 +20,8 @@
                     class="btn btn-primary pull-right">
                     Upload
                 </router-link>
-                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                    Launch demo modal
+                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
+                    Choose Video
                 </button>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     this.isLoaded = true;
                 })
                 .catch(err => {
-                    console.log('Show some error message here');
+                    console.log('Error in retreiving the videos');
                     this.isLoaded = true;
                 });
         },
@@ -105,7 +105,7 @@
                 request
                     .delete(`/videos/${video.id}`)
                     .then(response => this.videos = this.videos.filter(item => item.id !== video.id))
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => console.log('Error occured while deleting video'));
             },
 
             navigate(page) {
@@ -122,7 +122,7 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/videos/search?query=${this.searchTerm}&page=${page}`);
+                    return request.get(`/videos?search=${this.searchTerm}&page=${page}`);
                 }
 
                 return request.get(`/videos?page=${page}`);

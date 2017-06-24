@@ -20,7 +20,7 @@
                     class="btn btn-primary pull-right">
                     Upload
                 </router-link>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageSelectionModal">
+                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#imageSelectionModal">
                     Choose Image
                 </button>
             </div>
@@ -84,7 +84,7 @@
                     this.isLoaded = true;
                 })
                 .catch(err => {
-                    console.log('Show some error message here');
+                    console.log('Error in loading the images');
                     this.isLoaded = true;
                 });
         },
@@ -105,7 +105,7 @@
                 request
                     .delete(`/images/${image.id}`)
                     .then(response => this.images = this.images.filter(item => item.id !== image.id))
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => console.log('Error in deleting the image'));
             },
 
             navigate(page) {
@@ -134,5 +134,9 @@
 <style>
     .table > tbody > tr > td {
         vertical-align: middle;
+    }
+
+    .image_selection_btn {
+        margin-right: 10px;
     }
 </style>

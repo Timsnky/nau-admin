@@ -112,24 +112,19 @@
                 var uploadUrl = data.data.upload_url;
                 var urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 var tokenString = urlArray[urlArray.length - 1];
-                console.log(tokenString);
 
                 const {video} = this.videoBlob;
-                console.log(uploadUrl);
 
                 request
                     .put(tokenString, {video})
                     .then(response => this.completeUpload(response))
                     .catch(err => console.log('Error in uploading the Video2. Please retry the upload', err));
-                console.log(data.data);
             },
 
             completeUpload(data) {
-                console.log(data);
                 var uploadUrl = data.data.complete_url;
                 var urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 var tokenString = urlArray[urlArray.length - 1];
-                console.log(tokenString);
 
                 request
                     .post(tokenString)
@@ -176,7 +171,6 @@
                     return;
                 }
 
-                console.log("File", file);
                 let img = new Blob();
                 let reader = new FileReader();
                 let vm = this;
@@ -188,8 +182,6 @@
                 };
 
                 reader.readAsDataURL(file);
-
-                console.log(reader);
             },
 
             removeFile() {

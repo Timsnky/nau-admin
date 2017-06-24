@@ -6,7 +6,7 @@
                     <div class="video_section_video">
                         <router-link
                                 :to="{name: 'videos.edit', params: {id: video.id}}">
-                            <img height="100px" width="150px" class="media-object" :src="video.url" alt="...">
+                            <img height="100px" width="150px" class="media-object" :src="video.thumbnail"  alt="...">
                         </router-link>
                     </div>
                     <div class="video_section_details">
