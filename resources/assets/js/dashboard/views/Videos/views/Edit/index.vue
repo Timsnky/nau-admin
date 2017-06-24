@@ -5,7 +5,7 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_video_section">
-                    <img class="media-object" :src="oldVideoDetails.url" alt="...">
+                    <img class="media-object" :src="oldVideoDetails.thumbnail" alt="...">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -86,7 +86,7 @@
 
                 if (name && lead && source) {
                     request
-                        .put(`/videos/${this.newVideoDetails.id}`, { name, lead, source })
+                        .put(`/videos/${this.oldVideoDetails.id}`, { name, lead, source })
                         .then(response => this.$router.push('/videos'))
                         .catch(err => console.log('Show some error message here'));
                 } else {
