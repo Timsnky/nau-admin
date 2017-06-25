@@ -28,7 +28,7 @@
                 <div v-for="image in images" class="col-md-6 col-lg-6 col-sm-6">
                     <div class="image_section_left">
                         <div class="image_section_image">
-                            <img height="100px" width="150px" class="media-object" :src="image.url" alt="..." @click="dispatchImageSelected">
+                            <img height="100px" width="150px" class="media-object" :src="image.test" alt="..." @click="dispatchImageSelected(image.id)">
                         </div>
                         <div class="image_section_details">
                             <p><strong>{{ image.name }}</strong></p>
@@ -54,7 +54,6 @@
 </template>
 <script>
     import request from 'dashboard/utils/request';
-    import Item from 'dashboard/views/Images/views/List/components/Item';
     import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
     import api from 'dashboard/utils/api';
 
@@ -92,7 +91,6 @@
         },
 
         components: {
-            Item,
             Pagination
         },
 
@@ -142,7 +140,15 @@
             },
 
             dispatchImageSelected(id) {
-                this.$emit('imageSelected', this.image.id);
+                this.$emit('imageSelected', id);
+                this.reset();
+                $('#imageSelectionModal').modal('hide');
+            },
+
+            reset() {
+                this.searchTerm = "";
+                this.myUserId = api.user().id;
+                this.userId = this.myUserId;
             }
         }
     }
