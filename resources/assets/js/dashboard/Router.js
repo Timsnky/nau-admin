@@ -104,7 +104,7 @@ let routes = [{
     }],
 },
 {
-    path: '/myimages',
+    path: '/images',
     component: require('./views/Images'),
     children: [
         {
