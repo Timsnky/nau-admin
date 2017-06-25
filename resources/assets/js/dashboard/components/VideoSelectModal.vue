@@ -28,7 +28,7 @@
                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
                     <div class="image_section_left">
                         <div class="image_section_image">
-                            <video width="150" height="100" controls @click="dispatchVideoSelected">
+                            <video width="150" height="100" controls @click="dispatchVideoSelected(video.id)">
                                 <source :src="video.url" type="video/mp4">
                             </video>
                         </div>
@@ -56,7 +56,6 @@
 </template>
 <script>
     import request from 'dashboard/utils/request';
-    import Item from 'dashboard/views/Videos/views/List/components/Item';
     import Pagination from 'dashboard/views/Videos/views/List/components/Pagination';
     import api from 'dashboard/utils/api';
 
@@ -94,7 +93,6 @@
         },
 
         components: {
-            Item,
             Pagination
         },
 
@@ -137,7 +135,14 @@
             },
 
             dispatchVideoSelected(id) {
-                this.$emit('videoSelected', this.video.id);
+                this.$emit('videoSelected', id);
+                this.reset();
+            },
+
+            reset() {
+                this.searchTerm = "";
+                this.myUserId = api.user().id;
+                this.userId = this.myUserId;
             }
         }
     }
