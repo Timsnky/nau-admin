@@ -16,3 +16,29 @@
         line-height: inherit;
     }
 }
+
+
+.login .content {
+    width: 700px !important;
+}
+
+
+@media (max-width: $screen-sm-max) {
+    .border-between > [class*='col-']:after {
+        display: none;
+    }
+}
+
+.border-between > [class*='col-']:after {
+    background: #e3e3e3;
+    bottom: 0;
+    content: " ";
+    left: 100%;
+    position: absolute;
+    width: 1px;
+    top: 0;
+}
+
+.border-between > [class*='col-']:last-child:after {
+    display: none;
+}

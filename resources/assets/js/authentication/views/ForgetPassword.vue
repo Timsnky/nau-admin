@@ -1,47 +1,50 @@
 <template>
-    <form class="forget-form" @submit.prevent="handleSubmit">
-        <h3 class="font-green">Forget Password ?</h3>
-        <div
-            class="alert alert-danger"
-            v-if="hasErrors">
-            <button class="close" data-close="alert"></button>
-            <span>Enter your email</span>
+    <div>
+        <div v-if="sent">
+            <h3 class="font-green">E-Mail gesendet</h3>
+            <p>Falls ein Account mit dieser E-Mail Adresse existiert, wurde ein Link für die zurücksetzung gesendet.</p>
         </div>
-        <p> Enter your e-mail address below to reset your password. </p>
-        <div class="form-group">
-            <input
-                class="form-control placeholder-no-fix"
-                type="text"
-                autocomplete="off"
-                placeholder="Email"
-                v-model="user.email"
-                name="email"/>
-        </div>
-        <div class="form-actions">
-            <button
-                @click="goBack"
-                type="button"
-                id="back-btn"
-                class="btn green btn-outline">
-                Back
-            </button>
-            <button
-                type="submit"
-                class="btn btn-success uppercase pull-right">
-                Submit
-            </button>
-        </div>
-    </form>
+
+        <form v-if="!sent" class="forget-form" @submit.prevent="handleSubmit">
+            <h3 class="font-green">Passwort vergessen?</h3>
+            <p>Geben Sie bitte Ihre E-Mail Adresse an um Ihr Passwort zurückzusetzen.</p>
+            <div class="form-group">
+                <input
+                    class="form-control placeholder-no-fix"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="E-Mail"
+                    v-model="user.email"
+                    name="email"/>
+            </div>
+            <div class="form-actions">
+                <button
+                    @click="goBack"
+                    type="button"
+                    id="back-btn"
+                    class="btn green btn-outline">
+                    Zurück
+                </button>
+                <button
+                    type="submit"
+                    class="btn btn-success uppercase pull-right">
+                    Zurücksetzen
+                </button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
+    import api from 'dashboard/utils/api';
+
     export default {
         data() {
             return {
                 user: {
                     email: ''
                 },
-                hasErrors: false,
+                sent: false
             };
         },
 
@@ -49,11 +52,15 @@
             handleSubmit() {
                 const { email } = this.user;
 
-                if (email) {
-                    this.hasErrors = false;
-                } else {
-                    this.hasErrors = true;
+                if(!email) {
+                    return;
                 }
+
+                api.request
+                    .post('/password/forgot', { email })
+                    .then(response => {
+                        this.sent = true;
+                    });
             },
 
             goBack() {
