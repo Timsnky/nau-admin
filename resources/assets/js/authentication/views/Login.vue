@@ -45,7 +45,8 @@
                             <span v-if="errors.password" class="help-block">{{ errors.password[0] }}</span>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Anmelden</button>
-                                <router-link to="/forget-password" id="forget-password" class="forget-password"> Passwort vergessen? </router-link>
+                                <a v-show="!passwortForgotSent" class="forget-password" @click.prevent="forgotPassword">Passwort vergessen</a>
+                                <p v-show="passwortForgotSent" class="forget-password">Zurücksetzungslink gesendet.</p>
                             </div>
                         </form>
                     </div>
@@ -75,6 +76,7 @@
             return {
                 passwordScreen: false,
                 magicLinkSent: false,
+                passwortForgotSent: false,
                 user: {
                     email: '',
                     password: '',
@@ -118,6 +120,15 @@
                 .then(response => {
                     this.magicLinkSent = true;
                 })
+            },
+            forgotPassword() {
+                const { email, password } = this.user;
+
+                api.request
+                    .post('/password/forgot', { email })
+                    .then(response => {
+                        this.passwortForgotSent = true;
+                    });
             }
         },
         mounted() {
