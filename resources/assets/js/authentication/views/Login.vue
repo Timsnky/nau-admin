@@ -3,7 +3,7 @@
         <h3 class="form-title font-green">Anmelden</h3>
         <div class="row border-between">
             <div class="col-md-6">
-                <form v-show="!passwordScreen" class="login-form" @submit.prevent="passwordScreen = true">
+                <form v-show="!passwordScreen" class="login-form" @submit.prevent="showPasswordScreen">
                     <div :class="{ 'form-group': true, 'has-error': errors.email }">
                         <input
                         class="form-control"
@@ -37,12 +37,13 @@
                                 required
                                 class="form-control form-control-solid placeholder-no-fix"
                                 type="password"
+                                ref="password"
                                 autocomplete="off"
                                 placeholder="Passwort"
                                 name="password"
                                 v-model="user.password"/>
+                                <span v-if="errors.password" class="help-block">{{ errors.password[0] }}</span>
                             </div>
-                            <span v-if="errors.password" class="help-block">{{ errors.password[0] }}</span>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Anmelden</button>
                                 <a v-show="!passwortForgotSent" class="forget-password" @click.prevent="forgotPassword">Passwort vergessen</a>
@@ -103,7 +104,7 @@
                     .catch((error) => {
                         if(error.response.status === 401) {
                             this.errors = {
-                                'email': [error.response.data.message]
+                                'password': ['Das Passwort ist nicht korrekt.']
                             };
                         } else {
                             this.errors = error.response.data.errors;
@@ -129,6 +130,12 @@
                     .then(response => {
                         this.passwortForgotSent = true;
                     });
+            },
+            showPasswordScreen() {
+                this.passwordScreen = true;
+                setTimeout(() => {
+                    this.$refs.password.focus();
+                }, 200);
             }
         },
         mounted() {

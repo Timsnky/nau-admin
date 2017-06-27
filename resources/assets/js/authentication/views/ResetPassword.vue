@@ -9,6 +9,7 @@
                     type="password"
                     autocomplete="off"
                     placeholder="Neues Passwort"
+                    autofocus
                     v-model="password"
                     name="password"/>
             </div>
