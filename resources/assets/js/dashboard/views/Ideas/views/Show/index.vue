@@ -34,8 +34,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-
     export default {
         data() {
             return {
@@ -44,7 +42,7 @@
         },
 
         mounted() {
-            request
+            Api.http
                 .get(`/ideas/${this.$route.params.id}`)
                 .then(response => this.idea = response.data)
                 .catch(err => console.log('Show some error message here'));

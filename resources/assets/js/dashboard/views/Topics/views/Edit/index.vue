@@ -44,7 +44,6 @@
 <script>
     import _pick from 'lodash/pick';
     import DateTime from 'dashboard/components/DateTime';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -59,7 +58,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get(`/topics/${this.$route.params.id}`)
                 .then(response => {
                     this.topic = response.data;
@@ -76,7 +75,7 @@
                 const { name, date } = this.newTopic;
 
                 if (name && date) {
-                    request
+                    Api.http
                         .put(`/topics/${this.topic.id}`, { name, date })
                         .then(response => this.$router.push({name: 'resources.week'}))
                         .catch(err => console.log('Show some error message here'));

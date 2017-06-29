@@ -35,8 +35,6 @@
 </template>
 
 <script>
-    import api from 'dashboard/utils/api';
-
     export default {
         data() {
             return {
@@ -66,7 +64,7 @@
                     return;
                 }
 
-                api.request
+                Api.http
                     .post('/password/reset', { password, token })
                     .then(response => {
                         this.$router.push('/login');

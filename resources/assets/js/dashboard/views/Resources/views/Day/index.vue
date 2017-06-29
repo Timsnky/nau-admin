@@ -134,8 +134,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-
     export default {
         data() {
             return {
@@ -149,7 +147,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get(`/resources/overview/${this.date}`)
                 .then(response => {
                     this.day = response.data;

@@ -1,13 +1,14 @@
 import Vuex from 'vuex';
-import api from '../dashboard/utils/api';
+import createPersistedState from 'vuex-persistedstate'
 
 export const store = new Vuex.Store({
+    plugins: [createPersistedState()],
 	state: {
 		'user': {}
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
-            api.request.get('/me').then((response) => {
+            Api.http.get('/me').then((response) => {
                 commit('SET_USER', { user: response.data })
             }, (err) => {
                 location.href = '/login';
@@ -15,16 +16,13 @@ export const store = new Vuex.Store({
         },
         LOGOUT: function ({ commit }) {
             return new Promise((resolve, reject) => {
-                // Do something here... lets say, a http call using vue-resource
-                api.request.post('/token/invalidate').then((response) => {
+                Api.http.post('/token/invalidate').then((response) => {
                     commit('LOGOUT');
                     resolve(response);
                 }, (error) => {
                     reject(error);
                 })
             })
-
-
         }
     },
     mutations: {

@@ -1,13 +1,12 @@
 import '../bootstrap';
 import { store } from '../store/Store';
-import api from './utils/api';
 import router from './Router';
 
 // Check auth status
 store.dispatch('LOAD_AUTENTICATED_USER');
 
 router.beforeEach((to, from, next) => {
-    if (!api.getToken()) {
+    if (!Api.getToken()) {
         location.href = '/login';
     }
     next();
@@ -25,6 +24,7 @@ Vue.component('pageSidebar', require('./components/PageSidebar.vue'));
 Vue.component('pageFooter', require('./components/PageFooter.vue'));
 Vue.component('pageTitle', require('./components/PageTitle.vue'));
 Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
+Vue.component('notifications', require('./components/Notifications.vue'));
 
 const app = new Vue({
     el: '#app',

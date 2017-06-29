@@ -62,7 +62,6 @@
 
 <script>
     import _pick from 'lodash/pick';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -74,7 +73,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get(`/articles/${this.$route.params.articleID}`)
                 .then(response => {
                     this.article = response.data;
@@ -88,7 +87,7 @@
                 const { title, lead, dateline } = this.newArticle;
 
                 if (title && lead && dateline) {
-                    request
+                    Api.http
                         .put(`/topics/${this.$route.params.topicID}/articles/${this.article.id}`, {
                             title,
                             lead,

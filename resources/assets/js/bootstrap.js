@@ -5,30 +5,46 @@ import Vuex from 'vuex';
 import VueCookie from 'vue-cookie';
 import axios from 'axios';
 import moment from 'moment';
+import Api from './Api';
 
-window.env = env;
+const request = axios.create({
+    withCredentials: true,
+    baseURL: env.API_DOMAIN,
+});
 
 window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookie);
 
+window.env = env;
+window.io = require('socket.io-client');
+
+window.Api = new Api(env.API_DOMAIN, request, require('./store/Store').store);
+window.Echo = require('./Echo').default;
+
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = moment;
-window.moment.locale('en-gb');
+window.moment.locale('de');
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
 
-// import Echo from 'laravel-echo'
+request.interceptors.request.use(config => {
+    const token = window.Api.getToken();
 
-// window.Pusher = require('pusher-js');
+    if (token) {
+        config.headers.common['Authorization'] = `Bearer ${token}`;
+    }
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
+    return config;
+}, error => { return Promise.reject(error); });
+
+request.interceptors.response.use(response => { return response } , error => {
+    const status = error.response.status;
+
+    if (status === 401) {
+        window.Api.deleteToken();
+    }
+
+    return Promise.reject(error);
+});

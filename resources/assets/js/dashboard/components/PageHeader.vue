@@ -22,6 +22,7 @@
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    <notifications></notifications>
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
@@ -46,8 +47,6 @@
 </template>
 
 <script>
-    import api from '../utils/api';
-
     export default {
         computed: {
             user() {
@@ -56,7 +55,7 @@
         },
         methods: {
             logout() {
-                api.invalidateToken().then((response) => {
+                Api.invalidateToken().then((response) => {
                     location.href = '/login';
                 }, (error) => {
                     location.href = '/login';

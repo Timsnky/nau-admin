@@ -47,7 +47,6 @@
 
 <script>
     import _pick from 'lodash/pick';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -58,7 +57,7 @@
         },
 
         mounted() {
-            request
+            Api.http
                 .get(`/ideas/${this.$route.params.id}`)
                 .then(response => {
                     this.idea = response.data;
@@ -72,7 +71,7 @@
                 const { title, body } = this.newIdea;
 
                 if (title && body) {
-                    request
+                    Api.http
                         .put(`/ideas/${this.idea.id}`, { title, body })
                         .then(response => this.$router.push('/ideas'))
                         .catch(err => console.log('Show some error message here'));
