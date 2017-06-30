@@ -26,9 +26,9 @@
         <div v-else-if="images.length > 0">
             <div class="row image_selection_rows">
                 <div v-for="image in images" class="col-md-6 col-lg-6 col-sm-6">
-                    <div class="image_section_left">
+                    <div class="image_section_left image_chooser_section">
                         <div class="image_section_image">
-                            <img height="100px" width="150px" class="media-object" :src="image.test" alt="..." @click="dispatchImageSelected(image.id)">
+                            <img height="100px" width="150px" class="media-object image_choice" :src="image.url" alt="..." @click="dispatchImageSelected(image.id)">
                         </div>
                         <div class="image_section_details">
                             <p><strong>{{ image.name }}</strong></p>
@@ -161,11 +161,20 @@
     }
 
     .image_selection_rows {
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     .close {
         text-indent: initial;
+    }
+
+    .image_choice {
+        cursor: pointer;
+    }
+
+    .image_chooser_section {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 </style>
