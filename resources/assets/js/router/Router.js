@@ -33,8 +33,50 @@ let routes = [
         }, {
             path: '',
             name: 'ideas.list',
-            component: require('../views/Ideas/views/List'),
+            component: require('../views/Images/views/List'),
         }],
+    },
+    {
+        path: '/images',
+        component: require('../views/Images'),
+        children: [
+            {
+                path: 'create',
+                name: 'images.create',
+                component: require('../views/Images/views/Create'),
+            },
+            {
+                path: ':id/edit',
+                name: 'images.edit',
+                component: require('../views/Images/views/Edit'),
+            },
+            {
+                path: '',
+                name: 'images.list',
+                component: require('../views/Images/views/List'),
+            }
+        ],
+    },
+    {
+        path: '/videos',
+        component: require('../views/Videos'),
+        children: [
+            {
+                path: 'create',
+                name: 'videos.create',
+                component: require('../views/Videos/views/Create'),
+            },
+            {
+                path: ':id/edit',
+                name: 'videos.edit',
+                component: require('../views/Videos/views/Edit'),
+            },
+            {
+                path: '',
+                name: 'videos.list',
+                component: require('../views/Videos/views/List'),
+            }
+        ],
     },
 ];
 

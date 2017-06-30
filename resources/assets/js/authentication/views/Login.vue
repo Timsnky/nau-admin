@@ -114,7 +114,7 @@
                 const { email, password } = this.user;
                 var redirect = window.location.origin;
 
-                Api.request
+                Api.http
                     .post('/auth/magic', { email, redirect })
                     .then(response => {
                         this.magicLinkSent = true;
@@ -123,7 +123,7 @@
             forgotPassword() {
                 const { email, password } = this.user;
 
-                Api.request
+                Api.http
                     .post('/password/forgot', { email })
                     .then(response => {
                         this.passwortForgotSent = true;
@@ -137,7 +137,7 @@
             }
         },
         mounted() {
-            if (Api.user().id) {
+            if (Api.getToken() && Api.user().id) {
                 location.href = '/';
             }
         }

@@ -16,8 +16,8 @@ export const store = new Vuex.Store({
         },
         LOGOUT: function ({ commit }) {
             return new Promise((resolve, reject) => {
+                commit('LOGOUT');
                 Api.http.post('/token/invalidate').then((response) => {
-                    commit('LOGOUT');
                     resolve(response);
                 }, (error) => {
                     reject(error);

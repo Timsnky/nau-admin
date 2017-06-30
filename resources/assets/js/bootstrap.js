@@ -43,7 +43,8 @@ request.interceptors.response.use(response => { return response } , error => {
     const status = error.response.status;
 
     if (status === 401) {
-        window.Api.deleteToken();
+        Api.invalidateToken()
+        Api.deleteToken();
     }
 
     return Promise.reject(error);
