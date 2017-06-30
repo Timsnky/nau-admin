@@ -5,14 +5,6 @@ import router from './Router';
 // Check auth status
 store.dispatch('LOAD_AUTENTICATED_USER');
 
-router.beforeEach((to, from, next) => {
-    if (!Api.getToken()) {
-        location.href = '/login';
-    }
-    next();
-});
-
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -23,7 +15,6 @@ Vue.component('pageHeader', require('./components/PageHeader.vue'));
 Vue.component('pageSidebar', require('./components/PageSidebar.vue'));
 Vue.component('pageFooter', require('./components/PageFooter.vue'));
 Vue.component('pageTitle', require('./components/PageTitle.vue'));
-Vue.component('quickSidebar', require('./components/QuickSidebar.vue'));
 Vue.component('notifications', require('./components/Notifications.vue'));
 Vue.component('imageSelectModal', require('./components/ImageSelectModal.vue'));
 Vue.component('videoSelectModal', require('./components/VideoSelectModal.vue'));
