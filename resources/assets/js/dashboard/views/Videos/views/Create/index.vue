@@ -181,7 +181,7 @@
                     vm.video.user_id = api.user().id;
                 };
 
-                reader.readAsDataURL(file);
+                reader.readAsBinaryString(file);
             },
 
             removeFile() {
