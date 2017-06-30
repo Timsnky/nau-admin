@@ -26,15 +26,16 @@
         <div v-else-if="videos.length > 0">
             <div class="row image_selection_rows">
                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
-                    <div class="image_section_left">
+                    <div class="image_section_left image_chooser_section">
                         <div class="image_section_image">
-                            <video width="150" height="100" controls @click="dispatchVideoSelected(video.id)">
-                                <source :src="video.url" type="video/mp4">
+                            <video width="240" height="180" controls>
+                                <source src="/comet.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="image_section_details">
                             <p><strong>{{ video.name }}</strong></p>
                             <p>{{ video.lead }}</p>
+                            <p><a href="#" class="btn btn-primary btn-sm" @click="dispatchVideoSelected(video.id)">Select Video</a></p>
                         </div>
                     </div>
                 </div>
@@ -135,6 +136,7 @@
             dispatchVideoSelected(id) {
                 this.$emit('videoSelected', id);
                 this.reset();
+                $('#videoSelectionModal').modal('hide');
             },
 
             reset() {
