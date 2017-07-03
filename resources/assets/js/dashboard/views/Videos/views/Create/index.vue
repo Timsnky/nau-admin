@@ -171,7 +171,6 @@
                     return;
                 }
 
-                let img = new Blob();
                 let reader = new FileReader();
                 let vm = this;
 
@@ -179,6 +178,8 @@
                     vm.videoupload = e.target.result;
                     vm.videoBlob.video = e.target.result;
                     vm.video.user_id = api.user().id;
+
+                    console.log(vm.videoBlob.video);
                 };
 
                 reader.readAsBinaryString(file);
