@@ -29,7 +29,8 @@
                     <div class="image_section_left image_chooser_section">
                         <div class="image_section_image">
                             <video width="240" height="180" controls>
-                                <source :src="video.url" type="video/mp4">
+                                <source :src="video.urls[0]" type="video/mp4">
+                                <source :src="video.urls[1]" type="video/webm">
                             </video>
                         </div>
                         <div class="image_section_details">
