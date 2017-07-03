@@ -80,7 +80,6 @@
                     name: '',
                     lead: '',
                     source: '',
-                    user_id: ''
                 },
                 videoBlob : {
                     video: ''
@@ -92,11 +91,11 @@
 
         methods: {
             handleSubmit() {
-                const {name, lead, source, user_id} = this.video;
+                const {name, lead, source} = this.video;
 
                 if (name && lead && source) {
                     Api.http
-                        .post('/videos', {name, lead, source, user_id})
+                        .post('/videos', {name, lead, source})
                         .then(response => this.handleVideoUpload(response))
                         .catch(err => console.log(err));
                 } else {
@@ -134,7 +133,6 @@
                     name: '',
                     lead: '',
                     source: '',
-                    user_id: ''
                 };
                 this.videoBlob = {
                     video: ''
@@ -168,17 +166,15 @@
                     return;
                 }
 
-                let img = new Blob();
                 let reader = new FileReader();
                 let vm = this;
 
                 reader.onload = function (e) {
                     vm.videoupload = e.target.result;
                     vm.videoBlob.video = e.target.result;
-                    vm.video.user_id = Api.user().id;
                 };
 
-                reader.readAsBinaryString(file);
+                reader.readAsDataURL(file);
             },
 
             removeFile() {
