@@ -178,11 +178,9 @@
                     vm.videoupload = e.target.result;
                     vm.videoBlob.video = e.target.result;
                     vm.video.user_id = api.user().id;
-
-                    console.log(vm.videoBlob.video);
                 };
 
-                reader.readAsBinaryString(file);
+                reader.readAsDataURL(file);
             },
 
             removeFile() {
