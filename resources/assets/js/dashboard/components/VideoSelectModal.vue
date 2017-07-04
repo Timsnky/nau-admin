@@ -27,8 +27,8 @@
             <div class="row image_selection_rows">
                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
                     <div class="image_section_left image_chooser_section">
-                        <div class="image_section_image">
-                            <video width="240" height="180" controls>
+                        <div class="image_selection_section_image">
+                            <video controls>
                                 <source :src="video.urls[0]" type="video/mp4">
                                 <source :src="video.urls[1]" type="video/webm">
                             </video>
@@ -89,7 +89,9 @@
                     this.userId = this.myUserId;
                 })
                 .catch(err => {
-                    console.log('Show some error message here');
+                    Vue.toast('Error in retreiving the Videos. Please retry again', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     this.isLoaded = true;
                 });
         },
@@ -117,7 +119,11 @@
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
                     })
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => {
+                        Vue.toast('Error in retreiving the Videos. Please retry again', {
+                            className : ['nau_toast','nau_warning'],
+                        });
+                    });
             },
 
             getPaginatedData(page) {

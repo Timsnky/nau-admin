@@ -98,9 +98,13 @@
                     request
                         .post('/images', {name, lead, source, image, user_id})
                         .then(response => this.$router.push('/images'))
-                        .catch(err => console.log('Error in uploading the Image. Please retry the upload'));
+                        .catch(err => Vue.toast('Error in uploading the Image. Please retry the upload', {
+                            className : ['nau_toast','nau_warning'],
+                        }));
                 } else {
-                    console.log('Please provide the name, lead and source for the image');
+                    Vue.toast('Please provide the name, lead and source for the image', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                 }
             },
 
@@ -137,7 +141,9 @@
 
             createFile(file) {
                 if (!file.type.match('image.*')) {
-                    alert('The selected file is not an image. Please select and image and retry.');
+                    Vue.toast('The selected file is not an image. Please select and image and retry.', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     return;
                 }
                 let img = new Image();
