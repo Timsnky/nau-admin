@@ -84,7 +84,9 @@
                     this.isLoaded = true;
                 })
                 .catch(err => {
-                    console.log('Error in loading the images');
+                    Vue.toast('Error in loading the Images list. Please refresh the page', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     this.isLoaded = true;
                 });
         },
@@ -105,7 +107,9 @@
                 request
                     .delete(`/images/${image.id}`)
                     .then(response => this.images = this.images.filter(item => item.id !== image.id))
-                    .catch(err => console.log('Error in deleting the image'));
+                    .catch(err => Vue.toast('Error in deleting the Image. Please retry again', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             navigate(page) {
@@ -117,7 +121,9 @@
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
                     })
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => Vue.toast('Error in loading the Images list. Please refresh the page', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             getPaginatedData(page) {

@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import VueCookie from 'vue-cookie';
 import axios from 'axios';
 import moment from 'moment';
+import Toast from 'vue-easy-toast';
 
 window.env = env;
 
@@ -12,6 +13,14 @@ window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookie);
+Vue.use(Toast, {
+    id: 'easy-toast-default',
+    horizontalPosition: 'right',
+    verticalPosition: 'top',
+    parent: 'body',
+    transition: 'fade',
+    duration: 5000,
+});
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
