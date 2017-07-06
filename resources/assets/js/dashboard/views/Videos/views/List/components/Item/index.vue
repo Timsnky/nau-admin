@@ -6,10 +6,7 @@
                     <div class="video_section_video">
                         <router-link
                                 :to="{name: 'videos.edit', params: {id: video.id}}">
-                            <video controls>
-                                <source :src="video.urls[0]" type="video/mp4">
-                                <source :src="video.urls[1]" type="video/webm">
-                            </video>
+                            <img :src="video.thumbnail" alt="Video Thumbnail">
                         </router-link>
                     </div>
                     <div class="video_section_details">
@@ -76,7 +73,7 @@
         width: 320px;
     }
 
-    .video_section_video video {
+    .video_section_video img {
         max-height: 240px;
         width: auto;
         max-width: 320px;
