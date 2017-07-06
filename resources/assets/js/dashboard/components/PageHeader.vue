@@ -5,9 +5,9 @@
         <div class="page-header-inner ">
             <!-- BEGIN LOGO -->
             <div class="page-logo">
-                <a href="/">
+                <router-link :to="{name: 'home'}">
                     <img src="../../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default"/>
-                </a>
+                </router-link>
                 <div class="menu-toggler sidebar-toggler">
                     <span></span>
                 </div>
