@@ -135,7 +135,7 @@
                 request
                     .post(tokenString)
                     .then(response => this.$router.push('/videos'))
-                    .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
+                    .catch(err => Vue.toast('Error in completing the upload of the Video. Please retry the upload', {
                         className : ['nau_toast','nau_warning'],
                     }));
             },
