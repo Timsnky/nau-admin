@@ -27,7 +27,7 @@
             <div class="row image_selection_rows">
                 <div v-for="image in images" class="col-md-6 col-lg-6 col-sm-6">
                     <div class="image_section_left image_chooser_section">
-                        <div class="image_section_image">
+                        <div class="image_selection_section_image">
                             <img height="100px" width="150px" class="media-object image_choice" :src="image.url" alt="..." @click="dispatchImageSelected(image.id)">
                         </div>
                         <div class="image_section_details">
@@ -83,7 +83,9 @@
                     this.userId = this.myUserId;
                 })
                 .catch(err => {
-                    console.log('Show some error message here');
+                    Vue.toast('Error in loading the Images. Please refresh the page', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     this.isLoaded = true;
                 });
         },
@@ -106,7 +108,9 @@
                 Api.http
                     .delete(`/images/${image.id}`)
                     .then(response => this.images = this.images.filter(item => item.id !== image.id))
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => Vue.toast('Error in deleting the Image. Please retry again', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             navigate(page) {
@@ -118,7 +122,9 @@
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
                     })
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => Vue.toast('Error in retreiving the Images. Please retry again', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             getPaginatedData(page) {
@@ -163,6 +169,20 @@
         padding-bottom: 20px;
     }
 
+    .image_selection_section_image {
+        margin-right: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 240px;
+    }
+
+    .image_selection_section_image img, .image_selection_section_image video {
+        max-height: 180px;
+        width: auto;
+        max-width: 240px;
+        height: auto;
+    }
+
     .close {
         text-indent: initial;
     }
@@ -174,5 +194,6 @@
     .image_chooser_section {
         padding-top: 10px;
         padding-bottom: 10px;
+        height: 120px;
     }
 </style>

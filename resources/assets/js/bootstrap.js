@@ -6,6 +6,7 @@ import VueCookie from 'vue-cookie';
 import axios from 'axios';
 import moment from 'moment';
 import Api from './Api';
+import Toast from 'vue-easy-toast';
 
 const request = axios.create({
     withCredentials: true,
@@ -16,6 +17,14 @@ window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookie);
+Vue.use(Toast, {
+    id: 'easy-toast-default',
+    horizontalPosition: 'right',
+    verticalPosition: 'top',
+    parent: 'body',
+    transition: 'fade',
+    duration: 5000,
+});
 
 window.env = env;
 window.io = require('socket.io-client');

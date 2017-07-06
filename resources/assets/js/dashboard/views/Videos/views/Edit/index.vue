@@ -76,7 +76,9 @@
                     this.oldVideoDetails = response.data;
                     this.newVideoDetails = _pick(this.oldVideoDetails, ['name', 'lead', 'source']);
                 })
-                .catch(err => console.log('Show some error message here'));
+                .catch(err => Vue.toast('Error in retreiving the Video. Please refresh the page', {
+                    className : ['nau_toast','nau_warning'],
+                }));
         },
 
         methods: {
@@ -87,9 +89,13 @@
                     Api.http
                         .put(`/videos/${this.oldVideoDetails.id}`, { name, lead, source })
                         .then(response => this.$router.push('/videos'))
-                        .catch(err => console.log('Show some error message here'));
+                        .catch(err => Vue.toast('Error in updating the Video. Please retry', {
+                            className : ['nau_toast','nau_warning'],
+                        }));
                 } else {
-                    console.log('Show some error message here');
+                    Vue.toast('Please provide the name, lead and source for the video', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                 }
             },
 

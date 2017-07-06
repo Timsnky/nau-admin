@@ -83,7 +83,9 @@
                     this.isLoaded = true;
                 })
                 .catch(err => {
-                    console.log('Error in retreiving the videos');
+                    Vue.toast('Error in retreiving the videos', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     this.isLoaded = true;
                 });
         },
@@ -104,7 +106,9 @@
                 Api.http
                     .delete(`/videos/${video.id}`)
                     .then(response => this.videos = this.videos.filter(item => item.id !== video.id))
-                    .catch(err => console.log('Error occured while deleting video'));
+                    .catch(err => Vue.toast('Error occured while deleting video. Please retry', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             navigate(page) {
@@ -116,7 +120,9 @@
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
                     })
-                    .catch(err => console.log('Show some error message here'));
+                    .catch(err => Vue.toast('Error occured while retrieving the Images. Please retry', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             getPaginatedData(page) {
@@ -124,7 +130,16 @@
                     return Api.http.get(`/videos?search=${this.searchTerm}&page=${page}`);
                 }
 
-                return Api.http.get(`/videos?page=${page}`);
+                return request.get(`/videos?page=${page}`);
+
+//                Echo.private('notifications.' + Api.user().id)
+//                    .listen('VideoProcessed', (e) => {
+//                        this.notifications.unshift({
+//                            text: e.video.name + ' is done processing',
+//                            time: moment()
+//                        });
+//                        this.newNotificationsCount++;
+//                    });
             }
         }
     }

@@ -6,7 +6,10 @@
                     <div class="video_section_video">
                         <router-link
                                 :to="{name: 'videos.edit', params: {id: video.id}}">
-                            <img height="100px" width="150px" class="media-object" :src="video.thumbnail"  alt="...">
+                            <video controls>
+                                <source :src="video.urls[0]" type="video/mp4">
+                                <source :src="video.urls[1]" type="video/webm">
+                            </video>
                         </router-link>
                     </div>
                     <div class="video_section_details">
@@ -24,6 +27,10 @@
                             @click="handleDeleteVideo">
                         Delete
                     </button>
+                    <div class="loader_section" :class="(video.processed) ? '' : 'display_Loader' ">
+                        <div class="loader"></div>
+                        <span>Processing ...</span>
+                    </div>
                 </div>
             </div>
         </td>
@@ -59,10 +66,21 @@
 
     .video_section_left {
         display: inline-flex;
+        height: 240px;
     }
 
     .video_section_video {
         margin-right: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 320px;
+    }
+
+    .video_section_video video {
+        max-height: 240px;
+        width: auto;
+        max-width: 320px;
+        height: auto;
     }
 
     .video_section_right {
@@ -72,5 +90,35 @@
 
     .video_section_right span {
         margin-right: 10px;
+    }
+
+    .loader_section {
+        margin-top: 15px;
+        display: none;
+    }
+
+    .display_Loader {
+        display: block;
+    }
+
+    .loader_section span {
+        vertical-align: bottom;
+    }
+
+    .loader {
+        border: 10px solid #bbbaba;
+        border-top: 10px solid #337ab7;
+        border-bottom: 10px solid #337ab7;
+        border-radius: 50% !important;
+        width: 10px;
+        height: 10px;
+        animation: spin 2s linear infinite;
+        margin-right: 10px;
+        display: inline-flex;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>

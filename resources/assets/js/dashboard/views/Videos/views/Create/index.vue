@@ -97,9 +97,13 @@
                     Api.http
                         .post('/videos', {name, lead, source})
                         .then(response => this.handleVideoUpload(response))
-                        .catch(err => console.log(err));
+                        .catch(err => Vue.toast('Error in saving the Video. Please retry', {
+                            className : ['nau_toast','nau_warning'],
+                        }));
                 } else {
-                    console.log('Please provide the name, lead and source for the video');
+                    Vue.toast('Please provide the name, lead and source for the video', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                 }
             },
 
@@ -114,7 +118,9 @@
                 Api.http
                     .put(tokenString, {video})
                     .then(response => this.completeUpload(response))
-                    .catch(err => console.log('Error in uploading the Video2. Please retry the upload', err));
+                    .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             completeUpload(data) {
@@ -125,7 +131,9 @@
                 Api.http
                     .post(tokenString)
                     .then(response => this.$router.push('/videos'))
-                    .catch(err => console.log('Error in uploading the Video3. Please retry the upload', err));
+                    .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
             },
 
             reset() {
@@ -162,7 +170,9 @@
 
             createFile(file) {
                 if (!file.type.match('video.*')) {
-                    alert('The selected file is not an video. Please select and video and retry.');
+                    Vue.toast('The selected file is not an video. Please select and video and retry.', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                     return;
                 }
 
@@ -234,5 +244,13 @@
 
     .video_hidden_section_video img {
         height: 100%;
+    }
+
+    .nau_toast {
+        top: 60px !important;
+    }
+
+    .nau_warning {
+        background-color: rgba(189, 19, 19, 0.7);
     }
 </style>

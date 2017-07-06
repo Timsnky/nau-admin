@@ -76,7 +76,9 @@
                     this.oldImageDetails = response.data;
                     this.newImageDetails = _pick(this.oldImageDetails, ['name', 'lead', 'source']);
                 })
-                .catch(err => console.log('Show some error message here'));
+                .catch(err => Vue.toast('Error in retrieving the image. Please refresh the page', {
+                    className : ['nau_toast','nau_warning'],
+                }));
         },
 
         methods: {
@@ -87,9 +89,13 @@
                     Api.http
                         .put(`/images/${this.oldImageDetails.id}`, { name, lead, source })
                         .then(response => this.$router.push('/images'))
-                        .catch(err => console.log('Show some error message here'));
+                        .catch(err => Vue.toast('Error in updating the Image. Please retry again', {
+                            className : ['nau_toast','nau_warning'],
+                        }));
                 } else {
-                    console.log('Show some error message here');
+                    Vue.toast('Please provide the name, lead and source for the image', {
+                        className : ['nau_toast','nau_warning'],
+                    });
                 }
             },
 

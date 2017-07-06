@@ -6,7 +6,7 @@
                     <div class="image_section_image">
                         <router-link
                                 :to="{name: 'images.edit', params: {id: image.id}}">
-                            <img height="100px" width="150px" class="media-object" :src="image.url" alt="...">
+                            <img class="media-object" :src="image.url" alt="...">
                         </router-link>
                     </div>
                     <div class="image_section_details">
@@ -59,10 +59,21 @@
 
     .image_section_left {
         display: inline-flex;
+        height: 240px;
     }
 
     .image_section_image {
         margin-right: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 320px;
+    }
+
+    .image_section_image img {
+        max-height: 240px;
+        width: auto;
+        max-width: 320px;
+        height: auto;
     }
 
     .image_section_right {
