@@ -1,8 +1,8 @@
 import VueRouter from 'vue-router';
 
 let routes = [{
-    path: '/forget-password',
-    component: require('./views/ForgetPassword')
+    path: '/reset-password',
+    component: require('./views/ResetPassword')
 }, {
     path: '/login',
     name: 'login',
