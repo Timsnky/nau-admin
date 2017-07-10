@@ -34,6 +34,10 @@ let routes = [{
         name: 'ideas.edit',
         component: require('./views/Ideas/views/Edit'),
     }, {
+        path: ':id/articles/create',
+        name: 'ideas.articles.create',
+        component: require('./views/Ideas/views/Article'),
+    }, {
         path: '',
         name: 'ideas.list',
         component: require('./views/Ideas/views/List'),
