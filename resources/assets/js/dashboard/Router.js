@@ -146,6 +146,27 @@ let routes = [{
     ],
 },
 {
+    path: '/users',
+    component: require('./views/Users'),
+    children: [
+        {
+            path: 'create',
+            name: 'users.create',
+            component: require('./views/Users/views/Create'),
+        },
+        {
+            path: ':id/edit',
+            name: 'users.edit',
+            component: require('./views/Users/views/Edit'),
+        },
+        {
+            path: '',
+            name: 'users.list',
+            component: require('./views/Users/views/List'),
+        }
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }

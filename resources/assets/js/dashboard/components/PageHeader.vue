@@ -7,7 +7,7 @@
             <div class="page-logo">
 
                 <router-link :to="{name: 'home'}">
-                    <img src="../../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default"/>
+                    <img src="/assets/images/logo.png" alt="logo" class="logo-default"/>
                 </router-link>
 
                 <div class="menu-toggler sidebar-toggler">
