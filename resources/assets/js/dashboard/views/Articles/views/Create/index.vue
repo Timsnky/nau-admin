@@ -19,10 +19,10 @@
                         </ul>
                     </li>
                     <li class="active">
-                        <a href="#tab1" data-toggle="tab">Section 1</a>
+                        <a href="#externalTitle" data-toggle="tab">External Title</a>
                     </li>
                     <li>
-                        <a href="#tab2" data-toggle="tab">Section 2</a>
+                        <a href="#tab2" data-toggle="tab">Internal Title</a>
                     </li>
                     <li>
                         <a href="#tab3" data-toggle="tab">Section 3</a>
@@ -35,7 +35,8 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
+                    <!--External Title-->
+                    <div class="tab-pane active" id="externalTitle">
                         <div class="form-body">
                             <div class="form-group">
                                 <label for="dateline">Dateline</label>
@@ -45,7 +46,7 @@
                                     name="dateline"
                                     maxlength="100"
                                     v-model.trim="article.dateline"
-                                    placeholder="Add dateline"
+                                    placeholder="Add dateline (max 100chars)"
                                     class="form-control">
                             </div>
                             <div class="form-group">
@@ -56,7 +57,7 @@
                                     name="title"
                                     maxlength="100"
                                     v-model.trim="article.title"
-                                    placeholder="Add title"
+                                    placeholder="Add title (max 100chars)"
                                     class="form-control">
                             </div>
                         </div>
