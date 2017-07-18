@@ -7,6 +7,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Api from './Api';
 import Toast from 'vue-easy-toast';
+import swal from 'sweetalert2'
 
 const request = axios.create({
     withCredentials: true,
@@ -36,6 +37,8 @@ window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.moment = moment;
 window.moment.locale('de');
+
+window.swal = swal;
 
 
 request.interceptors.request.use(config => {

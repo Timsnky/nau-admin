@@ -17,6 +17,16 @@ let routes = [{
         path: '',
         name: 'articles.list',
         component: require('./views/Articles/views/List'),
+    },
+    {
+        path: ':article/liveticker',
+        name: 'articles.livetickers',
+        component: require('./views/Articles/views/Liveticker/views/Show'),
+    },
+    {
+        path: ':article/liveticker/:liveticker',
+        name: 'articles.livetickers.edit',
+        component: require('./views/Articles/views/Liveticker/views/Edit'),
     }],
 }, {
     path: '/ideas',
