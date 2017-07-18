@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0" @click="uploadArticleImages()">Save images</button>
+                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || article.id == null" @click="uploadArticleImages()">Save images</button>
                         </div>
                     </div>
 
@@ -298,8 +298,8 @@
                     .post(`/images`, {
                         image: this.articleMainImage.image,
                         name: this.article.title,
-                        source: '',
-                        lead: ''
+                        source: this.article.title,
+                        lead: this.article.title
                     })
                     .then(response => {
 
@@ -337,7 +337,10 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            console.log(response.date, "Article created")
+                            this.article.id = response.data.id;
+                            Vue.toast('Article updated successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         }
                         else
                         {
@@ -354,7 +357,9 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            console.log(response.date, "Article updated")
+                            Vue.toast('Article updated successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         }
                         else
                         {
@@ -388,14 +393,13 @@
                         .post(`/images`, {
                             image: value.image,
                             name: vm.article.title,
-                            source: '',
-                            lead: value.lead
+                            source: vm.article.title,
+                            lead: (value.lead !== '') ? value.lead : vm.article.title
                         })
                         .then(response => {
-
                             if(response.status === 201)
                             {
-                                linkImageToArticle(response.data.id);
+                                vm.linkImageToArticle(response.data.id);
                             }
                             else
                             {
@@ -487,7 +491,7 @@
         padding: 10px;
         margin-left: 15px;
         width: 300px;
-        height: 220px;
+        height: 240px;
         border: 1px solid #E3E3E3;
         border-radius: 3px;
         background: #e3e3e3;
