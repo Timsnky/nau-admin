@@ -132,7 +132,21 @@
                 }
 
                 return request.get(`/images?page=${page}`);
-            }
+            },
+
+            imageSelected(id) {
+
+                console.log("Image Seletced", id);
+//                request
+//                    .get(`/images/${id}`)
+//                    .then(response => {
+//                        console.log(response);
+//                    })
+//                    .catch(err => Vue.toast('Error in retrieving the selected Image. Please retry again', {
+//                        className : ['nau_toast','nau_warning'],
+//                    }));
+            },
+
         }
     }
 </script>

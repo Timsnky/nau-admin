@@ -20,7 +20,25 @@ const api = {
     },
     user() {
         return store.state.user;
-    }
+    },
+    getImage() {
+        return store.state.selected_image_id;
+    },
+    setImage(id) {
+        return store.dispatch('SET_IMAGE', id);
+    },
+    resetImage() {
+        return store.dispatch('RESET_IMAGE');
+    },
+    getVideo() {
+        return store.state.selected_video_id;
+    },
+    setVideo(id) {
+        return store.dispatch('SET_VIDEO', id);
+    },
+    resetVideo() {
+        return store.dispatch('RESET_VIDEO');
+    },
 };
 
 

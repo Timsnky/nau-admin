@@ -146,7 +146,7 @@
             },
 
             dispatchImageSelected(id) {
-                this.$emit('imageSelected', id);
+                api.setImage(id);
                 this.reset();
                 $('#imageSelectionModal').modal('hide');
             },
