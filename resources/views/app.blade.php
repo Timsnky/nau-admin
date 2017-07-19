@@ -77,7 +77,7 @@
                         <h4 class="modal-title" id="myModalLabel">Images</h4>
                     </div>
                     <div class="modal-body">
-                        {{--<image-select-modal></image-select-modal>--}}
+                        <image-select-modal></image-select-modal>
                     </div>
                 </div>
 

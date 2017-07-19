@@ -168,7 +168,8 @@
                                 <input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>
                                 <div id="media_images" class="row">
                                     <div class="col-md-3 col-md-3" v-for="(image, index) in articleImages" id="media_image">
-                                        <img :src="image.image" alt="">
+                                        <img v-if="image.id == null" :src="image.image" alt="">
+                                        <img v-if="image.id != null" :src="image.image.url" alt="">
                                         <div class="form-group">
                                             <input class="form-control" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                         </div>
@@ -176,6 +177,27 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || article.id == null" @click="uploadArticleImages()">Save images</button>
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <h4>Videos</h4>
+                                <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
+                                <div id="media_videos" class="row">
+                                    <div class="col-md-3 col-md-3" v-for="(video, index) in articleVideos" id="media_video">
+                                        <video v-if="video.id == null" controls>
+                                            <source :src="video.video">
+                                        </video>
+                                        <video v-if="video.id != null" controls>
+                                            <source :src="video.video.urls[0]" type="video/mp4">
+                                            <source :src="video.video.urls[1]" type="video/webm">
+                                        </video>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || article.id == null" @click="uploadArticleVideos()">Save videos</button>
                         </div>
                     </div>
 
@@ -218,6 +240,8 @@
                     imageId: null
                 },
                 articleImages: [
+                ],
+                articleVideos: [
                 ],
                 saveArticleImagesDisabled: true
             };
@@ -292,6 +316,7 @@
                 }
             },
 
+            //Submi
             submitArticleImage()
             {
                 request
@@ -338,7 +363,7 @@
                         if(response.status === 201)
                         {
                             this.article.id = response.data.id;
-                            Vue.toast('Article updated successfully', {
+                            Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
                         }
@@ -370,6 +395,7 @@
                     });
             },
 
+            //Handle when images are uploaded
             articleImagesChange: function () {
                 var fileElement = document.getElementById('article_images');
                 if (!fileElement) return;
@@ -377,7 +403,7 @@
                     var reader = new FileReader();
                     reader.readAsDataURL(fileElement.files[i]);
                     reader.onload = (e) => {
-                        this.articleImages.push({ image: e.target.result, lead: '' });
+                        this.articleImages.push({ image: e.target.result, lead: '', id: null });
                     };
                 }
             },
@@ -399,6 +425,9 @@
                         .then(response => {
                             if(response.status === 201)
                             {
+                                value.image = response.data;
+                                value.id = response.data.id;
+                                value.lead = response.data.lead;
                                 vm.linkImageToArticle(response.data.id);
                             }
                             else
@@ -412,27 +441,142 @@
                 });
             },
 
+            //Link an image to an article
             linkImageToArticle(id)
             {
                 request
                     .put(`/articles/${this.article.id}/images/${id}`)
                     .then(response => {
-                        if(response.status === 201)
+                        if(response.status === 200)
                         {
-                            console.log(response);
                         }
                         else
                         {
-                            Vue.toast('Error in uploading the selected Image. Please retry again', {
+                            Vue.toast('Error in linking the image. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
                     });
 
+            },
+
+            //Handle when a video is  uploaded
+            articleVideosChange: function ()
+            {
+                var fileElement = document.getElementById('article_videos');
+                if (!fileElement) return;
+                for (var i = 0; i < fileElement.files.length; i++) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(fileElement.files[i]);
+                    reader.onload = (e) => {
+                        this.articleVideos.push({ video: e.target.result, lead: '', id: null });
+                    };
+                }
+            },
+
+            //Upload article videos and link them to article
+            uploadArticleVideos()
+            {
+                let vm = this;
+
+                this.articleVideos.forEach(function (video, key)
+                {
+                    vm.submitVideoDetails(video);
+                });
+            },
+
+            submitVideoDetails(video)
+            {
+                let vm = this;
+
+                request
+                    .post(`/videos`, {
+                        name: this.article.title,
+                        lead: (video.lead !== '') ? video.lead : vm.article.title,
+                        source: vm.article.title,
+                        user_id: api.user().id
+                    })
+                    .then(response => {
+                        if(response.status === 201)
+                        {
+                            vm.startVideoUpload(response, video);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in uploading the selected video. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            startVideoUpload(data, video) {
+
+                let uploadUrl = data.data.upload_url;
+                let urlArray = uploadUrl.split("api-naut.livesystems.ch");
+                let tokenString = urlArray[urlArray.length - 1];
+
+                request
+                    .put(tokenString, {
+                        video : video.video
+                    })
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.completeVideoUpload(response, video);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in uploading the selected video. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            completeVideoUpload(data, video)
+            {
+                let uploadUrl = data.data.complete_url;
+                let urlArray = uploadUrl.split("api-naut.livesystems.ch");
+                let tokenString = urlArray[urlArray.length - 1];
+
+                request
+                    .post(tokenString)
+                    .then(response => {
+                        if (response.status === 200) {
+                            video.video = response.data;
+                            video.lead = response.data.lead;
+                            video.id = response.data.id;
+                            this.linkVideoToArticle(video.id);
+                        }
+                        else {
+                            Vue.toast('Error in uploading the selected video. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Link the video to the article
+            linkVideoToArticle(id)
+            {
+                request
+                    .put(`/articles/${this.article.id}/videos/${id}`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                        }
+                        else
+                        {
+                            Vue.toast('Error in linking the video. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
             }
         },
-        mounted: function () {
-
+        mounted: function ()
+        {
             var editor = $('#lead').wysihtml5({
                 name: 'lead',
                 image: false,
@@ -447,7 +591,7 @@
                 });
             }, 0);
         }
-    };
+    }
 </script>
 
 <style lang="css">
@@ -503,8 +647,24 @@
         margin-bottom: 10px;
     }
 
+    #media_videos {
+        margin-top: 10px;
+        display: inline-flex;
+    }
 
+    #media_video {
+        padding: 10px;
+        margin-left: 15px;
+        width: 300px;
+        height: 240px;
+        border: 1px solid #E3E3E3;
+        border-radius: 3px;
+        background: #e3e3e3;
+    }
 
-
-
+    #media_video video {
+        max-width: 100%;
+        max-height: 180px;
+        margin-bottom: 10px;
+    }
 </style>
