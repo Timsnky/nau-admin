@@ -39,8 +39,15 @@
                     <li>
                         <a href="#articleBody" data-toggle="tab">Body</a>
                     </li>
+                    <li>
+                        <a href="#articleLearning" data-toggle="tab">Learnings</a>
+                    </li>
+                    <li>
+                        <a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>
+                    </li>
                 </ul>
                 <div class="tab-content">
+
                     <!--External Title-->
                     <div class="tab-pane active" id="externalTitle">
                         <div class="form-body">
@@ -147,6 +154,7 @@
                             <div class="form-group">
                                 <label>Lead</label>
                                 <textarea
+                                        id="leadEditor"
                                     maxlength="350"
                                     v-model.trim="article.lead"
                                     placeholder="Add lead"
@@ -158,7 +166,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.image">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -205,9 +213,12 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane" id="tab6">
+                    <!--Social Media-->
+                    <div class="tab-pane" id="articleSocialMedia">
                         <p> Howdy, I'm in Section 6. </p>
                     </div>
+
+                    <!--Bodies-->
                     <div class="tab-pane" id="articleBody">
                         <div class="form-body">
 
@@ -232,17 +243,79 @@
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
-                                    type="submit"
-                                    :disabled="article.id == null || noArticleWithContent()">
+                                    type="button"
+                                    @click="saveArticleBodies()"
+                                    :disabled="article.id == null">
                                 Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="tab-pane" id="tab8">
-                        <p> Howdy, I'm in Section 8. </p>
+
+                    <!--Learnings-->
+                    <div class="tab-pane" id="articleLearning">
+                        <div class="form-body">
+
+                            <p>Learnings</p>
+                            <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
+                                <div class="form-group">
+                                    <input
+                                            type="text"
+                                            maxlength="100"
+                                            v-model.trim="articleLearning.text"
+                                            placeholder="Input text (max 100chars)"
+                                            class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleLearning()"
+                                    class="btn btn-primary item_add_btn"
+                                    :disabled="articleLearnings.length == 5"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveArticleLearnings()"
+                                    :disabled="disableLearningSubmit">
+                                Save learnings <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="tab-pane" id="tab9">
-                        <p> Howdy, I'm in Section 9. </p>
+
+                    <!--Info Boxes-->
+                    <div class="tab-pane" id="articleInfoBoxes">
+                        <div class="form-body">
+                            <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group">
+                                <label>Body</label>
+                                <textarea
+                                        :id="getArticleInfoBoxName(index)"
+                                        v-model.trim="articleInfoBox.content"
+                                        placeholder="Add content"
+                                        class="wysihtml5 form-control articleEditor"
+                                        rows="5">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleInfoBox()"
+                                    class="btn btn-primary item_add_btn"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveArticleInfoBoxes()"
+                                    :disabled="article.id == null">
+                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,9 +323,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
-    import api from 'dashboard/utils/api';
-
     export default {
         data: () => {
             return {
@@ -277,6 +347,28 @@
                 articleBodies: [
                     {
                         content: '',
+                        id: null
+                    }
+                ],
+                articleBodyWithContent: false,
+                articleLearnings: [
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    }
+                ],
+                articleInfoBoxes: [
+                    {
+                        id: null,
+                        content: ''
                     }
                 ],
                 saveArticleImagesDisabled: true
@@ -286,7 +378,27 @@
         computed: {
             selectedImageId()
             {
-                return api.getImage();
+                return Api.getImage();
+            },
+
+            disableLearningSubmit()
+            {
+                if(this.article.id === null)
+                {
+                    return true;
+                }
+
+                let totalLearnings = 0;
+
+                this.articleLearnings.forEach(function (value, key)
+                {
+                    if(value.text !== '')
+                    {
+                        totalLearnings ++;
+                    }
+                });
+
+                return ! (totalLearnings >= 3);
             }
         },
 
@@ -297,7 +409,7 @@
                 {
                     this.article.image_id = newId;
                     this.articleMainImage.imageId = newId;
-                    api.resetImage();
+                    Api.resetImage();
                     this.getMainImage(newId);
                 }
             }
@@ -329,7 +441,7 @@
 
             //Get the image once we have obtained the selected id
             getMainImage(id) {
-                request
+                Api.http
                     .get(`/images/${id}`)
                     .then(response => {
                         this.articleMainImage.image = response.data;
@@ -342,20 +454,31 @@
             //Handle the submission of the article
             handleSubmit()
             {
-                if (this.article.image_id)
+                this.article.lead = $('#leadEditor').val();
+
+                if (this.article.lead !== '')
                 {
-                    this.submitArticleDetails();
+                    if (this.article.image_id)
+                    {
+                        this.submitArticleDetails();
+                    }
+                    else
+                    {
+                        this.submitArticleImage();
+                    }
                 }
                 else
                 {
-                    this.submitArticleImage();
+                    Vue.toast('Please provide the lead for the article', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
                 }
             },
 
-            //Submi
+            //Submit article image
             submitArticleImage()
             {
-                request
+                Api.http
                     .post(`/images`, {
                         image: this.articleMainImage.image,
                         name: this.article.title,
@@ -393,7 +516,7 @@
 
             createArticle()
             {
-                request
+                Api.http
                     .post(`/articles`, this.article)
                     .then(response => {
                         if(response.status === 201)
@@ -413,7 +536,7 @@
             },
 
             updateArticle() {
-                request
+                Api.http
                     .put(`/articles/${this.article.id}`, this.article)
                     .then(response => {
                         if(response.status === 201)
@@ -451,7 +574,7 @@
 
                 this.articleImages.forEach(function (value, key)
                 {
-                    request
+                    Api.http
                         .post(`/images`, {
                             image: value.image,
                             name: vm.article.title,
@@ -480,7 +603,7 @@
             //Link an image to an article
             linkImageToArticle(id)
             {
-                request
+                Api.http
                     .put(`/articles/${this.article.id}/images/${id}`)
                     .then(response => {
                         if(response.status === 200)
@@ -525,7 +648,7 @@
             {
                 let vm = this;
 
-                request
+                Api.http
                     .post(`/videos`, {
                         name: this.article.title,
                         lead: (video.lead !== '') ? video.lead : vm.article.title,
@@ -552,7 +675,7 @@
                 let urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 let tokenString = urlArray[urlArray.length - 1];
 
-                request
+                Api.http
                     .put(tokenString, {
                         video : video.video
                     })
@@ -576,7 +699,7 @@
                 let urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 let tokenString = urlArray[urlArray.length - 1];
 
-                request
+                Api.http
                     .post(tokenString)
                     .then(response => {
                         if (response.status === 200) {
@@ -596,7 +719,7 @@
             //Link the video to the article
             linkVideoToArticle(id)
             {
-                request
+                Api.http
                     .put(`/articles/${this.article.id}/videos/${id}`)
                     .then(response => {
                         if(response.status === 204)
@@ -618,7 +741,7 @@
              */
             addArticleBody()
             {
-                this.articleBodies.push({content: ''});
+                this.articleBodies.push({content: '', id: null});
                 let id = this.articleBodies.length - 1;
                 setTimeout(() =>
                 {
@@ -638,32 +761,247 @@
                 return 'articleEditor_' + id;
             },
 
+            //Get the content of a certain article
             getArticleBodyEditorContent(id)
             {
                 return $('#articleEditor_' + id).val();
             },
 
-            noArticleWithContent()
+            //Save the bodies for the articles
+            saveArticleBodies()
             {
+                this.articleBodyWithContent = false;
+                let vm = this;
+
                 this.articleBodies.forEach(function (value, key)
                 {
-                    if($('#articleEditor_' + key).val() != '')
+                    value.content = vm.getArticleBodyEditorContent(key);
+
+                    if(value.content !== '')
                     {
-                        return false;
+                        vm.articleBodyWithContent = true;
+
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/bodies/${value.id}`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleBodies[key] = response.data;
+                                        Vue.toast('Article body updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/bodies`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleBodies[key] = response.data;
+                                        Vue.toast('Article body created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
                     }
                 });
 
-                return true;
-            }
+                if(! this.articleBodyWithContent)
+                {
+                    Vue.toast('Please make sure that you have content in the body', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            /**
+             * ARTICLE LEARNINGS
+             */
+            //Add article learnings
+            addArticleLearning()
+            {
+                if(this.articleLearnings.length < 5)
+                {
+                    this.articleLearnings.push({text: '', id: null});
+                }
+                else
+                {
+                    Vue.toast('Only a maximum of 5 learnings can be added', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            //Save article learnings
+            saveArticleLearnings()
+            {
+                let vm = this;
+
+                this.articleLearnings.forEach(function (value, key)
+                {
+                    if(value.text !== '')
+                    {
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/learnings/${value.id}`, {
+                                    text: value.text,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleLearnings[key] = response.data;
+                                        Vue.toast('Article learnings updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/learnings`, {
+                                    text: value.text,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleLearnings[key] = response.data;
+                                        Vue.toast('Article learnings created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+            },
+
+            /**
+             * ARTICLE INFOBOXES
+             */
+            addArticleInfoBox()
+            {
+                this.articleInfoBoxes.push({content: '', id: null});
+                let id = this.articleInfoBoxes.length - 1;
+                setTimeout(() =>
+                {
+                    let editor = $('#articleInfoBox_' + id).wysihtml5({
+                        image: false,
+                        lists: false,
+                        emphasis: false,
+                        html: false,
+                        'font-styles': false
+                    });
+                }, 500);
+            },
+
+            //Get the name for the info box element
+            getArticleInfoBoxName(id)
+            {
+                return 'articleInfoBox_' + id;
+            },
+
+            //Get the content of a certain article info box
+            getArticleInfoBoxContent(id)
+            {
+                return $('#articleInfoBox_' + id).val();
+            },
+
+            //Save the info boxes for the articles
+            saveArticleInfoBoxes()
+            {
+                this.articleInfoBoxWithContent = false;
+                let vm = this;
+
+                this.articleInfoBoxes.forEach(function (value, key)
+                {
+                    value.content = vm.getArticleInfoBoxContent(key);
+
+                    if(value.content !== '')
+                    {
+                        vm.articleInfoBoxWithContent = true;
+
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/infoboxes/${value.id}`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleInfoBoxes[key] = response.data;
+                                        Vue.toast('Article info box updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/infoboxes`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleInfoBoxes[key] = response.data;
+                                        Vue.toast('Article infobox created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+
+                if(! this.articleInfoBoxWithContent)
+                {
+                    Vue.toast('Please make sure that you have content in the body', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
         },
 
         mounted: function ()
         {
-            var editor = $('#articleEditor_0').wysihtml5({
+            $('#articleEditor_0').wysihtml5({
                 image: false,
                 lists: false,
                 emphasis: true,
                 html: false,
+                'font-styles': false
+            });
+
+            $('#leadEditor').wysihtml5({
+                image: false,
+                lists: false,
+                emphasis: true,
+                html: false,
+                'font-styles': false
+            });
+
+            $('#articleInfoBox_0').wysihtml5({
+                image: false,
+                lists: false,
+                emphasis: false,
+                html: false,
+                links: false,
                 'font-styles': false
             });
         }

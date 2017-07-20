@@ -144,7 +144,7 @@
             },
 
             dispatchImageSelected(id) {
-                api.setImage(id);
+                Api.setImage(id);
                 this.reset();
                 $('#imageSelectionModal').modal('hide');
             },
