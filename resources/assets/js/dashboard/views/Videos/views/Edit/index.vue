@@ -6,8 +6,8 @@
             <div class="form-body">
                 <div class="edit_video_section">
                     <video controls>
-                        <source :src="oldVideoDetails.urls[0]" type="video/mp4">
-                        <source :src="oldVideoDetails.urls[1]" type="video/webm">
+                        <source v-if="video" :src="video.urls[0]" type="video/mp4">
+                        <source v-if="video" :src="video.urls[1]" type="video/webm">
                     </video>
                 </div>
                 <div class="form-group">
@@ -16,7 +16,7 @@
                         id="name"
                         type="text"
                         name="name"
-                        v-model.trim="newVideoDetails.name"
+                        v-model.trim="video.name"
                         placeholder="Name"
                         class="form-control">
                 </div>
@@ -26,7 +26,7 @@
                     <textarea
                         id="lead"
                         name="lead"
-                        v-model.trim="newVideoDetails.lead"
+                        v-model.trim="video.lead"
                         placeholder="Lead"
                         class="form-control"
                         rows="3"></textarea>
@@ -37,7 +37,7 @@
                             id="source"
                             type="text"
                             name="source"
-                            v-model.trim="newVideoDetails.source"
+                            v-model.trim="video.source"
                             placeholder="Source"
                             class="form-control">
                 </div>
@@ -47,14 +47,8 @@
                 <button
                     class="btn btn-primary"
                     type="submit"
-                    :disabled="!newVideoDetails.name || !newVideoDetails.lead || !newVideoDetails.source">
+                    :disabled="!video.name || !video.lead || !video.source">
                     Submit
-                </button>
-                <button
-                    class="btn btn-default"
-                    type="button"
-                    @click="reset">
-                    Reset
                 </button>
             </div>
         </form>
@@ -67,8 +61,7 @@
     export default {
         data() {
             return {
-                oldVideoDetails: {},
-                newVideoDetails: {}
+                video: {}
             }
         },
 
@@ -76,8 +69,7 @@
             Api.http
                 .get(`/videos/${this.$route.params.id}`)
                 .then(response => {
-                    this.oldVideoDetails = response.data;
-                    this.newVideoDetails = _pick(this.oldVideoDetails, ['name', 'lead', 'source']);
+                    this.video = response.data;
                 })
                 .catch(err => Vue.toast('Error in retreiving the Video. Please refresh the page', {
                     className : ['nau_toast','nau_warning'],
@@ -86,11 +78,11 @@
 
         methods: {
             handleSubmit() {
-                const { name, lead, source } = this.newVideoDetails;
+                const { name, lead, source } = this.video;
 
                 if (name && lead && source) {
                     Api.http
-                        .put(`/videos/${this.oldVideoDetails.id}`, { name, lead, source })
+                        .put(`/videos/${this.video.id}`, { name, lead, source })
                         .then(response => this.$router.push('/videos'))
                         .catch(err => Vue.toast('Error in updating the Video. Please retry', {
                             className : ['nau_toast','nau_warning'],
@@ -100,10 +92,6 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 }
-            },
-
-            reset() {
-                this.newVideoDetails = _pick(this.oldVideoDetails, ['name', 'lead' , 'source']);
             }
         }
     }
