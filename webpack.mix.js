@@ -15,8 +15,13 @@ mix
     .copy('node_modules/font-awesome/fonts', 'public/fonts')
     .js('resources/assets/js/dashboard/app.js', 'public/js')
     .js('resources/assets/js/authentication/login.js', 'public/js')
+<<<<<<< Updated upstream
     .sass('resources/assets/sass/app.scss', 'public/css')
     .options({
         processCssUrls: false
     })
     .version();
+=======
+    .sass('resources/assets/sass/app.scss', 'public/css');
+    // .version();
+>>>>>>> Stashed changes
