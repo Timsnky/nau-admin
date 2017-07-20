@@ -14,6 +14,9 @@ const request = axios.create({
     baseURL: env.API_DOMAIN,
 });
 
+window.$ = window.jQuery = require('jquery');
+require('bootstrap-sass');
+
 window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);

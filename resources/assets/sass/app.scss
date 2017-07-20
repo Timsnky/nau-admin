@@ -6,7 +6,7 @@
 @import "variables";
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "./vendor/metronic/bootstrap";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/bootstrap-social/bootstrap-social.scss";
 
