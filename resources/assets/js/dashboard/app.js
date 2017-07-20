@@ -22,5 +22,5 @@ Vue.component('videoSelectModal', require('./components/VideoSelectModal.vue'));
 const app = new Vue({
     el: '#app',
     store,
-    router,
+    router
 });

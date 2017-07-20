@@ -1,6 +1,17 @@
 <template>
     <div>
         <page-title title="Articles" />
+        <div class="row">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6 text-right">
+                <router-link
+                    :to="{name: 'articles.create'}"
+                    class="btn btn-primary pull-right">
+                    Create
+                </router-link>
+            </div>
+        </div>
 
         <div class="table-scrollable">
             <table class="table table-hover">
