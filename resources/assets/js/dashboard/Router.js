@@ -17,6 +17,10 @@ let routes = [{
         path: '',
         name: 'articles.list',
         component: require('./views/Articles/views/List'),
+    }, {
+      path: 'create',
+      name: 'articles.create',
+      component: require('./views/Articles/views/Create'),
     },
     {
         path: ':article/liveticker',

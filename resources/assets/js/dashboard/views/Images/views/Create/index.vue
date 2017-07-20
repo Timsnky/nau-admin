@@ -163,7 +163,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="css">
     .image_dropbox {
         outline: 2px dashed grey;
         outline-offset: -10px;

@@ -27,6 +27,7 @@
     <!-- BEGIN THEME GLOBAL STYLES -->
     <link href="{{asset('assets/global/css/components.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
     <link href="{{asset('assets/global/css/plugins.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css')}}" rel="stylesheet" type="text/css" />
     <!-- END THEME GLOBAL STYLES -->
     <!-- BEGIN THEME LAYOUT STYLES -->
     <link href="{{asset('assets/layouts/layout/css/layout.min.css')}}" rel="stylesheet" type="text/css" />
@@ -87,7 +88,7 @@
                         <h4 class="modal-title" id="myModalLabel">Videos</h4>
                     </div>
                     <div class="modal-body">
-                        <video-select-modal></video-select-modal>
+                        {{--<video-select-modal></video-select-modal>--}}
                     </div>
                 </div>
 
@@ -112,6 +113,10 @@
     type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js')}}"
     type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js')}}"
+        type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js')}}"
+        type="text/javascript"></script>
     <!-- END CORE PLUGINS -->
     <!-- BEGIN THEME GLOBAL SCRIPTS -->
     <script src="{{asset('assets/global/scripts/app.min.js')}}" type="text/javascript"></script>

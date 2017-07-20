@@ -11,7 +11,9 @@
                     </p>
                     <div class="video_hidden_section display-inline align-center" v-else v-bind:class="{ 'video': true }">
                         <div class="video_hidden_section_video">
-                            <img :src="videoupload" alt="" class="img"/>
+                            <video controls>
+                                <source :src="videoupload">
+                            </video>
                         </div>
                         <div class="video_hidden_section_remove">
                             <button class="btn btn-danger" @click="removeFile">Remove video</button>
@@ -131,7 +133,7 @@
                 Api.http
                     .post(tokenString)
                     .then(response => this.$router.push('/videos'))
-                    .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
+                    .catch(err => Vue.toast('Error in completing the upload of the Video. Please retry the upload', {
                         className : ['nau_toast','nau_warning'],
                     }));
             },

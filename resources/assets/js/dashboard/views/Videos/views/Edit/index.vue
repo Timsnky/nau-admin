@@ -5,7 +5,10 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_video_section">
-                    <img class="media-object" :src="oldVideoDetails.thumbnail" alt="...">
+                    <video controls>
+                        <source :src="oldVideoDetails.urls[0]" type="video/mp4">
+                        <source :src="oldVideoDetails.urls[1]" type="video/webm">
+                    </video>
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -112,7 +115,7 @@
         margin-bottom: 20px;
     }
 
-    .edit_video_section img {
+    .edit_video_section video {
         height: 100%;
         display: block;
         margin: auto;
