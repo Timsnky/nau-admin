@@ -33,6 +33,12 @@
                     <li>
                         <a href="#articleMedia" data-toggle="tab">Media</a>
                     </li>
+                    <li>
+                        <a href="#articleSocialMedia" data-toggle="tab">Social Media</a>
+                    </li>
+                    <li>
+                        <a href="#articleBody" data-toggle="tab">Body</a>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <!--External Title-->
@@ -139,14 +145,12 @@
                     <div class="tab-pane" id="articleLead">
                         <div class="form-body">
                             <div class="form-group">
-                                <label for="lead">Lead</label>
+                                <label>Lead</label>
                                 <textarea
-                                    id="lead"
-                                    name="lead"
                                     maxlength="350"
                                     v-model.trim="article.lead"
                                     placeholder="Add lead"
-                                    class="wysihtml5 form-control"
+                                    class="wysihtml5 form-control articleEditor"
                                     rows="5"></textarea>
                             </div>
                         </div>
@@ -204,8 +208,35 @@
                     <div class="tab-pane" id="tab6">
                         <p> Howdy, I'm in Section 6. </p>
                     </div>
-                    <div class="tab-pane" id="tab7">
-                        <p> Howdy, I'm in Section 7. </p>
+                    <div class="tab-pane" id="articleBody">
+                        <div class="form-body">
+
+                            <div v-for="(articleBody, index) in articleBodies" class="form-group">
+                                <label>Body</label>
+                                <textarea
+                                        :id="getArticleBodyName(index)"
+                                        v-model.trim="articleBody.content"
+                                        placeholder="Add content"
+                                        class="wysihtml5 form-control articleEditor"
+                                        rows="5">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleBody()"
+                                    class="btn btn-primary item_add_btn"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                    :disabled="article.id == null || noArticleWithContent()">
+                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="tab-pane" id="tab8">
                         <p> Howdy, I'm in Section 8. </p>
@@ -242,6 +273,11 @@
                 articleImages: [
                 ],
                 articleVideos: [
+                ],
+                articleBodies: [
+                    {
+                        content: '',
+                    }
                 ],
                 saveArticleImagesDisabled: true
             };
@@ -563,8 +599,11 @@
                 request
                     .put(`/articles/${this.article.id}/videos/${id}`)
                     .then(response => {
-                        if(response.status === 200)
+                        if(response.status === 204)
                         {
+                            Vue.toast('Video linked successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         }
                         else
                         {
@@ -573,23 +612,60 @@
                             });
                         }
                     });
+            },
+            /**
+             * ARTICLE BODY
+             */
+            addArticleBody()
+            {
+                this.articleBodies.push({content: ''});
+                let id = this.articleBodies.length - 1;
+                setTimeout(() =>
+                {
+                    let editor = $('#articleEditor_' + id).wysihtml5({
+                        image: false,
+                        lists: false,
+                        emphasis: true,
+                        html: false,
+                        'font-styles': false
+                    });
+                }, 500);
+            },
+
+            //Get a name to give the article body
+            getArticleBodyName(id)
+            {
+                return 'articleEditor_' + id;
+            },
+
+            getArticleBodyEditorContent(id)
+            {
+                return $('#articleEditor_' + id).val();
+            },
+
+            noArticleWithContent()
+            {
+                this.articleBodies.forEach(function (value, key)
+                {
+                    if($('#articleEditor_' + key).val() != '')
+                    {
+                        return false;
+                    }
+                });
+
+                return true;
             }
         },
+
         mounted: function ()
         {
-            var editor = $('#lead').wysihtml5({
-                name: 'lead',
+            var editor = $('#articleEditor_0').wysihtml5({
                 image: false,
                 lists: false,
                 emphasis: true,
                 html: false,
                 'font-styles': false
             });
-            setTimeout(() => {
-                $('.wysihtml5-sandbox.lead').contents().find('body').on('keyup', () => {
-                    setTimeout(() => { this.article.lead = $('#lead').val(); }, 256);
-                });
-            }, 0);
         }
     }
 </script>
@@ -666,5 +742,14 @@
         max-width: 100%;
         max-height: 180px;
         margin-bottom: 10px;
+    }
+
+    .item_add {
+        margin-bottom: 10px;
+    }
+
+    .item_add_btn {
+        width: 100%;
+        border-radius: 3px;
     }
 </style>
