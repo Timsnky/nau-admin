@@ -70,8 +70,6 @@
 </template>
 
 <script>
-    import api from 'dashboard/utils/api';
-
     export default {
         data() {
             return {
@@ -87,17 +85,17 @@
         },
         methods: {
             social(provider) {
-                return api.baseURL + '/auth/' + provider + '?redirect=' + window.location.origin;
+                return Api.host + '/auth/' + provider + '?redirect=' + window.location.origin;
             },
             signIn() {
                 const { email, password } = this.user;
 
                 if (email && password) {
-                    api.request
+                    Api.http
                     .post('/token', { email, password })
                     .then(response => {
                         const { token } = response.data;
-                        api.setToken('token', token);
+                        Api.setToken('token', token);
 
                         location.href = '/';
                     })
@@ -116,16 +114,16 @@
                 const { email, password } = this.user;
                 var redirect = window.location.origin;
 
-                api.request
-                .post('/auth/magic', { email, redirect })
-                .then(response => {
-                    this.magicLinkSent = true;
-                })
+                Api.http
+                    .post('/auth/magic', { email, redirect })
+                    .then(response => {
+                        this.magicLinkSent = true;
+                    })
             },
             forgotPassword() {
                 const { email, password } = this.user;
 
-                api.request
+                Api.http
                     .post('/password/forgot', { email })
                     .then(response => {
                         this.passwortForgotSent = true;
@@ -139,7 +137,7 @@
             }
         },
         mounted() {
-            if (api.user().id) {
+            if (Api.getToken() && Api.user().id) {
                 location.href = '/';
             }
         }

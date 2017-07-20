@@ -62,7 +62,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Item from './components/Item';
     import Pagination from './components/Pagination';
 
@@ -108,7 +107,7 @@
 
         methods: {
             deleteIdea(idea) {
-                request
+                Api.http
                     .delete(`/ideas/${idea.id}`)
                     .then(response => this.ideas = this.ideas.filter(item => item.id !== idea.id))
                     .catch(err => console.log('Show some error message here'));
@@ -128,10 +127,10 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/ideas?page=${page}&search=${this.searchTerm}`);
+                    return Api.http.get(`/ideas?page=${page}&search=${this.searchTerm}`);
                 }
 
-                return request.get(`/ideas?page=${page}`);
+                return Api.http.get(`/ideas?page=${page}`);
             }
         }
     }

@@ -56,7 +56,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Item from './components/Item';
     import Pagination from './components/Pagination';
 
@@ -104,7 +103,7 @@
 
         methods: {
             deleteImage(image) {
-                request
+                Api.http
                     .delete(`/images/${image.id}`)
                     .then(response => this.images = this.images.filter(item => item.id !== image.id))
                     .catch(err => Vue.toast('Error in deleting the Image. Please retry again', {
@@ -128,25 +127,11 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/images?search=${this.searchTerm}&page=${page}`);
+                    return Api.http.get(`/images?search=${this.searchTerm}&page=${page}`);
                 }
 
-                return request.get(`/images?page=${page}`);
-            },
-
-            imageSelected(id) {
-
-                console.log("Image Seletced", id);
-//                request
-//                    .get(`/images/${id}`)
-//                    .then(response => {
-//                        console.log(response);
-//                    })
-//                    .catch(err => Vue.toast('Error in retrieving the selected Image. Please retry again', {
-//                        className : ['nau_toast','nau_warning'],
-//                    }));
-            },
-
+                return Api.http.get(`/images?page=${page}`);
+            }
         }
     }
 </script>

@@ -57,9 +57,7 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Pagination from 'dashboard/views/Videos/views/List/components/Pagination';
-    import api from 'dashboard/utils/api';
 
     export default {
         data() {
@@ -85,7 +83,7 @@
                     this.itemsPerPage = per_page;
                     this.pagesCount = last_page;
                     this.isLoaded = true;
-                    this.myUserId = api.user().id;
+                    this.myUserId = Api.user().id;
                     this.userId = this.myUserId;
                 })
                 .catch(err => {
@@ -139,7 +137,7 @@
                     userString += `user_id=${this.userId}&`;
                 }
 
-                return request.get(`/videos?` + searchString + userString + `page=${page}`);
+                return Api.http.get(`/videos?` + searchString + userString + `page=${page}`);
             },
 
             dispatchVideoSelected(id) {
@@ -150,7 +148,7 @@
 
             reset() {
                 this.searchTerm = "";
-                this.myUserId = api.user().id;
+                this.myUserId = Api.user().id;
                 this.userId = this.myUserId;
             }
         }

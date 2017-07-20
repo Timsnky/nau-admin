@@ -53,9 +53,7 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
-    import api from 'dashboard/utils/api';
 
     export default {
         data() {
@@ -81,7 +79,7 @@
                     this.itemsPerPage = per_page;
                     this.pagesCount = last_page;
                     this.isLoaded = true;
-                    this.myUserId = api.user().id;
+                    this.myUserId = Api.user().id;
                     this.userId = this.myUserId;
                 })
                 .catch(err => {
@@ -107,7 +105,7 @@
 
         methods: {
             deleteImage(image) {
-                request
+                Api.http
                     .delete(`/images/${image.id}`)
                     .then(response => this.images = this.images.filter(item => item.id !== image.id))
                     .catch(err => Vue.toast('Error in deleting the Image. Please retry again', {
@@ -142,7 +140,7 @@
                     userString += `user_id=${this.userId}&`;
                 }
 
-                return request.get(`/images?` + searchString + userString + `page=${page}`);
+                return Api.http.get(`/images?` + searchString + userString + `page=${page}`);
             },
 
             dispatchImageSelected(id) {
@@ -153,7 +151,7 @@
 
             reset() {
                 this.searchTerm = "";
-                this.myUserId = api.user().id;
+                this.myUserId = Api.user().id;
                 this.userId = this.myUserId;
             }
         }

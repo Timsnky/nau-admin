@@ -44,7 +44,6 @@
 
 <script>
     import DateTime from 'dashboard/components/DateTime';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -65,7 +64,7 @@
                 const { name, date } = this.holiday;
 
                 if (name && date) {
-                    request
+                    Api.http
                         .post('/holidays', { name, date })
                         .then(response => this.$router.push({name: 'holidays.list'}))
                         .catch(err => console.log('Show some error message here'));

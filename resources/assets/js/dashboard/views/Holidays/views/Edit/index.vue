@@ -45,7 +45,6 @@
 <script>
     import _pick from 'lodash/pick';
     import DateTime from 'dashboard/components/DateTime';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -60,7 +59,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get(`/holidays/${this.$route.params.id}`)
                 .then(response => {
                     this.holiday = response.data;
@@ -77,7 +76,7 @@
                 const { name, date } = this.newHoliday;
 
                 if (name && date) {
-                    request
+                    Api.http
                         .put(`/holidays/${this.holiday.id}`, { name, date })
                         .then(response => this.$router.push('/holidays'))
                         .catch(err => console.log('Show some error message here'));

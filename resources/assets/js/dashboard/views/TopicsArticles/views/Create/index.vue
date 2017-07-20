@@ -61,8 +61,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-
     export default {
         data() {
             return {
@@ -80,7 +78,7 @@
                 const { title, lead, dateline } = this.article;
 
                 if (title && lead && dateline) {
-                    request
+                    Api.http
                         .post(`/topics/${this.$route.params.topicID}/articles`, {
                             title,
                             lead,

@@ -1,13 +1,17 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+// @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import "node_modules/bootstrap-social/bootstrap-social.scss";
+@import "node_modules/font-awesome/scss/font-awesome";
+// @import "node_modules/bootstrap-social/bootstrap-social.scss";
+
+// Sweet alert
+@import "node_modules/sweetalert2/src/sweetalert2";
 
 .btn.btn-block.btn-social {
     color: #fff;
@@ -22,23 +26,26 @@
     width: 700px !important;
 }
 
-
-@media (max-width: $screen-sm-max) {
-    .border-between > [class*='col-']:after {
-        display: none;
-    }
+.swal2-success-ring, .swal2-icon {
+    border-radius: 50% !important;
 }
 
-.border-between > [class*='col-']:after {
-    background: #e3e3e3;
-    bottom: 0;
-    content: " ";
-    left: 100%;
-    position: absolute;
-    width: 1px;
-    top: 0;
-}
+// @media (max-width: $screen-sm-max) {
+//     .border-between > [class*='col-']:after {
+//         display: none;
+//     }
+// }
 
-.border-between > [class*='col-']:last-child:after {
-    display: none;
-}
+// .border-between > [class*='col-']:after {
+//     background: #e3e3e3;
+//     bottom: 0;
+//     content: " ";
+//     left: 100%;
+//     position: absolute;
+//     width: 1px;
+//     top: 0;
+// }
+
+// .border-between > [class*='col-']:last-child:after {
+//     display: none;
+// }

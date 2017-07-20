@@ -75,9 +75,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-    import api from 'dashboard/utils/api';
-
     export default {
         data() {
             return {
@@ -85,7 +82,6 @@
                     name: '',
                     lead: '',
                     source: '',
-                    user_id: ''
                 },
                 videoBlob : {
                     video: ''
@@ -97,11 +93,11 @@
 
         methods: {
             handleSubmit() {
-                const {name, lead, source, user_id} = this.video;
+                const {name, lead, source} = this.video;
 
                 if (name && lead && source) {
-                    request
-                        .post('/videos', {name, lead, source, user_id})
+                    Api.http
+                        .post('/videos', {name, lead, source})
                         .then(response => this.handleVideoUpload(response))
                         .catch(err => Vue.toast('Error in saving the Video. Please retry', {
                             className : ['nau_toast','nau_warning'],
@@ -121,7 +117,7 @@
 
                 const {video} = this.videoBlob;
 
-                request
+                Api.http
                     .put(tokenString, {video})
                     .then(response => this.completeUpload(response))
                     .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
@@ -134,7 +130,7 @@
                 var urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 var tokenString = urlArray[urlArray.length - 1];
 
-                request
+                Api.http
                     .post(tokenString)
                     .then(response => this.$router.push('/videos'))
                     .catch(err => Vue.toast('Error in completing the upload of the Video. Please retry the upload', {
@@ -147,7 +143,6 @@
                     name: '',
                     lead: '',
                     source: '',
-                    user_id: ''
                 };
                 this.videoBlob = {
                     video: ''
@@ -189,7 +184,6 @@
                 reader.onload = function (e) {
                     vm.videoupload = e.target.result;
                     vm.videoBlob.video = e.target.result;
-                    vm.video.user_id = api.user().id;
                 };
 
                 reader.readAsDataURL(file);

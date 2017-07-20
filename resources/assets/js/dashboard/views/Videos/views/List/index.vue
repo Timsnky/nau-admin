@@ -56,7 +56,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Item from './components/Item';
     import Pagination from './components/Pagination';
 
@@ -104,7 +103,7 @@
 
         methods: {
             deleteVideo(video) {
-                request
+                Api.http
                     .delete(`/videos/${video.id}`)
                     .then(response => this.videos = this.videos.filter(item => item.id !== video.id))
                     .catch(err => Vue.toast('Error occured while deleting video. Please retry', {
@@ -128,7 +127,7 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return request.get(`/videos?search=${this.searchTerm}&page=${page}`);
+                    return Api.http.get(`/videos?search=${this.searchTerm}&page=${page}`);
                 }
 
                 return request.get(`/videos?page=${page}`);

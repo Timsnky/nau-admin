@@ -60,7 +60,6 @@
 
 <script>
     import _pick from 'lodash/pick';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -71,7 +70,7 @@
         },
 
         mounted() {
-            request
+            Api.http
                 .get(`/images/${this.$route.params.id}`)
                 .then(response => {
                     this.oldImageDetails = response.data;
@@ -87,7 +86,7 @@
                 const { name, lead, source } = this.newImageDetails;
 
                 if (name && lead && source) {
-                    request
+                    Api.http
                         .put(`/images/${this.oldImageDetails.id}`, { name, lead, source })
                         .then(response => this.$router.push('/images'))
                         .catch(err => Vue.toast('Error in updating the Image. Please retry again', {

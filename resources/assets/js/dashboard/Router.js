@@ -21,6 +21,16 @@ let routes = [{
       path: 'create',
       name: 'articles.create',
       component: require('./views/Articles/views/Create'),
+    },
+    {
+        path: ':article/liveticker',
+        name: 'articles.livetickers',
+        component: require('./views/Articles/views/Liveticker/views/Show'),
+    },
+    {
+        path: ':article/liveticker/:liveticker',
+        name: 'articles.livetickers.edit',
+        component: require('./views/Articles/views/Liveticker/views/Edit'),
     }],
 }, {
     path: '/ideas',
@@ -37,6 +47,10 @@ let routes = [{
         path: ':id/edit',
         name: 'ideas.edit',
         component: require('./views/Ideas/views/Edit'),
+    }, {
+        path: ':id/articles/create',
+        name: 'ideas.articles.create',
+        component: require('./views/Ideas/views/Article'),
     }, {
         path: '',
         name: 'ideas.list',
@@ -146,6 +160,27 @@ let routes = [{
             path: '',
             name: 'videos.list',
             component: require('./views/Videos/views/List'),
+        }
+    ],
+},
+{
+    path: '/users',
+    component: require('./views/Users'),
+    children: [
+        {
+            path: 'create',
+            name: 'users.create',
+            component: require('./views/Users/views/Create'),
+        },
+        {
+            path: ':id/edit',
+            name: 'users.edit',
+            component: require('./views/Users/views/Edit'),
+        },
+        {
+            path: '',
+            name: 'users.list',
+            component: require('./views/Users/views/List'),
         }
     ],
 },

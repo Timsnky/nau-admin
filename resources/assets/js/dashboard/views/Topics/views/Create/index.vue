@@ -45,7 +45,6 @@
 
 <script>
     import DateTime from 'dashboard/components/DateTime';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -66,7 +65,7 @@
                 const { name, date } = this.topic;
 
                 if (name && date) {
-                    request
+                    Api.http
                         .post('/topics', { name, date })
                         .then(response => this.$router.push({name: 'resources.day', params: { date }}))
                         .catch(err => console.log('Show some error message here'));

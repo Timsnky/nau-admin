@@ -79,6 +79,14 @@
                         <span class="title">Videos</span>
                     </a>
                 </router-link>
+
+                <!--Users -->
+                <router-link :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-user"></i>
+                        <span class="title">Benutzer</span>
+                    </a>
+                </router-link>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->

@@ -36,8 +36,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
-
     export default {
         data() {
             return {
@@ -46,7 +44,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get('/articles')
                 .then(response => this.articles = response.data);
         }

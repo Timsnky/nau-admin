@@ -12,7 +12,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
     import WeekDays from './components/WeekDays';
     import WeekNavigation from './components/WeekNavigation';
 
@@ -48,7 +47,7 @@
             setData() {
                 const { week, year } = this;
 
-                request
+                Api.http
                     .get(`/resources/overview?year=${year}&week=${week}`)
                     .then(response => this.dates = response.data)
                     .catch(err => console.log('Show some error message here'));

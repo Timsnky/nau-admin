@@ -73,9 +73,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-    import api from 'dashboard/utils/api';
-
     export default {
         data() {
             return {
@@ -95,7 +92,7 @@
                 const {name, lead, source, image, user_id} = this.image;
 
                 if (name && lead && source && image) {
-                    request
+                    Api.http
                         .post('/images', {name, lead, source, image, user_id})
                         .then(response => this.$router.push('/images'))
                         .catch(err => Vue.toast('Error in uploading the Image. Please retry the upload', {
@@ -152,8 +149,8 @@
 
                 reader.onload = function (e) {
                     vm.imageupload = e.target.result;
-                    vm.image.image = e.target.result;
-                    vm.image.user_id = api.user().id;
+                    vm.image.image = e.target.result.split(';base64,')[1];
+                    vm.image.user_id = Api.user().id;
                 };
 
                 reader.readAsDataURL(file);

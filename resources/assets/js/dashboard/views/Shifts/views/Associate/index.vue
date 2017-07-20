@@ -39,7 +39,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
     import DropdownUsers from './components/DropdownUsers';
 
     export default {
@@ -60,12 +59,12 @@
         },
 
         created() {
-            request
+            Api.http
                 .get(`/work-shifts/${this.$route.params.id}`)
                 .then(response => {
                     this.shift = response.data;
 
-                    return request.get(`/work-types/${response.data.work_type_id}/users`)
+                    return Api.http.get(`/work-types/${response.data.work_type_id}/users`)
                 })
                 .then(response => this.users = response.data)
                 .catch(err => console.log('Show some error message here'));
@@ -103,12 +102,12 @@
                     if (this.assignment.id) {
                         const { id } = this.newAssignment;
 
-                        request
+                        Api.http
                             .put(`/work-shift-assignments/${id}`, { user_id })
                             .then(response => this.$router.push({ name: 'resources.day', params: { date: this.date } }))
                             .catch(err => console.log('Show some error message here'));
                     } else {
-                        request
+                        Api.http
                             .post('/work-shift-assignments', {
                                 user_id,
                                 date: this.date,

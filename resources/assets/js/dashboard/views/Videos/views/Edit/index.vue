@@ -63,7 +63,6 @@
 
 <script>
     import _pick from 'lodash/pick';
-    import request from 'dashboard/utils/request';
 
     export default {
         data() {
@@ -74,7 +73,7 @@
         },
 
         mounted() {
-            request
+            Api.http
                 .get(`/videos/${this.$route.params.id}`)
                 .then(response => {
                     this.oldVideoDetails = response.data;
@@ -90,7 +89,7 @@
                 const { name, lead, source } = this.newVideoDetails;
 
                 if (name && lead && source) {
-                    request
+                    Api.http
                         .put(`/videos/${this.oldVideoDetails.id}`, { name, lead, source })
                         .then(response => this.$router.push('/videos'))
                         .catch(err => Vue.toast('Error in updating the Video. Please retry', {

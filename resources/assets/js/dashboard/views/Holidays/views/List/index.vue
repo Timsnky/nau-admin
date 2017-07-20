@@ -40,7 +40,6 @@
     </div>
 </template>
 <script>
-    import request from 'dashboard/utils/request';
     import Item from './components/Item';
 
     export default {
@@ -52,7 +51,7 @@
         },
 
         created() {
-            request
+            Api.http
                 .get('/holidays')
                 .then(response => {
                     this.holidays = response.data;
@@ -70,7 +69,7 @@
 
         methods: {
             deleteHoliday(holiday) {
-                request
+                Api.http
                     .delete(`/holidays/${holiday.id}`)
                     .then(response => this.holidays = this.holidays.filter(item => item.id !== holiday.id))
                     .catch(err => console.log('Show some error message here'));

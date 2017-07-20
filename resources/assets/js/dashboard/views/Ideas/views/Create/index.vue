@@ -46,8 +46,6 @@
 </template>
 
 <script>
-    import request from 'dashboard/utils/request';
-
     export default {
         data() {
             return {
@@ -63,7 +61,7 @@
                 const { title, body } = this.idea;
 
                 if (title && body) {
-                    request
+                    Api.http
                         .post('/ideas', { title, body })
                         .then(response => this.$router.push('/ideas'))
                         .catch(err => console.log('Show some error message here'));
