@@ -185,6 +185,17 @@ let routes = [{
     ],
 },
 {
+    path: '/comments',
+    component: require('./views/Comments'),
+    children: [
+        {
+            path: '',
+            name: 'comments.list',
+            component: require('./views/Comments/views/List'),
+        }
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }

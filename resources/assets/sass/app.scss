@@ -30,6 +30,10 @@
     border-radius: 50% !important;
 }
 
+.linebreaks {
+    white-space: pre-line;
+}
+
 // @media (max-width: $screen-sm-max) {
 //     .border-between > [class*='col-']:after {
 //         display: none;

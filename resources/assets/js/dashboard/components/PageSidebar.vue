@@ -87,6 +87,14 @@
                         <span class="title">Benutzer</span>
                     </a>
                 </router-link>
+
+                <!--Comments -->
+                <router-link :to="{name: 'comments.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-comments"></i>
+                        <span class="title">Kommentare</span>
+                    </a>
+                </router-link>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->
