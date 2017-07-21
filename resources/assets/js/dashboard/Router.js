@@ -196,6 +196,27 @@ let routes = [{
     ],
 },
 {
+    path: '/surveys',
+    component: require('./views/Surveys'),
+    children: [
+        {
+            path: '',
+            name: 'surveys.list',
+            component: require('./views/Surveys/views/List'),
+        },
+        {
+            path: 'create',
+            name: 'surveys.create',
+            component: require('./views/Surveys/views/Create'),
+        },
+        {
+            path: ':id/edit',
+            name: 'surveys.edit',
+            component: require('./views/Surveys/views/Edit'),
+        }
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }

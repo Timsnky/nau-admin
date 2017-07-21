@@ -95,6 +95,14 @@
                         <span class="title">Kommentare</span>
                     </a>
                 </router-link>
+
+                <!--Surveys -->
+                <router-link :to="{name: 'surveys.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-question"></i>
+                        <span class="title">Umfragen</span>
+                    </a>
+                </router-link>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->
