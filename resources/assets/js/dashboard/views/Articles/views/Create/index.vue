@@ -33,8 +33,21 @@
                     <li>
                         <a href="#articleMedia" data-toggle="tab">Media</a>
                     </li>
+                    <li>
+                        <a href="#articleSocialMedia" data-toggle="tab">Social Media</a>
+                    </li>
+                    <li>
+                        <a href="#articleBody" data-toggle="tab">Body</a>
+                    </li>
+                    <li>
+                        <a href="#articleLearning" data-toggle="tab">Learnings</a>
+                    </li>
+                    <li>
+                        <a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>
+                    </li>
                 </ul>
                 <div class="tab-content">
+
                     <!--External Title-->
                     <div class="tab-pane active" id="externalTitle">
                         <div class="form-body">
@@ -139,14 +152,13 @@
                     <div class="tab-pane" id="articleLead">
                         <div class="form-body">
                             <div class="form-group">
-                                <label for="lead">Lead</label>
+                                <label>Lead</label>
                                 <textarea
-                                    id="lead"
-                                    name="lead"
+                                        id="leadEditor"
                                     maxlength="350"
                                     v-model.trim="article.lead"
                                     placeholder="Add lead"
-                                    class="wysihtml5 form-control"
+                                    class="wysihtml5 form-control articleEditor"
                                     rows="5"></textarea>
                             </div>
                         </div>
@@ -154,7 +166,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.image">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -201,17 +213,109 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane" id="tab6">
+                    <!--Social Media-->
+                    <div class="tab-pane" id="articleSocialMedia">
                         <p> Howdy, I'm in Section 6. </p>
                     </div>
-                    <div class="tab-pane" id="tab7">
-                        <p> Howdy, I'm in Section 7. </p>
+
+                    <!--Bodies-->
+                    <div class="tab-pane" id="articleBody">
+                        <div class="form-body">
+
+                            <div v-for="(articleBody, index) in articleBodies" class="form-group">
+                                <label>Body</label>
+                                <textarea
+                                        :id="getArticleBodyName(index)"
+                                        v-model.trim="articleBody.content"
+                                        placeholder="Add content"
+                                        class="wysihtml5 form-control articleEditor"
+                                        rows="5">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleBody()"
+                                    class="btn btn-primary item_add_btn"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveArticleBodies()"
+                                    :disabled="article.id == null">
+                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="tab-pane" id="tab8">
-                        <p> Howdy, I'm in Section 8. </p>
+
+                    <!--Learnings-->
+                    <div class="tab-pane" id="articleLearning">
+                        <div class="form-body">
+
+                            <p>Learnings</p>
+                            <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
+                                <div class="form-group">
+                                    <input
+                                            type="text"
+                                            maxlength="100"
+                                            v-model.trim="articleLearning.text"
+                                            placeholder="Input text (max 100chars)"
+                                            class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleLearning()"
+                                    class="btn btn-primary item_add_btn"
+                                    :disabled="articleLearnings.length == 5"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveArticleLearnings()"
+                                    :disabled="disableLearningSubmit">
+                                Save learnings <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="tab-pane" id="tab9">
-                        <p> Howdy, I'm in Section 9. </p>
+
+                    <!--Info Boxes-->
+                    <div class="tab-pane" id="articleInfoBoxes">
+                        <div class="form-body">
+                            <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group">
+                                <label>Body</label>
+                                <textarea
+                                        :id="getArticleInfoBoxName(index)"
+                                        v-model.trim="articleInfoBox.content"
+                                        placeholder="Add content"
+                                        class="wysihtml5 form-control articleEditor"
+                                        rows="5">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions item_add">
+                            <button
+                                    @click="addArticleInfoBox()"
+                                    class="btn btn-primary item_add_btn"
+                                    type="button"> +
+                            </button>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveArticleInfoBoxes()"
+                                    :disabled="article.id == null">
+                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -242,6 +346,33 @@
                 ],
                 articleVideos: [
                 ],
+                articleBodies: [
+                    {
+                        content: '',
+                        id: null
+                    }
+                ],
+                articleBodyWithContent: false,
+                articleLearnings: [
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    }
+                ],
+                articleInfoBoxes: [
+                    {
+                        id: null,
+                        content: ''
+                    }
+                ],
                 saveArticleImagesDisabled: true
             };
         },
@@ -249,7 +380,27 @@
         computed: {
             selectedImageId()
             {
-                return api.getImage();
+                return Api.getImage();
+            },
+
+            disableLearningSubmit()
+            {
+                if(this.article.id === null)
+                {
+                    return true;
+                }
+
+                let totalLearnings = 0;
+
+                this.articleLearnings.forEach(function (value, key)
+                {
+                    if(value.text !== '')
+                    {
+                        totalLearnings ++;
+                    }
+                });
+
+                return ! (totalLearnings >= 3);
             }
         },
 
@@ -260,7 +411,7 @@
                 {
                     this.article.image_id = newId;
                     this.articleMainImage.imageId = newId;
-                    api.resetImage();
+                    Api.resetImage();
                     this.getMainImage(newId);
                 }
             }
@@ -305,17 +456,28 @@
             //Handle the submission of the article
             handleSubmit()
             {
-                if (this.article.image_id)
+                this.article.lead = $('#leadEditor').val();
+
+                if (this.article.lead !== '')
                 {
-                    this.submitArticleDetails();
+                    if (this.article.image_id)
+                    {
+                        this.submitArticleDetails();
+                    }
+                    else
+                    {
+                        this.submitArticleImage();
+                    }
                 }
                 else
                 {
-                    this.submitArticleImage();
+                    Vue.toast('Please provide the lead for the article', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
                 }
             },
 
-            //Submi
+            //Submit article image
             submitArticleImage()
             {
                 Api.http
@@ -562,8 +724,11 @@
                 Api.http
                     .put(`/articles/${this.article.id}/videos/${id}`)
                     .then(response => {
-                        if(response.status === 200)
+                        if(response.status === 204)
                         {
+                            Vue.toast('Video linked successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         }
                         else
                         {
@@ -572,23 +737,275 @@
                             });
                         }
                     });
-            }
+            },
+            /**
+             * ARTICLE BODY
+             */
+            addArticleBody()
+            {
+                this.articleBodies.push({content: '', id: null});
+                let id = this.articleBodies.length - 1;
+                setTimeout(() =>
+                {
+                    let editor = $('#articleEditor_' + id).wysihtml5({
+                        image: false,
+                        lists: false,
+                        emphasis: true,
+                        html: false,
+                        'font-styles': false
+                    });
+                }, 500);
+            },
+
+            //Get a name to give the article body
+            getArticleBodyName(id)
+            {
+                return 'articleEditor_' + id;
+            },
+
+            //Get the content of a certain article
+            getArticleBodyEditorContent(id)
+            {
+                return $('#articleEditor_' + id).val();
+            },
+
+            //Save the bodies for the articles
+            saveArticleBodies()
+            {
+                this.articleBodyWithContent = false;
+                let vm = this;
+
+                this.articleBodies.forEach(function (value, key)
+                {
+                    value.content = vm.getArticleBodyEditorContent(key);
+
+                    if(value.content !== '')
+                    {
+                        vm.articleBodyWithContent = true;
+
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/bodies/${value.id}`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleBodies[key] = response.data;
+                                        Vue.toast('Article body updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/bodies`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleBodies[key] = response.data;
+                                        Vue.toast('Article body created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+
+                if(! this.articleBodyWithContent)
+                {
+                    Vue.toast('Please make sure that you have content in the body', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            /**
+             * ARTICLE LEARNINGS
+             */
+            //Add article learnings
+            addArticleLearning()
+            {
+                if(this.articleLearnings.length < 5)
+                {
+                    this.articleLearnings.push({text: '', id: null});
+                }
+                else
+                {
+                    Vue.toast('Only a maximum of 5 learnings can be added', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            //Save article learnings
+            saveArticleLearnings()
+            {
+                let vm = this;
+
+                this.articleLearnings.forEach(function (value, key)
+                {
+                    if(value.text !== '')
+                    {
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/learnings/${value.id}`, {
+                                    text: value.text,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleLearnings[key] = response.data;
+                                        Vue.toast('Article learnings updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/learnings`, {
+                                    text: value.text,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleLearnings[key] = response.data;
+                                        Vue.toast('Article learnings created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+            },
+
+            /**
+             * ARTICLE INFOBOXES
+             */
+            addArticleInfoBox()
+            {
+                this.articleInfoBoxes.push({content: '', id: null});
+                let id = this.articleInfoBoxes.length - 1;
+                setTimeout(() =>
+                {
+                    let editor = $('#articleInfoBox_' + id).wysihtml5({
+                        image: false,
+                        lists: false,
+                        emphasis: false,
+                        html: false,
+                        'font-styles': false
+                    });
+                }, 500);
+            },
+
+            //Get the name for the info box element
+            getArticleInfoBoxName(id)
+            {
+                return 'articleInfoBox_' + id;
+            },
+
+            //Get the content of a certain article info box
+            getArticleInfoBoxContent(id)
+            {
+                return $('#articleInfoBox_' + id).val();
+            },
+
+            //Save the info boxes for the articles
+            saveArticleInfoBoxes()
+            {
+                this.articleInfoBoxWithContent = false;
+                let vm = this;
+
+                this.articleInfoBoxes.forEach(function (value, key)
+                {
+                    value.content = vm.getArticleInfoBoxContent(key);
+
+                    if(value.content !== '')
+                    {
+                        vm.articleInfoBoxWithContent = true;
+
+                        if(value.id)
+                        {
+                            Api.http
+                                .put(`/articles/${vm.article.id}/infoboxes/${value.id}`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 200)
+                                    {
+                                        vm.articleInfoBoxes[key] = response.data;
+                                        Vue.toast('Article info box updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            Api.http
+                                .post(`/articles/${vm.article.id}/infoboxes`, {
+                                    content: value.content,
+                                })
+                                .then(response => {
+                                    if(response.status === 201)
+                                    {
+                                        vm.articleInfoBoxes[key] = response.data;
+                                        Vue.toast('Article infobox created successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+
+                if(! this.articleInfoBoxWithContent)
+                {
+                    Vue.toast('Please make sure that you have content in the body', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
         },
+
         mounted: function ()
         {
-            var editor = $('#lead').wysihtml5({
-                name: 'lead',
+            $('#articleEditor_0').wysihtml5({
                 image: false,
                 lists: false,
                 emphasis: true,
                 html: false,
                 'font-styles': false
             });
-            setTimeout(() => {
-                $('.wysihtml5-sandbox.lead').contents().find('body').on('keyup', () => {
-                    setTimeout(() => { this.article.lead = $('#lead').val(); }, 256);
-                });
-            }, 0);
+
+            $('#leadEditor').wysihtml5({
+                image: false,
+                lists: false,
+                emphasis: true,
+                html: false,
+                'font-styles': false
+            });
+
+            $('#articleInfoBox_0').wysihtml5({
+                image: false,
+                lists: false,
+                emphasis: false,
+                html: false,
+                links: false,
+                'font-styles': false
+            });
         }
     }
 </script>
@@ -665,5 +1082,14 @@
         max-width: 100%;
         max-height: 180px;
         margin-bottom: 10px;
+    }
+
+    .item_add {
+        margin-bottom: 10px;
+    }
+
+    .item_add_btn {
+        width: 100%;
+        border-radius: 3px;
     }
 </style>

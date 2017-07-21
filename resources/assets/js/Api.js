@@ -32,6 +32,30 @@ class Api {
     user() {
         return this.store.state.user;
     }
+
+    getImage() {
+        return this.store.state.selected_image_id;
+    }
+
+    setImage(id) {
+        return this.store.dispatch('SET_IMAGE', id);
+    }
+
+    resetImage() {
+        return this.store.dispatch('RESET_IMAGE');
+    }
+
+    getVideo() {
+        return this.store.state.selected_video_id;
+    }
+
+    setVideo(id) {
+        return this.store.dispatch('SET_VIDEO', id);
+    }
+
+    resetVideo() {
+        return this.store.dispatch('RESET_VIDEO');
+    }
 }
 
 export default Api;
