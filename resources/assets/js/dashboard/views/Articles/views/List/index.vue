@@ -20,6 +20,7 @@
                     <th>#</th>
                     <th>Title</th>
                     <th>Lead</th>
+                    <th>Options</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,6 +30,12 @@
                     <td>{{ article.id }}</td>
                     <td>{{ article.title }}</td>
                     <td>{{ article.lead }}</td>
+                    <td><router-link
+                            :to="{name: 'articles.edit', params: {id: article.id}}"
+                            class="btn btn-warning">
+                        Edit
+                    </router-link>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -78,7 +78,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -114,7 +114,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -127,9 +127,8 @@
                                 <h4 for="article_image">Article image</h4>
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
-                                        <i v-if="articleMainImage.image === '' && article.image_id === null" class="fa fa-image" ></i>
-                                        <img v-if="article.image_id === null" v-bind:src="articleMainImage.image" alt="">
-                                        <img v-if="article.image_id" v-bind:src="articleMainImage.image.url" alt="">
+                                        <i v-if="! articleMainImage.url" class="fa fa-image" ></i>
+                                        <img v-if="articleMainImage.url" v-bind:src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
                                 <input class="btn btn-primary" type="file" name="article_image" id="article_image" v-on:change="mainArticleImageChange"/>
@@ -142,7 +141,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -166,7 +165,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -332,13 +331,12 @@
                     internal_dateline: 'Internal Dateline',
                     internal_title: 'Internal Title',
                     lead: 'Lead',
-                    image_id: null,
                     id: null
                 },
                 submitting_main: false,
                 articleMainImage: {
-                    image: '',
-                    imageId: null
+                    url: null,
+                    id: null
                 },
                 articleImages: [
                 ],
@@ -415,6 +413,61 @@
             }
         },
         methods: {
+            /**
+             * INITIALIZE THE ARTICLE (EDIT ONLY)
+             */
+            initialiseArcticle(id)
+            {
+                Api.http
+                    .get(`/articles/${id}`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.article = response.data;
+                            this.articleMainImage = this.article.image;
+                            this.initializeEditors();
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article for edit. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Initialize the editors when creating an article
+            initializeEditors()
+            {
+                $('#articleEditor_0').wysihtml5({
+                    image: false,
+                    lists: false,
+                    emphasis: true,
+                    html: false,
+                    'font-styles': false
+                });
+
+                $('#leadEditor').wysihtml5({
+                    image: false,
+                    lists: false,
+                    emphasis: true,
+                    html: false,
+                    'font-styles': false
+                });
+
+                $('#articleInfoBox_0').wysihtml5({
+                    image: false,
+                    lists: false,
+                    emphasis: false,
+                    html: false,
+                    links: false,
+                    'font-styles': false
+                });
+            },
+
+            /**
+             * MAIN ARTICLE IMAGE
+             */
             //Receive the image from the upload button
             mainArticleImageChange() {
                 let fileInput = document.getElementById('article_image');
@@ -431,8 +484,8 @@
                 let vm = this;
 
                 reader.onload = function (e) {
-                    vm.articleMainImage.image = e.target.result;
-                    vm.articleMainImage.imageId = null;
+                    vm.articleMainImage.url = e.target.result;
+                    vm.articleMainImage.id = null;
                     vm.article.image_id = null;
                 };
 
@@ -443,14 +496,55 @@
             getMainImage(id) {
                 Api.http
                     .get(`/images/${id}`)
-                    .then(response => {
-                        this.articleMainImage.image = response.data;
-                    })
-                    .catch(err => Vue.toast('Error in retrieving the selected Image. Please retry again', {
-                        className : ['nau_toast','nau_warning'],
-                    }));
+                    .then(response =>
+                    {
+                        if(response.status === 200)
+                        {
+                            this.articleMainImage = response.data;
+                            this.article.image_id = response.data.id;
+                            this.article.image = response.data;
+                            console.log(response.data);
+                            console.log(vm.articleMainImage);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the selected Image. Please retry again', {
+                                className : ['nau_toast','nau_warning'],
+                            });
+                        }
+                    });
             },
 
+            //Submit article image
+            submitArticleImage()
+            {
+                Api.http
+                    .post(`/images`, {
+                        image: this.articleMainImage.url,
+                        name: '',
+                        source: '',
+                        lead: ''
+                    })
+                    .then(response => {
+
+                        if(response.status === 201)
+                        {
+                            this.article.image_id = response.data.id;
+                            this.articleMainImage = response.data;
+                            this.submitArticleDetails();
+                        }
+                        else
+                        {
+                            Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            /**
+             * SUBMIT OF ARTICLE DETAILS
+             */
             //Handle the submission of the article
             handleSubmit()
             {
@@ -458,7 +552,7 @@
 
                 if (this.article.lead !== '')
                 {
-                    if (this.article.image_id)
+                    if (this.articleMainImage.id)
                     {
                         this.submitArticleDetails();
                     }
@@ -475,33 +569,7 @@
                 }
             },
 
-            //Submit article image
-            submitArticleImage()
-            {
-                Api.http
-                    .post(`/images`, {
-                        image: this.articleMainImage.image,
-                        name: this.article.title,
-                        source: this.article.title,
-                        lead: this.article.title
-                    })
-                    .then(response => {
-
-                        if(response.status === 201)
-                        {
-                            this.article.image_id = response.data.id;
-                            this.articleMainImage.image = response.data;
-                            this.submitArticleDetails();
-                        }
-                        else
-                        {
-                            Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
+            //Submit the details for the article
             submitArticleDetails()
             {
                 if(this.article.id)
@@ -514,6 +582,7 @@
                 }
             },
 
+            //Create a new article
             createArticle()
             {
                 Api.http
@@ -521,7 +590,7 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            this.article.id = response.data.id;
+                            this.article = response.data;
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -535,12 +604,14 @@
                     });
             },
 
+            //Update an article
             updateArticle() {
                 Api.http
                     .put(`/articles/${this.article.id}`, this.article)
                     .then(response => {
                         if(response.status === 201)
                         {
+                            this.article = response.data;
                             Vue.toast('Article updated successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -766,7 +837,6 @@
             {
                 return $('#articleEditor_' + id).val();
             },
-
             //Save the bodies for the articles
             saveArticleBodies()
             {
@@ -980,30 +1050,14 @@
 
         mounted: function ()
         {
-            $('#articleEditor_0').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: true,
-                html: false,
-                'font-styles': false
-            });
-
-            $('#leadEditor').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: true,
-                html: false,
-                'font-styles': false
-            });
-
-            $('#articleInfoBox_0').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: false,
-                html: false,
-                links: false,
-                'font-styles': false
-            });
+            if(this.$route.params.hasOwnProperty('id'))
+            {
+                this.initialiseArcticle(this.$route.params.id);
+            }
+            else
+            {
+                this.initializeEditors();
+            }
         }
     }
 </script>
