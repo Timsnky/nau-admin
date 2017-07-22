@@ -152,13 +152,23 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <label>Lead</label>
+                                <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
+                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+
+                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
+                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
+                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                                    </div>
+                                </div>
                                 <textarea
                                         id="leadEditor"
-                                    maxlength="350"
-                                    v-model.trim="article.lead"
-                                    placeholder="Add lead"
-                                    class="wysihtml5 form-control articleEditor"
-                                    rows="5"></textarea>
+                                        placeholder="Add lead"
+                                        class="form-control articleEditor"
+                                        v-model.trim="article.lead"
+                                        maxlength="350"
+                                        rows="5">
+                                </textarea>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -220,16 +230,33 @@
                     <!--Bodies-->
                     <div class="tab-pane" id="articleBody">
                         <div class="form-body">
-
+                            <label><b>Body</b></label>
                             <div v-for="(articleBody, index) in articleBodies" class="form-group">
-                                <label>Body</label>
+
+                                <div :id="getArticleBodyToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
+                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+
+                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
+                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
+                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                                    </div>
+                                </div>
                                 <textarea
                                         :id="getArticleBodyName(index)"
                                         v-model.trim="articleBody.content"
                                         placeholder="Add content"
-                                        class="wysihtml5 form-control articleEditor"
+                                        class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
+                                <div class="form-actions">
+                                    <button
+                                            class="btn btn-danger"
+                                            type="button"
+                                            @click="deleteArticleBody(index)">
+                                        Remove Body
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions item_add">
@@ -288,13 +315,15 @@
                     <!--Info Boxes-->
                     <div class="tab-pane" id="articleInfoBoxes">
                         <div class="form-body">
+                            <label><b>Info Boxes</b></label>
                             <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group">
-                                <label>Body</label>
+                                <div :id="getArticleInfoBoxToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                                </div>
                                 <textarea
                                         :id="getArticleInfoBoxName(index)"
                                         v-model.trim="articleInfoBox.content"
                                         placeholder="Add content"
-                                        class="wysihtml5 form-control articleEditor"
+                                        class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
                             </div>
@@ -347,6 +376,8 @@
                         content: '',
                         id: null
                     }
+                ],
+                articleBodyEditors: [
                 ],
                 articleBodyWithContent: false,
                 articleLearnings: [
@@ -405,8 +436,6 @@
             {
                 if(newId)
                 {
-                    this.article.image_id = newId;
-                    this.articleMainImage.imageId = newId;
                     Api.resetImage();
                     this.getMainImage(newId);
                 }
@@ -423,8 +452,11 @@
                     .then(response => {
                         if(response.status === 200)
                         {
-                            this.article = response.data;
-                            this.articleMainImage = this.article.image;
+                            if(response.data.image)
+                            {
+                                this.articleMainImage = response.data.image;
+                            }
+                            this.fillArticleData(response.data);
                             this.initializeEditors();
                         }
                         else
@@ -436,32 +468,38 @@
                     });
             },
 
+            //Fill the aricle object with the data
+            fillArticleData(data)
+            {
+                this.article.id = data.id;
+                this.article.dateline = data.dateline;
+                this.article.title = data.title;
+                this.article.internal_dateline = data.internal_dateline;
+                this.article.internal_title = data.internal_title;
+                this.article.lead = data.lead;
+            },
+
             //Initialize the editors when creating an article
             initializeEditors()
             {
-                $('#articleEditor_0').wysihtml5({
-                    image: false,
-                    lists: false,
-                    emphasis: true,
-                    html: false,
-                    'font-styles': false
+                let vm = this;
+
+                let leadEditor = new wysihtml5.Editor("leadEditor", {
+                    toolbar:      "lead-toolbar",
+                    parserRules:  wysihtml5ParserRules
+                }).on("change", function () {
+                    vm.article.lead = this.getValue();
                 });
 
-                $('#leadEditor').wysihtml5({
-                    image: false,
-                    lists: false,
-                    emphasis: true,
-                    html: false,
-                    'font-styles': false
+                let articleEditor = new wysihtml5.Editor("articleEditor_0", {
+                    toolbar:      "articleEditorToolbar_0",
+                    parserRules:  wysihtml5ParserRules
                 });
+                this.articleBodyEditors.push({editor: articleEditor});
 
-                $('#articleInfoBox_0').wysihtml5({
-                    image: false,
-                    lists: false,
-                    emphasis: false,
-                    html: false,
-                    links: false,
-                    'font-styles': false
+                let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_0", {
+                    toolbar:      "articleInfoBoxToolbar_0",
+                    parserRules:  wysihtml5ParserRules
                 });
             },
 
@@ -486,7 +524,6 @@
                 reader.onload = function (e) {
                     vm.articleMainImage.url = e.target.result;
                     vm.articleMainImage.id = null;
-                    vm.article.image_id = null;
                 };
 
                 reader.readAsDataURL(file);
@@ -501,10 +538,6 @@
                         if(response.status === 200)
                         {
                             this.articleMainImage = response.data;
-                            this.article.image_id = response.data.id;
-                            this.article.image = response.data;
-                            console.log(response.data);
-                            console.log(vm.articleMainImage);
                         }
                         else
                         {
@@ -529,7 +562,6 @@
 
                         if(response.status === 201)
                         {
-                            this.article.image_id = response.data.id;
                             this.articleMainImage = response.data;
                             this.submitArticleDetails();
                         }
@@ -590,7 +622,8 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            this.article = response.data;
+                            this.fillArticleData(response.data);
+                            this.linkMainImageToArticle();
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -609,9 +642,14 @@
                 Api.http
                     .put(`/articles/${this.article.id}`, this.article)
                     .then(response => {
-                        if(response.status === 201)
+                        if(response.status === 200)
                         {
-                            this.article = response.data;
+                            this.fillArticleData(response.data);
+                            if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
+                            {
+                                this.linkMainImageToArticle();
+                            }
+
                             Vue.toast('Article updated successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -619,6 +657,27 @@
                         else
                         {
                             Vue.toast('Error in updating the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Link the article to the main image
+            linkMainImageToArticle()
+            {
+                Api.http
+                    .put(`/articles/${this.article.id}/preview/${this.articleMainImage.id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            Vue.toast('Article preview image added successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in updating the article main image. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
@@ -816,12 +875,9 @@
                 let id = this.articleBodies.length - 1;
                 setTimeout(() =>
                 {
-                    let editor = $('#articleEditor_' + id).wysihtml5({
-                        image: false,
-                        lists: false,
-                        emphasis: true,
-                        html: false,
-                        'font-styles': false
+                    let articleEditor = new wysihtml5.Editor("articleEditor_" + id, {
+                        toolbar:      "articleEditorToolbar_" + id,
+                        parserRules:  wysihtml5ParserRules
                     });
                 }, 500);
             },
@@ -832,11 +888,40 @@
                 return 'articleEditor_' + id;
             },
 
+            getArticleBodyToolbarName(id)
+            {
+                return 'articleEditorToolbar_' + id;
+            },
+
+            deleteArticleBody(id)
+            {
+                let vm = this;
+
+                this.articleBodies.forEach(function (value, key)
+                {
+                    if(key === 0)
+                    {
+                        var content = $('#articleEditor_0');
+                        var contentPar = content.parent();
+                        contentPar.find('articleEditorToolbar_0').remove();
+                        contentPar.find('iframe').remove();
+                        contentPar.find('input[name*="wysihtml5"]').remove();
+                        content.show()
+//                        $("#articleEditor_0").removeAttribute("articleEditor_0");
+//                        console.log(vm.articleBodyEditors[0].editor);
+//                        vm.articleBodyEditors[0].editor.off();
+//                        vm.articleBodyEditors[0].editor.destroy();
+                        vm.articleBodies.splice(key, 1);
+                    }
+                })
+            },
+
             //Get the content of a certain article
             getArticleBodyEditorContent(id)
             {
                 return $('#articleEditor_' + id).val();
             },
+
             //Save the bodies for the articles
             saveArticleBodies()
             {
@@ -967,12 +1052,9 @@
                 let id = this.articleInfoBoxes.length - 1;
                 setTimeout(() =>
                 {
-                    let editor = $('#articleInfoBox_' + id).wysihtml5({
-                        image: false,
-                        lists: false,
-                        emphasis: false,
-                        html: false,
-                        'font-styles': false
+                    let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_" + id, {
+                        toolbar:      "articleInfoBoxToolbar_" + id,
+                        parserRules:  wysihtml5ParserRules
                     });
                 }, 500);
             },
@@ -981,6 +1063,12 @@
             getArticleInfoBoxName(id)
             {
                 return 'articleInfoBox_' + id;
+            },
+
+            //Get name for the article info box toolbar
+            getArticleInfoBoxToolbarName(id)
+            {
+                return 'articleInfoBoxToolbar_' + id;
             },
 
             //Get the content of a certain article info box
@@ -1063,6 +1151,22 @@
 </script>
 
 <style lang="css">
+    .wysihtml_toolbar {
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    .toolbar_url {
+        width: 100%;
+        text-align: right;
+        padding-top: 5px;
+    }
+
+    .toolbar_url input {
+        display: inline-flex;
+        max-width: 50%;
+    }
+
     .article_image_section {
         padding: 10px;
     }

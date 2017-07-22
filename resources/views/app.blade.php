@@ -113,10 +113,16 @@
     type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js')}}"
     type="text/javascript"></script>
-    <script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js')}}"
-        type="text/javascript"></script>
-    <script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js')}}"
-        type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml.min.js')}}"
+            type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml-toolbar.min.js')}}"
+            type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/wysihtml/parser_rules/advanced_unwrap.js')}}"
+            type="text/javascript"></script>
+    {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js')}}"--}}
+        {{--type="text/javascript"></script>--}}
+    {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js')}}"--}}
+        {{--type="text/javascript"></script>--}}
     <!-- END CORE PLUGINS -->
     <!-- BEGIN THEME GLOBAL SCRIPTS -->
     <script src="{{asset('assets/global/scripts/app.min.js')}}" type="text/javascript"></script>
