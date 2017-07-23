@@ -149,7 +149,7 @@
 
                     <!--Lead-->
                     <div class="tab-pane" id="articleLead">
-                        <div class="form-body">
+                        <div class="form-body wysihtmlLead">
                             <div class="form-group">
                                 <label>Lead</label>
                                 <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
@@ -164,7 +164,7 @@
                                 <textarea
                                         id="leadEditor"
                                         placeholder="Add lead"
-                                        class="form-control articleEditor"
+                                        class="form-control articleEditor wysihtmlTextArea"
                                         v-model.trim="article.lead"
                                         maxlength="350"
                                         rows="5">
@@ -231,9 +231,9 @@
                     <div class="tab-pane" id="articleBody">
                         <div class="form-body">
                             <label><b>Body</b></label>
-                            <div v-for="(articleBody, index) in articleBodies" class="form-group">
+                            <div v-for="(articleBody, index) in articleBodies" class="form-group wysihtmlBody">
 
-                                <div :id="getArticleBodyToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                                <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
                                     <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
                                     <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
 
@@ -243,15 +243,15 @@
                                     </div>
                                 </div>
                                 <textarea
-                                        :id="getArticleBodyName(index)"
+                                        id="bodyEditor"
                                         v-model.trim="articleBody.content"
-                                        placeholder="Add content"
+                                        placeholder="Here is some text input"
                                         class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
                                 <div class="form-actions">
                                     <button
-                                            class="btn btn-danger"
+                                            class="btn btn-danger remove_btn"
                                             type="button"
                                             @click="deleteArticleBody(index)">
                                         Remove Body
@@ -263,6 +263,7 @@
                             <button
                                     @click="addArticleBody()"
                                     class="btn btn-primary item_add_btn"
+                                    :disabled="articleBodies.length >= 5"
                                     type="button"> +
                             </button>
                         </div>
@@ -272,7 +273,7 @@
                                     type="button"
                                     @click="saveArticleBodies()"
                                     :disabled="article.id == null">
-                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Save bodies <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -289,7 +290,13 @@
                                             maxlength="100"
                                             v-model.trim="articleLearning.text"
                                             placeholder="Input text (max 100chars)"
-                                            class="form-control">
+                                            class="form-control article_input">
+                                    <button
+                                            @click="deleteArticleLearning(index)"
+                                            class="btn btn-danger btn-sm delete_btn"
+                                            :disabled="articleLearnings.length <= 3"
+                                            type="button"> x
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -297,7 +304,7 @@
                             <button
                                     @click="addArticleLearning()"
                                     class="btn btn-primary item_add_btn"
-                                    :disabled="articleLearnings.length == 5"
+                                    :disabled="articleLearnings.length >= 5"
                                     type="button"> +
                             </button>
                         </div>
@@ -316,22 +323,31 @@
                     <div class="tab-pane" id="articleInfoBoxes">
                         <div class="form-body">
                             <label><b>Info Boxes</b></label>
-                            <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group">
-                                <div :id="getArticleInfoBoxToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                            <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group wysihtmlInfoBox">
+                                <div id="infoBox-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
                                 </div>
                                 <textarea
-                                        :id="getArticleInfoBoxName(index)"
+                                        id="infoBoxEditor"
                                         v-model.trim="articleInfoBox.content"
-                                        placeholder="Add content"
+                                        placeholder="Here is some text input"
                                         class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
+                                <div class="form-actions">
+                                    <button
+                                            class="btn btn-danger remove_btn"
+                                            type="button"
+                                            @click="deleteArticleInfoBox(index)">
+                                        Remove InfoBox
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions item_add">
                             <button
                                     @click="addArticleInfoBox()"
                                     class="btn btn-primary item_add_btn"
+                                    :disabled="articleInfoBoxes.length >= 5"
                                     type="button"> +
                             </button>
                         </div>
@@ -341,7 +357,7 @@
                                     type="button"
                                     @click="saveArticleInfoBoxes()"
                                     :disabled="article.id == null">
-                                Save body <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Save info box <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -400,6 +416,8 @@
                         content: ''
                     }
                 ],
+                articleInfoBoxEditors: [
+                ],
                 saveArticleImagesDisabled: true
             };
         },
@@ -445,7 +463,7 @@
             /**
              * INITIALIZE THE ARTICLE (EDIT ONLY)
              */
-            initialiseArcticle(id)
+            initialiseArticle(id)
             {
                 Api.http
                     .get(`/articles/${id}`)
@@ -457,7 +475,10 @@
                                 this.articleMainImage = response.data.image;
                             }
                             this.fillArticleData(response.data);
-                            this.initializeEditors();
+                            this.initializeLeadEditor(this);
+                            this.initializeArticleBodies(id);
+                            this.initializeArticleLearnings(id);
+                            this.initializeArticleInfoBoxes(id);
                         }
                         else
                         {
@@ -479,28 +500,144 @@
                 this.article.lead = data.lead;
             },
 
+            //Get the data for the bodies linked to the article
+            initializeArticleBodies(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/bodies`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.length !== 0)
+                            {
+                                this.articleBodies = response.data;
+                            }
+
+                            let vm = this;
+
+                            setTimeout(() =>
+                            {
+                                this.articleBodies.forEach(function (value, key)
+                                {
+                                    vm.initializeBodyEditor(vm, key);
+                                })
+                            }, 100);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article bodies. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Get the data for the learnings linked to the article
+            initializeArticleLearnings(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/learnings`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.length !== 0)
+                            {
+                                this.articleLearnings = response.data;
+                            }
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article learnings. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Get the data for the info boxes linked to the article
+            initializeArticleInfoBoxes(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/infoboxes`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.length !== 0)
+                            {
+                                this.articleInfoBoxes = response.data;
+                            }
+
+                            let vm = this;
+
+                            setTimeout(() =>
+                            {
+                                this.articleInfoBoxes.forEach(function (value, key)
+                                {
+                                    vm.initializeInfoBoxEditor(vm, key);
+                                })
+                            }, 100);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article info boxes. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            /**
+             * EDITORS
+             */
             //Initialize the editors when creating an article
             initializeEditors()
             {
-                let vm = this;
+                this.initializeLeadEditor(this);
+                this.initializeBodyEditor(this, 0);
+                this.initializeInfoBoxEditor(this, 0);
+            },
 
-                let leadEditor = new wysihtml5.Editor("leadEditor", {
-                    toolbar:      "lead-toolbar",
+            //Initialize lead editor
+            initializeLeadEditor(vm)
+            {
+                let leadSection = $($('.wysihtmlLead')).get(0);
+
+                let leadEditor = new wysihtml5.Editor($(leadSection).find('#leadEditor').get(0), {
+                    toolbar:      $(leadSection).find('#lead-toolbar').get(0),
                     parserRules:  wysihtml5ParserRules
                 }).on("change", function () {
                     vm.article.lead = this.getValue();
                 });
+            },
 
-                let articleEditor = new wysihtml5.Editor("articleEditor_0", {
-                    toolbar:      "articleEditorToolbar_0",
-                    parserRules:  wysihtml5ParserRules
-                });
-                this.articleBodyEditors.push({editor: articleEditor});
+            //Initialize body editors
+            initializeBodyEditor(vm, id)
+            {
+                let bodySection = $($('.wysihtmlBody')).get(id);
 
-                let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_0", {
-                    toolbar:      "articleInfoBoxToolbar_0",
-                    parserRules:  wysihtml5ParserRules
+                let bodyEditor = new wysihtml5.Editor($(bodySection).find('#bodyEditor').get(0), {
+                    toolbar: $(bodySection).find('#body-toolbar').get(0),
+                    parserRules: wysihtml5ParserRules
+                }).on("change", function () {
+                    vm.articleBodies[id].content = this.getValue();
                 });
+
+                vm.articleBodyEditors.push({editor: bodyEditor});
+            },
+
+            //Initialize info box editors
+            initializeInfoBoxEditor(vm, id)
+            {
+                let infoBoxSection = $($('.wysihtmlInfoBox')).get(id);
+
+                let infoBoxEditor = new wysihtml5.Editor($(infoBoxSection).find('#infoBoxEditor').get(0), {
+                    toolbar: $(infoBoxSection).find('#infoBox-toolbar').get(0),
+                    parserRules: wysihtml5ParserRules
+                }).on("change", function () {
+                    vm.articleInfoBoxes[id].content = this.getValue();
+                });
+
+                vm.articleInfoBoxEditors.push({editor: infoBoxEditor});
             },
 
             /**
@@ -684,6 +821,9 @@
                     });
             },
 
+            /**
+             * ARTICLE MEDIA
+             */
             //Handle when images are uploaded
             articleImagesChange: function () {
                 var fileElement = document.getElementById('article_images');
@@ -866,60 +1006,57 @@
                         }
                     });
             },
+
             /**
              * ARTICLE BODY
              */
+            //Add an article body
             addArticleBody()
             {
+                let vm = this;
                 this.articleBodies.push({content: '', id: null});
-                let id = this.articleBodies.length - 1;
                 setTimeout(() =>
                 {
-                    let articleEditor = new wysihtml5.Editor("articleEditor_" + id, {
-                        toolbar:      "articleEditorToolbar_" + id,
-                        parserRules:  wysihtml5ParserRules
-                    });
-                }, 500);
+                    vm.initializeBodyEditor(vm, vm.articleBodies.length - 1);
+                }, 100);
             },
 
-            //Get a name to give the article body
-            getArticleBodyName(id)
-            {
-                return 'articleEditor_' + id;
-            },
-
-            getArticleBodyToolbarName(id)
-            {
-                return 'articleEditorToolbar_' + id;
-            },
-
-            deleteArticleBody(id)
+            //Delete an article body
+            deleteArticleBody(key)
             {
                 let vm = this;
 
-                this.articleBodies.forEach(function (value, key)
+                if(vm.articleBodies[key].id)
                 {
-                    if(key === 0)
-                    {
-                        var content = $('#articleEditor_0');
-                        var contentPar = content.parent();
-                        contentPar.find('articleEditorToolbar_0').remove();
-                        contentPar.find('iframe').remove();
-                        contentPar.find('input[name*="wysihtml5"]').remove();
-                        content.show()
-//                        $("#articleEditor_0").removeAttribute("articleEditor_0");
-//                        console.log(vm.articleBodyEditors[0].editor);
-//                        vm.articleBodyEditors[0].editor.off();
-//                        vm.articleBodyEditors[0].editor.destroy();
-                        vm.articleBodies.splice(key, 1);
-                    }
-                })
+                    Api.http
+                        .delete(`/articles/${vm.article.id}/bodies/${vm.articleBodies[key].id}`)
+                        .then(response => {
+                            if(response.status === 204)
+                            {
+                                vm.deleteLocalBody(vm, key);
+                                Vue.toast('Article body deleted successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                        });
+                }
+                else
+                {
+                    vm.deleteLocalBody(vm, key);
+                }
             },
 
-            //Get the content of a certain article
-            getArticleBodyEditorContent(id)
+            //Delete the body record from local data
+            deleteLocalBody(vm, key)
             {
-                return $('#articleEditor_' + id).val();
+                vm.articleBodyEditors[vm.articleBodies.length - 1].editor.destroy();
+                vm.articleBodies.splice(key, 1);
+                vm.articleBodyEditors.splice(vm.articleBodyEditors.length - 1, 1);
+
+                vm.articleBodyEditors.forEach(function (value, key)
+                {
+                    value.editor.setValue(vm.articleBodies[key].content);
+                });
             },
 
             //Save the bodies for the articles
@@ -930,7 +1067,7 @@
 
                 this.articleBodies.forEach(function (value, key)
                 {
-                    value.content = vm.getArticleBodyEditorContent(key);
+                    value.content = vm.articleBodyEditors[key].editor.getValue();
 
                     if(value.content !== '')
                     {
@@ -1021,7 +1158,6 @@
                                         });
                                     }
                                 });
-
                         }
                         else
                         {
@@ -1043,38 +1179,74 @@
                 });
             },
 
+            //Delete a learning
+            deleteArticleLearning(key)
+            {
+                let vm = this;
+
+                Api.http
+                    .delete(`/articles/${vm.article.id}/learnings/${vm.articleLearnings[key].id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            vm.articleLearnings.splice(key, 1);
+                            Vue.toast('Article learning deleted successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                    });
+            },
+
             /**
              * ARTICLE INFOBOXES
              */
+            //Add an info box
             addArticleInfoBox()
             {
+                let vm = this;
                 this.articleInfoBoxes.push({content: '', id: null});
-                let id = this.articleInfoBoxes.length - 1;
                 setTimeout(() =>
                 {
-                    let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_" + id, {
-                        toolbar:      "articleInfoBoxToolbar_" + id,
-                        parserRules:  wysihtml5ParserRules
-                    });
-                }, 500);
+                    vm.initializeInfoBoxEditor(vm, vm.articleInfoBoxes.length - 1);
+                }, 100);
             },
 
-            //Get the name for the info box element
-            getArticleInfoBoxName(id)
+            //Delete an article info box
+            deleteArticleInfoBox(key)
             {
-                return 'articleInfoBox_' + id;
+                let vm = this;
+
+                if(vm.articleInfoBoxes[key].id)
+                {
+                    Api.http
+                        .delete(`/articles/${vm.article.id}/infoboxes/${vm.articleInfoBoxes[key].id}`)
+                        .then(response => {
+                            if(response.status === 204)
+                            {
+                                vm.deleteLocalInfoBox(vm, key);
+                                Vue.toast('Article infobox deleted successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                        });
+                }
+                else
+                {
+                    vm.deleteLocalInfoBox(vm, key);
+                }
             },
 
-            //Get name for the article info box toolbar
-            getArticleInfoBoxToolbarName(id)
+            //Delete the info box record from local data
+            deleteLocalInfoBox(vm, key)
             {
-                return 'articleInfoBoxToolbar_' + id;
-            },
+                vm.articleInfoBoxEditors[vm.articleInfoBoxes.length - 1].editor.destroy();
+                vm.articleInfoBoxes.splice(key, 1);
+                vm.articleInfoBoxEditors.splice(vm.articleInfoBoxEditors.length - 1, 1);
 
-            //Get the content of a certain article info box
-            getArticleInfoBoxContent(id)
-            {
-                return $('#articleInfoBox_' + id).val();
+                vm.articleInfoBoxEditors.forEach(function (value, key)
+                {
+                    value.editor.setValue(vm.articleInfoBoxes[key].content);
+                });
             },
 
             //Save the info boxes for the articles
@@ -1085,7 +1257,7 @@
 
                 this.articleInfoBoxes.forEach(function (value, key)
                 {
-                    value.content = vm.getArticleInfoBoxContent(key);
+                    value.content = vm.articleInfoBoxEditors[key].editor.getValue();
 
                     if(value.content !== '')
                     {
@@ -1133,14 +1305,13 @@
                     });
                 }
             },
-
         },
 
         mounted: function ()
         {
             if(this.$route.params.hasOwnProperty('id'))
             {
-                this.initialiseArcticle(this.$route.params.id);
+                this.initialiseArticle(this.$route.params.id);
             }
             else
             {
@@ -1247,5 +1418,21 @@
     .item_add_btn {
         width: 100%;
         border-radius: 3px;
+        margin-bottom: 5px;
+    }
+
+    .remove_btn {
+        margin-top: 10px;
+    }
+
+    .article_input {
+        display: inline-flex;
+        max-width: 94%;
+    }
+
+    .delete_btn {
+        width: 5%;
+        max-width: 28px;
+        float: right;
     }
 </style>
