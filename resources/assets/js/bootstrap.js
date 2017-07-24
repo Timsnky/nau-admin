@@ -7,7 +7,8 @@ import axios from 'axios';
 import moment from 'moment';
 import Api from './Api';
 import Toast from 'vue-easy-toast';
-import swal from 'sweetalert2'
+import swal from 'sweetalert2';
+import Multiselect from 'vue-multiselect';
 
 const request = axios.create({
     withCredentials: true,
@@ -18,6 +19,7 @@ window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookie);
+Vue.use(Multiselect);
 Vue.use(Toast, {
     id: 'easy-toast-default',
     horizontalPosition: 'right',
