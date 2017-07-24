@@ -78,7 +78,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -114,7 +114,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -127,9 +127,8 @@
                                 <h4 for="article_image">Article image</h4>
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
-                                        <i v-if="articleMainImage.image === '' && article.image_id === null" class="fa fa-image" ></i>
-                                        <img v-if="article.image_id === null" v-bind:src="articleMainImage.image" alt="">
-                                        <img v-if="article.image_id" v-bind:src="articleMainImage.image.url" alt="">
+                                        <i v-if="! articleMainImage.url" class="fa fa-image" ></i>
+                                        <img v-if="articleMainImage.url" v-bind:src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
                                 <input class="btn btn-primary" type="file" name="article_image" id="article_image" v-on:change="mainArticleImageChange"/>
@@ -142,7 +141,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -153,20 +152,30 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <label>Lead</label>
+                                <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
+                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+
+                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
+                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
+                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                                    </div>
+                                </div>
                                 <textarea
                                         id="leadEditor"
-                                    maxlength="350"
-                                    v-model.trim="article.lead"
-                                    placeholder="Add lead"
-                                    class="wysihtml5 form-control articleEditor"
-                                    rows="5"></textarea>
+                                        placeholder="Add lead"
+                                        class="form-control articleEditor"
+                                        v-model.trim="article.lead"
+                                        maxlength="350"
+                                        rows="5">
+                                </textarea>
                             </div>
                         </div>
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.image">
+                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.url">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -221,16 +230,33 @@
                     <!--Bodies-->
                     <div class="tab-pane" id="articleBody">
                         <div class="form-body">
-
+                            <label><b>Body</b></label>
                             <div v-for="(articleBody, index) in articleBodies" class="form-group">
-                                <label>Body</label>
+
+                                <div :id="getArticleBodyToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
+                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+
+                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
+                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
+                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                                    </div>
+                                </div>
                                 <textarea
                                         :id="getArticleBodyName(index)"
                                         v-model.trim="articleBody.content"
                                         placeholder="Add content"
-                                        class="wysihtml5 form-control articleEditor"
+                                        class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
+                                <div class="form-actions">
+                                    <button
+                                            class="btn btn-danger"
+                                            type="button"
+                                            @click="deleteArticleBody(index)">
+                                        Remove Body
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions item_add">
@@ -289,13 +315,15 @@
                     <!--Info Boxes-->
                     <div class="tab-pane" id="articleInfoBoxes">
                         <div class="form-body">
+                            <label><b>Info Boxes</b></label>
                             <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group">
-                                <label>Body</label>
+                                <div :id="getArticleInfoBoxToolbarName(index)" style="display: none;" class="wysihtml_toolbar text-right">
+                                </div>
                                 <textarea
                                         :id="getArticleInfoBoxName(index)"
                                         v-model.trim="articleInfoBox.content"
                                         placeholder="Add content"
-                                        class="wysihtml5 form-control articleEditor"
+                                        class="form-control articleEditor"
                                         rows="5">
                                 </textarea>
                             </div>
@@ -334,13 +362,12 @@
                     internal_dateline: 'Internal Dateline',
                     internal_title: 'Internal Title',
                     lead: 'Lead',
-                    image_id: null,
                     id: null
                 },
                 submitting_main: false,
                 articleMainImage: {
-                    image: '',
-                    imageId: null
+                    url: null,
+                    id: null
                 },
                 articleImages: [
                 ],
@@ -351,6 +378,8 @@
                         content: '',
                         id: null
                     }
+                ],
+                articleBodyEditors: [
                 ],
                 articleBodyWithContent: false,
                 articleLearnings: [
@@ -409,14 +438,76 @@
             {
                 if(newId)
                 {
-                    this.article.image_id = newId;
-                    this.articleMainImage.imageId = newId;
                     Api.resetImage();
                     this.getMainImage(newId);
                 }
             }
         },
         methods: {
+            /**
+             * INITIALIZE THE ARTICLE (EDIT ONLY)
+             */
+            initialiseArcticle(id)
+            {
+                Api.http
+                    .get(`/articles/${id}`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.image)
+                            {
+                                this.articleMainImage = response.data.image;
+                            }
+                            this.fillArticleData(response.data);
+                            this.initializeEditors();
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article for edit. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Fill the aricle object with the data
+            fillArticleData(data)
+            {
+                this.article.id = data.id;
+                this.article.dateline = data.dateline;
+                this.article.title = data.title;
+                this.article.internal_dateline = data.internal_dateline;
+                this.article.internal_title = data.internal_title;
+                this.article.lead = data.lead;
+            },
+
+            //Initialize the editors when creating an article
+            initializeEditors()
+            {
+                let vm = this;
+
+                let leadEditor = new wysihtml5.Editor("leadEditor", {
+                    toolbar:      "lead-toolbar",
+                    parserRules:  wysihtml5ParserRules
+                }).on("change", function () {
+                    vm.article.lead = this.getValue();
+                });
+
+                let articleEditor = new wysihtml5.Editor("articleEditor_0", {
+                    toolbar:      "articleEditorToolbar_0",
+                    parserRules:  wysihtml5ParserRules
+                });
+                this.articleBodyEditors.push({editor: articleEditor});
+
+                let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_0", {
+                    toolbar:      "articleInfoBoxToolbar_0",
+                    parserRules:  wysihtml5ParserRules
+                });
+            },
+
+            /**
+             * MAIN ARTICLE IMAGE
+             */
             //Receive the image from the upload button
             mainArticleImageChange() {
                 let fileInput = document.getElementById('article_image');
@@ -433,9 +524,8 @@
                 let vm = this;
 
                 reader.onload = function (e) {
-                    vm.articleMainImage.image = e.target.result;
-                    vm.articleMainImage.imageId = null;
-                    vm.article.image_id = null;
+                    vm.articleMainImage.url = e.target.result;
+                    vm.articleMainImage.id = null;
                 };
 
                 reader.readAsDataURL(file);
@@ -445,14 +535,50 @@
             getMainImage(id) {
                 Api.http
                     .get(`/images/${id}`)
-                    .then(response => {
-                        this.articleMainImage.image = response.data;
-                    })
-                    .catch(err => Vue.toast('Error in retrieving the selected Image. Please retry again', {
-                        className : ['nau_toast','nau_warning'],
-                    }));
+                    .then(response =>
+                    {
+                        if(response.status === 200)
+                        {
+                            this.articleMainImage = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the selected Image. Please retry again', {
+                                className : ['nau_toast','nau_warning'],
+                            });
+                        }
+                    });
             },
 
+            //Submit article image
+            submitArticleImage()
+            {
+                Api.http
+                    .post(`/images`, {
+                        image: this.articleMainImage.url,
+                        name: '',
+                        source: '',
+                        lead: ''
+                    })
+                    .then(response => {
+
+                        if(response.status === 201)
+                        {
+                            this.articleMainImage = response.data;
+                            this.submitArticleDetails();
+                        }
+                        else
+                        {
+                            Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            /**
+             * SUBMIT OF ARTICLE DETAILS
+             */
             //Handle the submission of the article
             handleSubmit()
             {
@@ -460,7 +586,7 @@
 
                 if (this.article.lead !== '')
                 {
-                    if (this.article.image_id)
+                    if (this.articleMainImage.id)
                     {
                         this.submitArticleDetails();
                     }
@@ -477,33 +603,7 @@
                 }
             },
 
-            //Submit article image
-            submitArticleImage()
-            {
-                Api.http
-                    .post(`/images`, {
-                        image: this.articleMainImage.image,
-                        name: this.article.title,
-                        source: this.article.title,
-                        lead: this.article.title
-                    })
-                    .then(response => {
-
-                        if(response.status === 201)
-                        {
-                            this.article.image_id = response.data.id;
-                            this.articleMainImage.image = response.data;
-                            this.submitArticleDetails();
-                        }
-                        else
-                        {
-                            Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
+            //Submit the details for the article
             submitArticleDetails()
             {
                 if(this.article.id)
@@ -516,6 +616,7 @@
                 }
             },
 
+            //Create a new article
             createArticle()
             {
                 Api.http
@@ -523,7 +624,8 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            this.article.id = response.data.id;
+                            this.fillArticleData(response.data);
+                            this.linkMainImageToArticle();
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -537,12 +639,19 @@
                     });
             },
 
+            //Update an article
             updateArticle() {
                 Api.http
                     .put(`/articles/${this.article.id}`, this.article)
                     .then(response => {
-                        if(response.status === 201)
+                        if(response.status === 200)
                         {
+                            this.fillArticleData(response.data);
+                            if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
+                            {
+                                this.linkMainImageToArticle();
+                            }
+
                             Vue.toast('Article updated successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -550,6 +659,27 @@
                         else
                         {
                             Vue.toast('Error in updating the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Link the article to the main image
+            linkMainImageToArticle()
+            {
+                Api.http
+                    .put(`/articles/${this.article.id}/preview/${this.articleMainImage.id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            Vue.toast('Article preview image added successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in updating the article main image. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
@@ -747,12 +877,9 @@
                 let id = this.articleBodies.length - 1;
                 setTimeout(() =>
                 {
-                    let editor = $('#articleEditor_' + id).wysihtml5({
-                        image: false,
-                        lists: false,
-                        emphasis: true,
-                        html: false,
-                        'font-styles': false
+                    let articleEditor = new wysihtml5.Editor("articleEditor_" + id, {
+                        toolbar:      "articleEditorToolbar_" + id,
+                        parserRules:  wysihtml5ParserRules
                     });
                 }, 500);
             },
@@ -761,6 +888,34 @@
             getArticleBodyName(id)
             {
                 return 'articleEditor_' + id;
+            },
+
+            getArticleBodyToolbarName(id)
+            {
+                return 'articleEditorToolbar_' + id;
+            },
+
+            deleteArticleBody(id)
+            {
+                let vm = this;
+
+                this.articleBodies.forEach(function (value, key)
+                {
+                    if(key === 0)
+                    {
+                        var content = $('#articleEditor_0');
+                        var contentPar = content.parent();
+                        contentPar.find('articleEditorToolbar_0').remove();
+                        contentPar.find('iframe').remove();
+                        contentPar.find('input[name*="wysihtml5"]').remove();
+                        content.show()
+//                        $("#articleEditor_0").removeAttribute("articleEditor_0");
+//                        console.log(vm.articleBodyEditors[0].editor);
+//                        vm.articleBodyEditors[0].editor.off();
+//                        vm.articleBodyEditors[0].editor.destroy();
+                        vm.articleBodies.splice(key, 1);
+                    }
+                })
             },
 
             //Get the content of a certain article
@@ -899,12 +1054,9 @@
                 let id = this.articleInfoBoxes.length - 1;
                 setTimeout(() =>
                 {
-                    let editor = $('#articleInfoBox_' + id).wysihtml5({
-                        image: false,
-                        lists: false,
-                        emphasis: false,
-                        html: false,
-                        'font-styles': false
+                    let infoBoxEditor = new wysihtml5.Editor("articleInfoBox_" + id, {
+                        toolbar:      "articleInfoBoxToolbar_" + id,
+                        parserRules:  wysihtml5ParserRules
                     });
                 }, 500);
             },
@@ -913,6 +1065,12 @@
             getArticleInfoBoxName(id)
             {
                 return 'articleInfoBox_' + id;
+            },
+
+            //Get name for the article info box toolbar
+            getArticleInfoBoxToolbarName(id)
+            {
+                return 'articleInfoBoxToolbar_' + id;
             },
 
             //Get the content of a certain article info box
@@ -982,35 +1140,35 @@
 
         mounted: function ()
         {
-            $('#articleEditor_0').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: true,
-                html: false,
-                'font-styles': false
-            });
-
-            $('#leadEditor').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: true,
-                html: false,
-                'font-styles': false
-            });
-
-            $('#articleInfoBox_0').wysihtml5({
-                image: false,
-                lists: false,
-                emphasis: false,
-                html: false,
-                links: false,
-                'font-styles': false
-            });
+            if(this.$route.params.hasOwnProperty('id'))
+            {
+                this.initialiseArcticle(this.$route.params.id);
+            }
+            else
+            {
+                this.initializeEditors();
+            }
         }
     }
 </script>
 
 <style lang="css">
+    .wysihtml_toolbar {
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    .toolbar_url {
+        width: 100%;
+        text-align: right;
+        padding-top: 5px;
+    }
+
+    .toolbar_url input {
+        display: inline-flex;
+        max-width: 50%;
+    }
+
     .article_image_section {
         padding: 10px;
     }
