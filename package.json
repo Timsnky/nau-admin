@@ -32,6 +32,7 @@
     "sweetalert2": "^6.6.6",
     "vue-cookie": "^1.1.4",
     "vue-easy-toast": "^1.0.2",
+    "vue-multiselect": "^2.0.2",
     "vue-template-compiler": "^2.3.3",
     "vuex-persistedstate": "^1.4.1"
   }
