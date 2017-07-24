@@ -20,7 +20,7 @@
                     class="btn btn-primary pull-right">
                     Upload
                 </router-link>
-                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
+                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
                     Choose Video
                 </button>
             </div>

@@ -30,7 +30,6 @@
 
     export default {
         props: {
-            items: Array,
             currentPage: Number,
             pagesCount: Number,
             itemsPerPage: Number,
