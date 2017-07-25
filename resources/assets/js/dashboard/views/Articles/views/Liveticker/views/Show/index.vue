@@ -16,29 +16,44 @@
                         </div>
                     </div>
                 </div>
-                <div class="timeline-body-content linebreaks">
+                <div class="timeline-body-content">
                     <span class="font-grey-cascade">
                         <div class="form-group">
-                            <textarea v-model="content" class="form-control" rows="6"></textarea>
+                            <select v-model="type" class="form-control" rows="6">
+                                <option value="" disabled hidden>Typ auswählen</option>
+                                <option value="body">Text</option>
+                                <option value="socialmedia">Socialmedia</option>
+                            </select>
                         </div>
 
-                        <button type="button" class="btn btn-primary" @click="create">Erstellen</button>
+                        <socialmedia-input v-if="type === 'socialmedia'" @new-post="fetchLivetickers"></socialmedia-input>
+                        <body-input v-if="type === 'body'" @new-post="fetchLivetickers"></body-input>
                     </span>
                 </div>
             </div>
         </div>
 
         <timeline-item v-for="liveticker in livetickers" :key="liveticker.id" :liveticker="liveticker" @delete="removeLiveticker(liveticker)">
-            {{ liveticker.content }}
+            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :url="liveticker.url" />
+
+            <text-element v-if="liveticker.type === 'body'">
+                {{ liveticker.content }}
+            </text-element>
+
         </timeline-item>
     </div>
 </template>
 <script>
     import TimelineItem from './components/TimelineItem'
+    import TextElement from './components/Elements/TextElement'
+    import BodyInput from './components/Inputs/BodyInput'
+    import SocialmediaElement from './components/Elements/SocialmediaTwitterElement'
+    import SocialmediaInput from './components/Inputs/SocialmediaInput'
 
     export default {
         data() {
             return {
+                type: '',
                 livetickers: [],
                 me: {},
                 content: '',
@@ -46,44 +61,45 @@
         },
 
         components: {
-            'timeline-item': TimelineItem
+            'timeline-item': TimelineItem,
+            'text-element': TextElement,
+            'body-input': BodyInput,
+            'socialmedia-input': SocialmediaInput,
+            'socialmedia-element': SocialmediaElement,
         },
 
         methods: {
-            create() {
-                Api.http
-                    .post(`/articles/${this.$route.params.article}/livetickers`, {
-                        content: this.content,
-                    }).then(response => {
-                        this.livetickers.unshift(response.data);
-                        this.content = '';
-                        Vue.toast('Liveticker wurde erstellt', {
-                            className : ['nau_toast','et-info'],
-                        });
-                    });
-            },
-
             removeLiveticker(liveticker) {
-                this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
+                Api.http
+                        .delete(`/article/${this.$route.params.article}/livetickers/${liveticker.id}`)
+                        .then(response => {
+                            this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
+                            Vue.toast('Liveticker wurde gelöscht', {
+                                className : ['nau_toast','et-info'],
+                            });
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            Vue.toast('Ein Fehler ist aufgetreten', {
+                                className : ['nau_toast','nau_warning'],
+                            });
+                        });
+
             },
+
+            fetchLivetickers() {
+                Api.http
+                    .get(`/articles/${this.$route.params.article}/livetickers`)
+                    .then(response => this.livetickers = response.data);
+            }
         },
-
-
 
         mounted() {
             Api.http
                 .get(`/me`)
                 .then(response => this.me = response.data);
 
-            Api.http
-                .get(`/articles/${this.$route.params.article}/livetickers`)
-                .then(response => this.livetickers = response.data);
+            this.fetchLivetickers();
         },
     }
 </script>
-
-<style scoped>
-    .linebreaks {
-        white-space: pre-line;
-    }
-</style>

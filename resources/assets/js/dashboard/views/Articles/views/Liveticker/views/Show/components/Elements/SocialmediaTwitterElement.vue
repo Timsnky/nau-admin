@@ -1,5 +1,5 @@
 <template>
-    <div id="tweet"></div>
+    <div class="tweet"></div>
 </template>
 <script>
     export default {
@@ -8,13 +8,13 @@
         },
 
         mounted() {
-            document.getElementById('tweet').innerHTML = '';
+            this.$el.innerHTML = '';
             var parts = this.url.split('/');
             var tweetId = parts.pop() || parts.pop();  // handle potential trailing slash
 
             twttr.widgets.createTweet(
                 tweetId,
-                document.getElementById('tweet'),
+                this.$el
                 );
         }
     }

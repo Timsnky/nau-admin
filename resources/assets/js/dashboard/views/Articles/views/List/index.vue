@@ -35,6 +35,11 @@
                             class="btn btn-warning">
                         Edit
                     </router-link>
+                    <router-link
+                            :to="{name: 'articles.livetickers', params: {article: article.id}}"
+                            class="btn btn-primary">
+                        Liveticker
+                    </router-link>
                     </td>
                 </tr>
                 </tbody>
