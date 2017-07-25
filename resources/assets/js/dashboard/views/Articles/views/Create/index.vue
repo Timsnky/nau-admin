@@ -304,8 +304,14 @@
                                             type="button"> x
                                     </button>
                                 </div>
-                                <div class="form-group">
-                                    <a href="https://publish.twitter.com/oembed?url=https://twitter.com/HELBpage/status/889378370814869504">Twitter</a>
+                                <div class="form-group"></div>
+                                <div class="form-actions">
+                                    <button
+                                            class="btn btn-primary remove_btn"
+                                            type="button"
+                                            @click="previewArticleSocialMedia(index)">
+                                        Preview
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -481,6 +487,8 @@
                                         track-by="id"
                                         :multiple="true"
                                         :taggable="true"
+                                        open-direction="bottom"
+                                        :internal-search="false"
                                         @tag="addArticleTag">
                                 </multiselect>
                             </div>
@@ -550,7 +558,7 @@
                 selectectedSlider: null,
                 articleSocialMedias: [
                     {
-                        url: '',
+                        url: 'https://twitter.com/HELBpage/status/889378370814869504',
                         id: null
                     }
                 ],
@@ -1583,6 +1591,23 @@
             /**
              * ARTICLE SOCIAL MEDIA
              */
+            //Preview a given social media article
+            previewArticleSocialMedia(key)
+            {
+                let url = 'https://publish.twitter.com/oembed?url=' + this.articleSocialMedias[key].url;
+
+                axios
+                    .get(url,  {
+                        headers: {
+                            'Access-Control-Allow-Origin' : 'https://publish.twitter.com',
+                            'Access-Control-Request-Method' : 'GET'
+                        }
+                    })
+                    .then(response => {
+                        console.log(response);
+                    });
+            },
+
             //Add an article social media item
             addArticleSocialMedia()
             {
