@@ -30,6 +30,7 @@
     "moment": "^2.18.1",
     "socket.io": "^2.0.3",
     "sweetalert2": "^6.6.6",
+    "underscore": "^1.8.3",
     "vue-cookie": "^1.1.4",
     "vue-easy-toast": "^1.0.2",
     "vue-multiselect": "^2.0.2",

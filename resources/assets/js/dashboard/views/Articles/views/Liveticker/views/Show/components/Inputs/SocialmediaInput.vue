@@ -2,9 +2,9 @@
     <div>
         <div class="form-group">
             <label for="socialmedia">Link</label>
-            <input @focusout="rerender" type="text" v-model="url" placeholder="https://twitter.com/elonmusk/status/576140759281238017" id="socialmedia" class="form-control"></input>
+            <input type="text" v-model="url" placeholder="https://twitter.com/elonmusk/status/576140759281238017" id="socialmedia" class="form-control"></input>
 
-            <twitter-element v-if="show" :url="url"></twitter-element>
+            <twitter-element :url="url"></twitter-element>
         </div>
 
         <div class="form-group">
@@ -13,22 +13,16 @@
     </div>
 </template>
 <script>
-    import TwitterElment from '../Elements/SocialmediaTwitterElement'
+    import TwitterElment from 'dashboard/components/TwitterTweet';
 
     export default {
         data() {
             return {
                 url: '',
-                show: false,
             }
         },
 
         methods: {
-            rerender() {
-                this.show = false;
-                setTimeout(() => this.show = true, 100);
-            },
-
             post() {
                 Api.http
                     .post(`/socialmedia`, {

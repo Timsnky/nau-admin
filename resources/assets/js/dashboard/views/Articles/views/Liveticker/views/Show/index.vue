@@ -33,7 +33,7 @@
 
         <timeline-item v-for="liveticker in livetickers" :key="liveticker.id" :liveticker="liveticker" @delete="removeLiveticker(liveticker)">
 
-            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :url="liveticker.url" />
+            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :element="liveticker" />
             <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
             <body-element v-if="liveticker.type === 'body'">{{ liveticker.content }}</body-element>
             <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
@@ -45,7 +45,7 @@
     import TimelineItem from './components/TimelineItem'
     import BodyElement from './components/Elements/BodyElement'
     import BodyInput from './components/Inputs/BodyInput'
-    import SocialmediaElement from './components/Elements/SocialmediaTwitterElement'
+    import SocialmediaElement from './components/Elements/SocialmediaElement'
     import SocialmediaInput from './components/Inputs/SocialmediaInput'
     import ExternalVideoInput from './components/Inputs/ExternalVideoInput'
     import ExternalVideoElement from './components/Elements/ExternalVideoElement'

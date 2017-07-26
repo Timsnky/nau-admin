@@ -44,6 +44,7 @@ window.moment = moment;
 window.moment.locale('de');
 
 window.swal = swal;
+window._ = require('underscore');
 
 
 request.interceptors.request.use(config => {
