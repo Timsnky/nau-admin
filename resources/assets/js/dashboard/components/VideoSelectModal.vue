@@ -141,7 +141,7 @@
             },
 
             dispatchVideoSelected(id) {
-                this.$emit('videoSelected', id);
+                Api.setVideo(id);
                 this.reset();
                 $('#videoSelectionModal').modal('hide');
             },

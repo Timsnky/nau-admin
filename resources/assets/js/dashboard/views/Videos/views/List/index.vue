@@ -130,16 +130,7 @@
                     return Api.http.get(`/videos?search=${this.searchTerm}&page=${page}`);
                 }
 
-                return request.get(`/videos?page=${page}`);
-
-//                Echo.private('notifications.' + Api.user().id)
-//                    .listen('VideoProcessed', (e) => {
-//                        this.notifications.unshift({
-//                            text: e.video.name + ' is done processing',
-//                            time: moment()
-//                        });
-//                        this.newNotificationsCount++;
-//                    });
+                return Api.http.get(`/videos?page=${page}`);
             }
         }
     }
