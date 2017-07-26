@@ -89,7 +89,7 @@
                         <h4 class="modal-title" id="myModalLabel">Videos</h4>
                     </div>
                     <div class="modal-body">
-                        {{--<video-select-modal></video-select-modal>--}}
+                        <video-select-modal></video-select-modal>
                     </div>
                 </div>
 
