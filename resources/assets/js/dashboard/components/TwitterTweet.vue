@@ -16,7 +16,6 @@
 
         methods: {
             debounce: _.debounce((vm) => {
-                debugger;
                 vm.createTweet();
             }, 400),
 
