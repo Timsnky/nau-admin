@@ -9,7 +9,6 @@
 
         watch: {
             url(newUrl) {
-                console.log(newUrl);
                 this.debounce(this);
             }
         },
