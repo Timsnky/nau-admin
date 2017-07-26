@@ -27,13 +27,13 @@
                         var body = response.data;
 
                         Api.http
-                        .put(`/livetickers/${this.$route.params.article}/bodies/${body.id}`)
-                        .then(response => {
-                            this.$emit('new-post');
-                            Vue.toast('Liveticker wurde erstellt', {
-                                className : ['nau_toast','et-info'],
+                            .put(`/livetickers/${this.$route.params.article}/bodies/${body.id}`)
+                            .then(response => {
+                                this.$emit('new-post');
+                                Vue.toast('Liveticker wurde erstellt', {
+                                    className : ['nau_toast','et-info'],
+                                });
                             });
-                        });
                     });
             },
         },

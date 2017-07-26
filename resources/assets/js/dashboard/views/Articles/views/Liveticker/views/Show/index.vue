@@ -19,36 +19,38 @@
                 <div class="timeline-body-content">
                     <span class="font-grey-cascade">
                         <div class="form-group">
-                            <select v-model="type" class="form-control" rows="6">
-                                <option value="" disabled hidden>Typ auswählen</option>
-                                <option value="body">Text</option>
-                                <option value="socialmedia">Socialmedia</option>
-                            </select>
+                            <multiselect v-model="type" :options="options" label="name" :show-labels="false" :searchable="false" placeholder="Typ auswählen" />
                         </div>
 
-                        <socialmedia-input v-if="type === 'socialmedia'" @new-post="fetchLivetickers"></socialmedia-input>
-                        <body-input v-if="type === 'body'" @new-post="fetchLivetickers"></body-input>
+                        <socialmedia-input v-if="type.value === 'socialmedia'" @new-post="fetchLivetickers" />
+                        <body-input v-if="type.value === 'body'" @new-post="fetchLivetickers" />
+                        <external-video-input v-if="type.value === 'external-video'" @new-post="fetchLivetickers" />
+                        <comment-input v-if="type.value === 'comment'" @new-post="fetchLivetickers" />
                     </span>
                 </div>
             </div>
         </div>
 
         <timeline-item v-for="liveticker in livetickers" :key="liveticker.id" :liveticker="liveticker" @delete="removeLiveticker(liveticker)">
-            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :url="liveticker.url" />
 
-            <text-element v-if="liveticker.type === 'body'">
-                {{ liveticker.content }}
-            </text-element>
+            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :url="liveticker.url" />
+            <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
+            <body-element v-if="liveticker.type === 'body'">{{ liveticker.content }}</body-element>
+            <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
 
         </timeline-item>
     </div>
 </template>
 <script>
     import TimelineItem from './components/TimelineItem'
-    import TextElement from './components/Elements/TextElement'
+    import BodyElement from './components/Elements/BodyElement'
     import BodyInput from './components/Inputs/BodyInput'
     import SocialmediaElement from './components/Elements/SocialmediaTwitterElement'
     import SocialmediaInput from './components/Inputs/SocialmediaInput'
+    import ExternalVideoInput from './components/Inputs/ExternalVideoInput'
+    import ExternalVideoElement from './components/Elements/ExternalVideoElement'
+    import CommentInput from './components/Inputs/CommentInput'
+    import CommentElement from './components/Elements/CommentElement'
 
     export default {
         data() {
@@ -57,33 +59,43 @@
                 livetickers: [],
                 me: {},
                 content: '',
+                options: [
+                    {name: 'Text', value: 'body'},
+                    {name: 'Socialmedia', value: 'socialmedia'},
+                    {name: 'Externes Video', value: 'external-video'},
+                    {name: 'Kommentar', value: 'comment'},
+                ]
             }
         },
 
         components: {
             'timeline-item': TimelineItem,
-            'text-element': TextElement,
+            'body-element': BodyElement,
             'body-input': BodyInput,
             'socialmedia-input': SocialmediaInput,
             'socialmedia-element': SocialmediaElement,
+            'external-video-input': ExternalVideoInput,
+            'external-video-element': ExternalVideoElement,
+            'comment-input': CommentInput,
+            'comment-element': CommentElement,
         },
 
         methods: {
             removeLiveticker(liveticker) {
                 Api.http
-                        .delete(`/article/${this.$route.params.article}/livetickers/${liveticker.id}`)
-                        .then(response => {
-                            this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
-                            Vue.toast('Liveticker wurde gelöscht', {
-                                className : ['nau_toast','et-info'],
-                            });
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            Vue.toast('Ein Fehler ist aufgetreten', {
-                                className : ['nau_toast','nau_warning'],
-                            });
+                    .delete(`/article/${this.$route.params.article}/livetickers/${liveticker.id}`)
+                    .then(response => {
+                        this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
+                        Vue.toast('Liveticker wurde gelöscht', {
+                            className : ['nau_toast','et-info'],
                         });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        Vue.toast('Ein Fehler ist aufgetreten', {
+                            className : ['nau_toast','nau_warning'],
+                        });
+                    });
 
             },
 
