@@ -11,6 +11,8 @@ mix
     })
     .copyDirectory('node_modules/bootstrap-select/dist', 'public/assets/global/plugins/bootstrap-select')
     .copyDirectory('node_modules/bootstrap-datepicker/dist', 'public/assets/global/plugins/bootstrap-datepicker')
+    .copyDirectory('node_modules/eonasdan-bootstrap-datetimepicker/build', 'public/assets/global/plugins/eonasdan-bootstrap-datetimepicker')
+    .copyDirectory('node_modules/bootstrap/fonts', 'public/assets/global/plugins/eonasdan-bootstrap-datetimepicker/fonts')
     .copyDirectory('resources/assets/images', 'public/assets/images')
     .copy('node_modules/font-awesome/fonts', 'public/fonts')
     .js('resources/assets/js/dashboard/app.js', 'public/js')

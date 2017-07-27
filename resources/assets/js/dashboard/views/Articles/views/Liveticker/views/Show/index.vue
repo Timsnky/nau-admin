@@ -16,74 +16,102 @@
                         </div>
                     </div>
                 </div>
-                <div class="timeline-body-content linebreaks">
+                <div class="timeline-body-content">
                     <span class="font-grey-cascade">
                         <div class="form-group">
-                            <textarea v-model="content" class="form-control" rows="6"></textarea>
+                            <multiselect v-model="type" :options="options" label="name" :show-labels="false" :searchable="false" placeholder="Typ auswählen" />
                         </div>
 
-                        <button type="button" class="btn btn-primary" @click="create">Erstellen</button>
+                        <socialmedia-input v-if="type.value === 'socialmedia'" @new-post="fetchLivetickers" />
+                        <body-input v-if="type.value === 'body'" @new-post="fetchLivetickers" />
+                        <external-video-input v-if="type.value === 'external-video'" @new-post="fetchLivetickers" />
+                        <comment-input v-if="type.value === 'comment'" @new-post="fetchLivetickers" />
                     </span>
                 </div>
             </div>
         </div>
 
         <timeline-item v-for="liveticker in livetickers" :key="liveticker.id" :liveticker="liveticker" @delete="removeLiveticker(liveticker)">
-            {{ liveticker.content }}
+
+            <socialmedia-element v-if="liveticker.type === 'socialmedia'" :element="liveticker" />
+            <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
+            <body-element v-if="liveticker.type === 'body'">{{ liveticker.content }}</body-element>
+            <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
+
         </timeline-item>
     </div>
 </template>
 <script>
     import TimelineItem from './components/TimelineItem'
+    import BodyElement from './components/Elements/BodyElement'
+    import BodyInput from './components/Inputs/BodyInput'
+    import SocialmediaElement from './components/Elements/SocialmediaElement'
+    import SocialmediaInput from './components/Inputs/SocialmediaInput'
+    import ExternalVideoInput from './components/Inputs/ExternalVideoInput'
+    import ExternalVideoElement from './components/Elements/ExternalVideoElement'
+    import CommentInput from './components/Inputs/CommentInput'
+    import CommentElement from './components/Elements/CommentElement'
 
     export default {
         data() {
             return {
+                type: '',
                 livetickers: [],
                 me: {},
                 content: '',
+                options: [
+                    {name: 'Text', value: 'body'},
+                    {name: 'Socialmedia', value: 'socialmedia'},
+                    {name: 'Externes Video', value: 'external-video'},
+                    {name: 'Kommentar', value: 'comment'},
+                ]
             }
         },
 
         components: {
-            'timeline-item': TimelineItem
+            'timeline-item': TimelineItem,
+            'body-element': BodyElement,
+            'body-input': BodyInput,
+            'socialmedia-input': SocialmediaInput,
+            'socialmedia-element': SocialmediaElement,
+            'external-video-input': ExternalVideoInput,
+            'external-video-element': ExternalVideoElement,
+            'comment-input': CommentInput,
+            'comment-element': CommentElement,
         },
 
         methods: {
-            create() {
+            removeLiveticker(liveticker) {
                 Api.http
-                    .post(`/articles/${this.$route.params.article}/livetickers`, {
-                        content: this.content,
-                    }).then(response => {
-                        this.livetickers.unshift(response.data);
-                        this.content = '';
-                        Vue.toast('Liveticker wurde erstellt', {
+                    .delete(`/article/${this.$route.params.article}/livetickers/${liveticker.id}`)
+                    .then(response => {
+                        this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
+                        Vue.toast('Liveticker wurde gelöscht', {
                             className : ['nau_toast','et-info'],
                         });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        Vue.toast('Ein Fehler ist aufgetreten', {
+                            className : ['nau_toast','nau_warning'],
+                        });
                     });
+
             },
 
-            removeLiveticker(liveticker) {
-                this.livetickers.splice(this.livetickers.indexOf(liveticker), 1);
-            },
+            fetchLivetickers() {
+                Api.http
+                    .get(`/articles/${this.$route.params.article}/livetickers`)
+                    .then(response => this.livetickers = response.data);
+            }
         },
-
-
 
         mounted() {
             Api.http
                 .get(`/me`)
                 .then(response => this.me = response.data);
 
-            Api.http
-                .get(`/articles/${this.$route.params.article}/livetickers`)
-                .then(response => this.livetickers = response.data);
+            this.fetchLivetickers();
         },
     }
 </script>
-
-<style scoped>
-    .linebreaks {
-        white-space: pre-line;
-    }
-</style>

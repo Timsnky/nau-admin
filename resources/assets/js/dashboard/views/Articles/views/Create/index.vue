@@ -51,6 +51,9 @@
                     <li>
                         <a href="#articleAuthors" data-toggle="tab">Authors</a>
                     </li>
+                    <li>
+                        <a href="#articleSorting" data-toggle="tab">Sorting</a>
+                    </li>
                 </ul>
                 <div class="tab-content">
 
@@ -210,7 +213,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>
+                                <div class="form-actions selection_sections">
+                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
+                                        Select Uploaded Image
+                                    </button>
+                                    <input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>
+                                </div>
                             </div>
                             <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages()">Save images</button>
                         </div>
@@ -240,7 +248,7 @@
                                         </div>
                                     </div>
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, sliderIndex)">
+                                        <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
                                             Select Uploaded Image
                                         </button>
                                         <button type="button" class="btn btn-danger image_selection_btn" @click="deleteArticleSlider(sliderIndex)">
@@ -261,28 +269,35 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <h4>Videos</h4>
-                                <div  class="row media_images">
-                                    <div class="col-md-3 col-md-3 media_image" v-for="(video, index) in articleVideos">
-                                        <video v-if="video.id == null" controls>
-                                            <source :src="video.video">
-                                        </video>
-                                        <video v-if="video.id != null" controls>
-                                            <source :src="video.urls[0]" type="video/mp4">
-                                            <source :src="video.urls[1]" type="video/webm">
-                                        </video>
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>
-                                            <input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
-                                            <button
-                                                    class="btn btn-danger btn-sm remove_btn"
-                                                    type="button"
-                                                    @click="deleteArticleVideo(index)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
+                                <div  class="row media_overflow">
+                                    <div class="media_images">
+                                        <div class="col-md-3 col-md-3 media_image" v-for="(video, index) in articleVideos">
+                                            <video v-if="video.id == null" controls>
+                                                <source :src="video.video">
+                                            </video>
+                                            <video v-if="video.id != null" controls>
+                                                <source :src="video.urls[0]" type="video/mp4">
+                                                <source :src="video.urls[1]" type="video/webm">
+                                            </video>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>
+                                                <input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
+                                                <button
+                                                        class="btn btn-danger btn-sm remove_btn"
+                                                        type="button"
+                                                        @click="deleteArticleVideo(index)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
+                                <div class="form-actions selection_sections">
+                                    <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
+                                        Select Uploaded Video
+                                    </button>
+                                    <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
+                                </div>
 
                             </div>
                             <button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos()">Save videos</button>
@@ -307,14 +322,8 @@
                                             type="button"> x
                                     </button>
                                 </div>
-                                <div class="form-group"></div>
-                                <div class="form-actions">
-                                    <button
-                                            class="btn btn-primary remove_btn"
-                                            type="button"
-                                            @click="previewArticleSocialMedia(index)">
-                                        Preview
-                                    </button>
+                                <div class="form-group">
+                                    <twitter-element :url="articleSocialMedia.url"></twitter-element>
                                 </div>
                             </div>
                         </div>
@@ -557,13 +566,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Ideas</label>
+                                <label>Informants</label>
                                 <multiselect
-                                        id="ideasMultiSelect"
-                                        v-model="articleIdeas"
-                                        :options="existingIdeas"
-                                        placeholder="Type to search idea"
-                                        label="title"
+                                        id="informantsMultiSelect"
+                                        v-model="articleInformants"
+                                        :options="existingInformants"
+                                        placeholder="Type to search informant"
+                                        label="display_name"
                                         :max-height="500"
                                         :options-limit="100"
                                         :clear-on-select="true"
@@ -571,14 +580,16 @@
                                         track-by="id"
                                         :multiple="true"
                                         open-direction="bottom"
-                                        :internal-search="false">
+                                        :internal-search="false"
+                                        @search-change="searchInformants"
+                                        @remove="deleteInformants">
                                 </multiselect>
                             </div>
                             <div class="form-group">
                                 <label>Publication Datetime</label>
-                                <date-time
+                                <date-and-time
                                         @changeDate="changeDate"
-                                        :date="article.published_at"/>
+                                        :date="article.published_at ? publicationDate : '' "/>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -586,8 +597,23 @@
                                     class="btn btn-primary"
                                     type="button"
                                     @click="saveArticleAuthorsAndIdeas()"
-                                    :disabled="articleAuthors.length < 1 || article.id == null">
+                                    :disabled="articleAuthors.length < 1 || article.id == null || article.published_at == null">
                                 Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--Sorting-->
+                    <div class="tab-pane" id="articleSorting">
+                        <div class="form-body">
+
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    :disabled="article.id == null">
+                                Save Order <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -597,9 +623,10 @@
     </div>
 </template>
 <script>
-
     import Multiselect from 'vue-multiselect';
-    import DateTime from 'dashboard/components/DateTime';
+    import DateAndTime from 'dashboard/components/DateAndTime';
+    import TwitterElement from 'dashboard/components/TwitterTweet';
+
 
     export default {
         data: () => {
@@ -629,7 +656,7 @@
                 selectectedSlider: null,
                 articleSocialMedias: [
                     {
-                        url: 'https://twitter.com/HELBpage/status/889378370814869504',
+                        url: '',
                         id: null
                     }
                 ],
@@ -688,11 +715,11 @@
                     query: '',
                     promise: true
                 },
-                articleIdeas: [
+                articleInformants: [
                 ],
-                existingIdeas: [
+                existingInformants: [
                 ],
-                searchedIdea: {
+                searchedInformant: {
                     query: '',
                     promise: true
                 },
@@ -702,14 +729,22 @@
 
         components: {
             Multiselect,
-            DateTime
+            DateAndTime,
+            TwitterElement,
         },
 
         computed: {
+
             //Get the selected image id from the modal
             selectedImageId()
             {
                 return Api.getImage();
+            },
+
+            //Get the selected video id from the modal
+            selectedVideoId()
+            {
+                return Api.getVideo();
             },
 
             //Disable the submit images button
@@ -769,6 +804,11 @@
                 });
 
                 return ! (totalLearnings >= 3);
+            },
+
+            publicationDate()
+            {
+                return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
             }
         },
 
@@ -780,336 +820,19 @@
                     Api.resetImage();
                     this.getMainImage(newId);
                 }
+            },
+
+            selectedVideoId(newId, oldId)
+            {
+                if(newId)
+                {
+                    Api.resetVideo();
+                    this.getVideo(newId);
+                }
             }
         },
 
         methods: {
-            /**
-             *  PUBLICATION DATE
-             */
-            changeDate(date)
-            {
-                this.article.published_at = date;
-            },
-
-            /**
-             *  ARTICLE AUTHORS
-             */
-            //Search for an author
-            searchAuthors(query)
-            {
-                this.searchedAuthor.query = query;
-
-                if(this.searchedAuthor.promise)
-                {
-                    this.searchedAuthor.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/authors?search=${this.searchedAuthor.query}`)
-                            .then(response => {
-                                this.existingAuthors = response.data;
-                                this.searchedAuthor.promise = true;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Save authors and ideas
-            saveArticleAuthorsAndIdeas()
-            {
-                this.linkAuthorToArticle();
-                this.updateArticle();
-            },
-
-            //Link author to article
-            linkAuthorToArticle()
-            {
-                let vm = this;
-
-                this.articleAuthors.forEach(function (value, key)
-                {
-                    if(! value.pivot)
-                    {
-                        Api.http
-                            .put(`/articles/${vm.article.id}/authors/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    vm.articleAuthors[key].pivot = {
-                                        article_id : vm.article.id,
-                                        author_id : vm.articleAuthors[key].id
-                                    };
-                                    Vue.toast('Article author linked successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the article author. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Delete any authors
-            deleteAuthors(author)
-            {
-                let vm = this;
-
-                vm.articleAuthors.forEach(function (value, key)
-                {
-                    if(value.id === author.id && value.pivot)
-                    {
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/authors/${vm.articleAuthors[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article author deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            /**
-             * ARTICLE TAGS
-             */
-            //Add a new tag to an article
-            addArticleTag(newTag)
-            {
-                const tag = {
-                    tag: newTag,
-                    id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
-                    created_at: null
-                };
-                this.existingTags.push(tag);
-                this.articleTags.push(tag);
-            },
-
-            //Call the server to search for tags
-            searchTags(query)
-            {
-                this.searchedTag.query = query;
-
-                if(this.searchedTag.promise)
-                {
-                    this.searchedTag.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/tags?search=${this.searchedTag.query}`)
-                            .then(response => {
-                                this.existingTags = response.data;
-                                this.searchedTag.promise = true;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Save Article tags and related stories
-            saveArticleTagsAndRelatedStories()
-            {
-                this.saveArticleTags();
-                this.linkRelatedStoriesToArticle();
-            },
-
-            //Save the article tags
-            saveArticleTags()
-            {
-                let vm = this;
-
-                this.articleTags.forEach(function (value, key)
-                {
-                    if(value.created_at)
-                    {
-                        Api.http
-                            .put(`/tags/${value.id}`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 200)
-                                {
-                                    let pivot = null;
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
-                                    Vue.toast('Article tags updated successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                    else
-                    {
-                        Api.http
-                            .post(`/tags`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 201)
-                                {
-                                    let pivot = null;
-                                    console.log(vm.articleTags[key].pivot, vm.articleTags[key], "Created");
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
-                                    Vue.toast('Article tags created successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Link a tag to an article
-            linkTagToArticle(key)
-            {
-                if(! this.articleTags[key].pivot)
-                {
-                    Api.http
-                        .put(`/articles/${this.article.id}/tags/${this.articleTags[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                this.articleTags[key].pivot = {
-                                    article_id : this.article.id,
-                                    tag_id : this.articleTags[key].id
-                                };
-                                Vue.toast('Article tag item linked successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                            else
-                            {
-                                Vue.toast('Error in linking the article tag item. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
-                        });
-                }
-            },
-
-            //Delete a tag
-            deleteTags(tag)
-            {
-                let vm = this;
-
-                vm.articleTags.forEach(function (value, key)
-                {
-                    if(value.id === tag.id && value.created_at)
-                    {
-
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/tags/${vm.articleTags[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article tags deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            /**
-             * ARTICLE RELATED STORIES
-             */
-            //Search for a related story
-            searchRelatedStories(query)
-            {
-                this.searchedRelatedStory.query = query;
-
-                if(this.searchedRelatedStory.promise)
-                {
-                    this.searchedRelatedStory.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/articles?search=${this.searchedRelatedStory.query}`)
-                            .then(response => {
-                                this.existingRelatedStories = response.data;
-                                this.searchedRelatedStory.promise = true;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Link related story to article
-            linkRelatedStoriesToArticle()
-            {
-                let vm = this;
-
-                this.articleRelatedStories.forEach(function (value, key)
-                {
-                    if(! value.pivot)
-                    {
-                        Api.http
-                            .put(`/articles/${vm.article.id}/related/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    vm.articleRelatedStories[key].pivot = {
-                                        article_id : vm.article.id,
-                                        related_id : vm.articleTags[key].id
-                                    };
-                                    Vue.toast('Article related story linked successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the article related story item. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Delete any related articles
-            deleteRelatedArticles(article)
-            {
-                let vm = this;
-
-                vm.articleRelatedStories.forEach(function (value, key)
-                {
-                    if(value.id === article.id && value.created_at)
-                    {
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/related/${vm.articleRelatedStories[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article related story deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
             /**
              * INITIALIZE THE ARTICLE (EDIT ONLY)
              */
@@ -1124,17 +847,21 @@
                             {
                                 this.articleMainImage = response.data.image;
                             }
-                            this.fillArticleData(response.data);
+                            this.article = response.data;
+                            delete this.article['image'];
+//                            this.fillArticleData(response.data);
                             this.initializeLeadEditor(this);
                             this.initializeArticleImages(id);
                             this.initializeArticleSliders(id);
                             this.initializeArticleVideos(id);
+                            this.initializeArticleSocialMedias(id);
                             this.initializeArticleBodies(id);
                             this.initializeArticleLearnings(id);
                             this.initializeArticleInfoBoxes(id);
                             this.initializeArticleTags(id);
                             this.initializeArticleRelatedStories(id);
                             this.initializeArticleAuthors(id);
+                            this.initializeArticleInformants(id);
                         }
                         else
                         {
@@ -1148,6 +875,7 @@
             //Fill the aricle object with the data
             fillArticleData(data)
             {
+
                 this.article.id = data.id;
                 this.article.dateline = data.dateline;
                 this.article.title = data.title;
@@ -1233,6 +961,28 @@
                         else
                         {
                             Vue.toast('Error in retrieving the article videos. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Get the data for the social medias linked to the article
+            initializeArticleSocialMedias(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/socialmedia`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.length !== 0)
+                            {
+                                this.articleSocialMedias = response.data;
+                            }
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article social medias. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
@@ -1353,6 +1103,11 @@
                         if(response.status === 200)
                         {
                             this.articleRelatedStories = response.data;
+
+                            this.articleRelatedStories.forEach(function (value, key)
+                            {
+                                value.linked = 1;
+                            })
                         }
                         else
                         {
@@ -1376,6 +1131,25 @@
                         else
                         {
                             Vue.toast('Error in retrieving the authors. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Get the informants for the article
+            initializeArticleInformants(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/informants`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.articleInformants = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the informants. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
@@ -1489,9 +1263,20 @@
                             {
                                 this.articleMainImage = response.data;
                             }
-                            else
+                            else if(this.type === 2)
+                            {
+                                this.articleImages.push(response.data);
+                            }
+                            else if(this.type === 3)
                             {
                                 this.articleSliders[this.selectectedSlider].images.push(response.data);
+                            }
+                            else if(this.type === 4)
+                            {
+                                this.articleVideos.push(response.data);
+                            }
+                            else {
+
                             }
                         }
                         else
@@ -1509,9 +1294,9 @@
                 Api.http
                     .post(`/images`, {
                         image: this.articleMainImage.url,
-                        name: '',
-                        source: '',
-                        lead: ''
+                        name: this.article.title,
+                        source: this.article.title,
+                        lead: this.article.title
                     })
                     .then(response => {
 
@@ -1599,7 +1384,7 @@
                     .then(response => {
                         if(response.status === 200)
                         {
-                            this.fillArticleData(response.data);
+                            this.article = response.data;
                             if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
                             {
                                 this.linkMainImageToArticle();
@@ -1688,6 +1473,13 @@
                                 }
                             });
                     }
+                    else
+                    {
+                        if(! value.pivot)
+                        {
+                            vm.linkImageToArticle(value.id);
+                        }
+                    }
                 });
             },
 
@@ -1711,7 +1503,7 @@
             {
                 let vm = this;
 
-                if(vm.articleImages[key].id)
+                if(vm.articleImages[key].pivot)
                 {
                     Api.http
                         .delete(`/articles/${vm.article.id}/images/${vm.articleImages[key].id}`)
@@ -1909,6 +1701,26 @@
                 }
             },
 
+            //Get a video after a selection via the modal
+            getVideo(id)
+            {
+                Api.http
+                    .get(`/videos/${id}`)
+                    .then(response =>
+                    {
+                        if(response.status === 200)
+                        {
+                            this.articleVideos.push(response.data);
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the selected video. Please retry again', {
+                                className : ['nau_toast','nau_warning'],
+                            });
+                        }
+                    });
+            },
+
             //Upload article videos and link them to article
             uploadArticleVideos()
             {
@@ -1920,6 +1732,14 @@
                     {
                         vm.submitVideoDetails(video);
                     }
+                    else
+                    {
+                        if(! video.pivot)
+                        {
+                            this.linkVideoToArticle(video.id);
+                        }
+                    }
+
                 });
             },
 
@@ -2024,7 +1844,7 @@
             {
                 let vm = this;
 
-                if(vm.articleVideos[key].id)
+                if(vm.articleVideos[key].pivot)
                 {
                     Api.http
                         .delete(`/articles/${vm.article.id}/videos/${vm.articleVideos[key].id}`)
@@ -2047,23 +1867,6 @@
             /**
              * ARTICLE SOCIAL MEDIA
              */
-            //Preview a given social media article
-            previewArticleSocialMedia(key)
-            {
-                let url = 'https://publish.twitter.com/oembed?url=' + this.articleSocialMedias[key].url;
-
-                axios
-                    .get(url,  {
-                        headers: {
-                            'Access-Control-Allow-Origin' : 'https://publish.twitter.com',
-                            'Access-Control-Request-Method' : 'GET'
-                        }
-                    })
-                    .then(response => {
-                        console.log(response);
-                    });
-            },
-
             //Add an article social media item
             addArticleSocialMedia()
             {
@@ -2082,7 +1885,7 @@
                         .then(response => {
                             if(response.status === 204)
                             {
-                                vm.articleLearnings.splice(key, 1);
+                                vm.articleSocialMedias.splice(key, 1);
                                 Vue.toast('Article social media item deleted successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
@@ -2149,6 +1952,7 @@
                     .then(response => {
                         if(response.status === 204)
                         {
+
                             Vue.toast('Social media item linked successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -2467,6 +2271,412 @@
                     });
                 }
             },
+
+            /**
+             * ARTICLE TAGS
+             */
+            //Add a new tag to an article
+            addArticleTag(newTag)
+            {
+                const tag = {
+                    tag: newTag,
+                    id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
+                    created_at: null
+                };
+                this.existingTags.push(tag);
+                this.articleTags.push(tag);
+            },
+
+            //Call the server to search for tags
+            searchTags(query)
+            {
+                this.searchedTag.query = query;
+
+                if(this.searchedTag.promise)
+                {
+                    this.searchedTag.promise = false;
+
+                    setTimeout(() => {
+                        Api.http
+                            .get(`/tags?search=${this.searchedTag.query}`)
+                            .then(response => {
+                                this.existingTags = response.data;
+                                this.searchedTag.promise = true;
+                            });
+                    }, 400);
+                }
+            },
+
+            //Save Article tags and related stories
+            saveArticleTagsAndRelatedStories()
+            {
+                this.saveArticleTags();
+                this.linkRelatedStoriesToArticle();
+            },
+
+            //Save the article tags
+            saveArticleTags()
+            {
+                let vm = this;
+
+                this.articleTags.forEach(function (value, key)
+                {
+                    if(value.created_at)
+                    {
+                        Api.http
+                            .put(`/tags/${value.id}`, {
+                                tag: value.tag,
+                            })
+                            .then(response => {
+                                if(response.status === 200)
+                                {
+                                    let pivot = null;
+
+                                    if(vm.articleTags[key].pivot)
+                                    {
+                                        pivot = vm.articleTags[key].pivot
+                                    }
+                                    vm.articleTags[key] = response.data;
+                                    vm.articleTags[key].pivot = pivot;
+                                    vm.linkTagToArticle(key);
+                                    Vue.toast('Article tags updated successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                    else
+                    {
+                        Api.http
+                            .post(`/tags`, {
+                                tag: value.tag,
+                            })
+                            .then(response => {
+                                if(response.status === 201)
+                                {
+                                    let pivot = null;
+                                    console.log(vm.articleTags[key].pivot, vm.articleTags[key], "Created");
+
+                                    if(vm.articleTags[key].pivot)
+                                    {
+                                        pivot = vm.articleTags[key].pivot
+                                    }
+                                    vm.articleTags[key] = response.data;
+                                    vm.articleTags[key].pivot = pivot;
+                                    vm.linkTagToArticle(key);
+                                    Vue.toast('Article tags created successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            //Link a tag to an article
+            linkTagToArticle(key)
+            {
+                if(! this.articleTags[key].pivot)
+                {
+                    Api.http
+                        .put(`/articles/${this.article.id}/tags/${this.articleTags[key].id}`)
+                        .then(response => {
+                            if(response.status === 204)
+                            {
+                                this.articleTags[key].pivot = {
+                                    article_id : this.article.id,
+                                    tag_id : this.articleTags[key].id
+                                };
+                                Vue.toast('Article tag item linked successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                            else
+                            {
+                                Vue.toast('Error in linking the article tag item. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
+            },
+
+            //Delete a tag
+            deleteTags(tag)
+            {
+                let vm = this;
+
+                vm.articleTags.forEach(function (value, key)
+                {
+                    if(value.id === tag.id && value.created_at)
+                    {
+
+                        Api.http
+                            .delete(`/articles/${vm.article.id}/tags/${vm.articleTags[key].id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article tags deleted successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            /**
+             * ARTICLE RELATED STORIES
+             */
+            //Search for a related story
+            searchRelatedStories(query)
+            {
+                this.searchedRelatedStory.query = query;
+
+                if(this.searchedRelatedStory.promise)
+                {
+                    this.searchedRelatedStory.promise = false;
+
+                    setTimeout(() => {
+                        Api.http
+                            .get(`/articles?search=${this.searchedRelatedStory.query}`)
+                            .then(response => {
+                                this.existingRelatedStories = response.data.articles;
+                                this.searchedRelatedStory.promise = true;
+                            });
+                    }, 400);
+                }
+            },
+
+            //Link related story to article
+            linkRelatedStoriesToArticle()
+            {
+                let vm = this;
+
+                this.articleRelatedStories.forEach(function (value, key)
+                {
+                    if(! value.linked)
+                    {
+                        Api.http
+                            .put(`/articles/${vm.article.id}/related/${value.id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    vm.articleRelatedStories[key].pivot = {
+                                        article_id : vm.article.id,
+                                        related_id : vm.articleTags[key].id
+                                    };
+                                    Vue.toast('Article related story linked successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in linking the article related story item. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            //Delete any related articles
+            deleteRelatedArticles(article)
+            {
+                let vm = this;
+
+                vm.articleRelatedStories.forEach(function (value, key)
+                {
+                    if(value.id === article.id && value.created_at)
+                    {
+                        Api.http
+                            .delete(`/articles/${vm.article.id}/related/${vm.articleRelatedStories[key].id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article related story deleted successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            /**
+             *  PUBLICATION DATE
+             */
+            changeDate(date)
+            {
+                this.article.published_at = date;
+            },
+
+            /**
+             * ARTICLE INFORMANTS
+             */
+            //Search for an informant
+            searchInformants(query)
+            {
+                this.searchedInformant.query = query;
+
+                if(this.searchedInformant.promise)
+                {
+                    this.searchedInformant.promise = false;
+
+                    setTimeout(() => {
+                        Api.http
+                            .get(`/users?search=${this.searchedInformant.query}`)
+                            .then(response => {
+                                this.existingInformants = response.data;
+                                this.searchedInformant.promise = true;
+                            });
+                    }, 400);
+                }
+            },
+
+            //Link informant to article
+            linkInformantToArticle()
+            {
+                let vm = this;
+
+                this.articleInformants.forEach(function (value, key)
+                {
+                    if(! value.pivot)
+                    {
+                        Api.http
+                            .put(`/articles/${vm.article.id}/informants/${value.id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    vm.articleInformants[key].pivot = {
+                                        article_id : vm.article.id,
+                                        informant_id : vm.articleInformants[key].id
+                                    };
+                                    Vue.toast('Article informant linked successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in linking the article informant. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            //Delete any informants
+            deleteInformants(informant)
+            {
+                let vm = this;
+
+                vm.articleInformants.forEach(function (value, key)
+                {
+                    if(value.id === informant.id && value.pivot)
+                    {
+                        Api.http
+                            .delete(`/articles/${vm.article.id}/informants/${vm.articleInformants[key].id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article informant deleted successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            /**
+             *  ARTICLE AUTHORS
+             */
+            //Search for an author
+            searchAuthors(query)
+            {
+                this.searchedAuthor.query = query;
+
+                if(this.searchedAuthor.promise)
+                {
+                    this.searchedAuthor.promise = false;
+
+                    setTimeout(() => {
+                        Api.http
+                            .get(`/authors?search=${this.searchedAuthor.query}`)
+                            .then(response => {
+                                this.existingAuthors = response.data;
+                                this.searchedAuthor.promise = true;
+                            });
+                    }, 400);
+                }
+            },
+
+            //Save authors and ideas
+            saveArticleAuthorsAndIdeas()
+            {
+                this.linkAuthorToArticle();
+                this.linkInformantToArticle();
+                this.updateArticle();
+            },
+
+            //Link author to article
+            linkAuthorToArticle()
+            {
+                let vm = this;
+
+                this.articleAuthors.forEach(function (value, key)
+                {
+                    if(! value.pivot)
+                    {
+                        Api.http
+                            .put(`/articles/${vm.article.id}/authors/${value.id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    vm.articleAuthors[key].pivot = {
+                                        article_id : vm.article.id,
+                                        author_id : vm.articleAuthors[key].id
+                                    };
+                                    Vue.toast('Article author linked successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in linking the article author. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            //Delete any authors
+            deleteAuthors(author)
+            {
+                let vm = this;
+
+                vm.articleAuthors.forEach(function (value, key)
+                {
+                    if(value.id === author.id && value.pivot)
+                    {
+                        Api.http
+                            .delete(`/articles/${vm.article.id}/authors/${vm.articleAuthors[key].id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article author deleted successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
         },
 
         mounted: function ()
@@ -2578,6 +2788,10 @@
         border-radius: 3px;
         background: #e3e3e3;
         margin-bottom: 10px;
+    }
+
+    .selection_sections {
+        display: inline-flex;
     }
 
     .slider_images_section {

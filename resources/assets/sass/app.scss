@@ -6,9 +6,9 @@
 @import "variables";
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "./vendor/metronic/bootstrap";
 @import "node_modules/font-awesome/scss/font-awesome";
-// @import "node_modules/bootstrap-social/bootstrap-social.scss";
+@import "node_modules/bootstrap-social/bootstrap-social.scss";
 
 // Sweet alert
 @import "node_modules/sweetalert2/src/sweetalert2";
@@ -28,6 +28,10 @@
 
 .swal2-success-ring, .swal2-icon {
     border-radius: 50% !important;
+}
+
+.linebreaks {
+    white-space: pre-line;
 }
 
 // @media (max-width: $screen-sm-max) {
