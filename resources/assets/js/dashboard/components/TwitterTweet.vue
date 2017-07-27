@@ -19,15 +19,21 @@
             }, 400),
 
             createTweet() {
+                let vm = this;
                 this.$el.innerHTML = '';
-                var parts = this.url.split('/');
-                var tweetId = parts.pop() || parts.pop();  // handle potential trailing slash
+                let parts = this.url.split('/');
+                let tweetId = parts.pop() || parts.pop();  // handle potential trailing slash
 
-                twttr.widgets.createTweet(tweetId, this.$el);
+                twttr.ready(
+                    function(evt) {
+                        twttr.widgets.createTweet(tweetId, vm.$el)
+                    }
+                );
             }
         },
 
-        mounted() {
+        mounted()
+        {
             this.createTweet();
         }
     }

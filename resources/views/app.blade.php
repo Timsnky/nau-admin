@@ -24,6 +24,8 @@
     <link href="{{asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/vue-multiselect/vue-multiselect.min.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME GLOBAL STYLES -->
     <link href="{{asset('assets/global/css/components.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
@@ -89,13 +91,18 @@
                         <h4 class="modal-title" id="myModalLabel">Videos</h4>
                     </div>
                     <div class="modal-body">
-                        {{--<video-select-modal></video-select-modal>--}}
+                        <video-select-modal></video-select-modal>
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
+
+
+    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml-toolbar.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/wysihtml/parser_rules/advanced_unwrap.js')}}" type="text/javascript"></script>
 
     <script>window.twttr = (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0],
@@ -128,9 +135,7 @@
     <script src="{{asset('assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('assets/global/plugins/wysihtml/dist/wysihtml-toolbar.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('assets/global/plugins/wysihtml/parser_rules/advanced_unwrap.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}" type="text/javascript"></script>
     {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js')}}"--}}
         {{--type="text/javascript"></script>--}}
     {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js')}}"--}}
