@@ -15,6 +15,9 @@ const request = axios.create({
     baseURL: env.API_DOMAIN,
 });
 
+window.$ = window.jQuery = require('jquery');
+require('bootstrap-sass');
+
 window.Vue = Vue;
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -41,6 +44,7 @@ window.moment = moment;
 window.moment.locale('de');
 
 window.swal = swal;
+window._ = require('underscore');
 
 
 request.interceptors.request.use(config => {

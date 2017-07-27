@@ -18,6 +18,10 @@ Vue.component('pageTitle', require('./components/PageTitle.vue'));
 Vue.component('notifications', require('./components/Notifications.vue'));
 Vue.component('imageSelectModal', require('./components/ImageSelectModal.vue'));
 Vue.component('videoSelectModal', require('./components/VideoSelectModal.vue'));
+Vue.component('pagination', require('./components/Pagination/Pagination.vue'));
+import multiselect from 'vue-multiselect';
+Vue.component('multiselect', multiselect);
+Vue.component('surveySelectModal', require('./components/SurveySelectModal.vue'));
 
 const app = new Vue({
     el: '#app',

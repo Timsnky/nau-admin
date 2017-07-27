@@ -203,7 +203,7 @@
         background: #E3E3E3;
         color: dimgray;
         padding: 10px 10px;
-        height: 400px;
+        min-height: 400px;
         position: relative;
         cursor: pointer;
         margin-bottom: 20px;
@@ -212,7 +212,7 @@
     .input-file {
         opacity: 0;
         width: 100%;
-        height: 380px;
+        min-height: 380px;
         position: absolute;
         cursor: pointer;
     }
@@ -233,19 +233,20 @@
 
     .video_hidden_section.video {
         display: inline-block;
-        height: 380px;
+        min-height: 380px;
         width: 100%;
         text-align: center;
     }
 
     .video_hidden_section_video {
         width: 100%;
-        height: 340px;
+        min-height: 340px;
         margin-bottom: 6px;
     }
 
-    .video_hidden_section_video img {
-        height: 100%;
+    .video_hidden_section_video video {
+        width: 100%;
+        max-width: 700px;
     }
 
     .nau_toast {

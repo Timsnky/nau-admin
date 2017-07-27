@@ -1,13 +1,13 @@
 <template>
     <div class="timeline-item">
         <div class="timeline-badge">
-            <img class="timeline-badge-userpic" :src="liveticker.user.avatar"></div>
+            <img class="timeline-badge-userpic" :src="liveticker.poster.avatar"></div>
         <div class="timeline-body">
             <div class="timeline-body-arrow"> </div>
             <div class="timeline-body-head">
                 <div class="timeline-body-head-caption">
-                    <a href="javascript:;" class="timeline-body-title font-blue-madison">{{ liveticker.user.name }}</a>
-                    <span class="timeline-body-time font-grey-cascade">Geposted {{ humanize(liveticker.created_at) }}</span>
+                    <a href="javascript:;" class="timeline-body-title font-blue-madison">{{ liveticker.poster.name }}</a>
+                    <span class="timeline-body-time font-grey-cascade">Geposted {{ humanize(liveticker.posted_at) }}</span>
                 </div>
                 <div class="timeline-body-head-actions">
                     <div class="btn-group">
@@ -16,20 +16,14 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
-                                <router-link :to="{name: 'articles.livetickers.edit', params: { article: $route.params.article, liveticker: liveticker.id }}"><i class="fa fa-edit"></i> Bearbeiten</router-link>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
                                 <a href="#" @click.prevent="remove(liveticker)"><i class="fa fa-trash"></i> Löschen</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="timeline-body-content linebreaks">
-                <span class="font-grey-cascade">
-                    <slot></slot>
-                </span>
+            <div class="timeline-body-content">
+                <slot></slot>
             </div>
         </div>
     </div>
@@ -55,20 +49,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ja, löschen!'
                 }).then(() => {
-                    Api.http
-                        .delete(`/livetickers/${liveticker.id}`)
-                        .then(response => {
-                            this.$emit('delete')
-                            Vue.toast('Liveticker wurde gelöscht', {
-                                className : ['nau_toast','et-info'],
-                            });
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            Vue.toast('Ein Fehler ist aufgetreten', {
-                                className : ['nau_toast','nau_warning'],
-                            });
-                        });
+                    this.$emit('delete', liveticker)
                 })
             },
         },
