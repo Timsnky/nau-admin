@@ -188,8 +188,8 @@
         text-indent: initial !important;
     }
 
-    .close {
-        text-indent: initial;
+    #imageSelectionModal .modal-content {
+        min-width: 900px;
     }
 
     .image_choice {
