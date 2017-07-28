@@ -36,6 +36,7 @@
     "vue-easy-toast": "^1.0.2",
     "vue-multiselect": "^2.0.2",
     "vue-template-compiler": "^2.3.3",
+    "vuedraggable": "^2.14.1",
     "vuex-persistedstate": "^1.4.1"
   }
 }

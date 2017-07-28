@@ -28,7 +28,14 @@
                     format: 'YYYY-MM-DD HH:mm'
                 }).on("dp.change", function (e)
                 {
-                    vm.$emit('changeDate', e.date.format('YYYY-MM-DD HH:mm'));
+                    if(e.date)
+                    {
+                        vm.$emit('changeDate', e.date.format());
+                    }
+                    else
+                    {
+                        vm.$emit('changeDate', '');
+                    }
                 });
             });
         },
@@ -39,7 +46,6 @@
         }
     }
 </script>
-
 <style>
     #dateTimePicker {
         z-index: auto;

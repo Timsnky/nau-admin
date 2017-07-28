@@ -26,7 +26,7 @@
         <div v-else-if="videos.length > 0">
             <div class="row image_selection_rows">
                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
-                    <div class="image_section_left image_chooser_section">
+                    <div class="image_section_left video_chooser_section">
                         <div class="image_selection_section_image">
                             <video controls>
                                 <source :src="video.urls[0]" type="video/mp4">
@@ -156,6 +156,14 @@
 </script>
 
 <style>
+    #videoSelectionModal .close {
+        text-indent: initial !important;
+    }
+
+    #videoSelectionModal .modal-content {
+        min-width: 900px;
+    }
+
     .image_selection_filters {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -164,5 +172,11 @@
     .image_selection_rows {
         padding-top: 10px;
         padding-bottom: 10px;
+    }
+
+    .video_chooser_section {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        overflow: scroll;
     }
 </style>

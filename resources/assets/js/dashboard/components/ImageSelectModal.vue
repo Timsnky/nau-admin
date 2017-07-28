@@ -184,8 +184,12 @@
         height: auto;
     }
 
-    .close {
-        text-indent: initial;
+    #imageSelectionModal .close {
+        text-indent: initial !important;
+    }
+
+    #imageSelectionModal .modal-content {
+        min-width: 900px;
     }
 
     .image_choice {
