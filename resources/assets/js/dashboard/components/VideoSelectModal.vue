@@ -160,6 +160,10 @@
         text-indent: initial !important;
     }
 
+    #videoSelectionModal .modal-content {
+        min-width: 900px;
+    }
+
     .image_selection_filters {
         padding-top: 10px;
         padding-bottom: 10px;
