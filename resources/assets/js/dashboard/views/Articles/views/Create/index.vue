@@ -87,7 +87,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
+                                    :disabled="disableArticleSave">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -123,7 +123,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
+                                    :disabled="disableArticleSave">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -133,15 +133,28 @@
                     <div class="tab-pane" id="articleImage">
                         <div class="form-body">
                             <div class="form-group">
-                                <h4 for="article_image">Article image</h4>
+                                <h4>Article Main Image</h4>
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
                                         <i v-if="! articleMainImage.url" class="fa fa-image" ></i>
-                                        <img v-if="articleMainImage.url" v-bind:src="articleMainImage.url" alt="">
+                                        <img v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <input class="btn btn-primary" type="file" name="article_image" id="article_image" v-on:change="mainArticleImageChange"/>
+                                <input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
+                                    Select Uploaded Image
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <h4>Article Teaser image</h4>
+                                <div class="article_image_section">
+                                    <div class="article_image_section_div">
+                                        <i v-if="! articleTeaserImage.url" class="fa fa-image" ></i>
+                                        <img v-if="articleTeaserImage.url" :src="articleTeaserImage.url" alt="">
+                                    </div>
+                                </div>
+                                <input class="btn btn-primary" type="file" name="article_image" id="article_teaser_image" @change="teaserArticleImageChange"/>
+                                <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Select Uploaded Image
                                 </button>
                             </div>
@@ -150,7 +163,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !article.lead || !articleMainImage.url">
+                                    :disabled="disableArticleSave">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -184,7 +197,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit"
-                                    :disabled="!article.dateline || !article.title || !article.internal_title || !article.internal_dateline || !articleMainImage.url">
+                                    :disabled="disableArticleSave">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -606,14 +619,73 @@
                     <!--Sorting-->
                     <div class="tab-pane" id="articleSorting">
                         <div class="form-body">
+                            <draggable v-model="articleElements">
+                                <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
+                                    <!--Image-->
+                                    <div v-if="articleElement.type == 'image'" class="elementImageSection sectionDiv">
+                                        <img :src="articleElement.url" alt="">
+                                    </div>
+                                    <!--Body-->
+                                    <div v-if="articleElement.type == 'body'" class="sectionDiv">
+                                        <p v-html="articleElement.content"></p>
+                                    </div>
+                                    <!--Slider-->
+                                    <div v-if="articleElement.type == 'slider'" class="sectionDiv">
+                                        <div class="container">
+                                            <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
+                                                <!-- Indicators -->
+                                                <ol class="carousel-indicators">
+                                                    <li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>
+                                                </ol>
 
+                                                <!-- Wrapper for slides -->
+                                                <div class="carousel-inner">
+                                                    <div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">
+                                                        <img :src="image.url">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Left and right controls -->
+                                                <a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">
+                                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                                <a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">
+                                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Learnings-->
+                                    <div v-if="articleElement.type == 'learning'" class="sectionDiv">
+                                        <p v-html="articleElement.text"></p>
+                                    </div>
+                                    <!--Social Media-->
+                                    <div v-if="articleElement.type == 'socialmedia'" class="sectionDiv">
+                                        <twitter-element :url="articleElement.url"></twitter-element>
+                                    </div>
+                                    <!--Info Box-->
+                                    <div v-if="articleElement.type == 'infobox'" class="sectionDiv">
+                                        <p v-html="articleElement.content"></p>
+                                    </div>
+                                    <!--Videos-->
+                                    <div v-if="articleElement.type == 'video'" class="elementImageSection sectionDiv">
+                                        <video controls>
+                                            <source :src="articleElement.urls[0]" type="video/mp4">
+                                            <source :src="articleElement.urls[1]" type="video/webm">
+                                        </video>
+                                    </div>
+                                </div>
+                            </draggable>
                         </div>
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
                                     type="button"
+                                    @click="saveSortedElements()"
                                     :disabled="article.id == null">
-                                Save Order <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Save Order
                             </button>
                         </div>
                     </div>
@@ -626,7 +698,7 @@
     import Multiselect from 'vue-multiselect';
     import DateAndTime from 'dashboard/components/DateAndTime';
     import TwitterElement from 'dashboard/components/TwitterTweet';
-
+    import draggable from 'vuedraggable';
 
     export default {
         data: () => {
@@ -644,6 +716,10 @@
                 leadEditor: null,
                 submitting_main: false,
                 articleMainImage: {
+                    url: null,
+                    id: null
+                },
+                articleTeaserImage: {
                     url: null,
                     id: null
                 },
@@ -723,6 +799,8 @@
                     query: '',
                     promise: true
                 },
+                articleElements: [
+                ],
                 saveArticleImagesDisabled: true
             };
         },
@@ -731,10 +809,10 @@
             Multiselect,
             DateAndTime,
             TwitterElement,
+            draggable
         },
 
         computed: {
-
             //Get the selected image id from the modal
             selectedImageId()
             {
@@ -806,9 +884,27 @@
                 return ! (totalLearnings >= 3);
             },
 
+            //Compute the publication date
             publicationDate()
             {
                 return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
+            },
+
+            //Check if the lead editor is empty
+            leadEditorEmpty()
+            {
+                if(this.leadEditor)
+                {
+                    return this.leadEditor.getValue() === '';
+                }
+
+                return false;
+            },
+
+            //Disable the saving of an article
+            disableArticleSave()
+            {
+                return !this.article.dateline || !this.article.title || !this.article.internal_title || !this.article.internal_dateline || this.leadEditorEmpty || !this.articleMainImage.url || !this.articleTeaserImage.url;
             }
         },
 
@@ -834,6 +930,63 @@
 
         methods: {
             /**
+             * SORTING
+             */
+            //Get the id for the slider carousel
+            getSliderIdName(elementId)
+            {
+                return "slider_" + elementId;
+            },
+
+            //Get the slider name string with the #
+            getSliderIdNameHashed(elementId)
+            {
+                return "#slider_" + elementId;
+            },
+
+            //Get the images linked to a given slider
+            getSliderImages(id)
+            {
+                for (let [key, value] of this.articleSliders.entries())
+                {
+                    if(value.id === id)
+                    {
+                        return value.images;
+                    }
+                }
+
+                return [];
+            },
+
+            //Submit order elements
+            saveSortedElements()
+            {
+                let orderArray = {};
+                this.articleElements.forEach(function (value, key)
+                {
+                    orderArray[value.element_id] = key;
+                });
+
+                Api.http
+                    .put(`/articles/${this.article.id}/elements`, orderArray)
+                    .then(response => {
+                        console.log(response);
+//                        if(response.status === 204)
+//                        {
+//                            Vue.toast('Article preview image added successfully', {
+//                                className: ['nau_toast', 'nau_success'],
+//                            });
+//                        }
+//                        else
+//                        {
+//                            Vue.toast('Error in updating the article main image. Please retry again', {
+//                                className: ['nau_toast', 'nau_warning'],
+//                            });
+//                        }
+                    });
+            },
+
+            /**
              * INITIALIZE THE ARTICLE (EDIT ONLY)
              */
             initialiseArticle(id)
@@ -851,6 +1004,10 @@
                             delete this.article['image'];
 //                            this.fillArticleData(response.data);
                             this.initializeLeadEditor(this);
+                            if(this.article.teaser_id)
+                            {
+                                this.initializeArticleTeaserImage(this.article.teaser_id);
+                            }
                             this.initializeArticleImages(id);
                             this.initializeArticleSliders(id);
                             this.initializeArticleVideos(id);
@@ -862,6 +1019,7 @@
                             this.initializeArticleRelatedStories(id);
                             this.initializeArticleAuthors(id);
                             this.initializeArticleInformants(id);
+                            this.initializeArticleElements(id);
                         }
                         else
                         {
@@ -882,6 +1040,25 @@
                 this.article.internal_dateline = data.internal_dateline;
                 this.article.internal_title = data.internal_title;
                 this.article.lead = data.lead;
+            },
+
+            //Initialise article teaser image
+            initializeArticleTeaserImage(id)
+            {
+                Api.http
+                    .get(`/images/${id}`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.articleTeaserImage = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article teaser image. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
             },
 
             //Get the images linked to the article
@@ -1156,6 +1333,26 @@
                     });
             },
 
+            //Get the article elements for ordering
+            initializeArticleElements(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/elements`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.articleElements = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the elements. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
+
             /**
              * EDITORS
              */
@@ -1273,7 +1470,7 @@
                             }
                             else if(this.type === 4)
                             {
-                                this.articleVideos.push(response.data);
+                                this.articleTeaserImage = response.data;
                             }
                             else {
 
@@ -1291,23 +1488,110 @@
             //Submit article image
             submitArticleImage()
             {
-                Api.http
-                    .post(`/images`, {
-                        image: this.articleMainImage.url,
-                        name: this.article.title,
-                        source: this.article.title,
-                        lead: this.article.title
-                    })
-                    .then(response => {
+                if (this.articleMainImage.id)
+                {
+                    this.linkMainImageToArticle();
+                }
+                else
+                {
+                    Api.http
+                        .post(`/images`, {
+                            image: this.articleMainImage.url,
+                            name: this.article.title,
+                            source: this.article.title,
+                            lead: this.article.title
+                        })
+                        .then(response => {
 
-                        if(response.status === 201)
+                            if(response.status === 201)
+                            {
+                                this.articleMainImage = response.data;
+                                this.linkMainImageToArticle();
+                            }
+                            else
+                            {
+                                Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
+            },
+
+            /**
+             * TEASER IMAGE
+             */
+            //Receive the teaser image from the upload button
+            teaserArticleImageChange() {
+                let fileInput = document.getElementById('article_teaser_image');
+                let file = fileInput.files[0];
+
+                if (!file.type.match('image.*')) {
+                    Vue.toast('The selected file is not an image. Please select and image and retry.', {
+                        className : ['nau_toast','nau_warning'],
+                    });
+                    return;
+                }
+
+                let reader = new FileReader();
+                let vm = this;
+
+                reader.onload = function (e) {
+                    vm.articleTeaserImage.url = e.target.result;
+                    vm.articleTeaserImage.id = null;
+                };
+
+                reader.readAsDataURL(file);
+            },
+
+            //Submit article teaser image
+            submitArticleTeaserImage()
+            {
+                if (this.articleTeaserImage.id)
+                {
+                    this.linkTeaserImageToArticle();
+                }
+                else
+                {
+                    Api.http
+                        .post(`/images`, {
+                            image: this.articleTeaserImage.url,
+                            name: this.article.title,
+                            source: this.article.title,
+                            lead: this.article.title
+                        })
+                        .then(response => {
+
+                            if(response.status === 201)
+                            {
+                                this.articleTeaserImage = response.data;
+                                this.linkTeaserImageToArticle();
+                            }
+                            else
+                            {
+                                Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
+            },
+
+            //Link the teaser image to an article
+            linkTeaserImageToArticle()
+            {
+                Api.http
+                    .put(`/articles/${this.article.id}/teaser/${this.articleTeaserImage.id}`)
+                    .then(response => {
+                        if(response.status === 204)
                         {
-                            this.articleMainImage = response.data;
-                            this.submitArticleDetails();
+                            Vue.toast('Article teaser image added successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         }
                         else
                         {
-                            Vue.toast('Error in uploading the selected Image. Please retry again', {
+                            Vue.toast('Error in updating the article teaser image. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
@@ -1320,18 +1604,11 @@
             //Handle the submission of the article
             handleSubmit()
             {
-                this.article.lead = $('#leadEditor').val();
+                this.article.lead = this.leadEditor.getValue();
 
                 if (this.article.lead !== '')
                 {
-                    if (this.articleMainImage.id)
-                    {
-                        this.submitArticleDetails();
-                    }
-                    else
-                    {
-                        this.submitArticleImage();
-                    }
+                    this.submitArticleDetails();
                 }
                 else
                 {
@@ -1362,8 +1639,9 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            this.fillArticleData(response.data);
-                            this.linkMainImageToArticle();
+                            this.article = response.data;
+                            this.submitArticleImage();
+                            this.submitArticleTeaserImage();
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -1387,7 +1665,11 @@
                             this.article = response.data;
                             if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
                             {
-                                this.linkMainImageToArticle();
+                                this.submitArticleImage();
+                            }
+                            if(! (response.data.teaser_id === this.articleTeaserImage.id))
+                            {
+                                this.submitArticleTeaserImage();
                             }
 
                             Vue.toast('Article updated successfully', {
@@ -2756,6 +3038,10 @@
         display: inline-flex;
     }
 
+    #article_teaser_image {
+        display: inline-flex;
+    }
+
     .media_overflow {
         overflow: scroll;
     }
@@ -2851,5 +3137,24 @@
 
     #articleTags, #articleAuthors {
         min-height: 600px;
+    }
+
+    .elementImageSection {
+
+    }
+
+    .elementImageSection img, .elementImageSection video {
+        max-width: 100%;
+        height: 300px;
+    }
+
+    .sliderSection {
+        width: 480px;
+        height: 300px;
+    }
+
+    .sectionDiv {
+        padding: 10px;
+        border: 2px dotted #E3E3E3;
     }
 </style>

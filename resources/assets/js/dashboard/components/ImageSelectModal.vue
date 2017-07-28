@@ -184,6 +184,10 @@
         height: auto;
     }
 
+    #imageSelectionModal .close {
+        text-indent: initial !important;
+    }
+
     .close {
         text-indent: initial;
     }
