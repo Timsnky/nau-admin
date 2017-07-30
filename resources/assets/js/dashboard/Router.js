@@ -223,6 +223,17 @@ let routes = [{
     ],
 },
 {
+    path: '/frontpage',
+    component: require('./views/Frontpage'),
+    children: [
+        {
+            path: '/big',
+            name: 'frontpage.big',
+            component: require('./views/Frontpage/views/Big'),
+        },
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }

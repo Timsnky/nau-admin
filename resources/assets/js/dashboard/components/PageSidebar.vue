@@ -103,6 +103,27 @@
                         <span class="title">Umfragen</span>
                     </a>
                 </router-link>
+
+                <!--Frontpage -->
+                <li class="nav-item">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-calendar"></i>
+                        <span class="title">Frontpage</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <router-link :to="{name: 'frontpage.big' }" tag="li" exact>
+                            <a>
+                                <span class="title">Big Verwaltung</span>
+                            </a>
+                        </router-link>
+                        <!-- <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Artikel Verwaltung</span>
+                            </a>
+                        </router-link> -->
+                    </ul>
+                </li>
             </ul>
             <!-- END SIDEBAR MENU -->
             <!-- END SIDEBAR MENU -->

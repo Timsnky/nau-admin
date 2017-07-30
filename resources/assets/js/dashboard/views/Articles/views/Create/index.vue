@@ -1,27 +1,25 @@
 <template>
     <div>
         <page-title title="Articles" sub="Create" />
+        <div class="row">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6 text-right">
+                <button
+                        class="btn btn-primary pull-right"
+                        @click="saveAndPublish()"
+                        :disabled="article.id == null">
+                    Save and Publish
+                </button>
+            </div>
+        </div>
         <form @submit.prevent="handleSubmit">
             <div class="tabbable tabbable-tabdrop">
                 <ul class="nav nav-tabs">
-                    <li class="dropdown pull-right tabdrop">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-ellipsis-v"></i>&nbsp;<i class="fa fa-angle-down"></i> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#tab6" data-toggle="tab">Section 6</a>
-                            </li>
-                            <li>
-                                <a href="#tab7" data-toggle="tab">Section 7</a>
-                            </li>
-                            <li>
-                                <a href="#tab8" data-toggle="tab">Section 8</a>
-                            </li>
-                        </ul>
-                    </li>
                     <li class="active">
                         <a href="#externalTitle" data-toggle="tab">External Title</a>
                     </li>
-                    <li>
+                    <li @click="updateInternalDetails()">
                         <a href="#internalTitle" data-toggle="tab">Internal Title</a>
                     </li>
                     <li>
@@ -42,16 +40,19 @@
                     <li>
                         <a href="#articleLearning" data-toggle="tab">Learnings</a>
                     </li>
-                    <li>
-                        <a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>
-                    </li>
+                    <!--<li>-->
+                        <!--<a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>-->
+                    <!--</li>-->
                     <li>
                         <a href="#articleTags" data-toggle="tab">Tags</a>
                     </li>
                     <li>
-                        <a href="#articleAuthors" data-toggle="tab">Authors</a>
+                        <a href="#articleSurveys" data-toggle="tab">Surveys</a>
                     </li>
                     <li>
+                        <a href="#articleSettings" data-toggle="tab">Settings</a>
+                    </li>
+                    <li @click="refreshSortingDate()">
                         <a href="#articleSorting" data-toggle="tab">Sorting</a>
                     </li>
                 </ul>
@@ -82,6 +83,17 @@
                                     placeholder="Add title (max 100chars)"
                                     class="form-control">
                             </div>
+                            <div class="form-group">
+                                <label for="title">SEO Title</label>
+                                <input
+                                        id="seo_title"
+                                        type="text"
+                                        name="seo_title"
+                                        maxlength="100"
+                                        v-model.trim="article.seo_title"
+                                        placeholder="Add seo title (max 100chars)"
+                                        class="form-control">
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button
@@ -104,7 +116,7 @@
                                     name="internal_dateline"
                                     maxlength="100"
                                     v-model.trim="article.internal_dateline"
-                                    placeholder="Add dateline internal"
+                                    placeholder="Add dateline internal (max 100chars)"
                                     class="form-control">
                             </div>
                             <div class="form-group">
@@ -115,7 +127,7 @@
                                     name="internal_title"
                                     maxlength="100"
                                     v-model.trim="article.internal_title"
-                                    placeholder="Add title internal"
+                                    placeholder="Add title internal (max 100chars)"
                                     class="form-control">
                             </div>
                         </div>
@@ -140,7 +152,7 @@
                                         <img v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>
+                                <!--<input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>-->
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
                                     Select Uploaded Image
                                 </button>
@@ -153,7 +165,7 @@
                                         <img v-if="articleTeaserImage.url" :src="articleTeaserImage.url" alt="">
                                     </div>
                                 </div>
-                                <input class="btn btn-primary" type="file" name="article_image" id="article_teaser_image" @change="teaserArticleImageChange"/>
+                                <!--<input class="btn btn-primary" type="file" name="article_image" id="article_teaser_image" @change="teaserArticleImageChange"/>-->
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Select Uploaded Image
                                 </button>
@@ -185,7 +197,7 @@
                                 </div>
                                 <textarea
                                         id="leadEditor"
-                                        placeholder="Add lead"
+                                        placeholder="Add lead (max 350chars)"
                                         class="form-control articleEditor wysihtmlTextArea"
                                         v-model.trim="article.lead"
                                         maxlength="350"
@@ -230,7 +242,7 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
                                         Select Uploaded Image
                                     </button>
-                                    <input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>
+                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
                             <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages()">Save images</button>
@@ -310,7 +322,7 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
                                         Select Uploaded Video
                                     </button>
-                                    <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
+                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
                                 </div>
 
                             </div>
@@ -452,47 +464,47 @@
                     </div>
 
                     <!--Info Boxes-->
-                    <div class="tab-pane" id="articleInfoBoxes">
-                        <div class="form-body">
-                            <label><b>Info Boxes</b></label>
-                            <div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group wysihtmlInfoBox">
-                                <div id="infoBox-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                </div>
-                                <textarea
-                                        id="infoBoxEditor"
-                                        v-model.trim="articleInfoBox.content"
-                                        placeholder="Here is some text input"
-                                        class="form-control articleEditor"
-                                        rows="5">
-                                </textarea>
-                                <div class="form-actions">
-                                    <button
-                                            class="btn btn-danger remove_btn"
-                                            type="button"
-                                            @click="deleteArticleInfoBox(index)">
-                                        Remove InfoBox
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-actions item_add">
-                            <button
-                                    @click="addArticleInfoBox()"
-                                    class="btn btn-primary item_add_btn"
-                                    :disabled="articleInfoBoxes.length >= 5"
-                                    type="button"> +
-                            </button>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveArticleInfoBoxes()"
-                                    :disabled="article.id == null">
-                                Save info box <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <!--<div class="tab-pane" id="articleInfoBoxes">-->
+                        <!--<div class="form-body">-->
+                            <!--<label><b>Info Boxes</b></label>-->
+                            <!--<div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group wysihtmlInfoBox">-->
+                                <!--<div id="infoBox-toolbar" style="display: none;" class="wysihtml_toolbar text-right">-->
+                                <!--</div>-->
+                                <!--<textarea-->
+                                        <!--id="infoBoxEditor"-->
+                                        <!--v-model.trim="articleInfoBox.content"-->
+                                        <!--placeholder="Here is some text input"-->
+                                        <!--class="form-control articleEditor"-->
+                                        <!--rows="5">-->
+                                <!--</textarea>-->
+                                <!--<div class="form-actions">-->
+                                    <!--<button-->
+                                            <!--class="btn btn-danger remove_btn"-->
+                                            <!--type="button"-->
+                                            <!--@click="deleteArticleInfoBox(index)">-->
+                                        <!--Remove InfoBox-->
+                                    <!--</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-actions item_add">-->
+                            <!--<button-->
+                                    <!--@click="addArticleInfoBox()"-->
+                                    <!--class="btn btn-primary item_add_btn"-->
+                                    <!--:disabled="articleInfoBoxes.length >= 5"-->
+                                    <!--type="button"> +-->
+                            <!--</button>-->
+                        <!--</div>-->
+                        <!--<div class="form-actions">-->
+                            <!--<button-->
+                                    <!--class="btn btn-primary"-->
+                                    <!--type="button"-->
+                                    <!--@click="saveArticleInfoBoxes()"-->
+                                    <!--:disabled="article.id == null">-->
+                                <!--Save info box <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <!--Tags and Related Stories-->
                     <div class="tab-pane" id="articleTags">
@@ -554,8 +566,39 @@
                         </div>
                     </div>
 
+                    <!--Surveys-->
+                    <div class="tab-pane" id="articleSurveys">
+                        <!--Images-->
+                        <div class="form-body">
+                            <div class="form-group">
+                                <h4>Surveys</h4>
+                                <div class="row">
+                                    <div class="col-md-3 media_image" v-for="(survey, index) in articleSurveys">
+                                        <p>{{ survey.question }}</p>
+                                        <div class="form-group">
+                                            <button
+                                                    class="btn btn-danger btn-sm remove_btn"
+                                                    type="button"
+                                                    @click="deleteSurvey(index)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions selection_sections">
+                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showSurveySelectionModal()">
+                                        Select Uploaded Image
+                                    </button>
+                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages()">Save images</button>
+                        </div>
+
+                    </div>
+
                     <!--Authors and Ideas-->
-                    <div class="tab-pane" id="articleAuthors">
+                    <div class="tab-pane" id="articleSettings">
                         <div class="form-body">
 
                             <div class="form-group">
@@ -598,6 +641,14 @@
                                         @search-change="searchInformants"
                                         @remove="deleteInformants">
                                 </multiselect>
+                            </div>
+                            <div class="form-group">
+                                <label>Channel</label>
+                                <select class="form-control" v-model="articleChannel">
+                                    <option v-bind:value="channel.id" v-for="channel in existingChannels">
+                                        {{ channel.display_name }}
+                                    </option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Publication Datetime</label>
@@ -705,11 +756,12 @@
         data: () => {
             return {
                 article: {
-                    dateline: 'External Dateline',
-                    title: 'External Title',
-                    internal_dateline: 'Internal Dateline',
-                    internal_title: 'Internal Title',
-                    lead: 'Lead',
+                    dateline: '',
+                    title: '',
+                    seo_title: '',
+                    internal_dateline: '',
+                    internal_title: '',
+                    lead: '',
                     id: null,
                     published_at: null
                 },
@@ -802,7 +854,12 @@
                 },
                 articleElements: [
                 ],
-                saveArticleImagesDisabled: true
+                existingChannels: [
+                ],
+                articleChannel: null,
+                saveArticleImagesDisabled: true,
+                articleSurveys: [
+                ]
             };
         },
 
@@ -905,7 +962,7 @@
             //Disable the saving of an article
             disableArticleSave()
             {
-                return !this.article.dateline || !this.article.title || !this.article.internal_title || !this.article.internal_dateline || this.leadEditorEmpty || !this.articleMainImage.url || !this.articleTeaserImage.url;
+                return !this.article.dateline || !this.article.title  || this.leadEditorEmpty || !this.articleMainImage.url || !this.articleTeaserImage.url;
             }
         },
 
@@ -930,6 +987,99 @@
         },
 
         methods: {
+            /**
+             * SURVEYS
+             */
+            showSurveySelectionModal
+
+
+            //Save and publish an article
+            saveAndPublish()
+            {
+                if(this.article.published_at === null)
+                {
+                    this.article.published_at = moment().format();
+                }
+
+                if(this.article.id)
+                {
+                    Api.http
+                        .put(`/articles/${this.article.id}`, this.article)
+                        .then(response => {
+                            if(response.status === 200)
+                            {
+                                this.article = response.data;
+                                if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
+                                {
+                                    this.submitArticleImage();
+                                }
+                                if(! (response.data.teaser_id === this.articleTeaserImage.id))
+                                {
+                                    this.submitArticleTeaserImage();
+                                }
+                                Vue.toast('Article updated and published successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+
+                                this.$router.push('/articles');
+                            }
+                            else
+                            {
+                                Vue.toast('Error in updating and publish the article. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
+                else
+                {
+                    Api.http
+                        .post(`/articles`, this.article)
+                        .then(response => {
+                            if(response.status === 201)
+                            {
+                                this.article = response.data;
+                                this.submitArticleImage();
+                                this.submitArticleTeaserImage();
+                                Vue.toast('Article created and published successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                            else
+                            {
+                                Vue.toast('Error in creation and publish of the article. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+
+                            this.$router.push('/articles');
+                        });
+                }
+            },
+
+            //Check the value of title and update internal title
+            updateInternalDetails()
+            {
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+            },
+
+            //Reload the sorting page data
+            refreshSortingDate()
+            {
+                if(this.article.id)
+                {
+                    this.initializeArticleElements(this.article.id);
+                }
+            },
+
             /**
              * SORTING
              */
@@ -1003,7 +1153,6 @@
                             }
                             this.article = response.data;
                             delete this.article['image'];
-//                            this.fillArticleData(response.data);
                             this.initializeLeadEditor(this);
                             if(this.article.teaser_id)
                             {
@@ -1015,7 +1164,7 @@
                             this.initializeArticleSocialMedias(id);
                             this.initializeArticleBodies(id);
                             this.initializeArticleLearnings(id);
-                            this.initializeArticleInfoBoxes(id);
+//                            this.initializeArticleInfoBoxes(id);
                             this.initializeArticleTags(id);
                             this.initializeArticleRelatedStories(id);
                             this.initializeArticleAuthors(id);
@@ -1334,6 +1483,27 @@
                     });
             },
 
+            //Get the channels for the dropdown
+            initializeChannels()
+            {
+                Api.http
+                    .get(`/channels`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.existingChannels = response.data;
+                            this.articleChannel = this.existingChannels[0].id;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the channels. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
+
             //Get the article elements for ordering
             initializeArticleElements(id)
             {
@@ -1351,7 +1521,6 @@
                             });
                         }
                     });
-
             },
 
             /**
@@ -1362,7 +1531,7 @@
             {
                 this.initializeLeadEditor(this);
                 this.initializeBodyEditor(this, 0);
-                this.initializeInfoBoxEditor(this, 0);
+//                this.initializeInfoBoxEditor(this, 0);
             },
 
             //Initialize lead editor
@@ -1372,7 +1541,7 @@
 
                 let leadEditor = new wysihtml5.Editor($(leadSection).find('#leadEditor').get(0), {
                     toolbar:      $(leadSection).find('#lead-toolbar').get(0),
-                    parserRules:  wysihtml5ParserRules
+                    parserRules:  wysihtml5ParserRules,
                 }).on("change", function () {
                     vm.article.lead = this.getValue();
                 });
@@ -1611,6 +1780,21 @@
             handleSubmit()
             {
                 this.article.lead = this.leadEditor.getValue();
+
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+
+                if(this.article.seo_title === '')
+                {
+                    this.article.seo_title = this.article.title;
+                }
 
                 if (this.article.lead !== '')
                 {
@@ -2740,7 +2924,7 @@
                         Api.http
                             .get(`/articles?search=${this.searchedRelatedStory.query}`)
                             .then(response => {
-                                this.existingRelatedStories = response.data.articles;
+                                this.existingRelatedStories = response.data;
                                 this.searchedRelatedStory.promise = true;
                             });
                     }, 400);
@@ -2801,6 +2985,29 @@
                             });
                     }
                 });
+            },
+
+            /**
+             * CHANNELS
+             */
+            linkChannelToArticle()
+            {
+                Api.http
+                    .put(`/articles/${this.article.id}/channels/${this.articleChannel}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            Vue.toast('Article channel linked successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in linking the article channel. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
             },
 
             /**
@@ -2918,6 +3125,7 @@
             {
                 this.linkAuthorToArticle();
                 this.linkInformantToArticle();
+                this.linkChannelToArticle();
                 this.updateArticle();
             },
 
@@ -2988,6 +3196,8 @@
             {
                 this.initializeEditors();
             }
+
+            this.initializeChannels();
         },
 
         beforeDestroy: function ()
@@ -3152,7 +3362,7 @@
         margin-top: 5px;
     }
 
-    #articleTags, #articleAuthors {
+    #articleTags, #articleSettings {
         min-height: 600px;
     }
 
