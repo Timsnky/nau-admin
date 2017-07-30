@@ -5,6 +5,7 @@
                 type="text"
                 name="date"
                 :value="date"
+                placeholder="2017-08-05 12:00"
                 class="form-control">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>

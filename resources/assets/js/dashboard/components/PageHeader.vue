@@ -1,4 +1,4 @@
-<template>
+    <template>
     <!-- BEGIN HEADER -->
     <div class="page-header navbar navbar-fixed-top">
         <!-- BEGIN HEADER INNER -->

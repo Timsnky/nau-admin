@@ -40,6 +40,7 @@
                             class="btn btn-primary">
                         Liveticker
                     </router-link>
+                    <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button>
                     </td>
                 </tr>
                 </tbody>
@@ -59,6 +60,30 @@
             Api.http
                 .get('/articles')
                 .then(response => this.articles = response.data);
+        },
+
+        methods: {
+            publishArticle(article)
+            {
+                article.published_at = moment().format();
+
+                Api.http
+                    .put(`/articles/${article.id}`, article)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            Vue.toast('Article published successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in publishing the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            }
         }
     }
 </script>
