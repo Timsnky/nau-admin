@@ -7,9 +7,9 @@
             <div class="col-md-6 text-right">
                 <button
                         class="btn btn-primary pull-right"
-                        @click="saveAndPublish()"
-                        :disabled="article.id == null">
-                    Save and Publish
+                        @click="saveAndExit()"
+                        :disabled="disableArticleSave">
+                    Save and Exit
                 </button>
             </div>
         </div>
@@ -962,7 +962,7 @@
             //Disable the saving of an article
             disableArticleSave()
             {
-                return !this.article.dateline || !this.article.title  || this.leadEditorEmpty || !this.articleMainImage.url || !this.articleTeaserImage.url;
+                return ! this.article.dateline || ! this.article.title || ! this.articleMainImage.url || ! this.articleTeaserImage.url;
             }
         },
 
@@ -998,14 +998,9 @@
             {
             },
 
-            //Save and publish an article
-            saveAndPublish()
+            //Save and exit an article
+            saveAndExit()
             {
-                if(this.article.published_at === null)
-                {
-                    this.article.published_at = moment().format();
-                }
-
                 if(this.article.id)
                 {
                     Api.http
