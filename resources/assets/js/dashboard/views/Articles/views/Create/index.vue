@@ -990,8 +990,13 @@
             /**
              * SURVEYS
              */
-            showSurveySelectionModal
+            showSurveySelectionModal()
+            {
+            },
 
+            deleteSurvey()
+            {
+            },
 
             //Save and publish an article
             saveAndPublish()
