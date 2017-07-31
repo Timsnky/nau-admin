@@ -256,4 +256,8 @@
     .nau_warning {
         background-color: rgba(189, 19, 19, 0.7);
     }
+
+    .nau_success {
+        background-color: #26c281;
+    }
 </style>
