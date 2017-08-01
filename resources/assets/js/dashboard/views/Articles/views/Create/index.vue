@@ -6,10 +6,16 @@
             </div>
             <div class="col-md-6 text-right">
                 <button
-                        class="btn btn-primary pull-right"
+                        class="btn btn-primary pull-right margin_left_5"
                         @click="saveAndExit()"
                         :disabled="disableArticleSave">
-                    Save and Exit
+                    Save Article and Exit
+                </button>
+                <button
+                        class="btn btn-primary pull-right"
+                        @click="handleSubmit()"
+                        :disabled="disableArticleSave">
+                    Save Article
                 </button>
             </div>
         </div>
@@ -1776,35 +1782,90 @@
             /**
              * SUBMIT OF ARTICLE DETAILS
              */
-            //Handle the submission of the article
-            handleSubmit()
+            //Validate the article submission process
+            validateSubmit()
             {
+                let errorString = "";
+                let errorArray = [];
                 this.article.lead = this.leadEditor.getValue();
 
-                if(this.article.internal_title === '')
+                if(! this.article.dateline)
                 {
-                    this.article.internal_title = this.article.title;
+                    errorArray.push('dateline');
                 }
 
-                if(this.article.internal_dateline === '')
+                if(! this.article.title)
                 {
-                    this.article.internal_dateline = this.article.dateline;
+                    errorArray.push('title');
                 }
 
-                if(this.article.seo_title === '')
+                if(! this.articleMainImage.url)
                 {
-                    this.article.seo_title = this.article.title;
+                    errorArray.push('main article image');
                 }
 
-                if (this.article.lead !== '')
+                if(! this.articleTeaserImage.url)
                 {
-                    this.submitArticleDetails();
+                    errorArray.push('teaser image');
+                }
+
+                if(this.article.lead === '')
+                {
+                    errorArray.push('lead');
+                }
+
+                if(errorArray.length === 1)
+                {
+                    errorString = errorArray[0];
                 }
                 else
                 {
-                    Vue.toast('Please provide the lead for the article', {
+                    errorArray.forEach(function (value, key)
+                    {
+                        if(key !== errorArray.length - 1)
+                        {
+                            errorString += value + ', ';
+                        }
+                        else
+                        {
+                            errorString += 'and ' + value;
+                        }
+                    });
+                }
+
+                return errorString;
+            },
+
+            //Handle the submission of the article
+            handleSubmit()
+            {
+                let errorString = this.validateSubmit();
+
+                if(errorString !== "")
+                {
+                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
                         className: ['nau_toast', 'nau_warning'],
                     });
+                }
+                else
+                {
+                    if(this.article.internal_title === '')
+                    {
+                        this.article.internal_title = this.article.title;
+                    }
+
+                    if(this.article.internal_dateline === '')
+                    {
+                        this.article.internal_dateline = this.article.dateline;
+                    }
+
+                    if(this.article.seo_title === '')
+                    {
+                        this.article.seo_title = this.article.title;
+                    }
+
+                    this.submitArticleDetails();
+
                 }
             },
 
@@ -3384,4 +3445,10 @@
         padding: 10px;
         border: 2px dotted #E3E3E3;
     }
+
+    .margin_left_5
+    {
+        margin-left: 5px;
+    }
+
 </style>
