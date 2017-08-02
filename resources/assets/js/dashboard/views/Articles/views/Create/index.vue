@@ -56,7 +56,7 @@
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleSettings" data-toggle="tab">Settings</a>
                     </li>
-                    <li :class="[article.id == null ? 'disabledTab' : '']" @click="refreshSortingDate()">
+                    <li :class="[article.id == null ? 'disabledTab' : '']" @click="refreshSortingData()">
                         <a href="#articleSorting" data-toggle="tab">Sorting</a>
                     </li>
                 </ul>
@@ -568,34 +568,7 @@
 
                     <!--Surveys-->
                     <div class="tab-pane" id="articleSurveys">
-                        <!--Images-->
-                        <div class="form-body">
-                            <div class="form-group">
-                                <h4>Surveys</h4>
-                                <div class="row">
-                                    <div class="col-md-3 media_image" v-for="(survey, index) in articleSurveys">
-                                        <p>{{ survey.question }}</p>
-                                        <div class="form-group">
-                                            <button
-                                                    class="btn btn-danger btn-sm remove_btn"
-                                                    type="button"
-                                                    @click="deleteSurvey(index)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
-                                        Select Survey
-                                    </button>
-                                    <survey-select></survey-select>
-                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 ||article.id == null" @click="saveArticleSurveys()">Save surveys</button>
-                        </div>
-
+                        <surveys :article-id="article.id"></surveys>
                     </div>
 
                     <!--Authors and Ideas-->
@@ -752,7 +725,8 @@
     import DateAndTime from 'dashboard/components/DateAndTime';
     import TwitterElement from 'dashboard/components/TwitterTweet';
     import draggable from 'vuedraggable';
-    import SurveySelect from 'dashboard/components/SurveySelectModal';
+    import Surveys from './components/Surveys';
+
 
     export default {
         data: () => {
@@ -860,8 +834,6 @@
                 ],
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
-                articleSurveys: [
-                ]
             };
         },
 
@@ -870,7 +842,7 @@
             DateAndTime,
             TwitterElement,
             draggable,
-            SurveySelect
+            Surveys
         },
 
         computed: {
@@ -986,21 +958,10 @@
                     Api.resetVideo();
                     this.getVideo(newId);
                 }
-            }
+            },
         },
 
         methods: {
-            /**
-             * SURVEYS
-             */
-            showSurveySelectionModal()
-            {
-            },
-
-            deleteSurvey()
-            {
-            },
-
             //Save and exit an article
             saveAndExit()
             {
@@ -1075,7 +1036,7 @@
             },
 
             //Reload the sorting page data
-            refreshSortingDate()
+            refreshSortingData()
             {
                 if(this.article.id)
                 {
@@ -2998,10 +2959,6 @@
                             .then(response => {
                                 if(response.status === 204)
                                 {
-                                    vm.articleRelatedStories[key].pivot = {
-                                        article_id : vm.article.id,
-                                        related_id : vm.articleTags[key].id
-                                    };
                                     Vue.toast('Article related story linked successfully', {
                                         className: ['nau_toast', 'nau_success'],
                                     });
@@ -3453,5 +3410,9 @@
     {
         pointer-events: none !important;
         cursor:not-allowed !important;
+    }
+
+    .surveys_section table{
+        width: 100%;
     }
 </style>

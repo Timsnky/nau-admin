@@ -8,7 +8,6 @@
                 </div>
                 <div class="modal-body">
                     <div>
-
                         <div class="row image_selection_filters">
                             <div class="col-md-6">
                                 <div v-if="surveys.length > 0 || searchTerm !== ''" class="input-icon">
@@ -27,7 +26,7 @@
 
                         <div v-else-if="surveys.length > 0">
                             <div class="row image_selection_rows">
-                                <div v-for="survey in surveys" class="col-md-6">
+                                <div v-for="survey in surveys" class="col-md-6 survey_section">
                                     <a @click.prevent="dispatchSelected(survey.id)" href="#"><h5>{{ survey.question }}</h5></a>
                                     <ul>
                                         <li v-for="answer in survey.answers">{{ answer.answer }}</li>
@@ -40,7 +39,7 @@
                                 class="pull-right"
                                 :currentPage="currentPage"
                                 :pagesCount="pagesCount"
-                                :itemsPerPage='itemsPerPage'
+                                :itemsPerPage="itemsPerPage"
                                 @navigate="navigate"/>
                             </div>
                         </div>
@@ -73,8 +72,8 @@
                 const { data, current_page, per_page, last_page } = response.data;
 
                 this.surveys = data;
-                this.currentPage = current_page;
-                this.itemsPerPage = per_page;
+                this.currentPage = parseInt(current_page);
+                this.itemsPerPage = parseInt(per_page);
                 this.pagesCount = last_page;
                 this.isLoaded = true;
             })
@@ -120,7 +119,7 @@
             },
 
             dispatchSelected(id) {
-                this.$emit('selected', id);
+                Api.setSurvey(id);
                 this.reset();
                 $('#surveySelectionModal').modal('hide');
             },

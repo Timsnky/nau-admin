@@ -33,6 +33,7 @@ class Api {
         return this.store.state.user;
     }
 
+    //Images
     getImage() {
         return this.store.state.selected_image_id;
     }
@@ -45,6 +46,7 @@ class Api {
         return this.store.dispatch('RESET_IMAGE');
     }
 
+    //Videos
     getVideo() {
         return this.store.state.selected_video_id;
     }
@@ -56,6 +58,20 @@ class Api {
     resetVideo() {
         return this.store.dispatch('RESET_VIDEO');
     }
+
+    //Surveys
+    getSurvey() {
+        return this.store.state.selected_survey_id;
+    }
+
+    setSurvey(id) {
+        return this.store.dispatch('SET_SURVEY', id);
+    }
+
+    resetSurvey() {
+        return this.store.dispatch('RESET_SURVEY');
+    }
+
 }
 
 export default Api;

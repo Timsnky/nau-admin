@@ -6,7 +6,8 @@ export const store = new Vuex.Store({
 	state: {
 		'user': {},
         'selected_image_id' : null,
-        'selected_video_id' : null
+        'selected_video_id' : null,
+        'selected_survey_id': null,
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -37,6 +38,12 @@ export const store = new Vuex.Store({
         },
         RESET_VIDEO: ({commit}) => {
             commit('RESET_VIDEO');
+        },
+        SET_SURVEY: ({commit}, survey_id) => {
+            commit('SET_SURVEY', survey_id);
+        },
+        RESET_SURVEY: ({commit}) => {
+            commit('RESET_SURVEY');
         }
     },
     mutations: {
@@ -57,6 +64,12 @@ export const store = new Vuex.Store({
         },
         RESET_VIDEO: (state) => {
             state.selected_video_id = null;
+        },
+        SET_SURVEY: (state, survey_id) => {
+            state.selected_survey_id = survey_id;
+        },
+        RESET_SURVEY: (state) => {
+            state.selected_survey_id = null;
         }
     }
 });
