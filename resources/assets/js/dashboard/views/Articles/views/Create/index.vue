@@ -7,14 +7,12 @@
             <div class="col-md-6 text-right">
                 <button
                         class="btn btn-primary pull-right margin_left_5"
-                        @click="saveAndExit()"
-                        :disabled="disableArticleSave">
+                        @click="saveAndExit()">
                     Save Article and Exit
                 </button>
                 <button
                         class="btn btn-primary pull-right"
-                        @click="handleSubmit()"
-                        :disabled="disableArticleSave">
+                        @click="handleSubmit()">
                     Save Article
                 </button>
             </div>
@@ -104,8 +102,7 @@
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
-                                    type="submit"
-                                    :disabled="disableArticleSave">
+                                    type="submit">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -140,8 +137,7 @@
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
-                                    type="submit"
-                                    :disabled="disableArticleSave">
+                                    type="submit">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -180,8 +176,7 @@
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
-                                    type="submit"
-                                    :disabled="disableArticleSave">
+                                    type="submit">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
@@ -214,8 +209,7 @@
                         <div class="form-actions">
                             <button
                                     class="btn btn-primary"
-                                    type="submit"
-                                    :disabled="disableArticleSave">
+                                    type="submit">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
