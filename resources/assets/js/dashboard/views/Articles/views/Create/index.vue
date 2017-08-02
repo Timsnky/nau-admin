@@ -34,31 +34,31 @@
                     <li>
                         <a href="#articleLead" data-toggle="tab">Lead</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleMedia" data-toggle="tab">Media</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleSocialMedia" data-toggle="tab">Social Media</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleBody" data-toggle="tab">Body</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleLearning" data-toggle="tab">Learnings</a>
                     </li>
                     <!--<li>-->
                         <!--<a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>-->
                     <!--</li>-->
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleTags" data-toggle="tab">Tags</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleSurveys" data-toggle="tab">Surveys</a>
                     </li>
-                    <li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleSettings" data-toggle="tab">Settings</a>
                     </li>
-                    <li @click="refreshSortingDate()">
+                    <li :class="[article.id == null ? 'disabledTab' : '']" @click="refreshSortingDate()">
                         <a href="#articleSorting" data-toggle="tab">Sorting</a>
                     </li>
                 </ul>
@@ -971,7 +971,7 @@
             //Disable the saving of an article
             disableArticleSave()
             {
-                return ! this.article.dateline || ! this.article.title || ! this.articleMainImage.url || ! this.articleTeaserImage.url;
+                return ! this.article.dateline || ! this.article.title || ! this.articleMainImage.url;
             }
         },
 
@@ -1805,11 +1805,6 @@
                 if(! this.articleMainImage.url)
                 {
                     errorArray.push('main article image');
-                }
-
-                if(! this.articleTeaserImage.url)
-                {
-                    errorArray.push('teaser image');
                 }
 
                 if(this.article.lead === '')
@@ -3454,4 +3449,15 @@
         margin-left: 5px;
     }
 
+    .disabledTab
+    {
+        cursor:not-allowed !important;
+        background: rgba(171, 169, 169, 0.16);
+    }
+
+    .disabledTab > a
+    {
+        pointer-events: none !important;
+        cursor:not-allowed !important;
+    }
 </style>
