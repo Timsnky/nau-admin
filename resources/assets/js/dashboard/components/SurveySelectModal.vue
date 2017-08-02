@@ -40,7 +40,7 @@
                                 class="pull-right"
                                 :currentPage="currentPage"
                                 :pagesCount="pagesCount"
-                                :itemsPerPage="itemsPerPage"
+                                :itemsPerPage='itemsPerPage'
                                 @navigate="navigate"/>
                             </div>
                         </div>

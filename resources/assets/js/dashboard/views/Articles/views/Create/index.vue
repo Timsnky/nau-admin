@@ -592,13 +592,14 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showSurveySelectionModal()">
-                                        Select Uploaded Image
+                                    <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
+                                        Select Survey
                                     </button>
+                                    <survey-select></survey-select>
                                     <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages()">Save images</button>
+                            <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 ||article.id == null" @click="saveArticleSurveys()">Save surveys</button>
                         </div>
 
                     </div>
@@ -757,6 +758,7 @@
     import DateAndTime from 'dashboard/components/DateAndTime';
     import TwitterElement from 'dashboard/components/TwitterTweet';
     import draggable from 'vuedraggable';
+    import SurveySelect from 'dashboard/components/SurveySelectModal';
 
     export default {
         data: () => {
@@ -873,7 +875,8 @@
             Multiselect,
             DateAndTime,
             TwitterElement,
-            draggable
+            draggable,
+            SurveySelect
         },
 
         computed: {
