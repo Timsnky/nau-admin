@@ -24,19 +24,22 @@
                         <a href="#externalTitle" data-toggle="tab">External Title</a>
                     </li>
                     <li @click="updateInternalDetails()">
-                        <a href="#internalTitle" data-toggle="tab">Internal Title</a>
+                        <a href="#internalTitle" data-toggle="tab">Internal Title/Lead</a>
                     </li>
                     <li>
                         <a href="#articleImage" data-toggle="tab">Main Image</a>
                     </li>
-                    <li>
-                        <a href="#articleLead" data-toggle="tab">Lead</a>
-                    </li>
+                    <!--<li>-->
+                        <!--<a href="#articleLead" data-toggle="tab">Lead</a>-->
+                    <!--</li>-->
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleMedia" data-toggle="tab">Media</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleSocialMedia" data-toggle="tab">Social Media</a>
+                    </li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
+                        <a href="#articleExternalVideos" data-toggle="tab">External Videos</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleBody" data-toggle="tab">Body</a>
@@ -133,6 +136,28 @@
                                     placeholder="Add title internal (max 100chars)"
                                     class="form-control">
                             </div>
+                            <div class="form-body wysihtmlLead">
+                                <div class="form-group">
+                                    <label>Lead</label>
+                                    <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
+                                        <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
+                                        <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+
+                                        <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
+                                            <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
+                                            <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                                        </div>
+                                    </div>
+                                    <textarea
+                                            id="leadEditor"
+                                            placeholder="Add lead (max 350chars)"
+                                            class="form-control articleEditor wysihtmlTextArea"
+                                            v-model.trim="article.lead"
+                                            maxlength="350"
+                                            rows="5">
+                                </textarea>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button
@@ -182,38 +207,10 @@
                         </div>
                     </div>
 
-                    <!--Lead-->
-                    <div class="tab-pane" id="articleLead">
-                        <div class="form-body wysihtmlLead">
-                            <div class="form-group">
-                                <label>Lead</label>
-                                <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
-                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+                    <!--&lt;!&ndash;Lead&ndash;&gt;-->
+                    <!--<div class="tab-pane" id="articleLead">-->
 
-                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
-                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
-                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
-                                    </div>
-                                </div>
-                                <textarea
-                                        id="leadEditor"
-                                        placeholder="Add lead (max 350chars)"
-                                        class="form-control articleEditor wysihtmlTextArea"
-                                        v-model.trim="article.lead"
-                                        maxlength="350"
-                                        rows="5">
-                                </textarea>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="submit">
-                                Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <!--</div>-->
 
                     <!--Images, Videos and Sliders-->
                     <div class="tab-pane" id="articleMedia">
@@ -242,8 +239,6 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
                                         Select Uploaded Image
                                     </button>
-
-                                    <image-select-modal></image-select-modal>
                                     <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
@@ -324,8 +319,7 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
                                         Select Uploaded Video
                                     </button>
-                                    <video-select-modal></video-select-modal>
-                                    <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
+                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
                                 </div>
 
                             </div>
@@ -374,6 +368,10 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+
+                    <!--External Videos-->
+                    <div class="tab-pane" id="articleExternalVideos">
                         <div class="form-body">
                             <external-videos :article-id="article.id"></external-videos>
                         </div>
@@ -724,6 +722,8 @@
                         </div>
                     </div>
                 </div>
+                <image-select-modal></image-select-modal>
+                <video-select-modal></video-select-modal>
             </div>
         </form>
     </div>

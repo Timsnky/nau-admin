@@ -51,7 +51,7 @@
                         class="btn btn-primary"
                         type="button"
                         @click="saveExternalVideo()"
-                        :disabled="articleId == null || !(externalVideo.url && externalVideo.name && externalVideo.lead)">
+                        :disabled="articleId == null || !(externalVideo.url)">
                     Save Video
                 </button>
                 <button
@@ -145,14 +145,37 @@
                 this.addingExternalVideo = true;
             },
 
+            //Validate the external video first
+            validateExternalVideo()
+            {
+                if(this.externalVideo.url.indexOf('youtube') !== -1)
+                {
+                    return true;
+                }
+
+                if(this.externalVideo.url.indexOf('streamable') !== -1)
+                {
+                    return true;
+                }
+
+                Vue.toast('Only youtube and streamable external videos are allowed', {
+                    className : ['nau_toast','nau_warning'],
+                });
+
+                return false;
+            },
+
             //Save an external video record
             saveExternalVideo()
             {
-                Api.http
-                    .post(`/external-videos`, this.externalVideo)
-                    .then(response => {
-                        this.linkExternalVideoToArticle(response.data);
-                    });
+                if(this.validateExternalVideo())
+                {
+                    Api.http
+                        .post(`/external-videos`, this.externalVideo)
+                        .then(response => {
+                            this.linkExternalVideoToArticle(response.data);
+                        });
+                }
             },
 
             //Link the external video to an article
