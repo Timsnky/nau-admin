@@ -65,21 +65,6 @@
         </div>
         <!-- END CONTAINER -->
         <page-footer></page-footer>
-
-        {{--VIDEO SELECT MODAL--}}
-        <div class="modal fade" id="videoSelectionModal" tabindex="-1" role="dialog" aria-labelledby="videoSelectionModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <video-select-modal-header></video-select-modal-header>
-                    </div>
-                    <div class="modal-body">
-                        <video-select-modal></video-select-modal>
-                    </div>
-                </div>
-
-            </div>
-        </div>
     </div>
 
 

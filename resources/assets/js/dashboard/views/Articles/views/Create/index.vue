@@ -324,7 +324,8 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
                                         Select Uploaded Video
                                     </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
+                                    <video-select-modal></video-select-modal>
+                                    <input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>
                                 </div>
 
                             </div>
@@ -735,6 +736,7 @@
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
     import ImageSelectModal from 'dashboard/components/ImageSelectModal';
+    import VideoSelectModal from 'dashboard/components/VideoSelectModal';
 
     export default {
         data: () => {
@@ -852,7 +854,8 @@
             draggable,
             Surveys,
             ExternalVideos,
-            ImageSelectModal
+            ImageSelectModal,
+            VideoSelectModal
         },
 
         computed: {

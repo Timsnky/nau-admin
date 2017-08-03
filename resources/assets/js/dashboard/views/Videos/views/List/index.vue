@@ -24,6 +24,7 @@
                     Choose Video
                 </button>
             </div>
+            <video-select-modal></video-select-modal>
         </div>
 
         <h2 v-if="!isLoaded" class="text-center">Loading...</h2>
@@ -58,6 +59,7 @@
 <script>
     import Item from './components/Item';
     import Pagination from './components/Pagination';
+    import VideoSelectModal from 'dashboard/components/VideoSelectModal';
 
     export default {
         data() {
@@ -92,7 +94,8 @@
 
         components: {
             Item,
-            Pagination
+            Pagination,
+            VideoSelectModal
         },
 
         watch: {
