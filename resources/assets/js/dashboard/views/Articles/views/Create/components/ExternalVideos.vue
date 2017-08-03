@@ -103,9 +103,9 @@
 
         mounted()
         {
-            if(this.article_id)
+            if(this.articleId)
             {
-                this.initializeArticleExternalVideos(this.article_id);
+                this.initializeArticleExternalVideos(this.articleId);
             }
         },
 
@@ -129,11 +129,6 @@
                         if(response.status === 200)
                         {
                             this.articleExternalVideos = response.data;
-
-                            this.articleExternalVideos.forEach(function (value, key)
-                            {
-                                value.linked = 1;
-                            })
                         }
                         else
                         {
