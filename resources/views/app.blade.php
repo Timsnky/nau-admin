@@ -66,21 +66,6 @@
         <!-- END CONTAINER -->
         <page-footer></page-footer>
 
-        {{--IMAGE SELECT MODAL--}}
-        <div class="modal fade" id="imageSelectionModal" tabindex="-1" role="dialog" aria-labelledby="imageSelectionModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <image-select-modal-header></image-select-modal-header>
-                    </div>
-                    <div class="modal-body">
-                        <image-select-modal></image-select-modal>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
         {{--VIDEO SELECT MODAL--}}
         <div class="modal fade" id="videoSelectionModal" tabindex="-1" role="dialog" aria-labelledby="videoSelectionModalLabel">
             <div class="modal-dialog modal-lg" role="document">

@@ -242,6 +242,8 @@
                                     <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
                                         Select Uploaded Image
                                     </button>
+
+                                    <image-select-modal></image-select-modal>
                                     <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
@@ -732,7 +734,7 @@
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
-
+    import ImageSelectModal from 'dashboard/components/ImageSelectModal';
 
     export default {
         data: () => {
@@ -849,7 +851,8 @@
             TwitterElement,
             draggable,
             Surveys,
-            ExternalVideos
+            ExternalVideos,
+            ImageSelectModal
         },
 
         computed: {
