@@ -333,41 +333,46 @@
                     <!--Social Media-->
                     <div class="tab-pane" id="articleSocialMedia">
                         <div class="form-body">
-                            <label><b>Social Media</b></label>
-                            <div v-for="(articleSocialMedia, index) in articleSocialMedias" class="form-group">
-                                <div class="form-group">
-                                    <input
-                                            type="text"
-                                            maxlength="100"
-                                            v-model.trim="articleSocialMedia.url"
-                                            placeholder="URL to post"
-                                            class="form-control article_input">
-                                    <button
-                                            @click="deleteArticleSocialMedia(index)"
-                                            class="btn btn-danger btn-sm delete_btn"
-                                            type="button"> x
-                                    </button>
-                                </div>
-                                <div class="form-group">
-                                    <twitter-element :url="articleSocialMedia.url"></twitter-element>
+                            <div class="form-body">
+                                <label><b>Social Media</b></label>
+                                <div v-for="(articleSocialMedia, index) in articleSocialMedias" class="form-group">
+                                    <div class="form-group">
+                                        <input
+                                                type="text"
+                                                maxlength="100"
+                                                v-model.trim="articleSocialMedia.url"
+                                                placeholder="URL to post"
+                                                class="form-control article_input">
+                                        <button
+                                                @click="deleteArticleSocialMedia(index)"
+                                                class="btn btn-danger btn-sm delete_btn"
+                                                type="button"> x
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <twitter-element :url="articleSocialMedia.url"></twitter-element>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="form-actions item_add">
+                                <button
+                                        @click="addArticleSocialMedia()"
+                                        class="btn btn-primary item_add_btn"
+                                        type="button"> +
+                                </button>
+                            </div>
+                            <div class="form-actions">
+                                <button
+                                        class="btn btn-primary"
+                                        type="button"
+                                        @click="saveArticleSocialMedias()"
+                                        :disabled="article.id == null">
+                                    Save Posts <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-actions item_add">
-                            <button
-                                    @click="addArticleSocialMedia()"
-                                    class="btn btn-primary item_add_btn"
-                                    type="button"> +
-                            </button>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveArticleSocialMedias()"
-                                    :disabled="article.id == null">
-                                Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
+                        <div class="form-body">
+                            <external-videos :article-id="article.id"></external-videos>
                         </div>
                     </div>
 
@@ -726,6 +731,7 @@
     import TwitterElement from 'dashboard/components/TwitterTweet';
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
+    import ExternalVideos from './components/ExternalVideos';
 
 
     export default {
@@ -842,7 +848,8 @@
             DateAndTime,
             TwitterElement,
             draggable,
-            Surveys
+            Surveys,
+            ExternalVideos
         },
 
         computed: {

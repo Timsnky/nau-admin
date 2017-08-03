@@ -3,7 +3,8 @@
         <div class="form-group surveys_section">
             <h4>Surveys</h4>
             <div class="row">
-                <table>
+                <table class="table table-hover table-bordered table-scrollable">
+                    <tbody>
                     <tr v-for="(survey, index) in articleSurveys">
                         <td>
                             <div class="col-md-12">
@@ -24,6 +25,7 @@
                             </div>
                         </td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
             <div class="form-actions selection_sections">
@@ -192,3 +194,7 @@
         }
     }
 </script>
+
+<style>
+
+</style>

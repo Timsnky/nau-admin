@@ -1,51 +1,92 @@
 <template>
-    <!--<div class="form-body">-->
-        <!--<label><b>External Videos</b></label>-->
-        <!--<div v-for="(articleExternalVideo, index) in articleExternalVideos" class="form-group">-->
-            <!--<div class="form-group">-->
-                <!--<input-->
-                        <!--type="text"-->
-                        <!--maxlength="100"-->
-                        <!--v-model.trim="articleExternalVideo.url"-->
-                        <!--placeholder="URL to post"-->
-                        <!--class="form-control article_input">-->
-                <!--<button-->
-                        <!--@click="deleteArticleExternalVideo(index)"-->
-                        <!--class="btn btn-danger btn-sm delete_btn"-->
-                        <!--type="button"> x-->
-                <!--</button>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<twitter-element :url="articleSocialMedia.url"></twitter-element>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="form-actions item_add">-->
-        <!--<button-->
-                <!--@click="addArticleSocialMedia()"-->
-                <!--class="btn btn-primary item_add_btn"-->
-                <!--type="button"> +-->
-        <!--</button>-->
-    <!--</div>-->
-    <!--<div class="form-actions">-->
-        <!--<button-->
-                <!--class="btn btn-primary"-->
-                <!--type="button"-->
-                <!--@click="saveArticleSocialMedias()"-->
-                <!--:disabled="article.id == null">-->
-            <!--Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>-->
-        <!--</button>-->
-    <!--</div>-->
+    <div>
+        <div class="form-body">
+            <h4><strong>External Videos</strong></h4>
+            <div class="form-group" v-if="addingExternalVideo">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>URL</label>
+                        <input
+                                type="url"
+                                v-model.trim="externalVideo.url"
+                                placeholder="https://streamable.com/1535 / https://www.youtube.com/watch?v=XB2g7-HgE_g"
+                                class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Name</label>
+                        <input
+                                type="text"
+                                name="name"
+                                v-model.trim="externalVideo.name"
+                                placeholder="Name"
+                                class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Lead</label>
+                        <input
+                                type="text"
+                                name="lead"
+                                v-model.trim="externalVideo.lead"
+                                placeholder="Lead"
+                                class="form-control">
+                        </input>
+                    </div>
+
+                    <div class="col-md-6 form-group">
+                        <label>Description</label>
+                        <input
+                                type="text"
+                                name="source"
+                                v-model.trim="externalVideo.alt"
+                                placeholder="Description"
+                                class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="saveExternalVideo()"
+                        :disabled="articleId == null || !(externalVideo.url && externalVideo.name && externalVideo.lead)">
+                    Save Video
+                </button>
+                <button
+                        @click="addArticleExternalVideo()"
+                        class="btn btn-primary"
+                        type="button"
+                        :disabled="addingExternalVideo">
+                    Add Video
+                </button>
+            </div>
+            <div class="timeline">
+                <timeline-item v-for="(articleExternalVideo, index) in articleExternalVideos" :key="articleExternalVideo.id" :liveticker="articleExternalVideo" @delete="deleteArticleExternalVideo(index)">
+                    <external-video-element :element="articleExternalVideo" />
+                </timeline-item>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 
-//    import SurveySelect from 'dashboard/components/SurveySelectModal';
+    import TimelineItem from '../../Liveticker/views/Show/components/TimelineItem';
+    import ExternalVideoElement from '../../Liveticker/views/Show/components/Elements/ExternalVideoElement';
 
     export default {
         data() {
             return {
-                articleSurveys: [],
+                articleExternalVideos: [],
+                addingExternalVideo: false,
+                externalVideo: {
+                    url: '',
+                    lead: '',
+                    name: '',
+                    alt: ''
+                }
             }
         },
 
@@ -56,139 +97,109 @@
         },
 
         components: {
-            SurveySelect
-        },
-
-        computed: {
-            //Get the selected survey id from the modal
-            selectedSurveyId()
-            {
-                return Api.getSurvey();
-            },
+            TimelineItem,
+            ExternalVideoElement
         },
 
         mounted()
         {
             if(this.article_id)
             {
-                this.initializeArticleSurveys(this.article_id);
+                this.initializeArticleExternalVideos(this.article_id);
             }
         },
 
         watch: {
-            selectedSurveyId(newId, oldId)
-            {
-                if(newId)
-                {
-                    Api.resetSurvey();
-                    this.getSurvey(newId);
-                }
-            },
-
             articleId()
             {
                 if(this.articleId)
                 {
-                    this.initializeArticleSurveys(this.articleId);
+                    this.initializeArticleExternalVideos(this.articleId);
                 }
             }
         },
 
         methods: {
-            //Get the surveys linked to the specified article
-            initializeArticleSurveys(id)
+            //Get the external videos linked to the specified article
+            initializeArticleExternalVideos(id)
             {
                 Api.http
-                    .get(`/articles/${id}/surveys`)
+                    .get(`/articles/${id}/livetickers`)
                     .then(response => {
                         if(response.status === 200)
                         {
-                            this.articleSurveys = response.data;
+                            this.articleExternalVideos = response.data;
 
-                            this.articleSurveys.forEach(function (value, key)
+                            this.articleExternalVideos.forEach(function (value, key)
                             {
                                 value.linked = 1;
                             })
                         }
                         else
                         {
-                            Vue.toast('Error in retrieving the related stories. Please retry again', {
+                            Vue.toast('Error in retrieving the external videos. Please retry again', {
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
                     });
             },
 
-            //Get the details of a given survey
-            getSurvey(id)
+            //Add an article external video record
+            addArticleExternalVideo()
+            {
+                this.addingExternalVideo = true;
+            },
+
+            //Save an external video record
+            saveExternalVideo()
             {
                 Api.http
-                    .get(`/surveys/${id}`)
+                    .post(`/external-videos`, this.externalVideo)
+                    .then(response => {
+                        this.linkExternalVideoToArticle(response.data);
+                    });
+            },
+
+            //Link the external video to an article
+            linkExternalVideoToArticle(video)
+            {
+                Api.http
+                    .put(`/livetickers/${this.articleId}/external-videos/${video.id}`)
                     .then(response =>
                     {
                         if(response.status === 200)
                         {
-                            this.articleSurveys.push(response.data);
+                            this.articleExternalVideos.push(video);
+                            this.addingExternalVideo = false;
+                            this.articleExternalVideos = [];
+                            this.initializeArticleExternalVideos(this.articleId);
+                            Vue.toast('External video linked to article successfully', {
+                                className : ['nau_toast','nau_success'],
+                            });
                         }
                         else
                         {
-                            Vue.toast('Error in retrieving the selected survey. Please retry again', {
-                                className : ['nau_toast','nau_warning'],
+                            Vue.toast('External video linked to article successfully', {
+                                className : ['nau_toast','nau_success'],
                             });
                         }
                     });
             },
 
-            //Detach a survey from an article
-            deleteSurvey(key)
+            //Detach a external video from an article
+            deleteArticleExternalVideo(key)
             {
-                let vm = this;
-
-                if(vm.articleSurveys[key].linked)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.articleId}/surveys/${vm.articleSurveys[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleSurveys.splice(key, 1);
-                                Vue.toast('Article survey detached successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleSurveys.splice(key, 1);
-                }
-            },
-
-            //Links surveys to an article
-            saveArticleSurveys()
-            {
-                let vm = this;
-
-                this.articleSurveys.forEach(function (value, key)
-                {
-                    if(! vm.articleSurveys[key].linked)
-                    {
-                        Api.http
-                            .put(`/articles/${vm.articleId}/surveys/${vm.articleSurveys[key].id}`)
-                            .then(response => {
-                                if (response.status === 204)
-                                {
-                                    vm.articleSurveys[key].linked = 1;
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the survey. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
+                Api.http
+                    .delete(`/article/${this.articleId}/livetickers/${this.articleExternalVideos[key].id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            this.articleExternalVideos.splice(key, 1);
+                            Vue.toast('Article external video detached successfully', {
+                                className: ['nau_toast', 'nau_success'],
                             });
-                    }
-                });
+                        }
+                    });
             },
         }
     }
