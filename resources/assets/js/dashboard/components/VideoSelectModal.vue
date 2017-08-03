@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Videos Manv</h4>
+                        <h4 class="modal-title" id="myModalLabel">Videos</h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingVideo" @click="showAddVideo()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                     </div>
@@ -196,6 +196,7 @@
 
         methods: {
             navigate(page) {
+                this.isLoaded = false;
                 this.getPaginatedData(page)
                     .then(response => {
                         const { data, current_page, last_page, from } = response.data;
@@ -203,6 +204,7 @@
                         this.videos = data;
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
+                        this.isLoaded = true;
                     })
                     .catch(err => {
                         Vue.toast('Error in retreiving the Videos. Please retry again', {
