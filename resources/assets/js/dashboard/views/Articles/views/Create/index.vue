@@ -662,7 +662,7 @@
                                         <p v-html="articleElement.content"></p>
                                     </div>
                                     <!--Slider-->
-                                    <div v-if="articleElement.type == 'slider'" class="sectionDiv">
+                                    <div v-if="articleElement.type == 'slider'" class="sliderSection sectionDiv">
                                         <div class="container">
                                             <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
                                                 <!-- Indicators -->
@@ -698,15 +698,20 @@
                                         <twitter-element :url="articleElement.url"></twitter-element>
                                     </div>
                                     <!--Info Box-->
-                                    <div v-if="articleElement.type == 'infobox'" class="sectionDiv">
-                                        <p v-html="articleElement.content"></p>
-                                    </div>
+                                    <!--<div v-if="articleElement.type == 'infobox'" class="sectionDiv">-->
+                                        <!--<p v-html="articleElement.content"></p>-->
+                                    <!--</div>-->
                                     <!--Videos-->
                                     <div v-if="articleElement.type == 'video'" class="elementImageSection sectionDiv">
                                         <video controls>
                                             <source :src="articleElement.urls[0]" type="video/mp4">
                                             <source :src="articleElement.urls[1]" type="video/webm">
                                         </video>
+                                    </div>
+
+                                    <!--Surveys-->
+                                    <div v-if="articleElement.type == 'survey'" class="sectionDiv">
+                                        <p>{{ articleElement.question }}</p>
                                     </div>
                                 </div>
                             </draggable>
@@ -3401,6 +3406,10 @@
     .sliderSection {
         width: 480px;
         height: 300px;
+    }
+
+    .sliderSection img {
+        height: 300px !important;
     }
 
     .sectionDiv {
