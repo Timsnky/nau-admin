@@ -53,7 +53,7 @@
                                     @click="saveSurvey()"
                                     class="btn btn-primary"
                                     type="button"
-                                    :disabled="! survey.question || survey.answers.length == 0">
+                                    :disabled="! survey.question || disableSaveSurvey">
                                 Save Survey
                             </button>
                         </div>
@@ -125,9 +125,6 @@
                         {
                             answer: ''
                         },
-                        {
-                            answer: ''
-                        }
                     ]
                 }
             }
@@ -159,14 +156,28 @@
         },
 
         computed: {
-            disableSaveArticle()
+            disableSaveSurvey()
             {
                 if(this.survey.question === '')
                 {
                     return true;
                 }
 
+                let answersCount = 0;
 
+                for (let [key, value] of this.survey.answers.entries())
+                {
+                    if(value.answer !== '')
+                    {
+                        answersCount ++;
+                    }
+                    if(answersCount >= 2)
+                    {
+                        return false
+                    }
+                }
+
+                return true;
             },
         },
 

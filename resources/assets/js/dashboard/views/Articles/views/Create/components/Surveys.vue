@@ -9,9 +9,6 @@
                         <td>
                             <div class="col-md-12">
                                 <h5>{{ survey.question }}</h5>
-                                <ol>
-                                    <li v-for="answer in survey.answers">{{ answer.answer }}</li>
-                                </ol>
                             </div>
                         </td>
                         <td>
@@ -30,7 +27,7 @@
             </div>
             <div class="form-actions selection_sections">
                 <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
-                    Select Survey
+                    Select or Add Survey
                 </button>
                 <survey-select></survey-select>
             </div>
