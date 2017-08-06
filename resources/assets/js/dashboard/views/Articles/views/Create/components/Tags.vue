@@ -52,7 +52,7 @@
             <button
                     class="btn btn-primary"
                     type="button"
-                    @click="saveArticleTagsAndRelatedStories()"
+                    @click="saveArticleTagsAndRelatedStories(articleId)"
                     :disabled="articleId == null">
                 Save
             </button>
@@ -109,7 +109,7 @@
 
         created()
         {
-            this.$parent.$on('sendData', this.sendData);
+            this.$parent.$on('duplicateData', this.duplicateData);
         },
 
         watch: {
@@ -210,6 +210,11 @@
                 let errorString = "";
                 let errorArray = [];
 
+                if(articleId !== this.articleId)
+                {
+                    return errorString;
+                }
+
                 if(this.articleTags.length < 6)
                 {
                     errorArray.push('at least 6 tags');
@@ -247,7 +252,7 @@
             },
 
             //Save Article tags and related stories
-            saveArticleTagsAndRelatedStories()
+            saveArticleTagsAndRelatedStories(articleId)
             {
                 let errorString = this.validateTagsAndRelatedStories();
 
@@ -259,13 +264,13 @@
                 }
                 else
                 {
-                    this.saveArticleTags();
-                    this.linkRelatedStoriesToArticle();
+                    this.saveArticleTags(articleId);
+                    this.linkRelatedStoriesToArticle(articleId);
                 }
             },
 
             //Save the article tags
-            saveArticleTags()
+            saveArticleTags(articleId)
             {
                 let vm = this;
 
@@ -288,7 +293,7 @@
                                     }
                                     vm.articleTags[key] = response.data;
                                     vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
+                                    vm.linkTagToArticle(key, articleId);
                                     Vue.toast('Article tags updated successfully', {
                                         className: ['nau_toast', 'nau_success'],
                                     });
@@ -312,7 +317,7 @@
                                     }
                                     vm.articleTags[key] = response.data;
                                     vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
+                                    vm.linkTagToArticle(key, articleId);
                                     Vue.toast('Article tags created successfully', {
                                         className: ['nau_toast', 'nau_success'],
                                     });
@@ -323,17 +328,17 @@
             },
 
             //Link a tag to an article
-            linkTagToArticle(key)
+            linkTagToArticle(key, articleId)
             {
-                if(! this.articleTags[key].pivot)
+                if(! (this.articleTags[key].pivot && this.articleTags[key].pivot.article_id === articleId))
                 {
                     Api.http
-                        .put(`/articles/${this.articleId}/tags/${this.articleTags[key].id}`)
+                        .put(`/articles/${articleId}/tags/${this.articleTags[key].id}`)
                         .then(response => {
                             if(response.status === 204)
                             {
                                 this.articleTags[key].pivot = {
-                                    article_id : this.articleId,
+                                    article_id : articleId,
                                     tag_id : this.articleTags[key].id
                                 };
                                 Vue.toast('Article tag item linked successfully', {
@@ -400,19 +405,20 @@
             },
 
             //Link related story to article
-            linkRelatedStoriesToArticle()
+            linkRelatedStoriesToArticle(articleId)
             {
                 let vm = this;
 
                 this.articleRelatedStories.forEach(function (value, key)
                 {
-                    if(! value.linked)
+                    if(! (value.linked && articleId === vm.articleId))
                     {
                         Api.http
-                            .put(`/articles/${vm.articleId}/related/${value.id}`)
+                            .put(`/articles/${articleId}/related/${value.id}`)
                             .then(response => {
                                 if(response.status === 204)
                                 {
+                                    vm.articleRelatedStories[key].linked = 1;
                                     Vue.toast('Article related story linked successfully', {
                                         className: ['nau_toast', 'nau_success'],
                                     });
@@ -450,6 +456,12 @@
                     }
                 });
             },
+
+            //Duplicate the data based on the article id
+            duplicateData(articleId)
+            {
+                this.saveArticleTagsAndRelatedStories(articleId);
+            }
         }
     }
 </script>

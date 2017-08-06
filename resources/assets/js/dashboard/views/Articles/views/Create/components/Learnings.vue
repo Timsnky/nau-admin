@@ -31,7 +31,7 @@
             <button
                     class="btn btn-primary"
                     type="button"
-                    @click="saveArticleLearnings()">
+                    @click="saveArticleLearnings(articleId)">
                 Save learnings
             </button>
         </div>
@@ -80,7 +80,7 @@
 
         created()
         {
-            this.$parent.$on('sendData', this.sendData);
+            this.$parent.$on('duplicateData', this.duplicateData);
         },
 
 
@@ -136,8 +136,13 @@
             },
 
             //Validate learnings save
-            validateLearnings()
+            validateLearnings(articleId)
             {
+                if(articleId !== this.articleId)
+                {
+                    return true;
+                }
+
                 let totalLearnings = 0;
 
                 this.articleLearnings.forEach(function (value, key)
@@ -152,17 +157,18 @@
             },
 
             //Save article learnings
-            saveArticleLearnings()
+            saveArticleLearnings(articleId)
             {
                 let vm = this;
 
-                if(! this.validateLearnings())
+                if(! this.validateLearnings(articleId))
                 {
                     this.articleLearnings.forEach(function (value, key)
                     {
-                        if (value.id) {
+                        if (value.id && articleId === vm.articleId)
+                        {
                             Api.http
-                                .put(`/articles/${vm.articleId}/learnings/${value.id}`, {
+                                .put(`/articles/${articleId}/learnings/${value.id}`, {
                                     text: value.text,
                                 })
                                 .then(response => {
@@ -179,7 +185,7 @@
                             if (value.text !== '')
                             {
                                 Api.http
-                                    .post(`/articles/${vm.articleId}/learnings`, {
+                                    .post(`/articles/${articleId}/learnings`, {
                                         text: value.text,
                                     })
                                     .then(response => {
@@ -242,6 +248,12 @@
                     vm.articleLearnings.splice(key, 1);
                 }
             },
+
+            //Duplicate the data based on the article id
+            duplicateData(articleId)
+            {
+                this.saveArticleLearnings(articleId);
+            }
         }
     }
 </script>

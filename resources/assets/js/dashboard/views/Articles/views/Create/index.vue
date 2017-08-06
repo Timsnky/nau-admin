@@ -11,7 +11,7 @@
                     Save Article and Exit
                 </button>
                 <button
-                        class="btn btn-primary pull-right"
+                        class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
                     Save Article
                 </button>
@@ -239,7 +239,7 @@
                                     <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages()">Save images</button>
+                            <button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>
                         </div>
 
                         <!--Sliders-->
@@ -281,7 +281,7 @@
                             </button>
                             <button class="btn btn-primary" type="button"
                                     :disabled="articleSliders.length == 0 || article.id == null"
-                                    @click="uploadArticleSliders()">Save sliders
+                                    @click="uploadArticleSliders(article.id)">Save sliders
                             </button>
                         </div>
 
@@ -320,7 +320,7 @@
                                 </div>
 
                             </div>
-                            <button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos()">Save videos</button>
+                            <button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>
                         </div>
                     </div>
 
@@ -358,7 +358,7 @@
 
                     <!--Surveys-->
                     <div class="tab-pane" id="articleSurveys">
-                        <surveys :article-id="article.id" @updateData="updateData"></surveys>
+                        <surveys :article-id="article.id"></surveys>
                     </div>
 
                     <!--Authors and Ideas-->
@@ -425,7 +425,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="button"
-                                    @click="saveArticleAuthorsAndIdeas()"
+                                    @click="saveSettings(article.id)"
                                     :disabled="articleAuthors.length < 1 || article.id == null">
                                 Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
@@ -511,8 +511,8 @@
                         </div>
                     </div>
                 </div>
-                <!--<image-select-modal></image-select-modal>-->
-                <!--<video-select-modal></video-select-modal>-->
+                <image-select-modal></image-select-modal>
+                <video-select-modal></video-select-modal>
             </div>
         </form>
     </div>
@@ -545,6 +545,7 @@
                     id: null,
                     published_at: null
                 },
+                duplicateArticleId: null,
                 type: 1,
                 leadEditor: null,
                 submitting_main: false,
@@ -700,17 +701,78 @@
         },
 
         methods: {
-            //Receive an update from surveys
-            updateData(data)
+            //Duplicate an article
+            duplicateArticle()
             {
-                console.log(data);
+                if(this.article.id)
+                {
+                    this.prepareDuplication();
+                    this.createDuplicateArticle();
+                }
+                else
+                {
+                    Vue.toast('Please create an article first inorder to duplicate', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+
+                }
             },
 
-            //Send a request for data notification
-            requestData()
+            //Prepare the article data before duplication
+            prepareDuplication()
             {
-                console.log("Requesting Data");
-                this.$emit('sendData');
+                this.article.lead = this.leadEditor.getValue();
+            },
+
+            //Create a duplicate article
+            createDuplicateArticle()
+            {
+                Api.http
+                    .post(`/articles`, {
+                        dateline: this.article.dateline,
+                        title: this.article.title,
+                        seo_title: this.article.seo_title,
+                        internal_dateline: this.article.internal_dateline,
+                        internal_title: this.article.internal_title,
+                        lead: this.article.lead,
+                    })
+                    .then(response => {
+                        if(response.status === 201)
+                        {
+                            this.duplicateArticleId = response.data.id;
+                            this.duplicatedLinkedItems();
+
+                            Vue.toast('Article duplicated successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in duplication of the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
+
+            //Duplicate the linked items
+            duplicateLinkedItems()
+            {
+                this.sendDuplicationEvent(this.duplicateArticleId);
+                this.submitArticleImage(this.duplicateArticleId);
+                this.submitArticleTeaserImage(this.duplicateArticleId);
+                this.uploadArticleImages(this.duplicateArticleId);
+                this.uploadArticleSliders(this.duplicateArticleId);
+                this.uploadArticleVideos(this.duplicateArticleId);
+                this.saveArticleAuthorsAndIdeas(this.duplicateArticleId);
+                this.$router.push('/articles/' + this.duplicateArticleId + '/edit');
+            },
+
+            //Send a request for data duplication to specified article id
+            sendDuplicationEvent(articleId)
+            {
+                this.$emit('duplicateData', articleId);
             },
 
             //Save and exit an article
@@ -726,11 +788,11 @@
                                 this.article = response.data;
                                 if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
                                 {
-                                    this.submitArticleImage();
+                                    this.submitArticleImage(this.article.id);
                                 }
                                 if(! (response.data.teaser_id === this.articleTeaserImage.id))
                                 {
-                                    this.submitArticleTeaserImage();
+                                    this.submitArticleTeaserImage(this.article.id);
                                 }
                                 Vue.toast('Article updated and published successfully', {
                                     className: ['nau_toast', 'nau_success'],
@@ -754,8 +816,8 @@
                             if(response.status === 201)
                             {
                                 this.article = response.data;
-                                this.submitArticleImage();
-                                this.submitArticleTeaserImage();
+                                this.submitArticleImage(this.article.id);
+                                this.submitArticleTeaserImage(this.article.id);
                                 Vue.toast('Article created and published successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
@@ -859,12 +921,12 @@
                             {
                                 this.initializeArticleTeaserImage(this.article.teaser_id);
                             }
-//                            this.initializeArticleImages(id);
-//                            this.initializeArticleSliders(id);
-//                            this.initializeArticleVideos(id);
+                            this.initializeArticleImages(id);
+                            this.initializeArticleSliders(id);
+                            this.initializeArticleVideos(id);
                             this.initializeArticleAuthors(id);
                             this.initializeArticleInformants(id);
-//                            this.initializeArticleElements(id);
+                            this.initializeArticleElements(id);
                         }
                         else
                         {
@@ -1161,11 +1223,11 @@
             },
 
             //Submit article image
-            submitArticleImage()
+            submitArticleImage(articleId)
             {
                 if (this.articleMainImage.id)
                 {
-                    this.linkMainImageToArticle();
+                    this.linkMainImageToArticle(articleId);
                 }
                 else
                 {
@@ -1181,7 +1243,7 @@
                             if(response.status === 201)
                             {
                                 this.articleMainImage = response.data;
-                                this.linkMainImageToArticle();
+                                this.linkMainImageToArticle(articleId);
                             }
                             else
                             {
@@ -1220,43 +1282,46 @@
             },
 
             //Submit article teaser image
-            submitArticleTeaserImage()
+            submitArticleTeaserImage(articleId)
             {
-                if (this.articleTeaserImage.id)
+                if(this.articleTeaserImage.url)
                 {
-                    this.linkTeaserImageToArticle();
-                }
-                else
-                {
-                    Api.http
-                        .post(`/images`, {
-                            image: this.articleTeaserImage.url,
-                            name: this.article.title,
-                            source: this.article.title,
-                            lead: this.article.title
-                        })
-                        .then(response => {
+                    if (this.articleTeaserImage.id)
+                    {
+                        this.linkTeaserImageToArticle(articleId);
+                    }
+                    else
+                    {
+                        Api.http
+                            .post(`/images`, {
+                                image: this.articleTeaserImage.url,
+                                name: this.article.title,
+                                source: this.article.title,
+                                lead: this.article.title
+                            })
+                            .then(response => {
 
-                            if(response.status === 201)
-                            {
-                                this.articleTeaserImage = response.data;
-                                this.linkTeaserImageToArticle();
-                            }
-                            else
-                            {
-                                Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
-                        });
+                                if(response.status === 201)
+                                {
+                                    this.articleTeaserImage = response.data;
+                                    this.linkTeaserImageToArticle(articleId);
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
                 }
             },
 
             //Link the teaser image to an article
-            linkTeaserImageToArticle()
+            linkTeaserImageToArticle(articleId)
             {
                 Api.http
-                    .put(`/articles/${this.article.id}/teaser/${this.articleTeaserImage.id}`)
+                    .put(`/articles/${articleId}/teaser/${this.articleTeaserImage.id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
@@ -1394,11 +1459,8 @@
                         if(response.status === 201)
                         {
                             this.article = response.data;
-                            this.submitArticleImage();
-                            if(this.articleTeaserImage.url)
-                            {
-                                this.submitArticleTeaserImage();
-                            }
+                            this.submitArticleImage(this.article.id);
+                            this.submitArticleTeaserImage(this.article.id);
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -1422,11 +1484,11 @@
                             this.article = response.data;
                             if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
                             {
-                                this.submitArticleImage();
+                                this.submitArticleImage(this.article.id);
                             }
                             if(! (response.data.teaser_id === this.articleTeaserImage.id) && this.articleTeaserImage.url)
                             {
-                                this.submitArticleTeaserImage();
+                                this.submitArticleTeaserImage(this.article.id);
                             }
 
                             Vue.toast('Article updated successfully', {
@@ -1443,10 +1505,10 @@
             },
 
             //Link the article to the main image
-            linkMainImageToArticle()
+            linkMainImageToArticle(articleId)
             {
                 Api.http
-                    .put(`/articles/${this.article.id}/preview/${this.articleMainImage.id}`)
+                    .put(`/articles/${articleId}/preview/${this.articleMainImage.id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
@@ -1483,7 +1545,7 @@
             },
 
             //Upload article images and link them to article
-            uploadArticleImages()
+            uploadArticleImages(articleId)
             {
                 let vm = this;
 
@@ -1502,7 +1564,7 @@
                                 if(response.status === 201)
                                 {
                                     vm.articleImages[key] = response.data;
-                                    vm.linkImageToArticle(key);
+                                    vm.linkImageToArticle(key, articleId);
                                 }
                                 else
                                 {
@@ -1514,24 +1576,24 @@
                     }
                     else
                     {
-                        if(! value.pivot)
+                        if(! (value.pivot && value.pivot.article_id === articleId))
                         {
-                            vm.linkImageToArticle(key);
+                            vm.linkImageToArticle(key, articleId);
                         }
                     }
                 });
             },
 
             //Link an image to an article
-            linkImageToArticle(key)
+            linkImageToArticle(key, articleId)
             {
                 Api.http
-                    .put(`/articles/${this.article.id}/images/${this.articleImages[key].id}`)
+                    .put(`/articles/${articleId}/images/${this.articleImages[key].id}`)
                     .then(response => {
                         if (response.status === 204)
                         {
                             this.articleImages[key].pivot = {
-                                article_id: this.article.id,
+                                article_id: articleId,
                                 element_id: this.articleImages[key].id
                             };
                         }
@@ -1636,29 +1698,29 @@
             },
 
             //Create or Update a slider
-            uploadArticleSliders()
+            uploadArticleSliders(articleId)
             {
                 let vm = this;
 
                 this.articleSliders.forEach(function (value, key)
                 {
-                    if(value.id)
+                    if(value.id && value.pivot && value.pivot.article_id === articleId)
                     {
                         vm.updateSliderDetails(value, key);
                     }
                     else
                     {
-                        vm.createSliderDetails(value, key)
+                        vm.createSliderDetails(value, key, articleId)
                     }
                 })
             },
 
             //Create a slider details
-            createSliderDetails(slider, key)
+            createSliderDetails(slider, key, articleId)
             {
                 let vm = this;
                 Api.http
-                    .post(`/articles/${this.article.id}/sliders`, {
+                    .post(`/articles/${articleId}/sliders`, {
                         name: slider.name
                     })
                     .then(response => {
@@ -1716,7 +1778,7 @@
 
                 this.articleSliders[sliderKey].images.forEach(function (value, key)
                 {
-                    if(! value.pivot.slider_id)
+                    if(! (value.pivot.slider_id === vm.articleSliders[sliderKey].id))
                     {
                         let order = (value.pivot.order === '') ? 0 : value.pivot.order;
 
@@ -1819,7 +1881,7 @@
             },
 
             //Upload article videos and link them to article
-            uploadArticleVideos()
+            uploadArticleVideos(articleId)
             {
                 let vm = this;
 
@@ -1827,13 +1889,13 @@
                 {
                     if(! video.id)
                     {
-                        vm.submitVideoDetails(video, key);
+                        vm.submitVideoDetails(video, key, articleId);
                     }
                     else
                     {
-                        if(! video.pivot)
+                        if(! (video.pivot && video.pivot.article_id === articleId))
                         {
-                            vm.linkVideoToArticle(video.id, key);
+                            vm.linkVideoToArticle(video.id, key, articleId);
                         }
                     }
 
@@ -1841,7 +1903,7 @@
             },
 
             //Submit the video details
-            submitVideoDetails(video, key)
+            submitVideoDetails(video, key, articleId)
             {
                 let vm = this;
 
@@ -1855,7 +1917,7 @@
                     .then(response => {
                         if(response.status === 201)
                         {
-                            vm.startVideoUpload(response, video, key);
+                            vm.startVideoUpload(response, video, key, articleId);
                         }
                         else
                         {
@@ -1867,8 +1929,8 @@
             },
 
             //Start the video upload
-            startVideoUpload(data, video, key) {
-
+            startVideoUpload(data, video, key, articleId)
+            {
                 let uploadUrl = data.data.upload_url;
                 let urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 let tokenString = urlArray[urlArray.length - 1];
@@ -1880,7 +1942,7 @@
                     .then(response => {
                         if(response.status === 200)
                         {
-                            this.completeVideoUpload(response, video);
+                            this.completeVideoUpload(response, video, key, articleId);
                         }
                         else
                         {
@@ -1892,7 +1954,7 @@
             },
 
             //Complete the video upload
-            completeVideoUpload(data, video, key)
+            completeVideoUpload(data, video, key, articleId)
             {
                 let uploadUrl = data.data.complete_url;
                 let urlArray = uploadUrl.split("api-naut.livesystems.ch");
@@ -1901,11 +1963,12 @@
                 Api.http
                     .post(tokenString)
                     .then(response => {
-                        if (response.status === 200) {
+                        if (response.status === 200)
+                        {
                             video.video = response.data;
                             video.lead = response.data.lead;
                             video.id = response.data.id;
-                            this.linkVideoToArticle(video.id, key);
+                            this.linkVideoToArticle(video.id, key, articleId);
                         }
                         else {
                             Vue.toast('Error in uploading the selected video. Please retry again', {
@@ -1916,15 +1979,15 @@
             },
 
             //Link the video to the article
-            linkVideoToArticle(id, key)
+            linkVideoToArticle(id, key, articleId)
             {
                 Api.http
-                    .put(`/articles/${this.article.id}/videos/${id}`)
+                    .put(`/articles/${articleId}/videos/${id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
                             this.articleVideos[key].pivot = {
-                                article_id: this.article.id,
+                                article_id: articleId,
                                 element_id: id
                             };
                             Vue.toast('Video linked successfully', {
@@ -1984,10 +2047,10 @@
             /**
              * CHANNELS
              */
-            linkChannelToArticle()
+            linkChannelToArticle(articleId)
             {
                 Api.http
-                    .put(`/articles/${this.article.id}/channels/${this.articleChannel}`)
+                    .put(`/articles/${articleId}/channels/${this.articleChannel}`)
                     .then(response => {
                         if(response.status === 204)
                         {
@@ -2036,21 +2099,21 @@
             },
 
             //Link informant to article
-            linkInformantToArticle()
+            linkInformantToArticle(articleId)
             {
                 let vm = this;
 
                 this.articleInformants.forEach(function (value, key)
                 {
-                    if(! value.pivot)
+                    if(! (value.pivot && value.pivot.article_id === articleId))
                     {
                         Api.http
-                            .put(`/articles/${vm.article.id}/informants/${value.id}`)
+                            .put(`/articles/${articleId}/informants/${value.id}`)
                             .then(response => {
                                 if(response.status === 204)
                                 {
                                     vm.articleInformants[key].pivot = {
-                                        article_id : vm.article.id,
+                                        article_id : articleId,
                                         informant_id : vm.articleInformants[key].id
                                     };
                                     Vue.toast('Article informant linked successfully', {
@@ -2114,31 +2177,37 @@
                 }
             },
 
-            //Save authors and ideas
-            saveArticleAuthorsAndIdeas()
+            //Save the settings for the article
+            saveSettings(articleId)
             {
-                this.linkAuthorToArticle();
-                this.linkInformantToArticle();
-                this.linkChannelToArticle();
-                this.updateArticle();
+                this.saveArticleAuthorsAndIdeas(articleId);
+                this.updateArticle(articleId);
+            },
+
+            //Save authors and ideas
+            saveArticleAuthorsAndIdeas(articleId)
+            {
+                this.linkAuthorToArticle(articleId);
+                this.linkInformantToArticle(articleId);
+                this.linkChannelToArticle(articleId);
             },
 
             //Link author to article
-            linkAuthorToArticle()
+            linkAuthorToArticle(articleId)
             {
                 let vm = this;
 
                 this.articleAuthors.forEach(function (value, key)
                 {
-                    if(! value.pivot)
+                    if(! (value.pivot && value.pivot.article_id === articleId))
                     {
                         Api.http
-                            .put(`/articles/${vm.article.id}/authors/${value.id}`)
+                            .put(`/articles/${articleId}/authors/${value.id}`)
                             .then(response => {
                                 if(response.status === 204)
                                 {
                                     vm.articleAuthors[key].pivot = {
-                                        article_id : vm.article.id,
+                                        article_id : articleId,
                                         author_id : vm.articleAuthors[key].id
                                     };
                                     Vue.toast('Article author linked successfully', {

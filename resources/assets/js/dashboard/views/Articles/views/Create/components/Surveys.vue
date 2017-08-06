@@ -32,7 +32,7 @@
                 <survey-select></survey-select>
             </div>
         </div>
-        <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys()">Save surveys</button>
+        <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Save surveys</button>
     </div>
 </template>
 
@@ -75,7 +75,7 @@
 
         created()
         {
-            this.$parent.$on('sendData', this.sendData);
+            this.$parent.$on('duplicateData', this.duplicateData);
         },
 
 
@@ -99,13 +99,6 @@
         },
 
         methods: {
-            //Send data back to the parent
-            sendData()
-            {
-                console.log("Loud and clear");
-                this.$emit('updateData', this.articleSurveys);
-            },
-
             //Get the surveys linked to the specified article
             initializeArticleSurveys(id)
             {
@@ -192,16 +185,16 @@
             },
 
             //Links surveys to an article
-            saveArticleSurveys()
+            saveArticleSurveys(articleId)
             {
                 let vm = this;
 
                 this.articleSurveys.forEach(function (value, key)
                 {
-                    if(! vm.articleSurveys[key].linked)
+                    if(! (vm.articleSurveys[key].linked && articleId === vm.articleId))
                     {
                         Api.http
-                            .put(`/articles/${vm.articleId}/surveys/${vm.articleSurveys[key].id}`)
+                            .put(`/articles/${articleId}/surveys/${vm.articleSurveys[key].id}`)
                             .then(response => {
                                 if (response.status === 204)
                                 {
@@ -217,6 +210,12 @@
                     }
                 });
             },
+
+            //Duplicate the data based on the article id
+            duplicateData(articleId)
+            {
+                this.saveArticleSurveys(articleId);
+            }
         }
     }
 </script>

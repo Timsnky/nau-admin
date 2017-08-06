@@ -32,7 +32,7 @@
             <button
                     class="btn btn-primary"
                     type="button"
-                    @click="saveArticleSocialMedias()"
+                    @click="saveArticleSocialMedias(articleId)"
                     :disabled="articleId == null">
                 Save Posts
             </button>
@@ -76,7 +76,7 @@
 
         created()
         {
-            this.$parent.$on('sendData', this.sendData);
+            this.$parent.$on('duplicateData', this.duplicateData);
         },
 
 
@@ -161,7 +161,7 @@
             },
 
             //Save an article social media record
-            saveArticleSocialMedias()
+            saveArticleSocialMedias(articleId)
             {
                 let vm = this;
 
@@ -169,7 +169,7 @@
                 {
                     if(value.url !== '')
                     {
-                        if(value.id)
+                        if(value.id && articleId === vm.articleId)
                         {
                             Api.http
                                 .put(`/socialmedia/${value.id}`, {
@@ -195,7 +195,7 @@
                                     if(response.status === 201)
                                     {
                                         vm.articleSocialMedias[key] = response.data;
-                                        vm.linkSocialMediaToArticle(response.data.id);
+                                        vm.linkSocialMediaToArticle(response.data.id, articleId);
                                         Vue.toast('Social media item created successfully', {
                                             className: ['nau_toast', 'nau_success'],
                                         });
@@ -207,10 +207,10 @@
             },
 
             //Link a social media item to an article
-            linkSocialMediaToArticle(id)
+            linkSocialMediaToArticle(id, articleId)
             {
                 Api.http
-                    .put(`/articles/${this.articleId}/socialmedia/${id}`)
+                    .put(`/articles/${articleId}/socialmedia/${id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
@@ -226,6 +226,12 @@
                         }
                     });
             },
+
+            //Duplicate the data to another article
+            duplicateData(articleId)
+            {
+                this.saveArticleSocialMedias(articleId);
+            }
         }
     }
 </script>

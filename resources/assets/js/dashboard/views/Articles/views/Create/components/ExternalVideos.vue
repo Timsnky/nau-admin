@@ -101,6 +101,11 @@
             ExternalVideoElement
         },
 
+        created()
+        {
+            this.$parent.$on('duplicateData', this.duplicateData);
+        },
+
         mounted()
         {
             if(this.articleId)
@@ -173,21 +178,20 @@
                     Api.http
                         .post(`/external-videos`, this.externalVideo)
                         .then(response => {
-                            this.linkExternalVideoToArticle(response.data);
+                            this.linkExternalVideoToArticle(response.data, this.articleId);
                         });
                 }
             },
 
             //Link the external video to an article
-            linkExternalVideoToArticle(video)
+            linkExternalVideoToArticle(video, articleId)
             {
                 Api.http
-                    .put(`/livetickers/${this.articleId}/external-videos/${video.id}`)
+                    .put(`/livetickers/${articleId}/external-videos/${video.id}`)
                     .then(response =>
                     {
                         if(response.status === 200)
                         {
-                            this.articleExternalVideos.push(video);
                             this.addingExternalVideo = false;
                             this.articleExternalVideos = [];
                             this.initializeArticleExternalVideos(this.articleId);
@@ -197,8 +201,8 @@
                         }
                         else
                         {
-                            Vue.toast('External video linked to article successfully', {
-                                className : ['nau_toast','nau_success'],
+                            Vue.toast('Error in linking external video to article. Please try again', {
+                                className : ['nau_toast','nau_warning'],
                             });
                         }
                     });
@@ -219,6 +223,25 @@
                         }
                     });
             },
+
+            //Duplicate the data in the external videos
+            duplicateData(articleId)
+            {
+                this.articleExternalVideos.forEach(function (value, key)
+                {
+                    Api.http
+                        .put(`/livetickers/${articleId}/external-videos/${value.id}`)
+                        .then(response =>
+                        {
+                            if(response.status !== 200)
+                            {
+                                Vue.toast('External video linked to article successfully', {
+                                    className : ['nau_toast','nau_success'],
+                                });
+                            }
+                        });
+                });
+            }
         }
     }
 </script>

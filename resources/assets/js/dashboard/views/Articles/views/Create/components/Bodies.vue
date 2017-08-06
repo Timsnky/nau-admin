@@ -42,7 +42,7 @@
             <button
                     class="btn btn-primary"
                     type="button"
-                    @click="saveArticleBodies()"
+                    @click="saveArticleBodies(articleId)"
                     :disabled="articleId == null">
                 Save bodies
             </button>
@@ -87,7 +87,7 @@
 
         created()
         {
-            this.$parent.$on('sendData', this.sendData);
+            this.$parent.$on('duplicateData', this.duplicateData);
         },
 
 
@@ -215,7 +215,7 @@
             },
 
             //Save the bodies for the articles
-            saveArticleBodies()
+            saveArticleBodies(articleId)
             {
                 this.articleBodyWithContent = false;
                 let vm = this;
@@ -228,10 +228,10 @@
                     {
                         vm.articleBodyWithContent = true;
 
-                        if(value.id)
+                        if(value.id && vm.articleId === articleId)
                         {
                             Api.http
-                                .put(`/articles/${vm.articleId}/bodies/${value.id}`, {
+                                .put(`/articles/${articleId}/bodies/${value.id}`, {
                                     content: value.content,
                                 })
                                 .then(response => {
@@ -247,7 +247,7 @@
                         else
                         {
                             Api.http
-                                .post(`/articles/${vm.articleId}/bodies`, {
+                                .post(`/articles/${articleId}/bodies`, {
                                     content: value.content,
                                 })
                                 .then(response => {
@@ -263,13 +263,19 @@
                     }
                 });
 
-                if(! this.articleBodyWithContent)
+                if(! (this.articleBodyWithContent && this.articleId === articleId))
                 {
                     Vue.toast('Please make sure that you have content in the body', {
                         className: ['nau_toast', 'nau_warning'],
                     });
                 }
             },
+
+            //Duplicate the data based on the supplied articleid
+            duplicateData(articleId)
+            {
+                this.saveArticleBodies(articleId);
+            }
         },
 
         beforeDestroy: function ()
