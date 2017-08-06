@@ -16,7 +16,7 @@
                                 <button
                                         class="btn btn-danger btn-sm remove_btn"
                                         type="button"
-                                        @click="deleteSurvey(index)">
+                                        @click="confirmDelete(index)">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </div>
@@ -67,11 +67,17 @@
 
         mounted()
         {
-            if(this.article_id)
+            if(this.articleId)
             {
-                this.initializeArticleSurveys(this.article_id);
+                this.initializeArticleSurveys(this.articleId);
             }
         },
+
+        created()
+        {
+            this.$parent.$on('sendData', this.sendData);
+        },
+
 
         watch: {
             selectedSurveyId(newId, oldId)
@@ -93,6 +99,13 @@
         },
 
         methods: {
+            //Send data back to the parent
+            sendData()
+            {
+                console.log("Loud and clear");
+                this.$emit('updateData', this.articleSurveys);
+            },
+
             //Get the surveys linked to the specified article
             initializeArticleSurveys(id)
             {
@@ -135,6 +148,22 @@
                             });
                         }
                     });
+            },
+
+            //Confirm the deletion of an item
+            confirmDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteSurvey(key)
+                }).catch(swal.noop);
             },
 
             //Detach a survey from an article

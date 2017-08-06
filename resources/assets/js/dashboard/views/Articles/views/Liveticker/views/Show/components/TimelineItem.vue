@@ -50,7 +50,7 @@
                     confirmButtonText: 'Ja, löschen!'
                 }).then(() => {
                     this.$emit('delete', liveticker)
-                })
+                }).catch(swal.noop);
             },
         },
     }

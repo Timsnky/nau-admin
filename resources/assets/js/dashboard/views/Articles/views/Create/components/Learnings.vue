@@ -1,0 +1,251 @@
+<template>
+    <div class="form-body">
+        <div class="form-body">
+            <p>Learnings</p>
+            <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
+                <div class="form-group">
+                    <input
+                            type="text"
+                            maxlength="100"
+                            v-model.trim="articleLearning.text"
+                            placeholder="Input text (max 100chars)"
+                            class="form-control article_input">
+                    <button
+                            @click="confirmDelete(index)"
+                            class="btn btn-danger btn-sm delete_btn"
+                            :disabled="articleLearnings.length <= 3"
+                            type="button"> x
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions item_add">
+            <button
+                    @click="addArticleLearning()"
+                    class="btn btn-primary item_add_btn"
+                    :disabled="articleLearnings.length >= 5"
+                    type="button"> +
+            </button>
+        </div>
+        <div class="form-actions">
+            <button
+                    class="btn btn-primary"
+                    type="button"
+                    @click="saveArticleLearnings()">
+                Save learnings
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+
+    export default {
+        data() {
+            return {
+                articleLearnings: [
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    },
+                    {
+                        text: '',
+                        id: null
+                    }
+                ],
+            }
+        },
+
+        props: {
+            articleId : {
+                type: Number,
+            }
+        },
+
+        components: {
+
+        },
+
+        mounted()
+        {
+            if(this.articleId)
+            {
+                this.initializeArticleLearnings(this.articleId);
+            }
+        },
+
+        created()
+        {
+            this.$parent.$on('sendData', this.sendData);
+        },
+
+
+        watch: {
+            articleId()
+            {
+                if(this.articleId)
+                {
+                    this.initializeArticleLearnings(this.articleId);
+                }
+            }
+        },
+
+        methods: {
+            //Get the data for the learnings linked to the article
+            initializeArticleLearnings(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/learnings`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            if(response.data.length !== 0)
+                            {
+                                this.articleLearnings = response.data;
+                            }
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the article learnings. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            /**
+             * ARTICLE LEARNINGS
+             */
+            //Add article learnings
+            addArticleLearning()
+            {
+                if(this.articleLearnings.length < 5)
+                {
+                    this.articleLearnings.push({text: '', id: null});
+                }
+                else
+                {
+                    Vue.toast('Only a maximum of 5 learnings can be added', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            //Validate learnings save
+            validateLearnings()
+            {
+                let totalLearnings = 0;
+
+                this.articleLearnings.forEach(function (value, key)
+                {
+                    if(value.text !== '')
+                    {
+                        totalLearnings ++;
+                    }
+                });
+
+                return ! (totalLearnings >= 3);
+            },
+
+            //Save article learnings
+            saveArticleLearnings()
+            {
+                let vm = this;
+
+                if(! this.validateLearnings())
+                {
+                    this.articleLearnings.forEach(function (value, key)
+                    {
+                        if (value.id) {
+                            Api.http
+                                .put(`/articles/${vm.articleId}/learnings/${value.id}`, {
+                                    text: value.text,
+                                })
+                                .then(response => {
+                                    if (response.status === 200) {
+                                        vm.articleLearnings[key] = response.data;
+                                        Vue.toast('Article learnings updated successfully', {
+                                            className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            if (value.text !== '')
+                            {
+                                Api.http
+                                    .post(`/articles/${vm.articleId}/learnings`, {
+                                        text: value.text,
+                                    })
+                                    .then(response => {
+                                        if (response.status === 201) {
+                                            vm.articleLearnings[key] = response.data;
+                                            Vue.toast('Article learnings created successfully', {
+                                                className: ['nau_toast', 'nau_success'],
+                                            });
+                                        }
+                                    });
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Vue.toast('Please provide at least 3 learnings inorder to save', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+            },
+
+            //Confirm the deletion of an item
+            confirmDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteArticleLearning(key)
+                }).catch(swal.noop);
+            },
+
+            //Delete a learning
+            deleteArticleLearning(key)
+            {
+                let vm = this;
+
+                if(vm.articleLearnings[key].id)
+                {
+                    Api.http
+                        .delete(`/articles/${vm.articleId}/learnings/${vm.articleLearnings[key].id}`)
+                        .then(response => {
+                            if(response.status === 204)
+                            {
+                                vm.articleLearnings.splice(key, 1);
+                                Vue.toast('Article learning deleted successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                        });
+                }
+                else
+                {
+                    vm.articleLearnings.splice(key, 1);
+                }
+            },
+        }
+    }
+</script>
+
+<style>
+
+</style>

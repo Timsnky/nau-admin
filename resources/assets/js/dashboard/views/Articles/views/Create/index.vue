@@ -15,6 +15,11 @@
                         @click="handleSubmit()">
                     Save Article
                 </button>
+                <button
+                        class="btn btn-primary pull-right"
+                        @click="duplicateArticle()">
+                    Duplicate Article
+                </button>
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
@@ -29,9 +34,6 @@
                     <li>
                         <a href="#articleImage" data-toggle="tab">Main Image</a>
                     </li>
-                    <!--<li>-->
-                        <!--<a href="#articleLead" data-toggle="tab">Lead</a>-->
-                    <!--</li>-->
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleMedia" data-toggle="tab">Media</a>
                     </li>
@@ -47,7 +49,7 @@
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleLearning" data-toggle="tab">Learnings</a>
                     </li>
-                    <!--<li>-->
+                    <!--<li :class="[article.id == null ? 'disabledTab' : '']">-->
                         <!--<a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>-->
                     <!--</li>-->
                     <li :class="[article.id == null ? 'disabledTab' : '']">
@@ -207,11 +209,6 @@
                         </div>
                     </div>
 
-                    <!--&lt;!&ndash;Lead&ndash;&gt;-->
-                    <!--<div class="tab-pane" id="articleLead">-->
-
-                    <!--</div>-->
-
                     <!--Images, Videos and Sliders-->
                     <div class="tab-pane" id="articleMedia">
                         <!--Images-->
@@ -228,7 +225,7 @@
                                                 <button
                                                         class="btn btn-danger btn-sm remove_btn"
                                                         type="button"
-                                                        @click="deleteArticleImage(index)">
+                                                        @click="confirmArticleImageDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
@@ -263,7 +260,7 @@
                                                     <button
                                                             class="btn btn-danger btn-sm remove_btn"
                                                             type="button"
-                                                            @click="deleteSliderImage(sliderIndex, index)">
+                                                            @click="confirmSliderImageDelete(sliderIndex, index)">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -274,7 +271,7 @@
                                         <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
                                             Select Uploaded Image
                                         </button>
-                                        <button type="button" class="btn btn-danger image_selection_btn" @click="deleteArticleSlider(sliderIndex)">
+                                        <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
                                             Remove slider
                                         </button>
                                     </div>
@@ -308,7 +305,7 @@
                                                 <button
                                                         class="btn btn-danger btn-sm remove_btn"
                                                         type="button"
-                                                        @click="deleteArticleVideo(index)">
+                                                        @click="confirmVideoDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
@@ -329,252 +326,39 @@
 
                     <!--Social Media-->
                     <div class="tab-pane" id="articleSocialMedia">
-                        <div class="form-body">
-                            <div class="form-body">
-                                <label><b>Social Media</b></label>
-                                <div v-for="(articleSocialMedia, index) in articleSocialMedias" class="form-group">
-                                    <div class="form-group">
-                                        <input
-                                                type="text"
-                                                maxlength="100"
-                                                v-model.trim="articleSocialMedia.url"
-                                                placeholder="URL to post"
-                                                class="form-control article_input">
-                                        <button
-                                                @click="deleteArticleSocialMedia(index)"
-                                                class="btn btn-danger btn-sm delete_btn"
-                                                type="button"> x
-                                        </button>
-                                    </div>
-                                    <div class="form-group">
-                                        <twitter-element :url="articleSocialMedia.url"></twitter-element>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-actions item_add">
-                                <button
-                                        @click="addArticleSocialMedia()"
-                                        class="btn btn-primary item_add_btn"
-                                        type="button"> +
-                                </button>
-                            </div>
-                            <div class="form-actions">
-                                <button
-                                        class="btn btn-primary"
-                                        type="button"
-                                        @click="saveArticleSocialMedias()"
-                                        :disabled="article.id == null">
-                                    Save Posts <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <social-media :article-id="article.id"></social-media>
                     </div>
 
                     <!--External Videos-->
                     <div class="tab-pane" id="articleExternalVideos">
                         <div class="form-body">
-                            <external-videos :article-id="article.id"></external-videos>
+                            <!--<external-videos :article-id="article.id"></external-videos>-->
                         </div>
                     </div>
 
                     <!--Bodies-->
                     <div class="tab-pane" id="articleBody">
-                        <div class="form-body">
-                            <label><b>Body</b></label>
-                            <div v-for="(articleBody, index) in articleBodies" class="form-group wysihtmlBody">
-
-                                <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
-                                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
-
-                                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
-                                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
-                                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
-                                    </div>
-                                </div>
-                                <textarea
-                                        id="bodyEditor"
-                                        v-model.trim="articleBody.content"
-                                        placeholder="Here is some text input"
-                                        class="form-control articleEditor"
-                                        rows="5">
-                                </textarea>
-                                <div class="form-actions">
-                                    <button
-                                            class="btn btn-danger remove_btn"
-                                            type="button"
-                                            @click="deleteArticleBody(index)">
-                                        Remove Body
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-actions item_add">
-                            <button
-                                    @click="addArticleBody()"
-                                    class="btn btn-primary item_add_btn"
-                                    :disabled="articleBodies.length >= 5"
-                                    type="button"> +
-                            </button>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveArticleBodies()"
-                                    :disabled="article.id == null">
-                                Save bodies <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                        </div>
+                        <bodies :article-id="article.id"></bodies>
                     </div>
 
                     <!--Learnings-->
                     <div class="tab-pane" id="articleLearning">
-                        <div class="form-body">
-
-                            <p>Learnings</p>
-                            <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
-                                <div class="form-group">
-                                    <input
-                                            type="text"
-                                            maxlength="100"
-                                            v-model.trim="articleLearning.text"
-                                            placeholder="Input text (max 100chars)"
-                                            class="form-control article_input">
-                                    <button
-                                            @click="deleteArticleLearning(index)"
-                                            class="btn btn-danger btn-sm delete_btn"
-                                            :disabled="articleLearnings.length <= 3"
-                                            type="button"> x
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-actions item_add">
-                            <button
-                                    @click="addArticleLearning()"
-                                    class="btn btn-primary item_add_btn"
-                                    :disabled="articleLearnings.length >= 5"
-                                    type="button"> +
-                            </button>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveArticleLearnings()"
-                                    :disabled="disableLearningSubmit">
-                                Save learnings <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                        </div>
+                        <learnings :article-id="article.id"></learnings>
                     </div>
 
                     <!--Info Boxes-->
                     <!--<div class="tab-pane" id="articleInfoBoxes">-->
-                        <!--<div class="form-body">-->
-                            <!--<label><b>Info Boxes</b></label>-->
-                            <!--<div v-for="(articleInfoBox, index) in articleInfoBoxes" class="form-group wysihtmlInfoBox">-->
-                                <!--<div id="infoBox-toolbar" style="display: none;" class="wysihtml_toolbar text-right">-->
-                                <!--</div>-->
-                                <!--<textarea-->
-                                        <!--id="infoBoxEditor"-->
-                                        <!--v-model.trim="articleInfoBox.content"-->
-                                        <!--placeholder="Here is some text input"-->
-                                        <!--class="form-control articleEditor"-->
-                                        <!--rows="5">-->
-                                <!--</textarea>-->
-                                <!--<div class="form-actions">-->
-                                    <!--<button-->
-                                            <!--class="btn btn-danger remove_btn"-->
-                                            <!--type="button"-->
-                                            <!--@click="deleteArticleInfoBox(index)">-->
-                                        <!--Remove InfoBox-->
-                                    <!--</button>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-actions item_add">-->
-                            <!--<button-->
-                                    <!--@click="addArticleInfoBox()"-->
-                                    <!--class="btn btn-primary item_add_btn"-->
-                                    <!--:disabled="articleInfoBoxes.length >= 5"-->
-                                    <!--type="button"> +-->
-                            <!--</button>-->
-                        <!--</div>-->
-                        <!--<div class="form-actions">-->
-                            <!--<button-->
-                                    <!--class="btn btn-primary"-->
-                                    <!--type="button"-->
-                                    <!--@click="saveArticleInfoBoxes()"-->
-                                    <!--:disabled="article.id == null">-->
-                                <!--Save info box <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>-->
-                            <!--</button>-->
-                        <!--</div>-->
+                        <!--<info-boxes :article-id="article.id"></info-boxes>-->
                     <!--</div>-->
 
                     <!--Tags and Related Stories-->
                     <div class="tab-pane" id="articleTags">
-                        <div class="form-body">
-
-                            <div class="form-group">
-                                <label>Tags</label>
-                                <multiselect
-                                        id="tagsMultiSelect"
-                                        v-model="articleTags"
-                                        :options="existingTags"
-                                        tag-placeholder="Add this as new tag"
-                                        placeholder="Type to search or add tag (at least 6 tags required)"
-                                        label="tag"
-                                        :max-height="500"
-                                        :options-limit="100"
-                                        :clear-on-select="false"
-                                        :close-on-select="false"
-                                        track-by="id"
-                                        :multiple="true"
-                                        :taggable="true"
-                                        open-direction="bottom"
-                                        :internal-search="false"
-                                        @tag="addArticleTag"
-                                        @search-change="searchTags"
-                                        @remove="deleteTags">
-                                </multiselect>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Related Stories</label>
-                                <multiselect
-                                        id="relatedStoriesMultiSelect"
-                                        v-model="articleRelatedStories"
-                                        :options="existingRelatedStories"
-                                        placeholder="Type to search related story (at least one story required)"
-                                        label="title"
-                                        :max-height="500"
-                                        :options-limit="100"
-                                        :clear-on-select="false"
-                                        :close-on-select="false"
-                                        track-by="id"
-                                        :multiple="true"
-                                        open-direction="bottom"
-                                        :internal-search="false"
-                                        @search-change="searchRelatedStories"
-                                        @remove="deleteRelatedArticles">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveArticleTagsAndRelatedStories()"
-                                    :disabled="articleTags.length < 6 || article.id == null">
-                                Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                        </div>
+                        <tags :article-id="article.id"></tags>
                     </div>
 
                     <!--Surveys-->
                     <div class="tab-pane" id="articleSurveys">
-                        <surveys :article-id="article.id"></surveys>
+                        <surveys :article-id="article.id" @updateData="updateData"></surveys>
                     </div>
 
                     <!--Authors and Ideas-->
@@ -727,21 +511,26 @@
                         </div>
                     </div>
                 </div>
-                <image-select-modal></image-select-modal>
-                <video-select-modal></video-select-modal>
+                <!--<image-select-modal></image-select-modal>-->
+                <!--<video-select-modal></video-select-modal>-->
             </div>
         </form>
     </div>
 </template>
 <script>
     import Multiselect from 'vue-multiselect';
-    import DateAndTime from 'dashboard/components/DateAndTime';
     import TwitterElement from 'dashboard/components/TwitterTweet';
+    import DateAndTime from 'dashboard/components/DateAndTime';
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
     import ImageSelectModal from 'dashboard/components/ImageSelectModal';
     import VideoSelectModal from 'dashboard/components/VideoSelectModal';
+    import Tags from './components/Tags';
+    import Learnings from './components/Learnings';
+    import SocialMedia from './components/SocialMedia';
+    import Bodies from './components/Bodies';
+//    import InfoBoxes from './components/InfoBoxes';
 
     export default {
         data: () => {
@@ -774,59 +563,6 @@
                 articleSliders: [
                 ],
                 selectectedSlider: null,
-                articleSocialMedias: [
-                    {
-                        url: '',
-                        id: null
-                    }
-                ],
-                articleBodies: [
-                    {
-                        content: '',
-                        id: null
-                    }
-                ],
-                articleBodyEditors: [
-                ],
-                articleBodyWithContent: false,
-                articleLearnings: [
-                    {
-                        text: '',
-                        id: null
-                    },
-                    {
-                        text: '',
-                        id: null
-                    },
-                    {
-                        text: '',
-                        id: null
-                    }
-                ],
-                articleInfoBoxes: [
-                    {
-                        id: null,
-                        content: ''
-                    }
-                ],
-                articleInfoBoxEditors: [
-                ],
-                articleTags: [
-                ],
-                existingTags: [
-                ],
-                searchedTag: {
-                    query: '',
-                    promise: true
-                },
-                articleRelatedStories: [
-                ],
-                existingRelatedStories: [
-                ],
-                searchedRelatedStory: {
-                    query: '',
-                    promise: true
-                },
                 articleAuthors: [
                 ],
                 existingAuthors: [
@@ -854,13 +590,18 @@
 
         components: {
             Multiselect,
-            DateAndTime,
             TwitterElement,
+            DateAndTime,
             draggable,
             Surveys,
             ExternalVideos,
             ImageSelectModal,
-            VideoSelectModal
+            VideoSelectModal,
+            Tags,
+            Learnings,
+            SocialMedia,
+            Bodies,
+//            InfoBoxes
         },
 
         computed: {
@@ -914,27 +655,6 @@
                 return false;
             },
 
-            //Disable the learnings submit button
-            disableLearningSubmit()
-            {
-                if(this.article.id === null)
-                {
-                    return true;
-                }
-
-                let totalLearnings = 0;
-
-                this.articleLearnings.forEach(function (value, key)
-                {
-                    if(value.text !== '')
-                    {
-                        totalLearnings ++;
-                    }
-                });
-
-                return ! (totalLearnings >= 3);
-            },
-
             //Compute the publication date
             publicationDate()
             {
@@ -980,6 +700,19 @@
         },
 
         methods: {
+            //Receive an update from surveys
+            updateData(data)
+            {
+                console.log(data);
+            },
+
+            //Send a request for data notification
+            requestData()
+            {
+                console.log("Requesting Data");
+                this.$emit('sendData');
+            },
+
             //Save and exit an article
             saveAndExit()
             {
@@ -1036,29 +769,6 @@
 
                             this.$router.push('/articles');
                         });
-                }
-            },
-
-            //Check the value of title and update internal title
-            updateInternalDetails()
-            {
-                if(this.article.internal_title === '')
-                {
-                    this.article.internal_title = this.article.title;
-                }
-
-                if(this.article.internal_dateline === '')
-                {
-                    this.article.internal_dateline = this.article.dateline;
-                }
-            },
-
-            //Reload the sorting page data
-            refreshSortingData()
-            {
-                if(this.article.id)
-                {
-                    this.initializeArticleElements(this.article.id);
                 }
             },
 
@@ -1119,6 +829,15 @@
                     });
             },
 
+            //Reload the sorting page data
+            refreshSortingData()
+            {
+                if(this.article.id)
+                {
+                    this.initializeArticleElements(this.article.id);
+                }
+            },
+
             /**
              * INITIALIZE THE ARTICLE (EDIT ONLY)
              */
@@ -1140,18 +859,12 @@
                             {
                                 this.initializeArticleTeaserImage(this.article.teaser_id);
                             }
-                            this.initializeArticleImages(id);
-                            this.initializeArticleSliders(id);
-                            this.initializeArticleVideos(id);
-                            this.initializeArticleSocialMedias(id);
-                            this.initializeArticleBodies(id);
-                            this.initializeArticleLearnings(id);
-//                            this.initializeArticleInfoBoxes(id);
-                            this.initializeArticleTags(id);
-                            this.initializeArticleRelatedStories(id);
+//                            this.initializeArticleImages(id);
+//                            this.initializeArticleSliders(id);
+//                            this.initializeArticleVideos(id);
                             this.initializeArticleAuthors(id);
                             this.initializeArticleInformants(id);
-                            this.initializeArticleElements(id);
+//                            this.initializeArticleElements(id);
                         }
                         else
                         {
@@ -1160,18 +873,6 @@
                             });
                         }
                     });
-            },
-
-            //Fill the aricle object with the data
-            fillArticleData(data)
-            {
-
-                this.article.id = data.id;
-                this.article.dateline = data.dateline;
-                this.article.title = data.title;
-                this.article.internal_dateline = data.internal_dateline;
-                this.article.internal_title = data.internal_title;
-                this.article.lead = data.lead;
             },
 
             //Initialise article teaser image
@@ -1276,157 +977,6 @@
                     });
             },
 
-            //Get the data for the social medias linked to the article
-            initializeArticleSocialMedias(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/socialmedia`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            if(response.data.length !== 0)
-                            {
-                                this.articleSocialMedias = response.data;
-                            }
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article social medias. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the data for the bodies linked to the article
-            initializeArticleBodies(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/bodies`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            if(response.data.length !== 0)
-                            {
-                                this.articleBodies = response.data;
-                            }
-
-                            let vm = this;
-
-                            setTimeout(() =>
-                            {
-                                this.articleBodies.forEach(function (value, key)
-                                {
-                                    vm.initializeBodyEditor(vm, key);
-                                })
-                            }, 100);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article bodies. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the data for the learnings linked to the article
-            initializeArticleLearnings(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/learnings`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            if(response.data.length !== 0)
-                            {
-                                this.articleLearnings = response.data;
-                            }
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article learnings. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the data for the info boxes linked to the article
-            initializeArticleInfoBoxes(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/infoboxes`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            if(response.data.length !== 0)
-                            {
-                                this.articleInfoBoxes = response.data;
-                            }
-
-                            let vm = this;
-
-                            setTimeout(() =>
-                            {
-                                this.articleInfoBoxes.forEach(function (value, key)
-                                {
-                                    vm.initializeInfoBoxEditor(vm, key);
-                                })
-                            }, 100);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article info boxes. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the tags for the article
-            initializeArticleTags(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/tags`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleTags = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the tags. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the related stories for the article
-            initializeArticleRelatedStories(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/related`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleRelatedStories = response.data;
-
-                            this.articleRelatedStories.forEach(function (value, key)
-                            {
-                                value.linked = 1;
-                            })
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the related stories. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
             //Get the authors for the article
             initializeArticleAuthors(id)
             {
@@ -1512,8 +1062,6 @@
             initializeEditors()
             {
                 this.initializeLeadEditor(this);
-                this.initializeBodyEditor(this, 0);
-//                this.initializeInfoBoxEditor(this, 0);
             },
 
             //Initialize lead editor
@@ -1529,36 +1077,6 @@
                 });
 
                 this.leadEditor = leadEditor;
-            },
-
-            //Initialize body editors
-            initializeBodyEditor(vm, id)
-            {
-                let bodySection = $($('.wysihtmlBody')).get(id);
-
-                let bodyEditor = new wysihtml5.Editor($(bodySection).find('#bodyEditor').get(0), {
-                    toolbar: $(bodySection).find('#body-toolbar').get(0),
-                    parserRules: wysihtml5ParserRules
-                }).on("change", function () {
-                    vm.articleBodies[id].content = this.getValue();
-                });
-
-                vm.articleBodyEditors.push({editor: bodyEditor});
-            },
-
-            //Initialize info box editors
-            initializeInfoBoxEditor(vm, id)
-            {
-                let infoBoxSection = $($('.wysihtmlInfoBox')).get(id);
-
-                let infoBoxEditor = new wysihtml5.Editor($(infoBoxSection).find('#infoBoxEditor').get(0), {
-                    toolbar: $(infoBoxSection).find('#infoBox-toolbar').get(0),
-                    parserRules: wysihtml5ParserRules
-                }).on("change", function () {
-                    vm.articleInfoBoxes[id].content = this.getValue();
-                });
-
-                vm.articleInfoBoxEditors.push({editor: infoBoxEditor});
             },
 
             /**
@@ -1758,6 +1276,20 @@
             /**
              * SUBMIT OF ARTICLE DETAILS
              */
+            //Check the value of title and update internal title
+            updateInternalDetails()
+            {
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+            },
+
             //Validate the article submission process
             validateSubmit()
             {
@@ -1863,7 +1395,10 @@
                         {
                             this.article = response.data;
                             this.submitArticleImage();
-                            this.submitArticleTeaserImage();
+                            if(this.articleTeaserImage.url)
+                            {
+                                this.submitArticleTeaserImage();
+                            }
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -1889,7 +1424,7 @@
                             {
                                 this.submitArticleImage();
                             }
-                            if(! (response.data.teaser_id === this.articleTeaserImage.id))
+                            if(! (response.data.teaser_id === this.articleTeaserImage.id) && this.articleTeaserImage.url)
                             {
                                 this.submitArticleTeaserImage();
                             }
@@ -2009,6 +1544,22 @@
                     });
             },
 
+            //Confirm the delete of an image
+            confirmArticleImageDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteArticleImage(key)
+                }).catch(swal.noop);
+            },
+
             //Delete an image from an article
             deleteArticleImage(key)
             {
@@ -2041,6 +1592,22 @@
             addArticleSlider()
             {
                 this.articleSliders.push({name: '', id: null, images: []});
+            },
+
+            //Confirm the delete of a slider
+            confirmSliderDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteArticleSlider(key)
+                }).catch(swal.noop);
             },
 
             //Remove article slider
@@ -2171,6 +1738,22 @@
                             });
                     }
                 });
+            },
+
+            //Confirm the delete of a slider image
+            confirmSliderImageDelete(key, imageKey)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteSliderImage(key, imageKey)
+                }).catch(swal.noop);
             },
 
             //Delete an image from a slider
@@ -2357,6 +1940,22 @@
                     });
             },
 
+            //Confirm the delete of a video
+            confirmVideoDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteArticleVideo(key)
+                }).catch(swal.noop);
+            },
+
             //Delete a video from an article
             deleteArticleVideo(key)
             {
@@ -2380,639 +1979,6 @@
                 {
                     vm.articleVideos.splice(key, 1);
                 }
-            },
-
-            /**
-             * ARTICLE SOCIAL MEDIA
-             */
-            //Add an article social media item
-            addArticleSocialMedia()
-            {
-                this.articleSocialMedias.push({url: '', id: null});
-            },
-
-            //Delete a social media article
-            deleteArticleSocialMedia(key)
-            {
-                let vm = this;
-
-                if(vm.articleSocialMedias[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/socialmedia/${vm.articleSocialMedias[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleSocialMedias.splice(key, 1);
-                                Vue.toast('Article social media item deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleSocialMedias.splice(key, 1);
-                }
-            },
-
-            //Save an article social media record
-            saveArticleSocialMedias()
-            {
-                let vm = this;
-
-                this.articleSocialMedias.forEach(function (value, key)
-                {
-                    if(value.url !== '')
-                    {
-                        if(value.id)
-                        {
-                            Api.http
-                                .put(`/socialmedia/${value.id}`, {
-                                    url: value.url,
-                                })
-                                .then(response => {
-                                    if(response.status === 200)
-                                    {
-                                        vm.articleSocialMedias[key] = response.data;
-                                        Vue.toast('Social media item updated successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            Api.http
-                                .post(`/socialmedia`, {
-                                    url: value.url,
-                                })
-                                .then(response => {
-                                    if(response.status === 201)
-                                    {
-                                        vm.articleSocialMedias[key] = response.data;
-                                        vm.linkSocialMediaToArticle(response.data.id);
-                                        Vue.toast('Social media item created successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                    }
-                });
-            },
-
-            //Link a social media item to an article
-            linkSocialMediaToArticle(id)
-            {
-                Api.http
-                    .put(`/articles/${this.article.id}/socialmedia/${id}`)
-                    .then(response => {
-                        if(response.status === 204)
-                        {
-
-                            Vue.toast('Social media item linked successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the social media item. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            /**
-             * ARTICLE BODY
-             */
-            //Add an article body
-            addArticleBody()
-            {
-                let vm = this;
-                this.articleBodies.push({content: '', id: null});
-                setTimeout(() =>
-                {
-                    vm.initializeBodyEditor(vm, vm.articleBodies.length - 1);
-                }, 100);
-            },
-
-            //Delete an article body
-            deleteArticleBody(key)
-            {
-                let vm = this;
-
-                if(vm.articleBodies[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/bodies/${vm.articleBodies[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.deleteLocalBody(vm, key);
-                                Vue.toast('Article body deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.deleteLocalBody(vm, key);
-                }
-            },
-
-            //Delete the body record from local data
-            deleteLocalBody(vm, key)
-            {
-                vm.articleBodyEditors[vm.articleBodies.length - 1].editor.destroy();
-                vm.articleBodies.splice(key, 1);
-                vm.articleBodyEditors.splice(vm.articleBodyEditors.length - 1, 1);
-
-                vm.articleBodyEditors.forEach(function (value, key)
-                {
-                    value.editor.setValue(vm.articleBodies[key].content);
-                });
-            },
-
-            //Save the bodies for the articles
-            saveArticleBodies()
-            {
-                this.articleBodyWithContent = false;
-                let vm = this;
-
-                this.articleBodies.forEach(function (value, key)
-                {
-                    value.content = vm.articleBodyEditors[key].editor.getValue();
-
-                    if(value.content !== '')
-                    {
-                        vm.articleBodyWithContent = true;
-
-                        if(value.id)
-                        {
-                            Api.http
-                                .put(`/articles/${vm.article.id}/bodies/${value.id}`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 200)
-                                    {
-                                        vm.articleBodies[key] = response.data;
-                                        Vue.toast('Article body updated successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            Api.http
-                                .post(`/articles/${vm.article.id}/bodies`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 201)
-                                    {
-                                        vm.articleBodies[key] = response.data;
-                                        Vue.toast('Article body created successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                    }
-                });
-
-                if(! this.articleBodyWithContent)
-                {
-                    Vue.toast('Please make sure that you have content in the body', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
-            },
-
-            /**
-             * ARTICLE LEARNINGS
-             */
-            //Add article learnings
-            addArticleLearning()
-            {
-                if(this.articleLearnings.length < 5)
-                {
-                    this.articleLearnings.push({text: '', id: null});
-                }
-                else
-                {
-                    Vue.toast('Only a maximum of 5 learnings can be added', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
-            },
-
-            //Save article learnings
-            saveArticleLearnings()
-            {
-                let vm = this;
-
-                this.articleLearnings.forEach(function (value, key)
-                {
-                    if (value.id) {
-                        Api.http
-                            .put(`/articles/${vm.article.id}/learnings/${value.id}`, {
-                                text: value.text,
-                            })
-                            .then(response => {
-                                if (response.status === 200) {
-                                    vm.articleLearnings[key] = response.data;
-                                    Vue.toast('Article learnings updated successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                    else
-                    {
-                        if (value.text !== '')
-                        {
-                            Api.http
-                                .post(`/articles/${vm.article.id}/learnings`, {
-                                    text: value.text,
-                                })
-                                .then(response => {
-                                    if (response.status === 201) {
-                                        vm.articleLearnings[key] = response.data;
-                                        Vue.toast('Article learnings created successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                    }
-                });
-            },
-
-            //Delete a learning
-            deleteArticleLearning(key)
-            {
-                let vm = this;
-
-                if(vm.articleLearnings[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/learnings/${vm.articleLearnings[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleLearnings.splice(key, 1);
-                                Vue.toast('Article learning deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleLearnings.splice(key, 1);
-                }
-            },
-
-            /**
-             * ARTICLE INFOBOXES
-             */
-            //Add an info box
-            addArticleInfoBox()
-            {
-                let vm = this;
-                this.articleInfoBoxes.push({content: '', id: null});
-                setTimeout(() =>
-                {
-                    vm.initializeInfoBoxEditor(vm, vm.articleInfoBoxes.length - 1);
-                }, 100);
-            },
-
-            //Delete an article info box
-            deleteArticleInfoBox(key)
-            {
-                let vm = this;
-
-                if(vm.articleInfoBoxes[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/infoboxes/${vm.articleInfoBoxes[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.deleteLocalInfoBox(vm, key);
-                                Vue.toast('Article infobox deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.deleteLocalInfoBox(vm, key);
-                }
-            },
-
-            //Delete the info box record from local data
-            deleteLocalInfoBox(vm, key)
-            {
-                vm.articleInfoBoxEditors[vm.articleInfoBoxes.length - 1].editor.destroy();
-                vm.articleInfoBoxes.splice(key, 1);
-                vm.articleInfoBoxEditors.splice(vm.articleInfoBoxEditors.length - 1, 1);
-
-                vm.articleInfoBoxEditors.forEach(function (value, key)
-                {
-                    value.editor.setValue(vm.articleInfoBoxes[key].content);
-                });
-            },
-
-            //Save the info boxes for the articles
-            saveArticleInfoBoxes()
-            {
-                this.articleInfoBoxWithContent = false;
-                let vm = this;
-
-                this.articleInfoBoxes.forEach(function (value, key)
-                {
-                    value.content = vm.articleInfoBoxEditors[key].editor.getValue();
-
-                    if(value.content !== '')
-                    {
-                        vm.articleInfoBoxWithContent = true;
-
-                        if(value.id)
-                        {
-                            Api.http
-                                .put(`/articles/${vm.article.id}/infoboxes/${value.id}`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 200)
-                                    {
-                                        vm.articleInfoBoxes[key] = response.data;
-                                        Vue.toast('Article info box updated successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            Api.http
-                                .post(`/articles/${vm.article.id}/infoboxes`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 201)
-                                    {
-                                        vm.articleInfoBoxes[key] = response.data;
-                                        Vue.toast('Article infobox created successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                    }
-                });
-
-                if(! this.articleInfoBoxWithContent)
-                {
-                    Vue.toast('Please make sure that you have content in the body', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
-            },
-
-            /**
-             * ARTICLE TAGS
-             */
-            //Add a new tag to an article
-            addArticleTag(newTag)
-            {
-                const tag = {
-                    tag: newTag,
-                    id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
-                    created_at: null
-                };
-                this.existingTags.push(tag);
-                this.articleTags.push(tag);
-            },
-
-            //Call the server to search for tags
-            searchTags(query)
-            {
-                this.searchedTag.query = query;
-
-                if(this.searchedTag.promise)
-                {
-                    this.searchedTag.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/tags?search=${this.searchedTag.query}`)
-                            .then(response => {
-                                this.existingTags = response.data;
-                                this.searchedTag.promise = true;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Save Article tags and related stories
-            saveArticleTagsAndRelatedStories()
-            {
-                this.saveArticleTags();
-                this.linkRelatedStoriesToArticle();
-            },
-
-            //Save the article tags
-            saveArticleTags()
-            {
-                let vm = this;
-
-                this.articleTags.forEach(function (value, key)
-                {
-                    if(value.created_at)
-                    {
-                        Api.http
-                            .put(`/tags/${value.id}`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 200)
-                                {
-                                    let pivot = null;
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
-                                    Vue.toast('Article tags updated successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                    else
-                    {
-                        Api.http
-                            .post(`/tags`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 201)
-                                {
-                                    let pivot = null;
-                                    console.log(vm.articleTags[key].pivot, vm.articleTags[key], "Created");
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key);
-                                    Vue.toast('Article tags created successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Link a tag to an article
-            linkTagToArticle(key)
-            {
-                if(! this.articleTags[key].pivot)
-                {
-                    Api.http
-                        .put(`/articles/${this.article.id}/tags/${this.articleTags[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                this.articleTags[key].pivot = {
-                                    article_id : this.article.id,
-                                    tag_id : this.articleTags[key].id
-                                };
-                                Vue.toast('Article tag item linked successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                            else
-                            {
-                                Vue.toast('Error in linking the article tag item. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
-                        });
-                }
-            },
-
-            //Delete a tag
-            deleteTags(tag)
-            {
-                let vm = this;
-
-                vm.articleTags.forEach(function (value, key)
-                {
-                    if(value.id === tag.id && value.created_at)
-                    {
-
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/tags/${vm.articleTags[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article tags deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            /**
-             * ARTICLE RELATED STORIES
-             */
-            //Search for a related story
-            searchRelatedStories(query)
-            {
-                this.searchedRelatedStory.query = query;
-
-                if(this.searchedRelatedStory.promise)
-                {
-                    this.searchedRelatedStory.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/articles?search=${this.searchedRelatedStory.query}`)
-                            .then(response => {
-                                this.existingRelatedStories = response.data;
-                                this.searchedRelatedStory.promise = true;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Link related story to article
-            linkRelatedStoriesToArticle()
-            {
-                let vm = this;
-
-                this.articleRelatedStories.forEach(function (value, key)
-                {
-                    if(! value.linked)
-                    {
-                        Api.http
-                            .put(`/articles/${vm.article.id}/related/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article related story linked successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the article related story item. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Delete any related articles
-            deleteRelatedArticles(article)
-            {
-                let vm = this;
-
-                vm.articleRelatedStories.forEach(function (value, key)
-                {
-                    if(value.id === article.id && value.created_at)
-                    {
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/related/${vm.articleRelatedStories[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article related story deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
             },
 
             /**
@@ -3228,19 +2194,17 @@
             this.initializeChannels();
         },
 
+        created()
+        {
+            if(this.$route.params.hasOwnProperty('id'))
+            {
+                this.article.id = parseInt(this.$route.params.id);
+            }
+        },
+
         beforeDestroy: function ()
         {
             this.leadEditor.destroy();
-
-            this.articleBodyEditors.forEach(function (value, key)
-            {
-                value.editor.destroy();
-            });
-
-            this.articleInfoBoxEditors.forEach(function (value, key)
-            {
-                value.editor.destroy();
-            });
         }
     }
 </script>
