@@ -140,7 +140,7 @@
             {
                 if(articleId !== this.articleId)
                 {
-                    return true;
+                    return false;
                 }
 
                 let totalLearnings = 0;

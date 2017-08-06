@@ -332,7 +332,7 @@
                     <!--External Videos-->
                     <div class="tab-pane" id="articleExternalVideos">
                         <div class="form-body">
-                            <!--<external-videos :article-id="article.id"></external-videos>-->
+                            <external-videos :article-id="article.id"></external-videos>
                         </div>
                     </div>
 
@@ -740,7 +740,7 @@
                         if(response.status === 201)
                         {
                             this.duplicateArticleId = response.data.id;
-                            this.duplicatedLinkedItems();
+                            this.duplicateLinkedItems();
 
                             Vue.toast('Article duplicated successfully', {
                                 className: ['nau_toast', 'nau_success'],
@@ -1729,7 +1729,7 @@
                             let images = vm.articleSliders[key].images;
                             vm.articleSliders[key] = response.data;
                             vm.articleSliders[key]['images'] = images;
-                            vm.linkImagesToSlider(vm.articleSliders[key]);
+                            vm.linkImagesToSlider(key);
                             Vue.toast('Article slider added successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });

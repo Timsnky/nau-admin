@@ -205,7 +205,7 @@
             },
 
             //Validate the article
-            validateTagsAndRelatedStories()
+            validateTagsAndRelatedStories(articleId)
             {
                 let errorString = "";
                 let errorArray = [];
@@ -254,7 +254,7 @@
             //Save Article tags and related stories
             saveArticleTagsAndRelatedStories(articleId)
             {
-                let errorString = this.validateTagsAndRelatedStories();
+                let errorString = this.validateTagsAndRelatedStories(articleId);
 
                 if(errorString !== "")
                 {
