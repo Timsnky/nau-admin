@@ -504,7 +504,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="button"
-                                    @click="saveSortedElements()"
+                                    @click="saveSortedElements(article.id)"
                                     :disabled="article.id == null">
                                 Save Order
                             </button>
@@ -546,6 +546,7 @@
                     published_at: null
                 },
                 duplicateArticleId: null,
+                articleTitle: '',
                 type: 1,
                 leadEditor: null,
                 submitting_main: false,
@@ -662,21 +663,10 @@
                 return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
             },
 
-            //Check if the lead editor is empty
-            leadEditorEmpty()
+            //Article title has changed
+            articleTitleChanged()
             {
-                if(this.leadEditor)
-                {
-                    return this.leadEditor.getValue() === '';
-                }
-
-                return false;
-            },
-
-            //Disable the saving of an article
-            disableArticleSave()
-            {
-                return ! this.article.dateline || ! this.article.title || ! this.articleMainImage.url;
+                return this.articleTitle !== this.article.title;
             }
         },
 
@@ -704,17 +694,22 @@
             //Duplicate an article
             duplicateArticle()
             {
-                if(this.article.id)
-                {
-                    this.prepareDuplication();
-                    this.createDuplicateArticle();
-                }
-                else
+                if(! this.article.id)
                 {
                     Vue.toast('Please create an article first inorder to duplicate', {
                         className: ['nau_toast', 'nau_warning'],
                     });
-
+                }
+                else if(! this.articleTitleChanged)
+                {
+                    Vue.toast('Please use a different title inorder to duplicate the article', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+                else
+                {
+                    this.prepareDuplication();
+                    this.createDuplicateArticle();
                 }
             },
 
@@ -864,30 +859,18 @@
             },
 
             //Submit order elements
-            saveSortedElements()
+            saveSortedElements(articleId)
             {
                 let orderArray = {};
+
                 this.articleElements.forEach(function (value, key)
                 {
                     orderArray[value.element_id] = key;
                 });
 
                 Api.http
-                    .put(`/articles/${this.article.id}/elements`, orderArray)
+                    .put(`/articles/${articleId}/elements`, orderArray)
                     .then(response => {
-                        console.log(response);
-//                        if(response.status === 204)
-//                        {
-//                            Vue.toast('Article preview image added successfully', {
-//                                className: ['nau_toast', 'nau_success'],
-//                            });
-//                        }
-//                        else
-//                        {
-//                            Vue.toast('Error in updating the article main image. Please retry again', {
-//                                className: ['nau_toast', 'nau_warning'],
-//                            });
-//                        }
                     });
             },
 
@@ -915,6 +898,7 @@
                                 this.articleMainImage = response.data.image;
                             }
                             this.article = response.data;
+                            this.articleTitle = this.article.title;
                             delete this.article['image'];
                             this.initializeLeadEditor(this);
                             if(this.article.teaser_id)
@@ -2187,7 +2171,6 @@
             //Save authors and ideas
             saveArticleAuthorsAndIdeas(articleId)
             {
-                this.linkAuthorToArticle(articleId);
                 this.linkInformantToArticle(articleId);
                 this.linkChannelToArticle(articleId);
             },
