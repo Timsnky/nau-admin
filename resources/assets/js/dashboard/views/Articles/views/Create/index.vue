@@ -435,6 +435,10 @@
                     <!--Sorting-->
                     <div class="tab-pane" id="articleSorting">
                         <div class="form-body">
+                            <div class="form-body">
+                                <h3>{{ article.title}}</h3>
+                                <p>{{article.lead}}</p>
+                            </div>
                             <draggable v-model="articleElements">
                                 <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
                                     <!--Image-->
