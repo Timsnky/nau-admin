@@ -2,6 +2,63 @@
     <div class="form-body">
         <div class="form-group surveys_section">
             <h4>Surveys</h4>
+            <div class="form-actions selection_sections">
+                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
+                    Select Survey
+                </button>
+                <button type="button" class="btn btn-primary image_selection_btn" :disabled="addingSurvey" @click="showAddSurvey()">
+                    Add Survey
+                </button>
+                <survey-select></survey-select>
+            </div>
+            <div class="form-group" v-if="addingSurvey">
+                <div class="form-group">
+                    <label>Question</label>
+                    <input
+                            type="text"
+                            name="question"
+                            v-model.trim="survey.question"
+                            placeholder="Question"
+                            class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Replies</label>
+                    <div v-for="answer, key in survey.answers" class="form-group">
+                        <div class="input-group">
+                            <input type="text"
+                                   v-model="survey.answers[key].answer"
+                                   placeholder="Antwort"
+                                   class="form-control">
+                            <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button" @click="removeAnswer(key)">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" v-show="survey && survey.answers.length <= 5">
+                    <button type="button" class="btn btn-block btn-primary" @click="addAnswer()">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+                <div class="form-actions">
+                    <button
+                            @click="closeAddSurvey()"
+                            class="btn btn-danger"
+                            type="button">
+                        Close
+                    </button>
+                    <button
+                            @click="saveSurvey()"
+                            class="btn btn-primary"
+                            type="button"
+                            :disabled="! survey.question || disableSaveSurvey">
+                        Save Survey
+                    </button>
+                </div>
+            </div>
             <div class="row">
                 <table class="table table-hover table-bordered table-scrollable">
                     <tbody>
@@ -9,6 +66,9 @@
                         <td>
                             <div class="col-md-12">
                                 <h5>{{ survey.question }}</h5>
+                                <ol>
+                                    <li v-for="(answer, index) in survey.answers">{{ answer.answer }}</li>
+                                </ol>
                             </div>
                         </td>
                         <td>
@@ -25,12 +85,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="form-actions selection_sections">
-                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
-                    Select or Add Survey
-                </button>
-                <survey-select></survey-select>
-            </div>
         </div>
         <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Save surveys</button>
     </div>
@@ -44,6 +98,18 @@
         data() {
             return {
                 articleSurveys: [],
+                addingSurvey: false,
+                survey: {
+                    question: '',
+                    answers: [
+                        {
+                            answer: ''
+                        },
+                        {
+                            answer: ''
+                        },
+                    ]
+                }
             }
         },
 
@@ -63,6 +129,31 @@
             {
                 return Api.getSurvey();
             },
+
+            //Disable saving of a survey
+            disableSaveSurvey()
+            {
+                if(this.survey.question === '')
+                {
+                    return true;
+                }
+
+                let answersCount = 0;
+
+                for (let [key, value] of this.survey.answers.entries())
+                {
+                    if(value.answer !== '')
+                    {
+                        answersCount ++;
+                    }
+                    if(answersCount >= 2)
+                    {
+                        return false
+                    }
+                }
+
+                return true;
+            },
         },
 
         mounted()
@@ -77,7 +168,6 @@
         {
             this.$parent.$on('duplicateData', this.duplicateData);
         },
-
 
         watch: {
             selectedSurveyId(newId, oldId)
@@ -120,6 +210,71 @@
                                 className: ['nau_toast', 'nau_warning'],
                             });
                         }
+                    });
+            },
+
+            //Show the survey add section
+            showAddSurvey()
+            {
+                this.addingSurvey = true;
+            },
+
+            //Close the add survey section
+            closeAddSurvey()
+            {
+                this.addingSurvey = false;
+                this.survey = {
+                    question: '',
+                    answers: [
+                        {
+                            answer: ''
+                        },
+                        {
+                            answer: ''
+                        },
+                        {
+                            answer: ''
+                        }
+                    ]
+                }
+            },
+
+            //Add an answer
+            addAnswer()
+            {
+                this.survey.answers.push({'answer' : ''});
+            },
+
+            //Remove an answer
+            removeAnswer(key)
+            {
+                this.survey.answers.splice(key, 1);
+            },
+
+            //Save a survey record
+            saveSurvey()
+            {
+                let vm = this;
+
+                Api.http
+                    .post(`/surveys`, {question: this.survey.question})
+                    .then((response) =>
+                    {
+                        let survey = response.data;
+                        vm.articleSurveys.push(response.data);
+                        let index = vm.articleSurveys.length - 1;
+
+                        this.survey.answers.forEach(function (value, key)
+                        {
+                            Api.http.post(`/surveys/${survey.id}/survey-answers`,
+                                {
+                                    answer: value.answer
+                                })
+                                .then(response => {
+                                    vm.articleSurveys[index].answers.push(response.data);
+                                });
+                        });
+                        vm.closeAddSurvey();
                     });
             },
 

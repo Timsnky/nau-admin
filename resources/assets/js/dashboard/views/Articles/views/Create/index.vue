@@ -496,6 +496,9 @@
                                     <!--Surveys-->
                                     <div v-if="articleElement.type == 'survey'" class="sectionDiv">
                                         <p>{{ articleElement.question }}</p>
+                                        <ol>
+                                            <li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>
+                                        </ol>
                                     </div>
                                 </div>
                             </draggable>
