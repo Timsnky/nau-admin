@@ -16,6 +16,7 @@
                             :disabled="articleLearnings.length <= 3"
                             type="button"> x
                     </button>
+                    <character-counter :limit="100" :itemString="articleLearning.text"></character-counter>
                 </div>
             </div>
         </div>
@@ -39,6 +40,8 @@
 </template>
 
 <script>
+
+    import CharacterCounter from 'dashboard/components/CharacterCounter';
 
     export default {
         data() {
@@ -67,7 +70,7 @@
         },
 
         components: {
-
+            CharacterCounter
         },
 
         mounted()

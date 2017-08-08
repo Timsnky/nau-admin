@@ -80,6 +80,7 @@
                                     v-model.trim="article.dateline"
                                     placeholder="Add dateline (max 100chars)"
                                     class="form-control">
+                                <character-counter :limit="100" :itemString="article.dateline"></character-counter>
                             </div>
                             <div class="form-group">
                                 <label for="title">Title</label>
@@ -91,6 +92,7 @@
                                     v-model.trim="article.title"
                                     placeholder="Add title (max 100chars)"
                                     class="form-control">
+                                <character-counter :limit="100" :itemString="article.title"></character-counter>
                             </div>
                             <div class="form-group">
                                 <label for="title">SEO Title</label>
@@ -102,6 +104,7 @@
                                         v-model.trim="article.seo_title"
                                         placeholder="Add seo title (max 100chars)"
                                         class="form-control">
+                                <character-counter :limit="100" :itemString="article.seo_title"></character-counter>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -126,6 +129,7 @@
                                     v-model.trim="article.internal_dateline"
                                     placeholder="Add dateline internal (max 100chars)"
                                     class="form-control">
+                                <character-counter :limit="100" :itemString="article.internal_dateline"></character-counter>
                             </div>
                             <div class="form-group">
                                 <label for="internal_title">Title internal</label>
@@ -137,6 +141,7 @@
                                     v-model.trim="article.internal_title"
                                     placeholder="Add title internal (max 100chars)"
                                     class="form-control">
+                                <character-counter :limit="100" :itemString="article.internal_title"></character-counter>
                             </div>
                             <div class="form-body wysihtmlLead">
                                 <div class="form-group">
@@ -157,7 +162,8 @@
                                             v-model.trim="article.lead"
                                             maxlength="350"
                                             rows="5">
-                                </textarea>
+                                    </textarea>
+                                    <character-counter :limit="350" :itemString="article.lead"></character-counter>
                                 </div>
                             </div>
                         </div>
@@ -537,6 +543,7 @@
     import Learnings from './components/Learnings';
     import SocialMedia from './components/SocialMedia';
     import Bodies from './components/Bodies';
+    import CharacterCounter from 'dashboard/components/CharacterCounter';
 //    import InfoBoxes from './components/InfoBoxes';
 
     export default {
@@ -610,6 +617,7 @@
             Learnings,
             SocialMedia,
             Bodies,
+            CharacterCounter
 //            InfoBoxes
         },
 
@@ -1125,6 +1133,12 @@
                 let leadEditor = new wysihtml5.Editor($(leadSection).find('#leadEditor').get(0), {
                     toolbar:      $(leadSection).find('#lead-toolbar').get(0),
                     parserRules:  wysihtml5ParserRules,
+                }).on("load", function ()
+                {
+                    let ed = this;
+                    $('.wysihtml5-sandbox').contents().find('body').on("keyup", function(event) {
+                        vm.article.lead = ed.getValue();
+                    });
                 }).on("change", function () {
                     vm.article.lead = this.getValue();
                 });
