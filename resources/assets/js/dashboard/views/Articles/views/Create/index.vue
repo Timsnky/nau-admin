@@ -7,7 +7,7 @@
             <div class="col-md-6 text-right">
                 <button
                         class="btn btn-primary pull-right margin_left_5"
-                        @click="saveAndExit()">
+                        @click="handleSaveAndExit()">
                     Save Article and Exit
                 </button>
                 <button
@@ -15,11 +15,12 @@
                         @click="handleSubmit()">
                     Save Article
                 </button>
-                <button
-                        class="btn btn-primary pull-right"
-                        @click="duplicateArticle()">
-                    Duplicate Article
-                </button>
+                <!--<button-->
+                        <!--v-if="editingArticle"-->
+                        <!--class="btn btn-primary pull-right"-->
+                        <!--@click="duplicateArticle()">-->
+                    <!--Duplicate Article-->
+                <!--</button>-->
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
@@ -112,6 +113,12 @@
                                     class="btn btn-primary"
                                     type="submit">
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                            </button>
+                            <button
+                                    v-if="editingArticle"
+                                    class="btn btn-primary"
+                                    @click="duplicateArticle()">
+                                Duplicate Article
                             </button>
                         </div>
                     </div>
@@ -560,6 +567,7 @@
                     published_at: null
                 },
                 duplicateArticleId: null,
+                editingArticle: false,
                 articleTitle: '',
                 type: 1,
                 leadEditor: null,
@@ -772,6 +780,7 @@
                 this.sendDuplicationEvent(this.duplicateArticleId);
                 this.submitArticleImage(this.duplicateArticleId);
                 this.submitArticleTeaserImage(this.duplicateArticleId);
+                this.setArticleAuthor(this.duplicateArticleId);
                 this.uploadArticleImages(this.duplicateArticleId);
                 this.uploadArticleSliders(this.duplicateArticleId);
                 this.uploadArticleVideos(this.duplicateArticleId);
@@ -783,6 +792,38 @@
             sendDuplicationEvent(articleId)
             {
                 this.$emit('duplicateData', articleId);
+            },
+
+            //Validate the save and exit button
+            handleSaveAndExit()
+            {
+                let errorString = this.validateSubmit();
+
+                if(errorString !== "")
+                {
+                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+                else
+                {
+                    if(this.article.internal_title === '')
+                    {
+                        this.article.internal_title = this.article.title;
+                    }
+
+                    if(this.article.internal_dateline === '')
+                    {
+                        this.article.internal_dateline = this.article.dateline;
+                    }
+
+                    if(this.article.seo_title === '')
+                    {
+                        this.article.seo_title = this.article.title;
+                    }
+
+                    this.saveAndExit();
+                }
             },
 
             //Save and exit an article
@@ -1466,6 +1507,7 @@
                             this.article = response.data;
                             this.submitArticleImage(this.article.id);
                             this.submitArticleTeaserImage(this.article.id);
+                            this.setArticleAuthor(this.article.id);
                             Vue.toast('Article created successfully', {
                                 className: ['nau_toast', 'nau_success'],
                             });
@@ -1507,6 +1549,30 @@
                             });
                         }
                     });
+            },
+
+            //link user as article author
+            setArticleAuthor(articleId)
+            {
+                Api.http
+                    .put(`/articles/${articleId}/authors/${Api.user().id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            this.initializeArticleAuthors(articleId);
+
+                            Vue.toast('Article author linked successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in linking the article author. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
             },
 
             //Link the article to the main image
@@ -2186,6 +2252,7 @@
             saveSettings(articleId)
             {
                 this.saveArticleAuthorsAndIdeas(articleId);
+                this.linkAuthorToArticle(articleId);
                 this.updateArticle(articleId);
             },
 
@@ -2257,6 +2324,8 @@
         {
             if(this.$route.params.hasOwnProperty('id'))
             {
+                this.editingArticle = true;
+
                 this.initialiseArticle(this.$route.params.id);
             }
             else
