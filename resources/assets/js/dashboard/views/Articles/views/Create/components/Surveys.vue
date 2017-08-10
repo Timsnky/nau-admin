@@ -79,6 +79,12 @@
                                         @click="confirmDelete(index)">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                <button
+                                        class="btn btn-warning btn-sm remove_btn"
+                                        type="button"
+                                        @click="editSurvey(index)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -109,7 +115,8 @@
                             answer: ''
                         },
                     ]
-                }
+                },
+                editedSurveyKey: null
             }
         },
 
@@ -242,7 +249,7 @@
             //Add an answer
             addAnswer()
             {
-                this.survey.answers.push({'answer' : ''});
+                this.survey.answers.push({'answer' : '', 'id' : null});
             },
 
             //Remove an answer
@@ -251,8 +258,31 @@
                 this.survey.answers.splice(key, 1);
             },
 
+            //Edit a survey
+            startEditSurvey(key)
+            {
+                this.survey = this.articleSurveys[key];
+                this.addingSurvey = true;
+                this.editedSurveyKey = key;
+            },
+
             //Save a survey record
             saveSurvey()
+            {
+                let vm = this;
+
+                if(this.survey.id)
+                {
+                    this.updateSurvey();
+                }
+                else
+                {
+                    this.createSurvey();
+                }
+            },
+
+            //Create a new survey record
+            createSurvey()
             {
                 let vm = this;
 
@@ -260,21 +290,81 @@
                     .post(`/surveys`, {question: this.survey.question})
                     .then((response) =>
                     {
-                        let survey = response.data;
-                        vm.articleSurveys.push(response.data);
-                        let index = vm.articleSurveys.length - 1;
-
-                        this.survey.answers.forEach(function (value, key)
+                        if(response.status === 201)
                         {
-                            Api.http.post(`/surveys/${survey.id}/survey-answers`,
-                                {
-                                    answer: value.answer
-                                })
-                                .then(response => {
-                                    vm.articleSurveys[index].answers.push(response.data);
-                                });
-                        });
+                            let survey = response.data;
+                            vm.articleSurveys.push(response.data);
+                            let index = vm.articleSurveys.length - 1;
+
+                            this.survey.answers.forEach(function (value, key)
+                            {
+                                vm.handleSurveyAnswers(survey, value, index);
+                            });
+                        }
+
                         vm.closeAddSurvey();
+                    });
+            },
+
+            //Update a survey
+            updateSurvey()
+            {
+                let vm = this;
+
+                Api.http
+                    .post(`/surveys/${this.survey.id}`, {question: this.survey.question})
+                    .then((response) =>
+                    {
+                        if(response.status === 201)
+                        {
+                            let survey = response.data;
+
+                            vm.articleSurveys[vm.editedSurveyKey] = response.data;
+
+                            this.survey.answers.forEach(function (value, key)
+                            {
+                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey);
+                            });
+                        }
+
+                        vm.closeAddSurvey();
+                    });
+            },
+
+            //Handle the survey answers
+            handleSurveyAnswers(survey, answer, key)
+            {
+                if(answer.id)
+                {
+                    vm.updateSurveyAnswers(survey, answer, key);
+                }
+                else
+                {
+                    vm.createSurveyAnswers(survey, answer, key);
+                }
+            },
+
+            //Create survey answers
+            createSurveyAnswers(survey, answer, key)
+            {
+                Api.http.post(`/surveys/${survey.id}/survey-answers`,
+                    {
+                        answer: answer.answer
+                    })
+                    .then(response => {
+                        vm.articleSurveys[key].answers.push(response.data);
+                    });
+            },
+
+            //Update the survey answers
+            updateSurveyAnswers(survey, answer, key)
+            {
+                Api.http.post(`/surveys/${survey.id}/survey-answers/${answer.id}`,
+                    {
+                        answer: answer.answer
+                    })
+                    .then(response => {
+                        vm.articleSurveys[key].answers.push(response.data);
                     });
             },
 
