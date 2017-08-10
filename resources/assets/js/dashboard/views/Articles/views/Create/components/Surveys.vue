@@ -82,8 +82,8 @@
                                 <button
                                         class="btn btn-warning btn-sm remove_btn"
                                         type="button"
-                                        @click="editSurvey(index)">
-                                    <i class="fa fa-trash"></i>
+                                        @click="startEditSurvey(index)">
+                                    <i class="fa fa-pencil"></i>
                                 </button>
                             </div>
                         </td>
@@ -312,10 +312,10 @@
                 let vm = this;
 
                 Api.http
-                    .post(`/surveys/${this.survey.id}`, {question: this.survey.question})
+                    .put(`/surveys/${this.survey.id}`, {question: this.survey.question})
                     .then((response) =>
                     {
-                        if(response.status === 201)
+                        if(response.status === 200)
                         {
                             let survey = response.data;
 
@@ -327,6 +327,7 @@
                             });
                         }
 
+                        vm.editedSurveyKey = null;
                         vm.closeAddSurvey();
                     });
             },
@@ -336,11 +337,11 @@
             {
                 if(answer.id)
                 {
-                    vm.updateSurveyAnswers(survey, answer, key);
+                    this.updateSurveyAnswers(survey, answer, key);
                 }
                 else
                 {
-                    vm.createSurveyAnswers(survey, answer, key);
+                    this.createSurveyAnswers(survey, answer, key);
                 }
             },
 
@@ -359,7 +360,7 @@
             //Update the survey answers
             updateSurveyAnswers(survey, answer, key)
             {
-                Api.http.post(`/surveys/${survey.id}/survey-answers/${answer.id}`,
+                Api.http.put(`/surveys/${survey.id}/survey-answers/${answer.id}`,
                     {
                         answer: answer.answer
                     })

@@ -77,14 +77,46 @@
                         <h2 v-if="!isLoaded" class="text-center">Loading...</h2>
 
                         <div v-else-if="surveys.length > 0">
-                            <div class="row image_selection_rows">
-                                <div v-for="survey in surveys" class="col-md-6 survey_section">
-                                    <a @click.prevent="dispatchSelected(survey.id)" href="#"><h5>{{ survey.question }}</h5></a>
-                                    <ul>
-                                        <li v-for="answer in survey.answers">{{ answer.answer }}</li>
-                                    </ul>
-                                </div>
+                            <div class="row">
+                                <table class="table table-hover table-bordered table-scrollable">
+                                    <tbody>
+                                    <tr v-for="(survey, index) in surveys">
+                                        <td>
+                                            <div class="col-md-12">
+                                                <h5>{{ survey.question }}</h5>
+                                                <ol>
+                                                    <li v-for="(answer, index) in survey.answers">{{ answer.answer }}</li>
+                                                </ol>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <button
+                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        type="button"
+                                                        @click="dispatchSelected(survey.id)">
+                                                    Select
+                                                </button>
+                                                <button
+                                                        class="btn btn-warning btn-sm remove_btn"
+                                                        type="button"
+                                                        @click="startEditSurvey(index)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                            <!--<div class="row image_selection_rows">-->
+                                <!--<div v-for="survey in surveys" class="col-md-6 survey_section">-->
+                                    <!--<a @click.prevent="dispatchSelected(survey.id)" href="#"><h5>{{ survey.question }}</h5></a>-->
+                                    <!--<ul>-->
+                                        <!--<li v-for="answer in survey.answers">{{ answer.answer }}</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
 
                             <div class="clearfix">
                                 <pagination
@@ -112,7 +144,7 @@
                 isLoaded: false,
                 currentPage: 1,
                 pagesCount: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 4,
                 searchTerm: '',
                 myUserId : 0,
                 addingSurvey: false,
@@ -126,7 +158,8 @@
                             answer: ''
                         },
                     ]
-                }
+                },
+                editedSurveyKey: null
             }
         },
 
@@ -265,8 +298,31 @@
                 this.survey.answers.splice(key, 1);
             },
 
+            //Edit a survey
+            startEditSurvey(key)
+            {
+                this.survey = this.surveys[key];
+                this.addingSurvey = true;
+                this.editedSurveyKey = key;
+            },
+
             //Save a survey record
             saveSurvey()
+            {
+                let vm = this;
+
+                if(this.survey.id)
+                {
+                    this.updateSurvey();
+                }
+                else
+                {
+                    this.createSurvey();
+                }
+            },
+
+            //Create a new survey record
+            createSurvey()
             {
                 let vm = this;
 
@@ -274,18 +330,84 @@
                     .post(`/surveys`, {question: this.survey.question})
                     .then((response) =>
                     {
-                        let survey = response.data;
+                        if(response.status === 201)
+                        {
+                            let survey = response.data;
+                            vm.surveys.push(response.data);
+                            let index = vm.surveys.length - 1;
 
-                        this.survey.answers.forEach(function (value, key) {
-                            Api.http.post(`/surveys/${survey.id}/survey-answers`,
-                                {
-                                    answer: value.answer
-                                })
-                                .then(response => {
-                                    vm.closeAddSurvey();
-                                    vm.navigate(1);
-                                });
-                        });
+                            this.survey.answers.forEach(function (value, key)
+                            {
+                                vm.handleSurveyAnswers(survey, value, index);
+                            });
+                        }
+
+                        vm.closeAddSurvey();
+                        vm.navigate(1);
+                    });
+            },
+
+            //Update a survey
+            updateSurvey()
+            {
+                let vm = this;
+
+                Api.http
+                    .put(`/surveys/${this.survey.id}`, {question: this.survey.question})
+                    .then((response) =>
+                    {
+                        if(response.status === 200)
+                        {
+                            let survey = response.data;
+
+                            vm.surveys[vm.editedSurveyKey] = response.data;
+
+                            this.survey.answers.forEach(function (value, key)
+                            {
+                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey);
+                            });
+                        }
+
+                        vm.editedSurveyKey = null;
+                        vm.closeAddSurvey();
+                        vm.navigate(1);
+                    });
+            },
+
+            //Handle the survey answers
+            handleSurveyAnswers(survey, answer, key)
+            {
+                if(answer.id)
+                {
+                    this.updateSurveyAnswers(survey, answer, key);
+                }
+                else
+                {
+                    this.createSurveyAnswers(survey, answer, key);
+                }
+            },
+
+            //Create survey answers
+            createSurveyAnswers(survey, answer, key)
+            {
+                Api.http.post(`/surveys/${survey.id}/survey-answers`,
+                    {
+                        answer: answer.answer
+                    })
+                    .then(response => {
+                        vm.surveys[key].answers.push(response.data);
+                    });
+            },
+
+            //Update the survey answers
+            updateSurveyAnswers(survey, answer, key)
+            {
+                Api.http.put(`/surveys/${survey.id}/survey-answers/${answer.id}`,
+                    {
+                        answer: answer.answer
+                    })
+                    .then(response => {
+                        vm.surveys[key].answers.push(response.data);
                     });
             }
         }
