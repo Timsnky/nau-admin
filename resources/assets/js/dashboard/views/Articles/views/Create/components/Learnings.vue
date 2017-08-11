@@ -13,7 +13,6 @@
                     <button
                             @click="confirmDelete(index)"
                             class="btn btn-danger btn-sm delete_btn"
-                            :disabled="articleLearnings.length <= 3"
                             type="button"> x
                     </button>
                     <character-counter :limit="100" :itemString="articleLearning.text"></character-counter>
@@ -175,10 +174,17 @@
                                     text: value.text,
                                 })
                                 .then(response => {
-                                    if (response.status === 200) {
+                                    if (response.status === 200)
+                                    {
                                         vm.articleLearnings[key] = response.data;
                                         Vue.toast('Article learnings updated successfully', {
                                             className: ['nau_toast', 'nau_success'],
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Vue.toast('Error in updating the learning. Please retry again', {
+                                            className: ['nau_toast', 'nau_warning'],
                                         });
                                     }
                                 });
@@ -192,10 +198,17 @@
                                         text: value.text,
                                     })
                                     .then(response => {
-                                        if (response.status === 201) {
+                                        if (response.status === 201)
+                                        {
                                             vm.articleLearnings[key] = response.data;
                                             Vue.toast('Article learnings created successfully', {
                                                 className: ['nau_toast', 'nau_success'],
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Vue.toast('Error in creating the learning. Please retry again', {
+                                                className: ['nau_toast', 'nau_warning'],
                                             });
                                         }
                                     });
@@ -249,6 +262,9 @@
                 else
                 {
                     vm.articleLearnings.splice(key, 1);
+                    Vue.toast('Article learning deleted successfully', {
+                        className: ['nau_toast', 'nau_success'],
+                    });
                 }
             },
 
