@@ -59,7 +59,7 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="! addingSurvey">
                 <table class="table table-hover table-bordered table-scrollable">
                     <tbody>
                     <tr v-for="(survey, index) in articleSurveys">
@@ -109,14 +109,16 @@
                     question: '',
                     answers: [
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                     ]
                 },
-                editedSurveyKey: null
+                editedSurveyKey: null,
             }
         },
 
@@ -255,7 +257,46 @@
             //Remove an answer
             removeAnswer(key)
             {
-                this.survey.answers.splice(key, 1);
+                if(this.survey.answers[key].id)
+                {
+                    this.confirmAnswerDelete(key);
+                }
+                else
+                {
+                    this.survey.answers.splice(key, 1);
+                }
+            },
+
+            //Confirm the deletion of an item
+            confirmAnswerDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteSurveyAnswer(key)
+                }).catch(swal.noop);
+            },
+
+            //Delete an answer
+            deleteSurveyAnswer(key)
+            {
+                Api.http
+                    .delete(`/survey-answers/${this.survey.answers[key].id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            this.survey.answers.splice(key, 1);
+                            Vue.toast('Article survey detached successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                    });
             },
 
             //Edit a survey
@@ -290,7 +331,7 @@
                     .post(`/surveys`, {question: this.survey.question})
                     .then((response) =>
                     {
-                        if(response.status === 201)
+                        if(response.status === 200)
                         {
                             let survey = response.data;
                             vm.articleSurveys.push(response.data);
@@ -298,7 +339,12 @@
 
                             this.survey.answers.forEach(function (value, key)
                             {
-                                vm.handleSurveyAnswers(survey, value, index);
+                                vm.articleSurveys[index].answers.push(value);
+                                vm.handleSurveyAnswers(survey, value, index, key);
+                            });
+
+                            Vue.toast('Article survey created successfully', {
+                                className: ['nau_toast', 'nau_success'],
                             });
                         }
 
@@ -319,11 +365,16 @@
                         {
                             let survey = response.data;
 
-                            vm.articleSurveys[vm.editedSurveyKey] = response.data;
+                            survey.answers = [];
+                            vm.articleSurveys[vm.editedSurveyKey] = survey;
 
                             this.survey.answers.forEach(function (value, key)
                             {
-                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey);
+                                vm.articleSurveys[vm.editedSurveyKey].answers.push(value);
+                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey, key);
+                            });
+                            Vue.toast('Article survey updated successfully', {
+                                className: ['nau_toast', 'nau_success'],
                             });
                         }
 
@@ -333,39 +384,40 @@
             },
 
             //Handle the survey answers
-            handleSurveyAnswers(survey, answer, key)
+            handleSurveyAnswers(survey, answer, key, answerKey)
             {
                 if(answer.id)
                 {
-                    this.updateSurveyAnswers(survey, answer, key);
+                    this.updateSurveyAnswers(survey, answer, key, answerKey);
                 }
                 else
                 {
-                    this.createSurveyAnswers(survey, answer, key);
+                    this.createSurveyAnswers(survey, answer, key, answerKey);
                 }
             },
 
             //Create survey answers
-            createSurveyAnswers(survey, answer, key)
+            createSurveyAnswers(survey, answer, key, answerKey)
             {
                 Api.http.post(`/surveys/${survey.id}/survey-answers`,
                     {
                         answer: answer.answer
                     })
                     .then(response => {
-                        vm.articleSurveys[key].answers.push(response.data);
+                        this.articleSurveys[key].answers[answerKey].id = response.data.id;
                     });
             },
 
             //Update the survey answers
-            updateSurveyAnswers(survey, answer, key)
+            updateSurveyAnswers(survey, answer, key, answerKey)
             {
-                Api.http.put(`/surveys/${survey.id}/survey-answers/${answer.id}`,
-                    {
-                        answer: answer.answer
-                    })
+                Api.http
+                    .delete(`/survey-answers/${answer.id}`)
                     .then(response => {
-                        vm.articleSurveys[key].answers.push(response.data);
+                        if(response.status === 204)
+                        {
+                            this.createSurveyAnswers(survey, answer, key, answerKey);
+                        }
                     });
             },
 
@@ -427,6 +479,9 @@
                 else
                 {
                     vm.articleSurveys.splice(key, 1);
+                    Vue.toast('Article survey detached successfully', {
+                        className: ['nau_toast', 'nau_success'],
+                    });
                 }
             },
 

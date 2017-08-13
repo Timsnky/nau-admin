@@ -152,14 +152,17 @@
                     question: '',
                     answers: [
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                     ]
                 },
-                editedSurveyKey: null
+                editedSurveyKey: null,
+                savedAnswers: 0,
             }
         },
 
@@ -249,7 +252,8 @@
                 $('#surveySelectionModal').modal('hide');
             },
 
-            reset() {
+            reset()
+            {
                 this.searchTerm = '';
             },
 
@@ -267,13 +271,16 @@
                     question: '',
                     answers: [
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         },
                         {
-                            answer: ''
+                            answer: '',
+                            id: null
                         }
                     ]
                 }
@@ -289,13 +296,52 @@
             //Add an answer
             addAnswer()
             {
-                this.survey.answers.push({'answer' : ''});
+                this.survey.answers.push({'answer' : '', 'id': null});
             },
 
             //Remove an answer
             removeAnswer(key)
             {
-                this.survey.answers.splice(key, 1);
+                if(this.survey.answers[key].id)
+                {
+                    this.confirmAnswerDelete(key);
+                }
+                else
+                {
+                    this.survey.answers.splice(key, 1);
+                }
+            },
+
+            //Confirm the deletion of an item
+            confirmAnswerDelete(key)
+            {
+                swal({
+                    title: 'Are you sure?',
+                    text: "The entry can not be restored!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abort',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete!'
+                }).then(() => {
+                    this.deleteSurveyAnswer(key)
+                }).catch(swal.noop);
+            },
+
+            //Delete an answer
+            deleteSurveyAnswer(key)
+            {
+                Api.http
+                    .delete(`/survey-answers/${this.survey.answers[key].id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            this.survey.answers.splice(key, 1);
+                            Vue.toast('Article survey detached successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                    });
             },
 
             //Edit a survey
@@ -310,6 +356,7 @@
             saveSurvey()
             {
                 let vm = this;
+                this.savedAnswers = this.survey.answers.length;
 
                 if(this.survey.id)
                 {
@@ -338,12 +385,12 @@
 
                             this.survey.answers.forEach(function (value, key)
                             {
-                                vm.handleSurveyAnswers(survey, value, index);
+                                vm.surveys[index].answers.push(value);
+                                vm.handleSurveyAnswers(survey, value, index, key);
                             });
                         }
 
                         vm.closeAddSurvey();
-                        vm.navigate(1);
                     });
             },
 
@@ -360,56 +407,71 @@
                         {
                             let survey = response.data;
 
-                            vm.surveys[vm.editedSurveyKey] = response.data;
+                            survey.answers = [];
+                            vm.surveys[vm.editedSurveyKey] = survey;
 
                             this.survey.answers.forEach(function (value, key)
                             {
-                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey);
+                                vm.surveys[vm.editedSurveyKey].answers.push(value);
+                                vm.handleSurveyAnswers(survey, value, vm.editedSurveyKey, key);
                             });
                         }
 
                         vm.editedSurveyKey = null;
                         vm.closeAddSurvey();
-                        vm.navigate(1);
                     });
             },
 
             //Handle the survey answers
-            handleSurveyAnswers(survey, answer, key)
+            handleSurveyAnswers(survey, answer, key, answerKey)
             {
                 if(answer.id)
                 {
-                    this.updateSurveyAnswers(survey, answer, key);
+                    this.updateSurveyAnswers(survey, answer, key, answerKey);
                 }
                 else
                 {
-                    this.createSurveyAnswers(survey, answer, key);
+                    this.createSurveyAnswers(survey, answer, key, answerKey);
                 }
             },
 
             //Create survey answers
-            createSurveyAnswers(survey, answer, key)
+            createSurveyAnswers(survey, answer, key, answerKey)
             {
                 Api.http.post(`/surveys/${survey.id}/survey-answers`,
                     {
                         answer: answer.answer
                     })
                     .then(response => {
-                        vm.surveys[key].answers.push(response.data);
+                        this.surveys[key].answers[answerKey].id = response.data.id;
+
+                        this.savedAnswers --;
+
+                        if(this.savedAnswers === 0)
+                        {
+                            this.navigate(1);
+                        }
                     });
             },
 
             //Update the survey answers
-            updateSurveyAnswers(survey, answer, key)
+            updateSurveyAnswers(survey, answer, key, answerKey)
             {
-                Api.http.put(`/surveys/${survey.id}/survey-answers/${answer.id}`,
-                    {
-                        answer: answer.answer
-                    })
+                Api.http
+                    .delete(`/survey-answers/${answer.id}`)
                     .then(response => {
-                        vm.surveys[key].answers.push(response.data);
+                        if(response.status === 204)
+                        {
+                            this.createSurveyAnswers(survey, answer, key, answerKey);
+                        }
                     });
             }
         }
     }
 </script>
+
+<style>
+    .swal2-container {
+        z-index: 100000;
+    }
+</style>

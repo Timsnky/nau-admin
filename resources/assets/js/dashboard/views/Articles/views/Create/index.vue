@@ -2010,30 +2010,46 @@
                 {
                     if(! (value.pivot.slider_id === vm.articleSliders[sliderKey].id))
                     {
-//                        let order = (value.pivot.order === '') ? 0 : value.pivot.order;
-
+                        vm.saveImageLinkToSlider(sliderKey, value.id, key);
+                    }
+                    else
+                    {
                         Api.http
-                            .put(`/sliders/${vm.articleSliders[sliderKey].id}/images/${value.id}`, {
-                                'order' : key
-                            })
+                            .delete(`/sliders/${vm.articleSliders[sliderKey].id}/images/${value.id}`)
                             .then(response => {
-                                if (response.status === 204)
+                                if(response.status === 204)
                                 {
-                                    vm.articleSliders[sliderKey].images[key].pivot.slider_id = vm.articleSliders[sliderKey].id;
-
-                                    Vue.toast('Slider image added to article successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the image. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
+                                    vm.saveImageLinkToSlider(sliderKey, value.id, key);
                                 }
                             });
                     }
                 });
+            },
+
+            //Save image link to slider
+            saveImageLinkToSlider(sliderKey, imageId, key)
+            {
+                let vm = this;
+                Api.http
+                    .put(`/sliders/${vm.articleSliders[sliderKey].id}/images/${imageId}`, {
+                        'order' : key
+                    })
+                    .then(response => {
+                        if (response.status === 204)
+                        {
+                            vm.articleSliders[sliderKey].images[key].pivot.slider_id = vm.articleSliders[sliderKey].id;
+
+                            Vue.toast('Slider image added to article successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in linking the image. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
             },
 
             //Confirm the delete of a slider image
