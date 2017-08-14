@@ -226,129 +226,129 @@
                     </div>
 
                     <!--Images, Videos and Sliders-->
-                    <div class="tab-pane" id="articleMedia">
-                        <!--Images-->
-                        <div class="form-body">
-                            <div class="form-group">
-                                <h4>Images</h4>
-                                <div class="row media_overflow">
-                                    <div class="media_images">
-                                        <div class="col-md-3 media_image" v-for="(image, index) in articleImages">
-                                            <img :src="image.url" alt="">
-                                            <div class="form-group">
-                                                <input class="form-control" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
-                                                <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
-                                                <button
-                                                        class="btn btn-danger btn-sm remove_btn"
-                                                        type="button"
-                                                        @click="confirmArticleImageDelete(index)">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
-                                        Select Uploaded Image
-                                    </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
-                                </div>
-                            </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>-->
-                        </div>
+                    <!--<div class="tab-pane" id="articleMedia">-->
+                        <!--&lt;!&ndash;Images&ndash;&gt;-->
+                        <!--<div class="form-body">-->
+                            <!--<div class="form-group">-->
+                                <!--<h4>Images</h4>-->
+                                <!--<div class="row media_overflow">-->
+                                    <!--<div class="media_images">-->
+                                        <!--<div class="col-md-3 media_image" v-for="(image, index) in articleImages">-->
+                                            <!--<img :src="image.url" alt="">-->
+                                            <!--<div class="form-group">-->
+                                                <!--<input class="form-control" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>-->
+                                                <!--<input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>-->
+                                                <!--<button-->
+                                                        <!--class="btn btn-danger btn-sm remove_btn"-->
+                                                        <!--type="button"-->
+                                                        <!--@click="confirmArticleImageDelete(index)">-->
+                                                    <!--<i class="fa fa-trash"></i>-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-actions selection_sections">-->
+                                    <!--<button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">-->
+                                        <!--Select Uploaded Image-->
+                                    <!--</button>-->
+                                    <!--&lt;!&ndash;<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>&ndash;&gt;-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>&ndash;&gt;-->
+                        <!--</div>-->
 
-                        <!--Sliders-->
-                        <div class="form-body">
-                            <h4>Sliders</h4>
-                            <div class="media_images sliders">
-                                <div v-for="(slider, sliderIndex) in articleSliders" class="slider_section">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" v-model="slider.name"
-                                               placeholder="Enter name for slider (required)"/>
-                                    </div>
-                                    <div class="media_overflow">
-                                        <div class="slider_images_section">
-                                            <draggable v-model="slider.images">
-                                                <div v-for="(image, index) in slider.images" :key="index" class="col-md-3 slider_image">
-                                                    <img :src="image.url" alt="">
-                                                    <div class="form-group">
-                                                        <!--<input class="form-control" type="text"-->
-                                                               <!--v-model="image.pivot.order"-->
-                                                               <!--placeholder="Enter order for image"/>-->
-                                                        <button
-                                                                class="btn btn-danger btn-sm remove_btn"
-                                                                type="button"
-                                                                @click="confirmSliderImageDelete(sliderIndex, index)">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </draggable>
-                                        </div>
-                                    </div>
-                                    <div class="form-actions">
-                                        <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
-                                            Select Uploaded Image
-                                        </button>
-                                        <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
-                                            Remove slider
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary" @click="addArticleSlider()">Add Slider
-                            </button>
-                            <!--<button class="btn btn-primary" type="button"-->
-                                    <!--:disabled="articleSliders.length == 0 || article.id == null"-->
-                                    <!--@click="uploadArticleSliders(article.id)">Save sliders-->
+                        <!--&lt;!&ndash;Sliders&ndash;&gt;-->
+                        <!--<div class="form-body">-->
+                            <!--<h4>Sliders</h4>-->
+                            <!--<div class="media_images sliders">-->
+                                <!--<div v-for="(slider, sliderIndex) in articleSliders" class="slider_section">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<input class="form-control" type="text" v-model="slider.name"-->
+                                               <!--placeholder="Enter name for slider (required)"/>-->
+                                    <!--</div>-->
+                                    <!--<div class="media_overflow">-->
+                                        <!--<div class="slider_images_section">-->
+                                            <!--<draggable v-model="slider.images">-->
+                                                <!--<div v-for="(image, index) in slider.images" :key="index" class="col-md-3 slider_image">-->
+                                                    <!--<img :src="image.url" alt="">-->
+                                                    <!--<div class="form-group">-->
+                                                        <!--&lt;!&ndash;<input class="form-control" type="text"&ndash;&gt;-->
+                                                               <!--&lt;!&ndash;v-model="image.pivot.order"&ndash;&gt;-->
+                                                               <!--&lt;!&ndash;placeholder="Enter order for image"/>&ndash;&gt;-->
+                                                        <!--<button-->
+                                                                <!--class="btn btn-danger btn-sm remove_btn"-->
+                                                                <!--type="button"-->
+                                                                <!--@click="confirmSliderImageDelete(sliderIndex, index)">-->
+                                                            <!--<i class="fa fa-trash"></i>-->
+                                                        <!--</button>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</draggable>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-actions">-->
+                                        <!--<button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">-->
+                                            <!--Select Uploaded Image-->
+                                        <!--</button>-->
+                                        <!--<button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">-->
+                                            <!--Remove slider-->
+                                        <!--</button>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<button type="button" class="btn btn-primary" @click="addArticleSlider()">Add Slider-->
                             <!--</button>-->
+                            <!--&lt;!&ndash;<button class="btn btn-primary" type="button"&ndash;&gt;-->
+                                    <!--&lt;!&ndash;:disabled="articleSliders.length == 0 || article.id == null"&ndash;&gt;-->
+                                    <!--&lt;!&ndash;@click="uploadArticleSliders(article.id)">Save sliders&ndash;&gt;-->
+                            <!--&lt;!&ndash;</button>&ndash;&gt;-->
 
-                        </div>
+                        <!--</div>-->
 
-                        <!--Vidoes-->
-                        <div class="form-body">
-                            <div class="form-group">
-                                <h4>Videos</h4>
-                                <div  class="row media_overflow">
-                                    <div class="media_images">
-                                        <div class="col-md-3 col-md-3 media_image" v-for="(video, index) in articleVideos">
-                                            <video v-if="video.id == null" controls>
-                                                <source :src="video.video">
-                                            </video>
-                                            <video v-if="video.id != null" controls>
-                                                <source :src="video.urls[0]" type="video/mp4">
-                                                <source :src="video.urls[1]" type="video/webm">
-                                            </video>
-                                            <div class="form-group">
-                                                <input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>
-                                                <input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
-                                                <button
-                                                        class="btn btn-danger btn-sm remove_btn"
-                                                        type="button"
-                                                        @click="confirmVideoDelete(index)">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
-                                        Select Uploaded Video
-                                    </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
-                                </div>
+                        <!--&lt;!&ndash;Vidoes&ndash;&gt;-->
+                        <!--<div class="form-body">-->
+                            <!--<div class="form-group">-->
+                                <!--<h4>Videos</h4>-->
+                                <!--<div  class="row media_overflow">-->
+                                    <!--<div class="media_images">-->
+                                        <!--<div class="col-md-3 col-md-3 media_image" v-for="(video, index) in articleVideos">-->
+                                            <!--<video v-if="video.id == null" controls>-->
+                                                <!--<source :src="video.video">-->
+                                            <!--</video>-->
+                                            <!--<video v-if="video.id != null" controls>-->
+                                                <!--<source :src="video.urls[0]" type="video/mp4">-->
+                                                <!--<source :src="video.urls[1]" type="video/webm">-->
+                                            <!--</video>-->
+                                            <!--<div class="form-group">-->
+                                                <!--<input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>-->
+                                                <!--<input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>-->
+                                                <!--<button-->
+                                                        <!--class="btn btn-danger btn-sm remove_btn"-->
+                                                        <!--type="button"-->
+                                                        <!--@click="confirmVideoDelete(index)">-->
+                                                    <!--<i class="fa fa-trash"></i>-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-actions selection_sections">-->
+                                    <!--<button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">-->
+                                        <!--Select Uploaded Video-->
+                                    <!--</button>-->
+                                    <!--&lt;!&ndash;<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>&ndash;&gt;-->
+                                <!--</div>-->
 
-                            </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>-->
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-primary image_selection_btn" @click="saveArticleMedia(article.id)">
-                                Save Media
-                            </button>
-                        </div>
-                    </div>
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--<div class="form-actions">-->
+                            <!--<button type="button" class="btn btn-primary image_selection_btn" @click="saveArticleMedia(article.id)">-->
+                                <!--Save Media-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <!--Social Media-->
                     <div class="tab-pane" id="articleSocialMedia">
@@ -487,68 +487,205 @@
                             <draggable v-model="articleElements">
                                 <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
                                     <!--Image-->
-                                    <div v-if="articleElement.type == 'image'" class="elementImageSection sectionDiv">
-                                        <img :src="articleElement.url" alt="">
-                                    </div>
-                                    <!--Body-->
-                                    <div v-if="articleElement.type == 'body'" class="sectionDiv">
-                                        <p v-html="articleElement.content"></p>
-                                    </div>
-                                    <!--Slider-->
-                                    <div v-if="articleElement.type == 'slider'" class="sliderSection sectionDiv">
-                                        <div class="container">
-                                            <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
-                                                <!-- Indicators -->
-                                                <ol class="carousel-indicators">
-                                                    <li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>
-                                                </ol>
-
-                                                <!-- Wrapper for slides -->
-                                                <div class="carousel-inner">
-                                                    <div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">
-                                                        <img :src="image.url">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Left and right controls -->
-                                                <a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">
-                                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                                    <span class="sr-only">Previous</span>
-                                                </a>
-                                                <a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">
-                                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                                    <span class="sr-only">Next</span>
-                                                </a>
+                                    <div v-if="articleElement.type == 'image'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Image</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p>{{ articleElement.name }}</p>
+                                            </div>
+                                            <div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">
+                                                <img :src="articleElement.url" alt="">
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!--<div v-if="articleElement.type == 'image'" class="elementImageSection sectionDiv">-->
+                                        <!--<img :src="articleElement.url" alt="">-->
+                                    <!--</div>-->
+                                    <!--Body-->
+                                    <div v-if="articleElement.type == 'body'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Body</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.content)"></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <p v-html="articleElement.content"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--<div v-if="articleElement.type == 'body'" class="sectionDiv">-->
+                                        <!--<p v-html="articleElement.content"></p>-->
+                                    <!--</div>-->
+                                    <!--Slider-->
+                                    <div v-if="articleElement.type == 'slider'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Image Slider</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="articleElement.name"></p>
+                                            </div>
+                                            <div class="panel_content padding_top_15" v-if="displayedPanel === index">
+                                                <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
+                                                    <!-- Indicators -->
+                                                    <ol class="carousel-indicators">
+                                                        <li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>
+                                                    </ol>
+
+                                                    <!-- Wrapper for slides -->
+                                                    <div class="carousel-inner">
+                                                        <div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">
+                                                            <img :src="image.url">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Left and right controls -->
+                                                    <a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">
+                                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">
+                                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--<div v-if="articleElement.type == 'slider'" class="sliderSection sectionDiv">-->
+                                        <!--<div class="container">-->
+                                            <!--<div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">-->
+                                                <!--&lt;!&ndash; Indicators &ndash;&gt;-->
+                                                <!--<ol class="carousel-indicators">-->
+                                                    <!--<li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>-->
+                                                <!--</ol>-->
+
+                                                <!--&lt;!&ndash; Wrapper for slides &ndash;&gt;-->
+                                                <!--<div class="carousel-inner">-->
+                                                    <!--<div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">-->
+                                                        <!--<img :src="image.url">-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+
+                                                <!--&lt;!&ndash; Left and right controls &ndash;&gt;-->
+                                                <!--<a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">-->
+                                                    <!--<span class="glyphicon glyphicon-chevron-left"></span>-->
+                                                    <!--<span class="sr-only">Previous</span>-->
+                                                <!--</a>-->
+                                                <!--<a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">-->
+                                                    <!--<span class="glyphicon glyphicon-chevron-right"></span>-->
+                                                    <!--<span class="sr-only">Next</span>-->
+                                                <!--</a>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
                                     <!--Learnings-->
-                                    <div v-if="articleElement.type == 'learning'" class="sectionDiv">
-                                        <p v-html="articleElement.text"></p>
+                                    <div v-if="articleElement.type == 'learning'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Learning</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.text)"></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <p v-html="articleElement.text"></p>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    <!--<div v-if="articleElement.type == 'learning'" class="sectionDiv">-->
+                                        <!--<p v-html="articleElement.text"></p>-->
+                                    <!--</div>-->
                                     <!--Social Media-->
-                                    <div v-if="articleElement.type == 'socialmedia'" class="sectionDiv">
-                                        <twitter-element :url="articleElement.url"></twitter-element>
+                                    <div v-if="articleElement.type == 'socialmedia'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Social Media</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <twitter-element :url="articleElement.url"></twitter-element>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!--<div v-if="articleElement.type == 'socialmedia'" class="sectionDiv">-->
+                                        <!--<twitter-element :url="articleElement.url"></twitter-element>-->
+                                    <!--</div>-->
                                     <!--Info Box-->
                                     <!--<div v-if="articleElement.type == 'infobox'" class="sectionDiv">-->
                                         <!--<p v-html="articleElement.content"></p>-->
                                     <!--</div>-->
                                     <!--Videos-->
-                                    <div v-if="articleElement.type == 'video'" class="elementImageSection sectionDiv">
-                                        <video controls>
-                                            <source :src="articleElement.urls[0]" type="video/mp4">
-                                            <source :src="articleElement.urls[1]" type="video/webm">
-                                        </video>
+                                    <div v-if="articleElement.type == 'video'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Video</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="articleElement.name"></p>
+                                            </div>
+                                            <div class="panel_content elementImageSection " v-if="displayedPanel === index">
+                                                <video controls>
+                                                    <source :src="articleElement.urls[0]" type="video/mp4">
+                                                    <source :src="articleElement.urls[1]" type="video/webm">
+                                                </video>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!--<div v-if="articleElement.type == 'video'" class="elementImageSection sectionDiv">-->
+                                        <!--<video controls>-->
+                                            <!--<source :src="articleElement.urls[0]" type="video/mp4">-->
+                                            <!--<source :src="articleElement.urls[1]" type="video/webm">-->
+                                        <!--</video>-->
+                                    <!--</div>-->
 
                                     <!--Surveys-->
-                                    <div v-if="articleElement.type == 'survey'" class="sectionDiv">
-                                        <p>{{ articleElement.question }}</p>
-                                        <ol>
-                                            <li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>
-                                        </ol>
+                                    <div v-if="articleElement.type == 'survey'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Survey</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.question)"></p>
+                                            </div>
+                                            <div class="panel_content elementImageSection" v-if="displayedPanel === index">
+                                                <p>{{ articleElement.question }}</p>
+                                                <ol>
+                                                    <li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>
+                                                </ol>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!--<div v-if="articleElement.type == 'survey'" class="sectionDiv">-->
+                                        <!--<p>{{ articleElement.question }}</p>-->
+                                        <!--<ol>-->
+                                            <!--<li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>-->
+                                        <!--</ol>-->
+                                    <!--</div>-->
                                 </div>
                             </draggable>
                         </div>
@@ -563,8 +700,8 @@
                         </div>
                     </div>
                 </div>
-                <image-select-modal></image-select-modal>
-                <video-select-modal></video-select-modal>
+                <!--<image-select-modal></image-select-modal>-->
+                <!--<video-select-modal></video-select-modal>-->
             </div>
         </form>
     </div>
@@ -583,6 +720,7 @@
     import SocialMedia from './components/SocialMedia';
     import Bodies from './components/Bodies';
     import CharacterCounter from 'dashboard/components/CharacterCounter';
+    import ArticleSorting from './components/ArticleSorting';
 //    import InfoBoxes from './components/InfoBoxes';
 
     export default {
@@ -653,6 +791,7 @@
                 ],
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
+                displayedPanel: null
             };
         },
 
@@ -669,7 +808,8 @@
             Learnings,
             SocialMedia,
             Bodies,
-            CharacterCounter
+            CharacterCounter,
+            ArticleSorting
 //            InfoBoxes
         },
 
@@ -941,6 +1081,20 @@
             /**
              * SORTING
              */
+            //Set the displayed panel
+            setDisplayedPanel(id)
+            {
+                this.displayedPanel = this.displayedPanel === id ? null : id;
+            },
+
+            //Trim content received from back end
+            trimContent(content)
+            {
+                content = content.replace(/<.+?>/g, '');
+
+                return content.substring(0, 100);
+            },
+
             //Get the id for the slider carousel
             getSliderIdName(elementId)
             {
