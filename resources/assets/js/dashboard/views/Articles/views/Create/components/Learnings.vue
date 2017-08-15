@@ -138,7 +138,7 @@
             },
 
             //Validate learnings save
-            validateLearnings(articleId)
+            validateLearnings(articleId, limit)
             {
                 if(articleId !== this.articleId)
                 {
@@ -155,7 +155,7 @@
                     }
                 });
 
-                return ! (totalLearnings >= 3);
+                return ! (totalLearnings >= limit);
             },
 
             //Save article learnings
@@ -163,7 +163,7 @@
             {
                 let vm = this;
 
-                if(! this.validateLearnings(articleId))
+                if(! this.validateLearnings(articleId, 3))
                 {
                     this.articleLearnings.forEach(function (value, key)
                     {
@@ -227,17 +227,26 @@
             //Confirm the deletion of an item
             confirmDelete(key)
             {
-                swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abort',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
-                }).then(() => {
-                    this.deleteArticleLearning(key)
-                }).catch(swal.noop);
+                if(! this.validateLearnings(this.articleId, 4))
+                {
+                    swal({
+                        title: 'Are you sure?',
+                        text: "The entry can not be restored!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        cancelButtonText: 'Abort',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete!'
+                    }).then(() => {
+                        this.deleteArticleLearning(key)
+                    }).catch(swal.noop);
+                }
+                else
+                {
+                    Vue.toast('Please provide more than three learnings in order to be allowed to delete', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
             },
 
             //Delete a learning

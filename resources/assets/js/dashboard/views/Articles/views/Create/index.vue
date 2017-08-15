@@ -115,6 +115,7 @@
                                 Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                             <button
+                                    type="button"
                                     v-if="editingArticle"
                                     class="btn btn-primary"
                                     @click="duplicateArticle()">
@@ -268,24 +269,23 @@
                                                placeholder="Enter name for slider (required)"/>
                                     </div>
                                     <div class="media_overflow">
-                                        <div class="slider_images_section">
-                                            <draggable v-model="slider.images">
-                                                <div v-for="(image, index) in slider.images" :key="index" class="col-md-3 slider_image">
-                                                    <img :src="image.url" alt="">
-                                                    <div class="form-group">
-                                                        <!--<input class="form-control" type="text"-->
-                                                               <!--v-model="image.pivot.order"-->
-                                                               <!--placeholder="Enter order for image"/>-->
-                                                        <button
-                                                                class="btn btn-danger btn-sm remove_btn"
-                                                                type="button"
-                                                                @click="confirmSliderImageDelete(sliderIndex, index)">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
+                                        <draggable class="slider_images_section" v-model="slider.images">
+                                            <div v-for="(image, index) in slider.images" :key="index"
+                                                 class="col-md-3 slider_image">
+                                                <img :src="image.url" alt="">
+                                                <div class="form-group">
+                                                    <!--<input class="form-control" type="text"-->
+                                                    <!--v-model="image.pivot.order"-->
+                                                    <!--placeholder="Enter order for image"/>-->
+                                                    <button
+                                                            class="btn btn-danger btn-sm remove_btn"
+                                                            type="button"
+                                                            @click="confirmSliderImageDelete(sliderIndex, index)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </div>
-                                            </draggable>
-                                        </div>
+                                            </div>
+                                        </draggable>
                                     </div>
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
