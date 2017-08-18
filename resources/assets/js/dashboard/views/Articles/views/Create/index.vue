@@ -686,6 +686,25 @@
                                             <!--<li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>-->
                                         <!--</ol>-->
                                     <!--</div>-->
+                                    <div v-if="articleElement.type == 'externalvideo'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">External Video</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <div class="timeline">
+                                                    <timeline-item :key="articleElement.id" :liveticker="articleElement" @delete="deleteArticleExternalVideo(index)">
+                                                        <external-video-element :element="articleElement" />
+                                                    </timeline-item>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </draggable>
                         </div>
@@ -700,8 +719,8 @@
                         </div>
                     </div>
                 </div>
-                <image-select-modal></image-select-modal>
-                <video-select-modal></video-select-modal>
+                <!--<image-select-modal></image-select-modal>-->
+                <!--<video-select-modal></video-select-modal>-->
             </div>
         </form>
     </div>
@@ -721,6 +740,8 @@
     import Bodies from './components/Bodies';
     import CharacterCounter from 'dashboard/components/CharacterCounter';
     import ArticleSorting from './components/ArticleSorting';
+    import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
+    import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
 //    import InfoBoxes from './components/InfoBoxes';
 
     export default {
@@ -809,7 +830,9 @@
             SocialMedia,
             Bodies,
             CharacterCounter,
-            ArticleSorting
+            ArticleSorting,
+            TimelineItem,
+            ExternalVideoElement
 //            InfoBoxes
         },
 

@@ -1,14 +1,14 @@
 <template>
     <div class="timeline-item">
-        <div class="timeline-badge">
-            <img class="timeline-badge-userpic" :src="liveticker.poster.avatar"></div>
+        <!--<div class="timeline-badge">-->
+            <!--<img class="timeline-badge-userpic" :src="liveticker.poster.avatar"></div>-->
         <div class="timeline-body">
-            <div class="timeline-body-arrow"> </div>
+            <!--<div class="timeline-body-arrow"> </div>-->
             <div class="timeline-body-head">
-                <div class="timeline-body-head-caption">
-                    <a href="javascript:;" class="timeline-body-title font-blue-madison">{{ liveticker.poster.name }}</a>
-                    <span class="timeline-body-time font-grey-cascade">Geposted {{ humanize(liveticker.posted_at) }}</span>
-                </div>
+                <!--<div class="timeline-body-head-caption">-->
+                    <!--<a href="javascript:;" class="timeline-body-title font-blue-madison">{{ liveticker.poster.name }}</a>-->
+                    <!--<span class="timeline-body-time font-grey-cascade">Geposted {{ humanize(liveticker.posted_at) }}</span>-->
+                <!--</div>-->
                 <div class="timeline-body-head-actions">
                     <div class="btn-group">
                         <button class="btn btn-circle green btn-sm dropdown-toggle" type="button" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> Aktionen
@@ -60,4 +60,16 @@
     .linebreaks {
         white-space: pre-line;
     }
+
+    .timeline-body {
+        margin-left: 0px !important;
+    }
+
+    .timeline:before {
+        display: none !important;
+    }
+
+
+
+
 </style>

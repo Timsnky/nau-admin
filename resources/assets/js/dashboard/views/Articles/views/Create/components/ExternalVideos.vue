@@ -13,18 +13,6 @@
                                 class="form-control">
                     </div>
                     <div class="col-md-6 form-group">
-                        <label>Name</label>
-                        <input
-                                type="text"
-                                name="name"
-                                v-model.trim="externalVideo.name"
-                                placeholder="Name"
-                                class="form-control">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 form-group">
                         <label>Lead</label>
                         <input
                                 type="text"
@@ -34,17 +22,29 @@
                                 class="form-control">
                         </input>
                     </div>
-
-                    <div class="col-md-6 form-group">
-                        <label>Description</label>
-                        <input
-                                type="text"
-                                name="source"
-                                v-model.trim="externalVideo.alt"
-                                placeholder="Description"
-                                class="form-control">
-                    </div>
                 </div>
+
+                <!--<div class="row">-->
+                    <!--<div class="col-md-6 form-group">-->
+                        <!--<label>Name</label>-->
+                        <!--<input-->
+                                <!--type="text"-->
+                                <!--name="name"-->
+                                <!--v-model.trim="externalVideo.name"-->
+                                <!--placeholder="Name"-->
+                                <!--class="form-control">-->
+                    <!--</div>-->
+                    <!---->
+                    <!--<div class="col-md-6 form-group">-->
+                        <!--<label>Description</label>-->
+                        <!--<input-->
+                                <!--type="text"-->
+                                <!--name="source"-->
+                                <!--v-model.trim="externalVideo.alt"-->
+                                <!--placeholder="Description"-->
+                                <!--class="form-control">-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
             <div class="form-actions">
                 <button
@@ -54,13 +54,13 @@
                         :disabled="articleId == null || !(externalVideo.url)">
                     Save Video
                 </button>
-                <button
-                        @click="addArticleExternalVideo()"
-                        class="btn btn-primary"
-                        type="button"
-                        :disabled="addingExternalVideo">
-                    Add Video
-                </button>
+                <!--<button-->
+                        <!--@click="addArticleExternalVideo()"-->
+                        <!--class="btn btn-primary"-->
+                        <!--type="button"-->
+                        <!--:disabled="addingExternalVideo">-->
+                    <!--Add Video-->
+                <!--</button>-->
             </div>
             <div class="timeline">
                 <timeline-item v-for="(articleExternalVideo, index) in articleExternalVideos" :key="articleExternalVideo.id" :liveticker="articleExternalVideo" @delete="deleteArticleExternalVideo(index)">
@@ -80,12 +80,10 @@
         data() {
             return {
                 articleExternalVideos: [],
-                addingExternalVideo: false,
+                addingExternalVideo: true,
                 externalVideo: {
                     url: '',
                     lead: '',
-                    name: '',
-                    alt: ''
                 }
             }
         },
@@ -129,7 +127,7 @@
             initializeArticleExternalVideos(id)
             {
                 Api.http
-                    .get(`/articles/${id}/livetickers`)
+                    .get(`/articles/${id}/external-videos`)
                     .then(response => {
                         if(response.status === 200)
                         {
@@ -187,10 +185,10 @@
             linkExternalVideoToArticle(video, articleId)
             {
                 Api.http
-                    .put(`/livetickers/${articleId}/external-videos/${video.id}`)
+                    .put(`/articles/${articleId}/external-videos/${video.id}`)
                     .then(response =>
                     {
-                        if(response.status === 200)
+                        if(response.status === 204)
                         {
                             this.addingExternalVideo = false;
                             this.articleExternalVideos = [];
@@ -230,7 +228,7 @@
                 this.articleExternalVideos.forEach(function (value, key)
                 {
                     Api.http
-                        .put(`/livetickers/${articleId}/external-videos/${value.id}`)
+                        .put(`/articles/${articleId}/external-videos/${value.id}`)
                         .then(response =>
                         {
                             if(response.status !== 200)

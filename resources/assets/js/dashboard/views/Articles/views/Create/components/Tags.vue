@@ -14,6 +14,7 @@
                         :options-limit="100"
                         :clear-on-select="false"
                         :close-on-select="false"
+                        :hide-selected="true"
                         track-by="id"
                         :multiple="true"
                         :taggable="true"
@@ -32,19 +33,36 @@
                         id="relatedStoriesMultiSelect"
                         v-model="articleRelatedStories"
                         :options="existingRelatedStories"
-                        placeholder="Type to search related story (at least one story required)"
-                        label="title"
-                        :max-height="500"
-                        :options-limit="100"
-                        :clear-on-select="false"
-                        :close-on-select="false"
-                        track-by="id"
                         :multiple="true"
-                        open-direction="bottom"
+                        :close-on-select="false"
+                        :clear-on-select="false"
+                        :hide-selected="true"
+                        :preserve-search="true"
+                        placeholder="Pick some"
+                        label="title"
+                        track-by="id"
                         :internal-search="false"
                         :loading="relatedStoryIsLoading"
                         @search-change="searchRelatedStories"
-                        @remove="deleteRelatedArticles">
+                        @remove="deleteRelatedArticles"
+                >
+                        <!--id="relatedStoriesMultiSelect"-->
+                        <!--v-model="articleRelatedStories"-->
+                        <!--:options="existingRelatedStories"-->
+                        <!--placeholder="Type to search related story (at least one story required)"-->
+                        <!--label="title"-->
+                        <!--:max-height="500"-->
+                        <!--:options-limit="100"-->
+                        <!--:clear-on-select="false"-->
+                        <!--:close-on-select="false"-->
+                        <!--:hide-selected="true"-->
+                        <!--track-by="id"-->
+                        <!--:multiple="true"-->
+                        <!--open-direction="bottom"-->
+                        <!--:internal-search="false"-->
+                        <!--:loading="relatedStoryIsLoading"-->
+                        <!--@search-change="searchRelatedStories"-->
+                        <!--@remove="deleteRelatedArticles"-->
                 </multiselect>
             </div>
         </div>
@@ -119,6 +137,7 @@
                 {
                     this.initializeArticleTags(this.articleId);
                     this.initializeArticleRelatedStories(this.articleId);
+                    this.searchTags('a');
                 }
             }
         },
