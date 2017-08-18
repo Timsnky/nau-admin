@@ -719,8 +719,8 @@
                         </div>
                     </div>
                 </div>
-                <!--<image-select-modal></image-select-modal>-->
-                <!--<video-select-modal></video-select-modal>-->
+                <image-select-modal></image-select-modal>
+                <video-select-modal></video-select-modal>
             </div>
         </form>
     </div>
