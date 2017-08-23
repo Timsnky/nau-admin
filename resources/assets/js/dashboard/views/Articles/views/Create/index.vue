@@ -196,16 +196,8 @@
                                         <img id="mainImage" v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <image-quality :display="articleCropper ? 1 : 0" :image-height="mainArticleImageCropHeight" :image-width="mainArticleImageCropWidth"></image-quality>
-                                <input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
                                     Select Uploaded Image
-                                </button>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="startCrop()">
-                                    Start Crop
-                                </button>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="finishCrop()">
-                                    Finish Crop
                                 </button>
                             </div>
                             <div class="form-group">
@@ -694,7 +686,6 @@
     import ArticleSorting from './components/ArticleSorting';
     import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
-    import ImageQuality from 'dashboard/components/ImageQuality';
 //    import InfoBoxes from './components/InfoBoxes';
 
     export default {
@@ -766,9 +757,6 @@
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
                 displayedPanel: null,
-                articleCropper: null,
-                mainArticleImageCropHeight: 0,
-                mainArticleImageCropWidth: 0
             };
         },
 
@@ -789,7 +777,6 @@
             ArticleSorting,
             TimelineItem,
             ExternalVideoElement,
-            ImageQuality
 //            InfoBoxes
         },
 
@@ -1446,7 +1433,6 @@
                             else {
 
                             }
-                            this.startCrop();
                         }
                         else
                         {
@@ -1455,39 +1441,6 @@
                             });
                         }
                     });
-            },
-
-            startCrop()
-            {
-                let file = document.getElementById('mainImage');
-                let vm = this;
-
-                this.articleCropper = new Cropper(file, {
-                    dragMode: 'move',
-                    aspectRatio: 2,
-                    autoCropArea: 0.65,
-                    restore: true,
-                    guides: true,
-                    center: true,
-                    highlight: true,
-                    cropBoxMovable: true,
-                    cropBoxResizable: true,
-                    toggleDragModeOnDblclick: true,
-                    crop: function(e) {
-                        console.log(e.detail.x);
-                        console.log(e.detail.y);
-                        console.log(e.detail.width);
-                        console.log(e.detail.height);
-                        vm.mainArticleImageCropWidth = parseInt(e.detail.width);
-                        vm.mainArticleImageCropHeight = parseInt(e.detail.height);
-                    }
-                });
-            },
-
-            finishCrop()
-            {
-                this.articleMainImage.url = this.articleCropper.getCroppedCanvas().toDataURL('image/jpeg');
-                this.articleCropper.destroy();
             },
 
             //Submit article image

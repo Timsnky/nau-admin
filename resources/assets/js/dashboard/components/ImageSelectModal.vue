@@ -11,6 +11,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group" v-if="addingImage">
+                        <div class="article_image_section">
+                            <div class="article_image_section_div">
+                                <img id="cropImage"  :src="image.image" alt="">
+                            </div>
+                        </div>
+                        <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Image</label>
@@ -56,18 +62,30 @@
                             </div>
                         </div>
                         <div class="form-actions">
-                            <button
-                                    @click="closeAddImage()"
-                                    class="btn btn-danger"
-                                    type="button">
-                                Close
+                            <button type="button"
+                                    class="btn btn-primary image_selection_btn"
+                                    @click="startCrop()"
+                                    :disabled="! image.image">
+                                Start Crop
+                            </button>
+                            <button type="button"
+                                    class="btn btn-primary image_selection_btn"
+                                    @click="finishCrop()"
+                                    :disabled="! image.image || ! imageCropper">
+                                Finish Crop
                             </button>
                             <button
                                     @click="uploadImage()"
                                     class="btn btn-primary"
                                     type="button"
                                     :disabled="! image.image || !image.name || !image.source || !image.lead">
-                                Add Video
+                                Save Image
+                            </button>
+                            <button
+                                    @click="closeAddImage()"
+                                    class="btn btn-danger"
+                                    type="button">
+                                Close
                             </button>
                         </div>
                     </div>
@@ -132,6 +150,7 @@
 
 <script>
     import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
+    import ImageQuality from 'dashboard/components/ImageQuality';
 
     export default {
         data() {
@@ -150,7 +169,10 @@
                     name: '',
                     source: ''
                 },
-                addingImage: false
+                addingImage: false,
+                imageCropper: null,
+                imageCropHeight: 0,
+                imageCropWidth: 0
             }
         },
 
@@ -176,7 +198,8 @@
         },
 
         components: {
-            Pagination
+            Pagination,
+            ImageQuality
         },
 
         watch: {
@@ -278,9 +301,45 @@
                 }
             },
 
+            //Start the image cropping process
+            startCrop()
+            {
+                let file = document.getElementById('cropImage');
+                let vm = this;
+
+                this.imageCropper = new Cropper(file, {
+                    dragMode: 'move',
+                    aspectRatio: 2,
+                    autoCropArea: 0.65,
+                    restore: true,
+                    guides: true,
+                    center: true,
+                    highlight: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: true,
+                    crop: function(e) {
+                        vm.imageCropHeight = parseInt(e.detail.width);
+                        vm.imageCropWidth = parseInt(e.detail.height);
+                    }
+                });
+            },
+
+            //Finish the cropping process and save image
+            finishCrop()
+            {
+                this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
+                this.imageCropper.destroy();
+            },
+
             //Upload image
             uploadImage()
             {
+                if(this.imageCropper)
+                {
+                    this.finishCrop();
+                }
+
                 Api.http
                     .post(`/images`, {
                         image: this.image.image,
