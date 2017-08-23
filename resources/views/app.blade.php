@@ -26,6 +26,7 @@
     <link href="{{asset('assets/global/plugins/vue-multiselect/vue-multiselect.min.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/global/plugins/cropperjs/cropper.min.css')}}" rel="stylesheet" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME GLOBAL STYLES -->
     <link href="{{asset('assets/global/css/components.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
@@ -104,6 +105,7 @@
     <script src="{{asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/global/plugins/cropperjs/cropper.min.js')}}" type="text/javascript"></script>
     {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js')}}"--}}
         {{--type="text/javascript"></script>--}}
     {{--<script src="{{asset('assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js')}}"--}}

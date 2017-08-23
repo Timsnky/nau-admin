@@ -9,6 +9,7 @@ import Api from './Api';
 import Toast from 'vue-easy-toast';
 import swal from 'sweetalert2';
 import Multiselect from 'vue-multiselect';
+import Cropper from 'cropperjs';
 
 const request = axios.create({
     withCredentials: true,
@@ -45,6 +46,7 @@ window.moment.locale('de');
 
 window.swal = swal;
 window._ = require('underscore');
+window.Cropper = Cropper;
 
 
 request.interceptors.request.use(config => {

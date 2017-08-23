@@ -189,15 +189,23 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <h4>Article Main Image</h4>
+
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
                                         <i v-if="! articleMainImage.url" class="fa fa-image" ></i>
-                                        <img v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
+                                        <img id="mainImage" v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <!--<input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>-->
+                                <image-quality :display="articleCropper ? 1 : 0" :image-height="mainArticleImageCropHeight" :image-width="mainArticleImageCropWidth"></image-quality>
+                                <input class="btn btn-primary" type="file" name="article_image" id="article_image" @change="mainArticleImageChange"/>
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
                                     Select Uploaded Image
+                                </button>
+                                <button type="button" class="btn btn-primary image_selection_btn" @click="startCrop()">
+                                    Start Crop
+                                </button>
+                                <button type="button" class="btn btn-primary image_selection_btn" @click="finishCrop()">
+                                    Finish Crop
                                 </button>
                             </div>
                             <div class="form-group">
@@ -208,13 +216,12 @@
                                         <img v-if="articleTeaserImage.url" :src="articleTeaserImage.url" alt="">
                                     </div>
                                 </div>
-                                <!--<input class="btn btn-primary" type="file" name="article_image" id="article_teaser_image" @change="teaserArticleImageChange"/>-->
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Select Uploaded Image
                                 </button>
-                                <!--<button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">-->
-                                    <!--Delete teaser image-->
-                                <!--</button>-->
+                                <button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">
+                                    Delete teaser image
+                                </button>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -274,9 +281,6 @@
                                                  class="col-md-3 slider_image">
                                                 <img :src="image.url" alt="">
                                                 <div class="form-group">
-                                                    <!--<input class="form-control" type="text"-->
-                                                    <!--v-model="image.pivot.order"-->
-                                                    <!--placeholder="Enter order for image"/>-->
                                                     <button
                                                             class="btn btn-danger btn-sm remove_btn"
                                                             type="button"
@@ -503,9 +507,6 @@
                                         </div>
                                     </div>
 
-                                    <!--<div v-if="articleElement.type == 'image'" class="elementImageSection sectionDiv">-->
-                                        <!--<img :src="articleElement.url" alt="">-->
-                                    <!--</div>-->
                                     <!--Body-->
                                     <div v-if="articleElement.type == 'body'" class="form-body panel">
                                         <div class="panel_heading">
@@ -523,9 +524,6 @@
                                         </div>
                                     </div>
 
-                                    <!--<div v-if="articleElement.type == 'body'" class="sectionDiv">-->
-                                        <!--<p v-html="articleElement.content"></p>-->
-                                    <!--</div>-->
                                     <!--Slider-->
                                     <div v-if="articleElement.type == 'slider'" class="form-body panel">
                                         <div class="panel_heading">
@@ -565,33 +563,6 @@
                                         </div>
                                     </div>
 
-                                    <!--<div v-if="articleElement.type == 'slider'" class="sliderSection sectionDiv">-->
-                                        <!--<div class="container">-->
-                                            <!--<div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">-->
-                                                <!--&lt;!&ndash; Indicators &ndash;&gt;-->
-                                                <!--<ol class="carousel-indicators">-->
-                                                    <!--<li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>-->
-                                                <!--</ol>-->
-
-                                                <!--&lt;!&ndash; Wrapper for slides &ndash;&gt;-->
-                                                <!--<div class="carousel-inner">-->
-                                                    <!--<div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">-->
-                                                        <!--<img :src="image.url">-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-
-                                                <!--&lt;!&ndash; Left and right controls &ndash;&gt;-->
-                                                <!--<a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">-->
-                                                    <!--<span class="glyphicon glyphicon-chevron-left"></span>-->
-                                                    <!--<span class="sr-only">Previous</span>-->
-                                                <!--</a>-->
-                                                <!--<a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">-->
-                                                    <!--<span class="glyphicon glyphicon-chevron-right"></span>-->
-                                                    <!--<span class="sr-only">Next</span>-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
                                     <!--Learnings-->
                                     <div v-if="articleElement.type == 'learning'" class="form-body panel">
                                         <div class="panel_heading">
@@ -609,9 +580,6 @@
                                         </div>
                                     </div>
 
-                                    <!--<div v-if="articleElement.type == 'learning'" class="sectionDiv">-->
-                                        <!--<p v-html="articleElement.text"></p>-->
-                                    <!--</div>-->
                                     <!--Social Media-->
                                     <div v-if="articleElement.type == 'socialmedia'" class="form-body panel">
                                         <div class="panel_heading">
@@ -628,13 +596,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--<div v-if="articleElement.type == 'socialmedia'" class="sectionDiv">-->
-                                        <!--<twitter-element :url="articleElement.url"></twitter-element>-->
-                                    <!--</div>-->
-                                    <!--Info Box-->
-                                    <!--<div v-if="articleElement.type == 'infobox'" class="sectionDiv">-->
-                                        <!--<p v-html="articleElement.content"></p>-->
-                                    <!--</div>-->
+
                                     <!--Videos-->
                                     <div v-if="articleElement.type == 'video'" class="form-body panel">
                                         <div class="panel_heading">
@@ -654,12 +616,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--<div v-if="articleElement.type == 'video'" class="elementImageSection sectionDiv">-->
-                                        <!--<video controls>-->
-                                            <!--<source :src="articleElement.urls[0]" type="video/mp4">-->
-                                            <!--<source :src="articleElement.urls[1]" type="video/webm">-->
-                                        <!--</video>-->
-                                    <!--</div>-->
 
                                     <!--Surveys-->
                                     <div v-if="articleElement.type == 'survey'" class="form-body panel">
@@ -680,12 +636,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--<div v-if="articleElement.type == 'survey'" class="sectionDiv">-->
-                                        <!--<p>{{ articleElement.question }}</p>-->
-                                        <!--<ol>-->
-                                            <!--<li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>-->
-                                        <!--</ol>-->
-                                    <!--</div>-->
+
+                                    <!--External Videos-->
                                     <div v-if="articleElement.type == 'externalvideo'" class="form-body panel">
                                         <div class="panel_heading">
                                             <span class="panel_title">External Video</span>
@@ -742,6 +694,7 @@
     import ArticleSorting from './components/ArticleSorting';
     import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
+    import ImageQuality from 'dashboard/components/ImageQuality';
 //    import InfoBoxes from './components/InfoBoxes';
 
     export default {
@@ -812,7 +765,10 @@
                 ],
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
-                displayedPanel: null
+                displayedPanel: null,
+                articleCropper: null,
+                mainArticleImageCropHeight: 0,
+                mainArticleImageCropWidth: 0
             };
         },
 
@@ -832,7 +788,8 @@
             CharacterCounter,
             ArticleSorting,
             TimelineItem,
-            ExternalVideoElement
+            ExternalVideoElement,
+            ImageQuality
 //            InfoBoxes
         },
 
@@ -1438,6 +1395,7 @@
                 reader.onload = function (e) {
                     vm.articleMainImage.url = e.target.result;
                     vm.articleMainImage.id = null;
+
                 };
 
                 reader.readAsDataURL(file);
@@ -1488,6 +1446,7 @@
                             else {
 
                             }
+                            this.startCrop();
                         }
                         else
                         {
@@ -1496,6 +1455,39 @@
                             });
                         }
                     });
+            },
+
+            startCrop()
+            {
+                let file = document.getElementById('mainImage');
+                let vm = this;
+
+                this.articleCropper = new Cropper(file, {
+                    dragMode: 'move',
+                    aspectRatio: 2,
+                    autoCropArea: 0.65,
+                    restore: true,
+                    guides: true,
+                    center: true,
+                    highlight: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: true,
+                    crop: function(e) {
+                        console.log(e.detail.x);
+                        console.log(e.detail.y);
+                        console.log(e.detail.width);
+                        console.log(e.detail.height);
+                        vm.mainArticleImageCropWidth = parseInt(e.detail.width);
+                        vm.mainArticleImageCropHeight = parseInt(e.detail.height);
+                    }
+                });
+            },
+
+            finishCrop()
+            {
+                this.articleMainImage.url = this.articleCropper.getCroppedCanvas().toDataURL('image/jpeg');
+                this.articleCropper.destroy();
             },
 
             //Submit article image
@@ -2744,6 +2736,14 @@
 </script>
 
 <style lang="css">
+    .container {
+        max-width: 640px;
+        margin: 20px auto;
+    }
+    .container img {
+        width: 100%;
+    }
+
     .wysihtml_toolbar {
         margin-bottom: 5px;
         width: 100%;
@@ -2934,5 +2934,9 @@
 
     .surveys_section table{
         width: 100%;
+    }
+
+    img {
+        max-width: 100%;
     }
 </style>

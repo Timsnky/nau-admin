@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "bootstrap-social": "^5.1.1",
+    "cropperjs": "^1.0.0-rc.3",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "jquery": "^1.12.4",
     "laravel-echo": "^1.3.1",
