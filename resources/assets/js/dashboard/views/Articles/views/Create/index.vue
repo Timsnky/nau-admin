@@ -233,10 +233,16 @@
                                 <h4>Images</h4>
                                 <div class="row media_overflow">
                                     <div class="media_images">
-                                        <div class="col-md-3 media_image" v-for="(image, index) in articleImages">
+                                        <div class="col-md-3 media_image image_section_height" v-for="(image, index) in articleImages">
                                             <img :src="image.url" alt="">
                                             <div class="form-group">
-                                                <input class="form-control" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
+
+                                                <select class="form-control" @change="imageSourceSelected(index)" v-model="image.selectedSource">
+                                                    <option v-bind:value="source.name" v-for="source in sources">
+                                                        {{ source.displayName}}
+                                                    </option>
+                                                </select>
+                                                <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                 <button
                                                         class="btn btn-danger btn-sm remove_btn"
@@ -757,6 +763,32 @@
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
                 displayedPanel: null,
+                sources: [
+                    {
+                        name: '',
+                        displayName: 'Select source (optional)'
+                    },
+                    {
+                        name: 'dpa',
+                        displayName: 'Dpa'
+                    },
+                    {
+                        name: 'getty',
+                        displayName: 'Getty'
+                    },
+                    {
+                        name: 'dukas',
+                        displayName: 'Dukas'
+                    },
+                    {
+                        name: 'reuters',
+                        displayName: 'Reuters'
+                    },
+                    {
+                        name: 'zvg',
+                        displayName: 'Zvg'
+                    }
+                ]
             };
         },
 
@@ -1173,12 +1205,18 @@
             //Get the images linked to the article
             initializeArticleImages(id)
             {
+                let vm = this;
                 Api.http
                     .get(`/articles/${id}/images`)
                     .then(response => {
                         if(response.status === 200)
                         {
                             this.articleImages = response.data;
+
+                            this.articleImages.forEach(function (value, key)
+                            {
+                                value.selectedSource = "";
+                            })
                         }
                         else
                         {
@@ -1888,6 +1926,12 @@
                 }
             },
 
+            //Save selected source of article image
+            imageSourceSelected(key)
+            {
+                this.articleImages[key].source = this.articleImages[key].selectedSource;
+            },
+
             //Upload article images and link them to article
             uploadArticleImages(articleId)
             {
@@ -1920,6 +1964,25 @@
                     }
                     else
                     {
+                        Api.http
+                            .put(`/images/${value.id}`, {
+                                image: value.url,
+                                name: value.name,
+                                source: value.source,
+                                lead: value.lead,
+                            })
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+
                         if(! (value.pivot && value.pivot.article_id === articleId))
                         {
                             vm.linkImageToArticle(key, articleId);
@@ -2771,15 +2834,20 @@
         margin-bottom: 10px;
         max-height: 400px;
     }
+
     .media_image {
         padding: 10px;
         margin-left: 15px;
         width: 320px;
-        height: 320px;
+        height: 325px;
         border: 1px solid #E3E3E3;
         border-radius: 3px;
         background: #e3e3e3;
         margin-bottom: 10px;
+    }
+
+    .image_section_height {
+        height: 362px;
     }
 
     .selection_sections {
