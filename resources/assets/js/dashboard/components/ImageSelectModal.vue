@@ -53,6 +53,17 @@
 
                             <div class="col-md-6 form-group">
                                 <label>Quelle *</label>
+                                <select class="form-control" @change="imageSourceSelected()" v-model="image.selectedSource">
+                                    <option v-bind:value="source.name" v-for="source in sources">
+                                        {{ source.displayName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Quelle *</label>
                                 <input
                                         type="text"
                                         name="source"
@@ -154,12 +165,39 @@
                     image: '',
                     lead: '',
                     name: '',
-                    source: ''
+                    source: '',
+                    selectedSource: ''
                 },
                 addingImage: false,
                 imageCropper: null,
                 imageCropHeight: 0,
-                imageCropWidth: 0
+                imageCropWidth: 0,
+                sources: [
+                    {
+                        name: '',
+                        displayName: 'Select source (optional)'
+                    },
+                    {
+                        name: 'dpa',
+                        displayName: 'Dpa'
+                    },
+                    {
+                        name: 'getty',
+                        displayName: 'Getty'
+                    },
+                    {
+                        name: 'dukas',
+                        displayName: 'Dukas'
+                    },
+                    {
+                        name: 'reuters',
+                        displayName: 'Reuters'
+                    },
+                    {
+                        name: 'zvg',
+                        displayName: 'Zvg'
+                    }
+                ]
             }
         },
 
@@ -327,6 +365,12 @@
             {
                 this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
                 this.imageCropper.destroy();
+            },
+
+            //Save selected source of article image
+            imageSourceSelected()
+            {
+                this.image.source = this.image.selectedSource;
             },
 
             //Validate the image save process
