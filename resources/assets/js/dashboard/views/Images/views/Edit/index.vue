@@ -28,6 +28,16 @@
                         class="form-control"
                         rows="3"></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="name">Source</label>
+                    <select class="form-control" @change="imageSourceSelected()" v-model="selectedSource">
+                        <option v-bind:value="source.name" v-for="source in sources">
+                            {{ source.displayName}}
+                        </option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="name">Source</label>
                     <input
@@ -65,7 +75,34 @@
         data() {
             return {
                 oldImageDetails: {},
-                newImageDetails: {}
+                newImageDetails: {},
+                selectedSource: '',
+                sources: [
+                    {
+                        name: '',
+                        displayName: 'Select source (optional)'
+                    },
+                    {
+                        name: 'dpa',
+                        displayName: 'Dpa'
+                    },
+                    {
+                        name: 'getty',
+                        displayName: 'Getty'
+                    },
+                    {
+                        name: 'dukas',
+                        displayName: 'Dukas'
+                    },
+                    {
+                        name: 'reuters',
+                        displayName: 'Reuters'
+                    },
+                    {
+                        name: 'zvg',
+                        displayName: 'Zvg'
+                    }
+                ]
             }
         },
 
@@ -101,7 +138,13 @@
 
             reset() {
                 this.newImageDetails = _pick(this.oldImageDetails, ['name', 'lead' , 'source']);
-            }
+            },
+
+            //Save selected source of article image
+            imageSourceSelected()
+            {
+                this.newImageDetails.source = this.selectedSource;
+            },
         }
     }
 </script>
