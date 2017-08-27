@@ -46,12 +46,12 @@
                             </div>
 
                             <div class="col-md-6 form-group">
-                                <label>Source</label>
+                                <label>Quelle *</label>
                                 <input
                                         type="text"
                                         name="source"
                                         v-model.trim="video.source"
-                                        placeholder="Source"
+                                        placeholder="Quelle"
                                         class="form-control">
                             </div>
                         </div>
@@ -61,14 +61,14 @@
                                     @click="closeAddVideo()"
                                     class="btn btn-danger"
                                     type="button">
-                                Close
+                                Schliessen
                             </button>
                             <button
                                     @click="submitVideoDetails()"
                                     class="btn btn-primary"
                                     type="button"
                                     :disabled="! video.video || !video.name || !video.source || !video.lead">
-                                Add Video
+                                Video hinzufügen
                             </button>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                             </div>
                         </div>
 
-                        <h2 v-else class="text-center">No videos uploaded</h2>
+                        <h2 v-else class="text-center">Keine Videos Hochgeladen</h2>
                     </div>
                 </div>
             </div>
@@ -221,7 +221,7 @@
                     searchString += `search=${this.searchTerm}&`;
                 }
 
-                if(this.userId != 0)
+                if(this.userId !== 0)
                 {
                     userString += `user_id=${this.userId}&`;
                 }

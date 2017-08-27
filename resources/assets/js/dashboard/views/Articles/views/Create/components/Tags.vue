@@ -2,13 +2,13 @@
     <div class="form-body">
         <div class="form-body">
             <div class="form-group">
-                <label>Tags</label>
+                <label>Tags (min. 4)</label>
                 <multiselect
                         id="tagsMultiSelect"
                         v-model="articleTags"
                         :options="existingTags"
                         tag-placeholder="Add this as new tag"
-                        placeholder="Type to search or add tag (at least 6 tags required)"
+                        placeholder="Tippen um Tags zu suchen oder hinzufügen"
                         label="tag"
                         :max-height="500"
                         :options-limit="100"
@@ -28,7 +28,7 @@
             </div>
 
             <div class="form-group">
-                <label>Related Stories</label>
+                <label>Verwandte Artikel</label>
                 <multiselect
                         id="relatedStoriesMultiSelect"
                         v-model="articleRelatedStories"
@@ -38,31 +38,14 @@
                         :clear-on-select="false"
                         :hide-selected="true"
                         :preserve-search="true"
-                        placeholder="Pick some"
+                        placeholder="Tippen um einen verwandten Artikel zu suchen"
+                        open-direction="bottom"
                         label="title"
                         track-by="id"
                         :internal-search="false"
                         :loading="relatedStoryIsLoading"
                         @search-change="searchRelatedStories"
-                        @remove="deleteRelatedArticles"
-                >
-                        <!--id="relatedStoriesMultiSelect"-->
-                        <!--v-model="articleRelatedStories"-->
-                        <!--:options="existingRelatedStories"-->
-                        <!--placeholder="Type to search related story (at least one story required)"-->
-                        <!--label="title"-->
-                        <!--:max-height="500"-->
-                        <!--:options-limit="100"-->
-                        <!--:clear-on-select="false"-->
-                        <!--:close-on-select="false"-->
-                        <!--:hide-selected="true"-->
-                        <!--track-by="id"-->
-                        <!--:multiple="true"-->
-                        <!--open-direction="bottom"-->
-                        <!--:internal-search="false"-->
-                        <!--:loading="relatedStoryIsLoading"-->
-                        <!--@search-change="searchRelatedStories"-->
-                        <!--@remove="deleteRelatedArticles"-->
+                        @remove="deleteRelatedArticles">
                 </multiselect>
             </div>
         </div>
@@ -72,7 +55,7 @@
                     type="button"
                     @click="saveArticleTagsAndRelatedStories(articleId)"
                     :disabled="articleId == null">
-                Save
+                Speichern
             </button>
         </div>
     </div>
@@ -137,7 +120,6 @@
                 {
                     this.initializeArticleTags(this.articleId);
                     this.initializeArticleRelatedStories(this.articleId);
-                    this.searchTags('a');
                 }
             }
         },
@@ -234,9 +216,9 @@
                     return errorString;
                 }
 
-                if(this.articleTags.length < 6)
+                if(this.articleTags.length < 4)
                 {
-                    errorArray.push('at least 6 tags');
+                    errorArray.push('at least 4 tags');
                 }
 
                 if(this.articleRelatedStories.length < 1)

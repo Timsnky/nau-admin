@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="form-body">
-            <h4><strong>External Videos</strong></h4>
+            <h4><strong>Youtube / Streamable Videos</strong></h4>
             <div class="form-group" v-if="addingExternalVideo">
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label>URL</label>
+                        <label>Link</label>
                         <input
                                 type="url"
                                 v-model.trim="externalVideo.url"
@@ -23,28 +23,6 @@
                         </input>
                     </div>
                 </div>
-
-                <!--<div class="row">-->
-                    <!--<div class="col-md-6 form-group">-->
-                        <!--<label>Name</label>-->
-                        <!--<input-->
-                                <!--type="text"-->
-                                <!--name="name"-->
-                                <!--v-model.trim="externalVideo.name"-->
-                                <!--placeholder="Name"-->
-                                <!--class="form-control">-->
-                    <!--</div>-->
-                    <!---->
-                    <!--<div class="col-md-6 form-group">-->
-                        <!--<label>Description</label>-->
-                        <!--<input-->
-                                <!--type="text"-->
-                                <!--name="source"-->
-                                <!--v-model.trim="externalVideo.alt"-->
-                                <!--placeholder="Description"-->
-                                <!--class="form-control">-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
             <div class="form-actions">
                 <button
@@ -52,15 +30,8 @@
                         type="button"
                         @click="saveExternalVideo()"
                         :disabled="articleId == null || !(externalVideo.url)">
-                    Save Video
+                    Video speichern
                 </button>
-                <!--<button-->
-                        <!--@click="addArticleExternalVideo()"-->
-                        <!--class="btn btn-primary"-->
-                        <!--type="button"-->
-                        <!--:disabled="addingExternalVideo">-->
-                    <!--Add Video-->
-                <!--</button>-->
             </div>
             <div class="timeline">
                 <timeline-item v-for="(articleExternalVideo, index) in articleExternalVideos" :key="articleExternalVideo.id" :liveticker="articleExternalVideo" @delete="deleteArticleExternalVideo(index)">

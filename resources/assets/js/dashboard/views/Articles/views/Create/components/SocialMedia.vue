@@ -1,14 +1,14 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <label><b>Social Media</b></label>
+            <label><b>Social</b></label>
             <div v-for="(articleSocialMedia, index) in articleSocialMedias" class="form-group">
                 <div class="form-group">
                     <input
                             type="text"
                             maxlength="100"
                             v-model.trim="articleSocialMedia.url"
-                            placeholder="URL to post"
+                            placeholder="Link hinzufügen"
                             class="form-control article_input">
                     <button
                             @click="confirmDelete(index)"
@@ -34,7 +34,7 @@
                     type="button"
                     @click="saveArticleSocialMedias(articleId)"
                     :disabled="articleId == null">
-                Save Posts
+                Speichern
             </button>
         </div>
     </div>

@@ -1,14 +1,14 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <p>Learnings</p>
+            <p>Key Facts (min. 3)</p>
             <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
                 <div class="form-group">
                     <input
                             type="text"
                             maxlength="100"
                             v-model.trim="articleLearning.text"
-                            placeholder="Input text (max 100chars)"
+                            placeholder="Key Fact hinzufügen (max 100 Zeichen)"
                             class="form-control article_input">
                     <button
                             @click="confirmDelete(index)"
@@ -32,7 +32,7 @@
                     class="btn btn-primary"
                     type="button"
                     @click="saveArticleLearnings(articleId)">
-                Save learnings
+                Key Facts speichern
             </button>
         </div>
     </div>

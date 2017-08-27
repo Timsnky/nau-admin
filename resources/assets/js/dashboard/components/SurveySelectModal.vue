@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Surveys</h4>
+                        <h4 class="modal-title" id="myModalLabel">Votings</h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingSurvey" @click="showAddSurvey()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" @click="closeModal()"><i class="fa fa-close"></i></button>
                     </div>
@@ -12,17 +12,17 @@
                 <div class="modal-body">
                     <div class="form-group" v-if="addingSurvey">
                         <div class="form-group">
-                            <label>Question</label>
+                            <label>Frage</label>
                             <input
                                     type="text"
                                     name="question"
                                     v-model.trim="survey.question"
-                                    placeholder="Question"
+                                    placeholder="Frage"
                                     class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label>Replies</label>
+                            <label>Antworten</label>
                             <div v-for="answer, key in survey.answers" class="form-group">
                                 <div class="input-group">
                                     <input type="text"
@@ -47,14 +47,14 @@
                                     @click="closeAddSurvey()"
                                     class="btn btn-danger"
                                     type="button">
-                                Close
+                                Schliessen
                             </button>
                             <button
                                     @click="saveSurvey()"
                                     class="btn btn-primary"
                                     type="button"
                                     :disabled="! survey.question || disableSaveSurvey">
-                                Save Survey
+                                Voting speichern
                             </button>
                         </div>
                     </div>

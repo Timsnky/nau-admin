@@ -1,5 +1,5 @@
 <template>
-    <span class="character_counter">{{remainingCount}} of {{limit}} characters left</span>
+    <span class="character_counter">{{remainingCount}} von {{limit}} Zeichen übrig</span>
 </template>
 
 <script>

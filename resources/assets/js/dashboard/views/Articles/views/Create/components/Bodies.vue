@@ -1,7 +1,7 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <label><b>Body</b></label>
+            <label><b>Artikel-Text</b></label>
             <div v-for="(articleBody, index) in articleBodies" class="form-group wysihtmlBody">
 
                 <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
@@ -16,7 +16,7 @@
                 <textarea
                         id="bodyEditor"
                         v-model.trim="articleBody.content"
-                        placeholder="Here is some text input"
+                        placeholder="Untertitel mit Fett setzen"
                         class="form-control articleEditor"
                         rows="5">
                                 </textarea>
@@ -25,7 +25,7 @@
                             class="btn btn-danger remove_btn"
                             type="button"
                             @click="confirmDelete(index)">
-                        Remove Body
+                        Artikel-Text Iöschen
                     </button>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     type="button"
                     @click="saveArticleBodies(articleId)"
                     :disabled="articleId == null">
-                Save bodies
+                Artikel-Text speichern
             </button>
         </div>
     </div>

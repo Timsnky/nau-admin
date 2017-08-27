@@ -1,29 +1,29 @@
 <template>
     <div class="form-body">
         <div class="form-group surveys_section">
-            <h4>Surveys</h4>
+            <h4>Votings</h4>
             <div class="form-actions selection_sections">
                 <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
-                    Select Survey
+                    Voting auswählen
                 </button>
                 <button type="button" class="btn btn-primary image_selection_btn" :disabled="addingSurvey" @click="showAddSurvey()">
-                    Add Survey
+                    Voting hinzufügen
                 </button>
                 <survey-select></survey-select>
             </div>
             <div class="form-group" v-if="addingSurvey">
                 <div class="form-group">
-                    <label>Question</label>
+                    <label>Frage</label>
                     <input
                             type="text"
                             name="question"
                             v-model.trim="survey.question"
-                            placeholder="Question"
+                            placeholder="Frage"
                             class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Replies</label>
+                    <label>Antworten</label>
                     <div v-for="answer, key in survey.answers" class="form-group">
                         <div class="input-group">
                             <input type="text"
@@ -48,14 +48,14 @@
                             @click="closeAddSurvey()"
                             class="btn btn-danger"
                             type="button">
-                        Close
+                        Schliessen
                     </button>
                     <button
                             @click="saveSurvey()"
                             class="btn btn-primary"
                             type="button"
                             :disabled="! survey.question || disableSaveSurvey">
-                        Save Survey
+                        Voting speichern
                     </button>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Save surveys</button>
+        <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Votings speichern</button>
     </div>
 </template>
 

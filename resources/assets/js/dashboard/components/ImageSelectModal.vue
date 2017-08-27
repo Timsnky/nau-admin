@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Images</h4>
+                        <h4 class="modal-title" id="myModalLabel">Bilder</h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingImage" @click="showAddImage()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                     </div>
@@ -19,7 +19,7 @@
                         <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Image</label>
+                                <label>Bild</label>
                                 <input
                                         class="form-control"
                                         type="file"
@@ -29,7 +29,7 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Name</label>
+                                <label>Name *</label>
                                 <input
                                         type="text"
                                         name="name"
@@ -41,7 +41,7 @@
 
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Lead</label>
+                                <label>Bildunterschrift *</label>
                                 <input
                                         type="text"
                                         name="lead"
@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="col-md-6 form-group">
-                                <label>Source</label>
+                                <label>Quelle *</label>
                                 <input
                                         type="text"
                                         name="source"
@@ -79,13 +79,13 @@
                                     class="btn btn-primary"
                                     type="button"
                                     :disabled="! image.image || !image.name || !image.source || !image.lead">
-                                Save Image
+                                Bild hinzufügen
                             </button>
                             <button
                                     @click="closeAddImage()"
                                     class="btn btn-danger"
                                     type="button">
-                                Close
+                                Schliessen
                             </button>
                         </div>
                     </div>
@@ -106,8 +106,8 @@
 
                             <div class="col-md-6">
                                 <select class="form-control" name="user_id" id="user_id" v-model="userId">
-                                    <option :value="myUserId">My Images</option>
-                                    <option :value="0">All Images</option>
+                                    <option :value="myUserId">Meine Bilder</option>
+                                    <option :value="0">Alle Bilder</option>
                                 </select>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                             </div>
                         </div>
 
-                        <h3 v-else class="text-center">No images uploaded</h3>
+                        <h3 v-else class="text-center">Keine Bilder Hochgeladen</h3>
                     </div>
                 </div>
             </div>

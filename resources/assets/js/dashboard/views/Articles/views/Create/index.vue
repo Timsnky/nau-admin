@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Articles" sub="Create" />
+        <page-title title="Artikel" sub="Erfassen" />
         <div class="row">
             <div class="col-md-6">
             </div>
@@ -8,62 +8,56 @@
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndExit()">
-                    Save Article and Exit
+                    Artikel speichern und verlassen
                 </button>
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
-                    Save Article
+                    Artikel speichern
                 </button>
-                <!--<button-->
-                        <!--v-if="editingArticle"-->
-                        <!--class="btn btn-primary pull-right"-->
-                        <!--@click="duplicateArticle()">-->
-                    <!--Duplicate Article-->
-                <!--</button>-->
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
             <div class="tabbable tabbable-tabdrop">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#externalTitle" data-toggle="tab">External Title</a>
+                        <a href="#externalTitle" data-toggle="tab">Ansicht Home</a>
                     </li>
                     <li @click="updateInternalDetails()">
-                        <a href="#internalTitle" data-toggle="tab">Internal Title/Lead</a>
+                        <a href="#internalTitle" data-toggle="tab">Artikel</a>
                     </li>
                     <li>
-                        <a href="#articleImage" data-toggle="tab">Main Image</a>
+                        <a href="#articleImage" data-toggle="tab">Teaser Bilder</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleMedia" data-toggle="tab">Media</a>
+                        <a href="#articleMedia" data-toggle="tab">Bilder / Videos</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleSocialMedia" data-toggle="tab">Social Media</a>
+                        <a href="#articleSocialMedia" data-toggle="tab">Social</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleExternalVideos" data-toggle="tab">External Videos</a>
+                        <a href="#articleExternalVideos" data-toggle="tab">Youtube</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleBody" data-toggle="tab">Body</a>
+                        <a href="#articleBody" data-toggle="tab">Artikel-Text</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleLearning" data-toggle="tab">Learnings</a>
+                        <a href="#articleLearning" data-toggle="tab">Key Facts</a>
                     </li>
                     <!--<li :class="[article.id == null ? 'disabledTab' : '']">-->
                         <!--<a href="#articleInfoBoxes" data-toggle="tab">Info Boxes</a>-->
                     <!--</li>-->
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleTags" data-toggle="tab">Tags</a>
+                        <a href="#articleTags" data-toggle="tab">SEO</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleSurveys" data-toggle="tab">Surveys</a>
+                        <a href="#articleSurveys" data-toggle="tab">Votings</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleSettings" data-toggle="tab">Settings</a>
+                        <a href="#articleSettings" data-toggle="tab">Publish</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']" @click="refreshSortingData()">
-                        <a href="#articleSorting" data-toggle="tab">Sorting</a>
+                        <a href="#articleSorting" data-toggle="tab">Aufbau</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -72,38 +66,38 @@
                     <div class="tab-pane active" id="externalTitle">
                         <div class="form-body">
                             <div class="form-group">
-                                <label for="dateline">Dateline</label>
+                                <label for="dateline">Überzeile *</label>
                                 <input
                                     id="dateline"
                                     type="text"
                                     name="dateline"
                                     maxlength="100"
                                     v-model.trim="article.dateline"
-                                    placeholder="Add dateline (max 100chars)"
+                                    placeholder="Überzeile hinzufügen (max 100 Zeichen)"
                                     class="form-control">
                                 <character-counter :limit="100" :itemString="article.dateline"></character-counter>
                             </div>
                             <div class="form-group">
-                                <label for="title">Title</label>
+                                <label for="title">Titel Home *</label>
                                 <input
                                     id="title"
                                     type="text"
                                     name="title"
                                     maxlength="100"
                                     v-model.trim="article.title"
-                                    placeholder="Add title (max 100chars)"
+                                    placeholder="Titel hinzufügen (max 100 Zeichen)"
                                     class="form-control">
                                 <character-counter :limit="100" :itemString="article.title"></character-counter>
                             </div>
                             <div class="form-group">
-                                <label for="title">SEO Title</label>
+                                <label for="title">SEO Titel</label>
                                 <input
                                         id="seo_title"
                                         type="text"
                                         name="seo_title"
                                         maxlength="100"
                                         v-model.trim="article.seo_title"
-                                        placeholder="Add seo title (max 100chars)"
+                                        placeholder="SEO Titel hinzufügen (max 100 Zeichen)"
                                         class="form-control">
                                 <character-counter :limit="100" :itemString="article.seo_title"></character-counter>
                             </div>
@@ -112,14 +106,14 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit">
-                                Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                             <button
                                     type="button"
                                     v-if="editingArticle"
                                     class="btn btn-primary"
                                     @click="duplicateArticle()">
-                                Duplicate Article
+                                Artikel vervielfältigen
                             </button>
                         </div>
                     </div>
@@ -128,44 +122,44 @@
                     <div class="tab-pane" id="internalTitle">
                         <div class="form-body">
                             <div class="form-group">
-                                <label for="internal_dateline">Dateline internal</label>
+                                <label for="internal_dateline">Überzeile Artikel *</label>
                                 <input
                                     id="internal_dateline"
                                     type="text"
                                     name="internal_dateline"
                                     maxlength="100"
                                     v-model.trim="article.internal_dateline"
-                                    placeholder="Add dateline internal (max 100chars)"
+                                    placeholder="Überzeile Artikel hinzufügen (max 100 Zeichen)"
                                     class="form-control">
                                 <character-counter :limit="100" :itemString="article.internal_dateline"></character-counter>
                             </div>
                             <div class="form-group">
-                                <label for="internal_title">Title internal</label>
+                                <label for="internal_title">Title Artikel *</label>
                                 <input
                                     id="internal_title"
                                     type="text"
                                     name="internal_title"
                                     maxlength="100"
                                     v-model.trim="article.internal_title"
-                                    placeholder="Add title internal (max 100chars)"
+                                    placeholder="Titel des Artikels hinzufügen (max 100 Zeichen)"
                                     class="form-control">
                                 <character-counter :limit="100" :itemString="article.internal_title"></character-counter>
                             </div>
                             <div class="form-body wysihtmlLead">
                                 <div class="form-group">
-                                    <label>Lead</label>
+                                    <label>Lead *</label>
                                     <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                        <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
-                                        <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+                                        <!--<a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>-->
+                                        <!--<a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>-->
 
-                                        <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
-                                            <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
-                                            <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
-                                        </div>
+                                        <!--<div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">-->
+                                            <!--<input data-wysihtml5-dialog-field="href" class="form-control" value="http://">-->
+                                            <!--<a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>-->
+                                        <!--</div>-->
                                     </div>
                                     <textarea
                                             id="leadEditor"
-                                            placeholder="Add lead (max 350chars)"
+                                            placeholder="Lead hinzufügen (max 350 Zeichen)"
                                             class="form-control articleEditor wysihtmlTextArea"
                                             v-model.trim="article.lead"
                                             maxlength="350"
@@ -179,7 +173,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit">
-                                Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -188,7 +182,7 @@
                     <div class="tab-pane" id="articleImage">
                         <div class="form-body">
                             <div class="form-group">
-                                <h4>Article Main Image</h4>
+                                <h4>Teaser *</h4>
 
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
@@ -197,11 +191,11 @@
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
-                                    Select Uploaded Image
+                                    Teaser hochladen
                                 </button>
                             </div>
                             <div class="form-group">
-                                <h4>Article Teaser image</h4>
+                                <h4>Top Teaser</h4>
                                 <div class="article_image_section">
                                     <div class="article_image_section_div">
                                         <i v-if="! articleTeaserImage.url" class="fa fa-image" ></i>
@@ -209,10 +203,10 @@
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
-                                    Select Uploaded Image
+                                    Top Teaser hochladen
                                 </button>
                                 <button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">
-                                    Delete teaser image
+                                    Löschen Teaser Bild
                                 </button>
                             </div>
                         </div>
@@ -220,7 +214,7 @@
                             <button
                                     class="btn btn-primary"
                                     type="submit">
-                                Save article <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -230,7 +224,7 @@
                         <!--Images-->
                         <div class="form-body">
                             <div class="form-group">
-                                <h4>Images</h4>
+                                <h4>Bilder</h4>
                                 <div class="row media_overflow">
                                     <div class="media_images">
                                         <div class="col-md-3 media_image image_section_height" v-for="(image, index) in articleImages">
@@ -256,7 +250,7 @@
                                 </div>
                                 <div class="form-actions selection_sections">
                                     <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
-                                        Select Uploaded Image
+                                        Bilder Hochladen
                                     </button>
                                     <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
@@ -266,7 +260,7 @@
 
                         <!--Sliders-->
                         <div class="form-body">
-                            <h4>Sliders</h4>
+                            <h4>Diashow</h4>
                             <div class="media_images sliders">
                                 <div v-for="(slider, sliderIndex) in articleSliders" class="slider_section">
                                     <div class="form-group">
@@ -291,7 +285,7 @@
                                     </div>
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
-                                            Select Uploaded Image
+                                            Bilder Hochladen
                                         </button>
                                         <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
                                             Remove slider
@@ -299,7 +293,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" @click="addArticleSlider()">Add Slider
+                            <button type="button" class="btn btn-primary" @click="addArticleSlider()">Diashow hinzufügen
                             </button>
                             <!--<button class="btn btn-primary" type="button"-->
                                     <!--:disabled="articleSliders.length == 0 || article.id == null"-->
@@ -337,7 +331,7 @@
                                 </div>
                                 <div class="form-actions selection_sections">
                                     <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
-                                        Select Uploaded Video
+                                        Videos Hochladen
                                     </button>
                                     <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
                                 </div>
@@ -394,7 +388,7 @@
                         <div class="form-body">
 
                             <div class="form-group">
-                                <label>Authors</label>
+                                <label>Autor *</label>
                                 <multiselect
                                         id="authorsMultiSelect"
                                         v-model="articleAuthors"
@@ -416,12 +410,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Informants</label>
+                                <label>Informanten</label>
                                 <multiselect
                                         id="informantsMultiSelect"
                                         v-model="articleInformants"
                                         :options="existingInformants"
-                                        placeholder="Type to search informant"
+                                        placeholder="Informant hinzufügen (nicht obligatorisch)"
                                         label="name"
                                         :max-height="500"
                                         :options-limit="100"
@@ -437,12 +431,12 @@
                                 </multiselect>
                             </div>
                             <div class="form-group">
-                                <label>Location</label>
+                                <label>Ursprungsort der Geschichte*</label>
                                 <multiselect
                                         id="locationMultiSelect"
                                         v-model="articlePlaces"
                                         :options="existingPlaces"
-                                        placeholder="Type to search place"
+                                        placeholder="Ort hinzufügen"
                                         label="name"
                                         :close-on-select="true"
                                         :internal-search="false"
@@ -462,7 +456,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Publication Datetime</label>
+                                <label>Publikationsdatum</label>
                                 <date-and-time
                                         @changeDate="changeDate"
                                         :date="article.published_at ? publicationDate : '' "/>
@@ -474,7 +468,7 @@
                                     type="button"
                                     @click="saveSettings(article.id)"
                                     :disabled="articleAuthors.length < 1 || article.id == null">
-                                Save <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
+                                Speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
                         </div>
                     </div>
@@ -491,7 +485,7 @@
                                     <!--Image-->
                                     <div v-if="articleElement.type == 'image'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Image</span>
+                                            <span class="panel_title">Bilder</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -508,7 +502,7 @@
                                     <!--Body-->
                                     <div v-if="articleElement.type == 'body'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Body</span>
+                                            <span class="panel_title">Artikel-Text</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -525,7 +519,7 @@
                                     <!--Slider-->
                                     <div v-if="articleElement.type == 'slider'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Image Slider</span>
+                                            <span class="panel_title">Diashow</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -564,7 +558,7 @@
                                     <!--Learnings-->
                                     <div v-if="articleElement.type == 'learning'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Learning</span>
+                                            <span class="panel_title">Key Fact</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -581,7 +575,7 @@
                                     <!--Social Media-->
                                     <div v-if="articleElement.type == 'socialmedia'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Social Media</span>
+                                            <span class="panel_title">Social</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -618,7 +612,7 @@
                                     <!--Surveys-->
                                     <div v-if="articleElement.type == 'survey'" class="form-body panel">
                                         <div class="panel_heading">
-                                            <span class="panel_title">Survey</span>
+                                            <span class="panel_title">Voting</span>
                                             <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
                                             <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -664,7 +658,7 @@
                                     type="button"
                                     @click="saveSortedElements(article.id)"
                                     :disabled="article.id == null">
-                                Save Order
+                                Aufbau speichern
                             </button>
                         </div>
                     </div>
