@@ -149,13 +149,6 @@
                                 <div class="form-group">
                                     <label>Lead *</label>
                                     <div id="lead-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                        <!--<a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>-->
-                                        <!--<a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>-->
-
-                                        <!--<div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">-->
-                                            <!--<input data-wysihtml5-dialog-field="href" class="form-control" value="http://">-->
-                                            <!--<a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>-->
-                                        <!--</div>-->
                                     </div>
                                     <textarea
                                             id="leadEditor"

@@ -11,13 +11,17 @@
                     </p>
                     <div class="image_hidden_section display-inline align-center" v-else v-bind:class="{ 'image': true }">
                         <div class="image_hidden_section_image">
-                            <img :src="imageupload" alt="" class="img"/>
+                            <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
                         </div>
                         <div class="image_hidden_section_remove">
                             <button class="btn btn-danger" @click="removeFile">Remove image</button>
                         </div>
                     </div>
                     </label>
+                </div>
+
+                <div class="form-group">
+                    <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
                 </div>
 
                 <div v-if="imageupload" class="form-group">
@@ -73,6 +77,8 @@
 </template>
 
 <script>
+    import ImageQuality from 'dashboard/components/ImageQuality';
+
     export default {
         data() {
             return {
@@ -83,15 +89,28 @@
                     image: '',
                     user_id: ''
                 },
-                imageupload: null
+                imageupload: null,
+                imageCropper: null,
+                imageCropHeight: 0,
+                imageCropWidth: 0
             }
+        },
+
+        components: {
+            ImageQuality
         },
 
         methods: {
             handleSubmit() {
                 const {name, lead, source, image, user_id} = this.image;
 
-                if (name && lead && source && image) {
+                if (name && lead && source && image)
+                {
+                    if(this.imageCropper)
+                    {
+                        this.finishCrop();
+                    }
+
                     Api.http
                         .post('/images', {name, lead, source, image, user_id})
                         .then(response => this.$router.push('/images'))
@@ -136,7 +155,8 @@
                 this.createFile(file);
             },
 
-            createFile(file) {
+            createFile(file)
+            {
                 if (!file.type.match('image.*')) {
                     Vue.toast('The selected file is not an image. Please select and image and retry.', {
                         className : ['nau_toast','nau_warning'],
@@ -154,11 +174,52 @@
                 };
 
                 reader.readAsDataURL(file);
+
+                setTimeout(() =>
+                {
+                    vm.startCrop();
+                }, 400);
             },
 
             removeFile() {
                 this.reset();
-            }
+
+                if(this.imageCropper)
+                {
+                    this.imageCropper.destroy();
+                }
+            },
+
+            //Start the image cropping process
+            startCrop()
+            {
+                let file = document.getElementById('croppedImage');
+                let vm = this;
+
+                this.imageCropper = new Cropper(file, {
+                    dragMode: 'move',
+                    aspectRatio: 2,
+                    autoCropArea: 0.65,
+                    restore: true,
+                    guides: true,
+                    center: true,
+                    highlight: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: true,
+                    crop: function(e) {
+                        vm.imageCropHeight = parseInt(e.detail.width);
+                        vm.imageCropWidth = parseInt(e.detail.height);
+                    }
+                });
+            },
+
+            //Finish the cropping process and save image
+            finishCrop()
+            {
+                this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
+                this.imageCropper.destroy();
+            },
         }
     }
 </script>

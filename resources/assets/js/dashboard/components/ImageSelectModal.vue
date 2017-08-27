@@ -62,23 +62,10 @@
                             </div>
                         </div>
                         <div class="form-actions">
-                            <button type="button"
-                                    class="btn btn-primary image_selection_btn"
-                                    @click="startCrop()"
-                                    :disabled="! image.image">
-                                Start Crop
-                            </button>
-                            <button type="button"
-                                    class="btn btn-primary image_selection_btn"
-                                    @click="finishCrop()"
-                                    :disabled="! image.image || ! imageCropper">
-                                Finish Crop
-                            </button>
                             <button
                                     @click="uploadImage()"
                                     class="btn btn-primary"
-                                    type="button"
-                                    :disabled="! image.image || !image.name || !image.source || !image.lead">
+                                    type="button">
                                 Bild hinzufügen
                             </button>
                             <button
@@ -283,6 +270,11 @@
                     name: '',
                     source: ''
                 }
+
+                if(this.imageCropper)
+                {
+                    this.imageCropper.destroy();
+                }
             },
 
             //Handle when images are uploaded
@@ -298,6 +290,11 @@
                     {
                         vm.image.image = e.target.result;
                     };
+
+                    setTimeout(() =>
+                    {
+                        vm.startCrop();
+                    }, 400);
                 }
             },
 
@@ -332,34 +329,94 @@
                 this.imageCropper.destroy();
             },
 
-            //Upload image
-            uploadImage()
+            //Validate the image save process
+            validateImageSave()
             {
-                if(this.imageCropper)
+                let errorString = "";
+                let errorArray = [];
+
+                if(! this.image.image)
                 {
-                    this.finishCrop();
+                    errorArray.push('image');
                 }
 
-                Api.http
-                    .post(`/images`, {
-                        image: this.image.image,
-                        name: this.image.name,
-                        source: this.image.source,
-                        lead: this.image.lead
-                    })
-                    .then(response => {
-                        if(response.status === 201)
+                if(! this.image.name)
+                {
+                    errorArray.push('name');
+                }
+
+                if(! this.image.source)
+                {
+                    errorArray.push('source');
+                }
+
+                if(! this.image.lead)
+                {
+                    errorArray.push('lead');
+                }
+
+                if(errorArray.length === 1)
+                {
+                    errorString = errorArray[0];
+                }
+                else
+                {
+                    errorArray.forEach(function (value, key)
+                    {
+                        if(key !== errorArray.length - 1)
                         {
-                            this.closeAddImage();
-                            this.navigate(1);
+                            errorString += value + ', ';
                         }
                         else
                         {
-                            Vue.toast('Error in uploading the Image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
+                            errorString += 'and ' + value;
                         }
                     });
+                }
+
+                return errorString;
+
+            },
+
+            //Upload image
+            uploadImage()
+            {
+                let errorString = this.validateImageSave();
+
+                if(errorString !== "")
+                {
+                    Vue.toast('Please provide the ' + errorString + ' for the image in order to save', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+                else
+                {
+                    if(this.imageCropper)
+                    {
+                        this.finishCrop();
+                    }
+
+                    Api.http
+                        .post(`/images`, {
+                            image: this.image.image,
+                            name: this.image.name,
+                            source: this.image.source,
+                            lead: this.image.lead
+                        })
+                        .then(response => {
+                            if(response.status === 201)
+                            {
+                                this.closeAddImage();
+                                this.navigate(1);
+                            }
+                            else
+                            {
+                                Vue.toast('Error in uploading the Image. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
             },
         }
     }
@@ -421,5 +478,9 @@
         padding-top: 10px;
         padding-bottom: 10px;
         height: 120px;
+    }
+
+    .nau_warning {
+        z-index: 1000000;
     }
 </style>
