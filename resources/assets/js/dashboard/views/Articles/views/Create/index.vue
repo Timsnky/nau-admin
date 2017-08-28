@@ -224,11 +224,11 @@
                                             <img :src="image.url" alt="">
                                             <div class="form-group">
 
-                                                <select class="form-control" @change="imageSourceSelected(index)" v-model="image.selectedSource">
-                                                    <option v-bind:value="source.name" v-for="source in sources">
-                                                        {{ source.displayName}}
-                                                    </option>
-                                                </select>
+                                                <!--<select class="form-control" @change="imageSourceSelected(index)" v-model="image.selectedSource">-->
+                                                    <!--<option v-bind:value="source.name" v-for="source in sources">-->
+                                                        <!--{{ source.displayName}}-->
+                                                    <!--</option>-->
+                                                <!--</select>-->
                                                 <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                 <button
@@ -2834,7 +2834,7 @@
     }
 
     .image_section_height {
-        height: 362px;
+        height: 330px;
     }
 
     .selection_sections {
