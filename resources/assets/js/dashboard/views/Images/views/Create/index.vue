@@ -4,14 +4,16 @@
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
-                <div class="image_dropbox">
+                <div class="image_dropbox center_text">
                     <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
                     <p v-if="!imageupload">
                         Drag your image here to begin<br> or click to browse
                     </p>
-                    <div class="image_hidden_section display-inline align-center" v-else v-bind:class="{ 'image': true }">
-                        <div class="image_hidden_section_image">
-                            <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
+                    <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
+                        <div class="image_crop_section">
+                            <div class="image_hidden_section_image">
+                                <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
+                            </div>
                         </div>
                         <div class="image_hidden_section_remove">
                             <button class="btn btn-danger" @click="removeFile">Remove image</button>
@@ -48,22 +50,20 @@
 
                 <div v-if="imageupload" class="form-group">
                     <label for="name">Source</label>
-                    <select class="form-control" @change="imageSourceSelected()" v-model="image.selectedSource">
-                        <option v-bind:value="source.name" v-for="source in sources">
-                            {{ source.displayName}}
-                        </option>
-                    </select>
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="name">Source</label>
-                    <input
-                            id="source"
-                            type="text"
-                            name="source"
-                            v-model.trim="image.source"
-                            placeholder="Source"
-                            class="form-control">
+                    <div class="source_div">
+                        <input
+                                id="source"
+                                type="text"
+                                name="source"
+                                v-model.trim="image.source"
+                                placeholder="Source"
+                                class="form-control source_input">
+                        <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
+                            <option v-bind:value="source.name" v-for="source in sources">
+                                {{ source.displayName}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -169,6 +169,10 @@
                     user_id: ''
                 }
                 this.imageupload = null;
+                if(this.imageCropper)
+                {
+                    this.imageCropper.destroy();
+                }
             },
 
             onDrop(e) {
@@ -235,7 +239,7 @@
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
                     aspectRatio: 2,
-                    autoCropArea: 0.65,
+                    autoCropArea: 1,
                     restore: true,
                     guides: true,
                     center: true,
@@ -244,8 +248,8 @@
                     cropBoxResizable: true,
                     toggleDragModeOnDblclick: true,
                     crop: function(e) {
-                        vm.imageCropHeight = parseInt(e.detail.width);
-                        vm.imageCropWidth = parseInt(e.detail.height);
+                        vm.imageCropHeight = parseInt(e.detail.height);
+                        vm.imageCropWidth = parseInt(e.detail.width);
                     }
                 });
             },
@@ -308,13 +312,37 @@
         text-align: center;
     }
 
-    .image_hidden_section_image {
+    .image_crop_section {
         width: 100%;
-        height: 340px;
         margin-bottom: 6px;
+    }
+
+    .image_hidden_section_image {
+        width: auto;
+        height: 340px;
     }
 
     .image_hidden_section_image img {
         height: 100%;
+    }
+
+    .center_text {
+        text-align: center;
+    }
+
+    .no_width {
+        width: auto !important;
+    }
+
+    .source_div {
+        display: flex;
+    }
+
+    .source_div .source_input{
+        width: 70%;
+    }
+
+    .source_div .helper_input {
+        width: 30%;
     }
 </style>

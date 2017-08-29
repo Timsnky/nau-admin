@@ -31,22 +31,20 @@
 
                 <div class="form-group">
                     <label for="name">Source</label>
-                    <select class="form-control" @change="imageSourceSelected()" v-model="selectedSource">
-                        <option v-bind:value="source.name" v-for="source in sources">
-                            {{ source.displayName}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="name">Source</label>
-                    <input
-                            id="source"
-                            type="text"
-                            name="source"
-                            v-model.trim="newImageDetails.source"
-                            placeholder="Source"
-                            class="form-control">
+                    <div class="source_div">
+                        <input
+                                id="source"
+                                type="text"
+                                name="source"
+                                v-model.trim="newImageDetails.source"
+                                placeholder="Source"
+                                class="form-control source_input">
+                        <select class="form-control helper_input" @change="imageSourceSelected()" v-model="selectedSource">
+                            <option v-bind:value="source.name" v-for="source in sources">
+                                {{ source.displayName}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

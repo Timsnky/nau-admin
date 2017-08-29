@@ -11,8 +11,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group" v-if="addingImage">
-                        <div class="article_image_section">
-                            <div class="article_image_section_div">
+                        <div v-if="image.image" class="article_image_section">
+                            <div class="article_image_section_div auto_height">
                                 <img id="cropImage"  :src="image.image" alt="">
                             </div>
                         </div>
@@ -53,24 +53,21 @@
 
                             <div class="col-md-6 form-group">
                                 <label>Quelle *</label>
-                                <select class="form-control" @change="imageSourceSelected()" v-model="image.selectedSource">
-                                    <option v-bind:value="source.name" v-for="source in sources">
-                                        {{ source.displayName}}
-                                    </option>
-                                </select>
+                                <div class="source_div">
+                                    <input
+                                            type="text"
+                                            name="source"
+                                            v-model.trim="image.source"
+                                            placeholder="Source"
+                                            class="form-control source_input">
+                                    <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
+                                        <option v-bind:value="source.name" v-for="source in sources">
+                                            {{ source.displayName}}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label>Quelle *</label>
-                                <input
-                                        type="text"
-                                        name="source"
-                                        v-model.trim="image.source"
-                                        placeholder="Source"
-                                        class="form-control">
-                            </div>
                         </div>
                         <div class="form-actions">
                             <button
@@ -345,7 +342,7 @@
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
                     aspectRatio: 2,
-                    autoCropArea: 0.65,
+                    autoCropArea: 1,
                     restore: true,
                     guides: true,
                     center: true,
@@ -354,8 +351,8 @@
                     cropBoxResizable: true,
                     toggleDragModeOnDblclick: true,
                     crop: function(e) {
-                        vm.imageCropHeight = parseInt(e.detail.width);
-                        vm.imageCropWidth = parseInt(e.detail.height);
+                        vm.imageCropHeight = parseInt(e.detail.height);
+                        vm.imageCropWidth = parseInt(e.detail.width);
                     }
                 });
             },

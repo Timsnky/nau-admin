@@ -2776,6 +2776,12 @@
         text-align: center;
     }
 
+    .auto_height {
+        width: auto !important;
+        height: auto;
+        max-height: 300px;
+    }
+
     .article_image_section_div i {
         position: absolute;
         color: #999;
