@@ -29,7 +29,7 @@
                     :key="article.id">
                     <td>{{ article.id }}</td>
                     <td>{{ article.title }}</td>
-                    <td>{{ article.lead }}</td>
+                    <td v-html="article.lead"></td>
                     <td><router-link
                             :to="{name: 'articles.edit', params: {id: article.id}}"
                             class="btn btn-warning">
