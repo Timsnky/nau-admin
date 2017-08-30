@@ -175,23 +175,23 @@
                         displayName: 'Select source (optional)'
                     },
                     {
-                        name: 'dpa',
+                        name: 'Dpa',
                         displayName: 'Dpa'
                     },
                     {
-                        name: 'getty',
+                        name: 'Getty',
                         displayName: 'Getty'
                     },
                     {
-                        name: 'dukas',
+                        name: 'Dukas',
                         displayName: 'Dukas'
                     },
                     {
-                        name: 'reuters',
+                        name: 'Reuters',
                         displayName: 'Reuters'
                     },
                     {
-                        name: 'zvg',
+                        name: 'Zvg',
                         displayName: 'Zvg'
                     }
                 ]

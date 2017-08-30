@@ -471,7 +471,7 @@
                         <div class="form-body">
                             <div class="form-body">
                                 <h3>{{ article.title}}</h3>
-                                <p>{{article.lead}}</p>
+                                <p>{{ article.lead }}</p>
                             </div>
                             <draggable v-model="articleElements">
                                 <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
@@ -756,23 +756,23 @@
                         displayName: 'Select source (optional)'
                     },
                     {
-                        name: 'dpa',
+                        name: 'Dpa',
                         displayName: 'Dpa'
                     },
                     {
-                        name: 'getty',
+                        name: 'Getty',
                         displayName: 'Getty'
                     },
                     {
-                        name: 'dukas',
+                        name: 'Dukas',
                         displayName: 'Dukas'
                     },
                     {
-                        name: 'reuters',
+                        name: 'Reuters',
                         displayName: 'Reuters'
                     },
                     {
-                        name: 'zvg',
+                        name: 'Zvg',
                         displayName: 'Zvg'
                     }
                 ]
