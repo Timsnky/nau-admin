@@ -30,6 +30,9 @@
                         <a href="#articleImage" data-toggle="tab">Teaser Bilder</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
+                        <a href="#articleBody" data-toggle="tab">Artikel-Text</a>
+                    </li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleMedia" data-toggle="tab">Bilder / Videos</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
@@ -37,9 +40,6 @@
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleExternalVideos" data-toggle="tab">Youtube</a>
-                    </li>
-                    <li :class="[article.id == null ? 'disabledTab' : '']">
-                        <a href="#articleBody" data-toggle="tab">Artikel-Text</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleLearning" data-toggle="tab">Key Facts</a>
@@ -212,6 +212,11 @@
                         </div>
                     </div>
 
+                    <!--Bodies-->
+                    <div class="tab-pane" id="articleBody">
+                        <bodies :article-id="article.id"></bodies>
+                    </div>
+
                     <!--Images, Videos and Sliders-->
                     <div class="tab-pane" id="articleMedia">
                         <!--Images-->
@@ -349,11 +354,6 @@
                         <div class="form-body">
                             <external-videos :article-id="article.id"></external-videos>
                         </div>
-                    </div>
-
-                    <!--Bodies-->
-                    <div class="tab-pane" id="articleBody">
-                        <bodies :article-id="article.id"></bodies>
                     </div>
 
                     <!--Learnings-->
@@ -693,8 +693,8 @@
                     lead: '',
                     id: null,
                     published_at: null,
-                    latitude: '',
-                    longitude: ''
+                    latitude: null,
+                    longitude: null
                 },
                 duplicateArticleId: null,
                 editingArticle: false,

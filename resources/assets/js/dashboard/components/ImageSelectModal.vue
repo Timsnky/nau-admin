@@ -315,6 +315,11 @@
             //Handle when images are uploaded
             imageAdded()
             {
+                if(this.imageCropper)
+                {
+                    this.imageCropper.destroy();
+                }
+
                 let fileElement = document.getElementById('image');
                 let vm = this;
                 if (!fileElement) return;
