@@ -74,12 +74,13 @@
                                     @click="uploadImage()"
                                     class="btn btn-primary"
                                     type="button">
-                                Bild hinzufügen
+                                Bild hinzufügen <span v-if="submitting"> &nbsp;(Uploading <i class="fa fa-spinner fa-spin"></i>)</span>
                             </button>
                             <button
                                     @click="closeAddImage()"
                                     class="btn btn-danger"
-                                    type="button">
+                                    type="button"
+                                    :disabled="submitting">
                                 Schliessen
                             </button>
                         </div>
@@ -194,7 +195,8 @@
                         name: 'Zvg',
                         displayName: 'Zvg'
                     }
-                ]
+                ],
+                submitting: false
             }
         },
 
@@ -287,6 +289,7 @@
                 this.searchTerm = "";
                 this.myUserId = Api.user().id;
                 this.userId = this.myUserId;
+                this.submitting = false;
             },
 
             //Show the input to add an image
@@ -304,7 +307,8 @@
                     lead: '',
                     name: '',
                     source: ''
-                }
+                };
+                this.submitting = false;
 
                 if(this.imageCropper)
                 {
@@ -427,6 +431,8 @@
             //Upload image
             uploadImage()
             {
+                this.submitting = true;
+
                 let errorString = this.validateImageSave();
 
                 if(errorString !== "")

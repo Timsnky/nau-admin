@@ -67,8 +67,8 @@
                                     @click="submitVideoDetails()"
                                     class="btn btn-primary"
                                     type="button"
-                                    :disabled="! video.video || !video.name || !video.source || !video.lead">
-                                Video hinzufügen
+                                    :disabled="! video.video || !video.name || !video.source || !video.lead || submitting">
+                                Video hinzufügen <span v-if="submitting"> &nbsp;(Uploading <i class="fa fa-spinner fa-spin"></i>)</span>
                             </button>
                         </div>
                     </div>
@@ -156,7 +156,8 @@
                     name: '',
                     lead: '',
                     source: ''
-                }
+                },
+                submitting : false
             }
         },
 
@@ -239,6 +240,7 @@
                 this.searchTerm = "";
                 this.myUserId = Api.user().id;
                 this.userId = this.myUserId;
+                this.submitting = false;
             },
 
             //Show the video addition form
@@ -251,6 +253,7 @@
             closeAddVideo()
             {
                 this.addingVideo = false;
+                this.submitting = false;
                 this.video = {
                     video: '',
                     lead: '',
@@ -283,6 +286,7 @@
             //Submit the video details
             submitVideoDetails()
             {
+                this.submitting = true;
                 let vm = this;
 
                 Api.http
