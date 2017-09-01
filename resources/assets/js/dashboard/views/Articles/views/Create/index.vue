@@ -13,7 +13,7 @@
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
-                    Artikel speichern
+                    Speichern
                 </button>
             </div>
         </div>
@@ -1471,33 +1471,36 @@
             //Submit article image
             submitArticleImage(articleId)
             {
-                if (this.articleMainImage.id)
+                if(this.articleMainImage.url)
                 {
-                    this.linkMainImageToArticle(articleId);
-                }
-                else
-                {
-                    Api.http
-                        .post(`/images`, {
-                            image: this.articleMainImage.url,
-                            name: this.article.title,
-                            source: this.article.title,
-                            lead: this.article.title
-                        })
-                        .then(response => {
+                    if (this.articleMainImage.id)
+                    {
+                        this.linkMainImageToArticle(articleId);
+                    }
+                    else
+                    {
+                        Api.http
+                            .post(`/images`, {
+                                image: this.articleMainImage.url,
+                                name: this.article.title,
+                                source: this.article.title,
+                                lead: this.article.title
+                            })
+                            .then(response => {
 
-                            if(response.status === 201)
-                            {
-                                this.articleMainImage = response.data;
-                                this.linkMainImageToArticle(articleId);
-                            }
-                            else
-                            {
-                                Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
-                        });
+                                if(response.status === 201)
+                                {
+                                    this.articleMainImage = response.data;
+                                    this.linkMainImageToArticle(articleId);
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in uploading the selected Image. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
                 }
             },
 
@@ -1656,11 +1659,11 @@
                 {
                     errorArray.push('title');
                 }
-
-                if(! this.articleMainImage.url)
-                {
-                    errorArray.push('main article image');
-                }
+//
+//                if(! this.articleMainImage.url)
+//                {
+//                    errorArray.push('main article image');
+//                }
 
                 if(this.article.lead === '')
                 {
@@ -1717,8 +1720,17 @@
                         this.article.seo_title = this.article.title;
                     }
 
-                    this.submitArticleDetails();
+                    if(this.article.latitude === null)
+                    {
+                        delete this.article['latitude'];
+                    }
 
+                    if(this.article.longitude === null)
+                    {
+                        delete this.article['longitude'];
+                    }
+
+                    this.submitArticleDetails();
                 }
             },
 
