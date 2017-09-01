@@ -40,11 +40,11 @@
                     </div>
             </div>
             <div class="col-md-4">
-                <div v-if="big">
-                    <div v-if="big" class="form-group">
+                <div v-if="big && big.article">
+                    <div class="form-group">
                         <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig">Big entfernen</button>
                     </div>
-                    <article-element v-if="big" :article="big.article" />
+                    <article-element :article="big.article" />
                     <div>
                         <h5>Position: {{ big.position == 1 ? 'oben' : 'unten' }}</h5>
                     </div>
@@ -64,7 +64,7 @@
     export default {
         data() {
             return {
-                big: null,
+                big: {},
                 options: [],
                 selectedArticle: {},
                 isLoading: false,
@@ -98,6 +98,7 @@
             },
 
             removeBig() {
+                var vm = this;
                 swal({
                     title: 'Sind Sie sicher,',
                     text: "dass der Big Artikel entfernt werden soll?",
@@ -110,7 +111,7 @@
                 }).then(function () {
                     Api.http.delete('/big-article')
                     .then(() => {
-                        this.big = null;
+                        vm.big = null;
                         swal(
                             'Erfolgreich!',
                             'Der Big wurde entfernt.',
@@ -122,7 +123,7 @@
             },
         },
 
-        created() {
+        mounted() {
             Api.http
                 .get(`/big-article`)
                 .then(response => {
