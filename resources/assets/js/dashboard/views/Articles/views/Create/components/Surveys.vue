@@ -176,6 +176,7 @@
         created()
         {
             this.$parent.$on('duplicateData', this.duplicateData);
+            this.$parent.$on('saveData', this.saveArticleSurveys);
         },
 
         watch: {

@@ -6,9 +6,16 @@
             </div>
             <div class="col-md-6 text-right">
                 <button
+                        type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndExit()">
                     Speichern & Schliessen
+                </button>
+                <button
+                        type="button"
+                        class="btn btn-primary pull-right margin_left_5"
+                        @click="handleSaveAndPublish()">
+                    Speichern & publish
                 </button>
                 <button
                         class="btn btn-primary pull-right margin_left_5"
@@ -683,6 +690,7 @@
     import videoMixin from './mixins/videoMixin';
     import imageMixin from './mixins/imageMixin';
     import sliderMixin from './mixins/sliderMixin';
+    import sortingMixin from './mixins/sortingMixin';
     import initializationMixin from './mixins/initializationMixin';
 
     export default {
@@ -761,7 +769,8 @@
             videoMixin,
             imageMixin,
             sliderMixin,
-            initializationMixin
+            sortingMixin,
+            initializationMixin,
         ],
 
         components: {
@@ -878,6 +887,9 @@
         },
 
         methods: {
+            /**
+             * DUPLICATION
+             */
             //Duplicate an article
             duplicateArticle()
             {
@@ -958,6 +970,9 @@
                 this.$emit('duplicateData', articleId);
             },
 
+            /**
+             * SAVE AND EXIT
+             */
             //Validate the save and exit button
             handleSaveAndExit()
             {
@@ -971,20 +986,7 @@
                 }
                 else
                 {
-                    if(this.article.internal_title === '')
-                    {
-                        this.article.internal_title = this.article.title;
-                    }
-
-                    if(this.article.internal_dateline === '')
-                    {
-                        this.article.internal_dateline = this.article.dateline;
-                    }
-
-                    if(this.article.seo_title === '')
-                    {
-                        this.article.seo_title = this.article.title;
-                    }
+                    this.setSavingDefaults();
 
                     this.saveAndExit();
                 }
@@ -1009,11 +1011,162 @@
                                 {
                                     this.submitArticleTeaserImage(this.article.id);
                                 }
+                                Vue.toast('Article updated successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+
+                                this.saveArticleItems(this.article.id);
+                                this.$router.push('/articles');
+                            }
+                            else
+                            {
+                                Vue.toast('Error in updating the article. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                }
+                else
+                {
+                    Api.http
+                        .post(`/articles`, this.article)
+                        .then(response => {
+                            if(response.status === 201)
+                            {
+                                this.article = response.data;
+                                this.submitArticleImage(this.article.id);
+                                this.submitArticleTeaserImage(this.article.id);
+                                Vue.toast('Article created successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            }
+                            else
+                            {
+                                Vue.toast('Error in creation of the article. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                            this.saveArticleItems(this.article.id);
+                            this.$router.push('/articles');
+                        });
+                }
+            },
+
+            /**
+             * SAVE AND PUBLISH
+             */
+            handleSaveAndPublish()
+            {
+                let errorString = this.validateSaveAndPublish();
+
+                if(errorString !== "")
+                {
+                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+                else
+                {
+                    this.setSavingDefaults();
+
+                    this.saveAndPublish();
+                }
+            },
+
+            //Validate the save and publish process
+            validateSaveAndPublish()
+            {
+                let errorString = "";
+                let errorArray = [];
+                this.article.lead = this.leadEditor.getValue();
+
+                if(! this.article.dateline)
+                {
+                    errorArray.push('dateline');
+                }
+
+                if(! this.article.title)
+                {
+                    errorArray.push('title');
+                }
+
+                if(! this.articleMainImage.url)
+                {
+                    errorArray.push('main article image');
+                }
+
+                if(! this.articleTeaserImage.url)
+                {
+                    errorArray.push('teaser image');
+                }
+
+                if(this.article.lead === '')
+                {
+                    errorArray.push('lead');
+                }
+
+                if(this.articleAuthors.length === 0)
+                {
+                    errorArray.push('author');
+                }
+
+                if(this.article.latitude === undefined || this.article.longitude === undefined)
+                {
+                    errorArray.push('location');
+                }
+
+                if(this.article.published_at === null || this.article.published_at === '')
+                {
+                    errorArray.push('publication date');
+                }
+
+                if(errorArray.length === 1)
+                {
+                    errorString = errorArray[0];
+                }
+                else
+                {
+                    errorArray.forEach(function (value, key)
+                    {
+                        if(key !== errorArray.length - 1)
+                        {
+                            errorString += value + ', ';
+                        }
+                        else
+                        {
+                            errorString += 'and ' + value;
+                        }
+                    });
+                }
+
+                return errorString;
+
+            },
+
+            //Save and publish
+            saveAndPublish()
+            {
+                if(this.article.id)
+                {
+                    Api.http
+                        .put(`/articles/${this.article.id}`, this.article)
+                        .then(response => {
+                            if(response.status === 200)
+                            {
+                                this.article = response.data;
+                                if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
+                                {
+                                    this.submitArticleImage(this.article.id);
+                                }
+                                if(! (response.data.teaser_id === this.articleTeaserImage.id))
+                                {
+                                    this.submitArticleTeaserImage(this.article.id);
+                                }
                                 Vue.toast('Article updated and published successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
 
-                                this.$router.push('/articles');
+                                this.saveArticleItems(this.article.id);
                             }
                             else
                             {
@@ -1043,10 +1196,251 @@
                                     className: ['nau_toast', 'nau_warning'],
                                 });
                             }
-
-                            this.$router.push('/articles');
+                            this.saveArticleItems(this.article.id);
                         });
                 }
+            },
+
+            /**
+             * SUBMIT OF ARTICLE DETAILS
+             */
+            //Check the value of title and update internal title
+            updateInternalDetails()
+            {
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+            },
+
+            //Validate the article submission process
+            validateSubmit()
+            {
+                let errorString = "";
+                let errorArray = [];
+                this.article.lead = this.leadEditor.getValue();
+
+                if(! this.article.dateline)
+                {
+                    errorArray.push('dateline');
+                }
+
+                if(! this.article.title)
+                {
+                    errorArray.push('title');
+                }
+//
+//                if(! this.articleMainImage.url)
+//                {
+//                    errorArray.push('main article image');
+//                }
+
+                if(this.article.lead === '')
+                {
+                    errorArray.push('lead');
+                }
+
+                if(errorArray.length === 1)
+                {
+                    errorString = errorArray[0];
+                }
+                else
+                {
+                    errorArray.forEach(function (value, key)
+                    {
+                        if(key !== errorArray.length - 1)
+                        {
+                            errorString += value + ', ';
+                        }
+                        else
+                        {
+                            errorString += 'and ' + value;
+                        }
+                    });
+                }
+
+                return errorString;
+            },
+
+            //Setup some of the required saving defaults
+            setSavingDefaults()
+            {
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+
+                if(this.article.seo_title === '')
+                {
+                    this.article.seo_title = this.article.title;
+                }
+
+                if(this.article.latitude === null)
+                {
+                    delete this.article['latitude'];
+                }
+
+                if(this.article.longitude === null)
+                {
+                    delete this.article['longitude'];
+                }
+            },
+
+            //Handle the submission of the article
+            handleSubmit()
+            {
+                let errorString = this.validateSubmit();
+
+                if(errorString !== "")
+                {
+                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
+                else
+                {
+                    this.setSavingDefaults();
+
+                    this.submitArticleDetails();
+                }
+            },
+
+            //Submit the details for the article
+            submitArticleDetails()
+            {
+                if(this.article.id)
+                {
+                    this.updateArticle();
+                }
+                else
+                {
+                    this.createArticle();
+                }
+            },
+
+            //Create a new article
+            createArticle()
+            {
+                Api.http
+                    .post(`/articles`, this.article)
+                    .then(response => {
+                        if(response.status === 201)
+                        {
+                            this.article = response.data;
+                            this.submitArticleImage(this.article.id);
+                            this.submitArticleTeaserImage(this.article.id);
+                            this.setArticleAuthor(this.article.id);
+                            Vue.toast('Article created successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in creation of the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Update an article
+            updateArticle() {
+                Api.http
+                    .put(`/articles/${this.article.id}`, this.article)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.article = response.data;
+                            if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
+                            {
+                                this.submitArticleImage(this.article.id);
+                            }
+                            if(! (response.data.teaser_id === this.articleTeaserImage.id) && this.articleTeaserImage.url)
+                            {
+                                this.submitArticleTeaserImage(this.article.id);
+                            }
+
+                            Vue.toast('Article updated successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in updating the article. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //link user as article author
+            setArticleAuthor(articleId)
+            {
+                Api.http
+                    .put(`/articles/${articleId}/authors/${Api.user().id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            this.initializeArticleAuthors(articleId);
+
+                            Vue.toast('Article author linked successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in linking the article author. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
+
+            //Link the article to the main image
+            linkMainImageToArticle(articleId)
+            {
+                Api.http
+                    .put(`/articles/${articleId}/preview/${this.articleMainImage.id}`)
+                    .then(response => {
+                        if(response.status === 204)
+                        {
+                            Vue.toast('Article preview image added successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                        }
+                        else
+                        {
+                            Vue.toast('Error in updating the article main image. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Save the other article details if possible
+            saveArticleItems(articleId)
+            {
+                this.sendSaveActionEvent(articleId);
+                this.saveArticleMedia(articleId);
+                this.saveSettings(articleId);
+                this.saveSortedElements(articleId);
+            },
+
+            //Send a request for data duplication to specified article id
+            sendSaveActionEvent(articleId)
+            {
+                this.$emit('saveData', articleId);
             },
 
             /**
@@ -1290,233 +1684,6 @@
             },
 
             /**
-             * SUBMIT OF ARTICLE DETAILS
-             */
-            //Check the value of title and update internal title
-            updateInternalDetails()
-            {
-                if(this.article.internal_title === '')
-                {
-                    this.article.internal_title = this.article.title;
-                }
-
-                if(this.article.internal_dateline === '')
-                {
-                    this.article.internal_dateline = this.article.dateline;
-                }
-            },
-
-            //Validate the article submission process
-            validateSubmit()
-            {
-                let errorString = "";
-                let errorArray = [];
-                this.article.lead = this.leadEditor.getValue();
-
-                if(! this.article.dateline)
-                {
-                    errorArray.push('dateline');
-                }
-
-                if(! this.article.title)
-                {
-                    errorArray.push('title');
-                }
-//
-//                if(! this.articleMainImage.url)
-//                {
-//                    errorArray.push('main article image');
-//                }
-
-                if(this.article.lead === '')
-                {
-                    errorArray.push('lead');
-                }
-
-                if(errorArray.length === 1)
-                {
-                    errorString = errorArray[0];
-                }
-                else
-                {
-                    errorArray.forEach(function (value, key)
-                    {
-                        if(key !== errorArray.length - 1)
-                        {
-                            errorString += value + ', ';
-                        }
-                        else
-                        {
-                            errorString += 'and ' + value;
-                        }
-                    });
-                }
-
-                return errorString;
-            },
-
-            //Setup some of the required saving defaults
-            setSavingDefaults()
-            {
-                if(this.article.internal_title === '')
-                {
-                    this.article.internal_title = this.article.title;
-                }
-
-                if(this.article.internal_dateline === '')
-                {
-                    this.article.internal_dateline = this.article.dateline;
-                }
-
-                if(this.article.seo_title === '')
-                {
-                    this.article.seo_title = this.article.title;
-                }
-
-                if(this.article.latitude === null)
-                {
-                    delete this.article['latitude'];
-                }
-
-                if(this.article.longitude === null)
-                {
-                    delete this.article['longitude'];
-                }
-            },
-
-            //Handle the submission of the article
-            handleSubmit()
-            {
-                let errorString = this.validateSubmit();
-
-                if(errorString !== "")
-                {
-                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
-                else
-                {
-                    this.setSavingDefaults();
-
-                    this.submitArticleDetails();
-                }
-            },
-
-            //Submit the details for the article
-            submitArticleDetails()
-            {
-                if(this.article.id)
-                {
-                    this.updateArticle();
-                }
-                else
-                {
-                    this.createArticle();
-                }
-            },
-
-            //Create a new article
-            createArticle()
-            {
-                Api.http
-                    .post(`/articles`, this.article)
-                    .then(response => {
-                        if(response.status === 201)
-                        {
-                            this.article = response.data;
-                            this.submitArticleImage(this.article.id);
-                            this.submitArticleTeaserImage(this.article.id);
-                            this.setArticleAuthor(this.article.id);
-                            Vue.toast('Article created successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in creation of the article. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Update an article
-            updateArticle() {
-                Api.http
-                    .put(`/articles/${this.article.id}`, this.article)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.article = response.data;
-                            if(! (response.data.image && response.data.image.id === this.articleMainImage.id))
-                            {
-                                this.submitArticleImage(this.article.id);
-                            }
-                            if(! (response.data.teaser_id === this.articleTeaserImage.id) && this.articleTeaserImage.url)
-                            {
-                                this.submitArticleTeaserImage(this.article.id);
-                            }
-
-                            Vue.toast('Article updated successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in updating the article. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //link user as article author
-            setArticleAuthor(articleId)
-            {
-                Api.http
-                    .put(`/articles/${articleId}/authors/${Api.user().id}`)
-                    .then(response => {
-                        if(response.status === 204)
-                        {
-                            this.initializeArticleAuthors(articleId);
-
-                            Vue.toast('Article author linked successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the article author. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-
-            },
-
-            //Link the article to the main image
-            linkMainImageToArticle(articleId)
-            {
-                Api.http
-                    .put(`/articles/${articleId}/preview/${this.articleMainImage.id}`)
-                    .then(response => {
-                        if(response.status === 204)
-                        {
-                            Vue.toast('Article preview image added successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in updating the article main image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            /**
              * ARTICLE MEDIA
              */
             //Save all the media
@@ -1536,7 +1703,6 @@
                     this.uploadArticleSliders(articleId);
                     this.uploadArticleVideos(articleId);
                 }
-
             },
 
             //Validate the media submission
@@ -1554,7 +1720,6 @@
                 {
                     errorArray.push('videos');
                 }
-
 
                 if(errorArray.length === 1)
                 {
