@@ -8,7 +8,7 @@
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndExit()">
-                    Artikel speichern und verlassen
+                    Speichern & Schliessen
                 </button>
                 <button
                         class="btn btn-primary pull-right margin_left_5"
@@ -467,197 +467,197 @@
                     </div>
 
                     <!--Sorting-->
-                    <div class="tab-pane" id="articleSorting">
-                        <div class="form-body">
-                            <div class="form-body">
-                                <h3>{{ article.title}}</h3>
-                                <p v-html="article.lead"></p>
-                            </div>
-                            <draggable v-model="articleElements">
-                                <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
-                                    <!--Image-->
-                                    <div v-if="articleElement.type == 'image'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Bilder</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p>{{ articleElement.name }}</p>
-                                            </div>
-                                            <div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">
-                                                <img :src="articleElement.url" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
+                    <!--<div class="tab-pane" id="articleSorting">-->
+                        <!--<div class="form-body">-->
+                            <!--<div class="form-body">-->
+                                <!--<h3>{{ article.title}}</h3>-->
+                                <!--<p v-html="article.lead"></p>-->
+                            <!--</div>-->
+                            <!--<draggable v-model="articleElements">-->
+                                <!--<div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">-->
+                                    <!--&lt;!&ndash;Image&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'image'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Bilder</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p>{{ articleElement.name }}</p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">-->
+                                                <!--<img :src="articleElement.url" alt="">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Body-->
-                                    <div v-if="articleElement.type == 'body'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Artikel-Text</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="trimContent(articleElement.content)"></p>
-                                            </div>
-                                            <div class="panel_content" v-if="displayedPanel === index">
-                                                <p v-html="articleElement.content"></p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!--&lt;!&ndash;Body&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'body'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Artikel-Text</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p v-html="trimContent(articleElement.content)"></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
+                                                <!--<p v-html="articleElement.content"></p>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Slider-->
-                                    <div v-if="articleElement.type == 'slider'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Diashow</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="articleElement.name"></p>
-                                            </div>
-                                            <div class="panel_content padding_top_15" v-if="displayedPanel === index">
-                                                <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
-                                                    <!-- Indicators -->
-                                                    <ol class="carousel-indicators">
-                                                        <li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>
-                                                    </ol>
+                                    <!--&lt;!&ndash;Slider&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'slider'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Diashow</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p v-html="articleElement.name"></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content padding_top_15" v-if="displayedPanel === index">-->
+                                                <!--<div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">-->
+                                                    <!--&lt;!&ndash; Indicators &ndash;&gt;-->
+                                                    <!--<ol class="carousel-indicators">-->
+                                                        <!--<li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>-->
+                                                    <!--</ol>-->
 
-                                                    <!-- Wrapper for slides -->
-                                                    <div class="carousel-inner">
-                                                        <div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">
-                                                            <img :src="image.url">
-                                                        </div>
-                                                    </div>
+                                                    <!--&lt;!&ndash; Wrapper for slides &ndash;&gt;-->
+                                                    <!--<div class="carousel-inner">-->
+                                                        <!--<div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">-->
+                                                            <!--<img :src="image.url">-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
 
-                                                    <!-- Left and right controls -->
-                                                    <a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">
-                                                        <span class="glyphicon glyphicon-chevron-left"></span>
-                                                        <span class="sr-only">Previous</span>
-                                                    </a>
-                                                    <a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">
-                                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                                        <span class="sr-only">Next</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                    <!--&lt;!&ndash; Left and right controls &ndash;&gt;-->
+                                                    <!--<a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">-->
+                                                        <!--<span class="glyphicon glyphicon-chevron-left"></span>-->
+                                                        <!--<span class="sr-only">Previous</span>-->
+                                                    <!--</a>-->
+                                                    <!--<a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">-->
+                                                        <!--<span class="glyphicon glyphicon-chevron-right"></span>-->
+                                                        <!--<span class="sr-only">Next</span>-->
+                                                    <!--</a>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Learnings-->
-                                    <div v-if="articleElement.type == 'learning'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Key Fact</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="trimContent(articleElement.text)"></p>
-                                            </div>
-                                            <div class="panel_content" v-if="displayedPanel === index">
-                                                <p v-html="articleElement.text"></p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!--&lt;!&ndash;Learnings&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'learning'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Key Fact</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p v-html="trimContent(articleElement.text)"></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
+                                                <!--<p v-html="articleElement.text"></p>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Social Media-->
-                                    <div v-if="articleElement.type == 'socialmedia'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Social</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p></p>
-                                            </div>
-                                            <div class="panel_content" v-if="displayedPanel === index">
-                                                <twitter-element :url="articleElement.url"></twitter-element>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!--&lt;!&ndash;Social Media&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'socialmedia'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Social</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
+                                                <!--<twitter-element :url="articleElement.url"></twitter-element>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Videos-->
-                                    <div v-if="articleElement.type == 'video'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Video</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="articleElement.name"></p>
-                                            </div>
-                                            <div class="panel_content elementImageSection " v-if="displayedPanel === index">
-                                                <video controls>
-                                                    <source :src="articleElement.urls[0]" type="video/mp4">
-                                                    <source :src="articleElement.urls[1]" type="video/webm">
-                                                </video>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!--&lt;!&ndash;Videos&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'video'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Video</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p v-html="articleElement.name"></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content elementImageSection " v-if="displayedPanel === index">-->
+                                                <!--<video controls>-->
+                                                    <!--<source :src="articleElement.urls[0]" type="video/mp4">-->
+                                                    <!--<source :src="articleElement.urls[1]" type="video/webm">-->
+                                                <!--</video>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--Surveys-->
-                                    <div v-if="articleElement.type == 'survey'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">Voting</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="trimContent(articleElement.question)"></p>
-                                            </div>
-                                            <div class="panel_content elementImageSection" v-if="displayedPanel === index">
-                                                <p>{{ articleElement.question }}</p>
-                                                <ol>
-                                                    <li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>
-                                                </ol>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!--&lt;!&ndash;Surveys&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'survey'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">Voting</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p v-html="trimContent(articleElement.question)"></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content elementImageSection" v-if="displayedPanel === index">-->
+                                                <!--<p>{{ articleElement.question }}</p>-->
+                                                <!--<ol>-->
+                                                    <!--<li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>-->
+                                                <!--</ol>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                    <!--External Videos-->
-                                    <div v-if="articleElement.type == 'externalvideo'" class="form-body panel">
-                                        <div class="panel_heading">
-                                            <span class="panel_title">External Video</span>
-                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
-                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                        <div class="panel_body">
-                                            <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p></p>
-                                            </div>
-                                            <div class="panel_content" v-if="displayedPanel === index">
-                                                <div class="timeline">
-                                                    <timeline-item :key="articleElement.id" :liveticker="articleElement" @delete="deleteArticleExternalVideo(index)">
-                                                        <external-video-element :element="articleElement" />
-                                                    </timeline-item>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </draggable>
-                        </div>
-                        <div class="form-actions">
-                            <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    @click="saveSortedElements(article.id)"
-                                    :disabled="article.id == null">
-                                Aufbau speichern
-                            </button>
-                        </div>
-                    </div>
+                                    <!--&lt;!&ndash;External Videos&ndash;&gt;-->
+                                    <!--<div v-if="articleElement.type == 'externalvideo'" class="form-body panel">-->
+                                        <!--<div class="panel_heading">-->
+                                            <!--<span class="panel_title">External Video</span>-->
+                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
+                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
+                                        <!--</div>-->
+                                        <!--<div class="panel_body">-->
+                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
+                                                <!--<p></p>-->
+                                            <!--</div>-->
+                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
+                                                <!--<div class="timeline">-->
+                                                    <!--<timeline-item :key="articleElement.id" :liveticker="articleElement" @delete="deleteArticleExternalVideo(index)">-->
+                                                        <!--<external-video-element :element="articleElement" />-->
+                                                    <!--</timeline-item>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</draggable>-->
+                        <!--</div>-->
+                        <!--<div class="form-actions">-->
+                            <!--<button-->
+                                    <!--class="btn btn-primary"-->
+                                    <!--type="button"-->
+                                    <!--@click="saveSortedElements(article.id)"-->
+                                    <!--:disabled="article.id == null">-->
+                                <!--Aufbau speichern-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
-                <image-select-modal></image-select-modal>
-                <video-select-modal></video-select-modal>
+                <!--<image-select-modal></image-select-modal>-->
+                <!--<video-select-modal></video-select-modal>-->
             </div>
         </form>
     </div>
@@ -680,6 +680,10 @@
     import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
 //    import InfoBoxes from './components/InfoBoxes';
+    import videoMixin from './mixins/videoMixin';
+    import imageMixin from './mixins/imageMixin';
+    import sliderMixin from './mixins/sliderMixin';
+    import initializationMixin from './mixins/initializationMixin';
 
     export default {
         data: () => {
@@ -750,34 +754,15 @@
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
                 displayedPanel: null,
-                sources: [
-                    {
-                        name: '',
-                        displayName: 'Select source (optional)'
-                    },
-                    {
-                        name: 'Dpa',
-                        displayName: 'Dpa'
-                    },
-                    {
-                        name: 'Getty',
-                        displayName: 'Getty'
-                    },
-                    {
-                        name: 'Dukas',
-                        displayName: 'Dukas'
-                    },
-                    {
-                        name: 'Reuters',
-                        displayName: 'Reuters'
-                    },
-                    {
-                        name: 'Zvg',
-                        displayName: 'Zvg'
-                    }
-                ]
             };
         },
+
+        mixins: [
+            videoMixin,
+            imageMixin,
+            sliderMixin,
+            initializationMixin
+        ],
 
         components: {
             Multiselect,
@@ -1062,328 +1047,6 @@
                             this.$router.push('/articles');
                         });
                 }
-            },
-
-            /**
-             * SORTING
-             */
-            //Set the displayed panel
-            setDisplayedPanel(id)
-            {
-                this.displayedPanel = this.displayedPanel === id ? null : id;
-            },
-
-            //Trim content received from back end
-            trimContent(content)
-            {
-                content = content.replace(/<.+?>/g, '');
-
-                return content.substring(0, 100);
-            },
-
-            //Get the id for the slider carousel
-            getSliderIdName(elementId)
-            {
-                return "slider_" + elementId;
-            },
-
-            //Get the slider name string with the #
-            getSliderIdNameHashed(elementId)
-            {
-                return "#slider_" + elementId;
-            },
-
-            //Get the images linked to a given slider
-            getSliderImages(id)
-            {
-                for (let [key, value] of this.articleSliders.entries())
-                {
-                    if(value.id === id)
-                    {
-                        return value.images;
-                    }
-                }
-
-                return [];
-            },
-
-            //Submit order elements
-            saveSortedElements(articleId)
-            {
-                let orderArray = {};
-
-                this.articleElements.forEach(function (value, key)
-                {
-                    orderArray[value.element_id] = key;
-                });
-
-                Api.http
-                    .put(`/articles/${articleId}/elements`, orderArray)
-                    .then(response => {
-                    });
-            },
-
-            //Reload the sorting page data
-            refreshSortingData()
-            {
-                if(this.article.id)
-                {
-                    this.initializeArticleElements(this.article.id);
-                }
-            },
-
-            /**
-             * INITIALIZE THE ARTICLE (EDIT ONLY)
-             */
-            initialiseArticle(id)
-            {
-                Api.http
-                    .get(`/articles/${id}`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            if(response.data.image)
-                            {
-                                this.articleMainImage = response.data.image;
-                            }
-                            this.article = response.data;
-                            this.articleTitle = this.article.title;
-                            delete this.article['image'];
-                            this.initializeLeadEditor(this);
-                            if(this.article.teaser_id)
-                            {
-                                this.initializeArticleTeaserImage(this.article.teaser_id);
-                            }
-                            this.initializeArticleImages(id);
-                            this.initializeArticleSliders(id);
-                            this.initializeArticleVideos(id);
-                            this.initializeArticleAuthors(id);
-                            this.initializeArticleInformants(id);
-                            this.initializeArticleElements(id);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article for edit. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Initialise article teaser image
-            initializeArticleTeaserImage(id)
-            {
-                Api.http
-                    .get(`/images/${id}`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleTeaserImage = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article teaser image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the images linked to the article
-            initializeArticleImages(id)
-            {
-                let vm = this;
-                Api.http
-                    .get(`/articles/${id}/images`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleImages = response.data;
-
-                            this.articleImages.forEach(function (value, key)
-                            {
-                                value.selectedSource = "";
-                            })
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article images. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the sliders and images for the article
-            initializeArticleSliders(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/sliders`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleSliders = response.data;
-                            let vm = this;
-
-                            this.articleSliders.forEach(function (value, key)
-                            {
-                                vm.initializeSliderImages(key);
-                            })
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article images. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the slider images for a given slider
-            initializeSliderImages(key)
-            {
-                Api.http
-                    .get(`/sliders/${this.articleSliders[key].id}/images`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleSliders[key].images = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article images. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-
-            },
-
-            //Get the videos linked to the article
-            initializeArticleVideos(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/videos`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleVideos = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the article videos. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the authors for the article
-            initializeArticleAuthors(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/authors`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleAuthors = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the authors. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the informants for the article
-            initializeArticleInformants(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/informants`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleInformants = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the informants. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Get the channels for the dropdown
-            initializeChannels()
-            {
-                Api.http
-                    .get(`/channels`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.existingChannels = response.data;
-                            this.articleChannel = this.existingChannels[0].id;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the channels. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-
-            },
-
-            //Get the article elements for ordering
-            initializeArticleElements(id)
-            {
-                Api.http
-                    .get(`/articles/${id}/elements`)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.articleElements = response.data;
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the elements. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            /**
-             * EDITORS
-             */
-            //Initialize the editors when creating an article
-            initializeEditors()
-            {
-                this.initializeLeadEditor(this);
-            },
-
-            //Initialize lead editor
-            initializeLeadEditor(vm)
-            {
-                let leadSection = $($('.wysihtmlLead')).get(0);
-
-                let leadEditor = new wysihtml5.Editor($(leadSection).find('#leadEditor').get(0), {
-                    toolbar:      $(leadSection).find('#lead-toolbar').get(0),
-                    parserRules:  wysihtml5ParserRules,
-                }).on("load", function ()
-                {
-                    let ed = this;
-                    $('.wysihtml5-sandbox').contents().find('body').on("keyup", function(event) {
-                        vm.article.lead = ed.getValue();
-                    });
-                }).on("change", function () {
-                    vm.article.lead = this.getValue();
-                });
-
-                this.leadEditor = leadEditor;
             },
 
             /**
@@ -1692,6 +1355,35 @@
                 return errorString;
             },
 
+            //Setup some of the required saving defaults
+            setSavingDefaults()
+            {
+                if(this.article.internal_title === '')
+                {
+                    this.article.internal_title = this.article.title;
+                }
+
+                if(this.article.internal_dateline === '')
+                {
+                    this.article.internal_dateline = this.article.dateline;
+                }
+
+                if(this.article.seo_title === '')
+                {
+                    this.article.seo_title = this.article.title;
+                }
+
+                if(this.article.latitude === null)
+                {
+                    delete this.article['latitude'];
+                }
+
+                if(this.article.longitude === null)
+                {
+                    delete this.article['longitude'];
+                }
+            },
+
             //Handle the submission of the article
             handleSubmit()
             {
@@ -1705,30 +1397,7 @@
                 }
                 else
                 {
-                    if(this.article.internal_title === '')
-                    {
-                        this.article.internal_title = this.article.title;
-                    }
-
-                    if(this.article.internal_dateline === '')
-                    {
-                        this.article.internal_dateline = this.article.dateline;
-                    }
-
-                    if(this.article.seo_title === '')
-                    {
-                        this.article.seo_title = this.article.title;
-                    }
-
-                    if(this.article.latitude === null)
-                    {
-                        delete this.article['latitude'];
-                    }
-
-                    if(this.article.longitude === null)
-                    {
-                        delete this.article['longitude'];
-                    }
+                    this.setSavingDefaults();
 
                     this.submitArticleDetails();
                 }
@@ -1907,575 +1576,6 @@
                 }
 
                 return errorString;
-            },
-
-            /**
-             * IMAGES
-             */
-            //Handle when images are uploaded
-            articleImagesChange: function () {
-                var fileElement = document.getElementById('article_images');
-                if (!fileElement) return;
-                for (var i = 0; i < fileElement.files.length; i++) {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(fileElement.files[i]);
-                    reader.onload = (e) => {
-                        this.articleImages.push({ url: e.target.result, lead: '', id: null });
-                    };
-                }
-            },
-
-            //Save selected source of article image
-            imageSourceSelected(key)
-            {
-                this.articleImages[key].source = this.articleImages[key].selectedSource;
-            },
-
-            //Upload article images and link them to article
-            uploadArticleImages(articleId)
-            {
-                let vm = this;
-
-                this.articleImages.forEach(function (value, key)
-                {
-                    if(! value.id)
-                    {
-                        Api.http
-                            .post(`/images`, {
-                                image: value.url,
-                                name: vm.article.title,
-                                source: vm.article.title,
-                                lead: (value.lead !== '') ? value.lead : vm.article.title,
-                            })
-                            .then(response => {
-                                if(response.status === 201)
-                                {
-                                    vm.articleImages[key] = response.data;
-                                    vm.linkImageToArticle(key, articleId);
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                    else
-                    {
-                        Api.http
-                            .put(`/images/${value.id}`, {
-                                image: value.url,
-                                name: value.name,
-                                source: value.source,
-                                lead: value.lead,
-                            })
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in uploading the selected Image. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-
-                        if(! (value.pivot && value.pivot.article_id === articleId))
-                        {
-                            vm.linkImageToArticle(key, articleId);
-                        }
-                    }
-                });
-            },
-
-            //Link an image to an article
-            linkImageToArticle(key, articleId)
-            {
-                Api.http
-                    .put(`/articles/${articleId}/images/${this.articleImages[key].id}`)
-                    .then(response => {
-                        if (response.status === 204)
-                        {
-                            this.articleImages[key].pivot = {
-                                article_id: articleId,
-                                element_id: this.articleImages[key].id
-                            };
-
-                            Vue.toast('Image added to article successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Confirm the delete of an image
-            confirmArticleImageDelete(key)
-            {
-                swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abort',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
-                }).then(() => {
-                    this.deleteArticleImage(key)
-                }).catch(swal.noop);
-            },
-
-            //Delete an image from an article
-            deleteArticleImage(key)
-            {
-                let vm = this;
-
-                if(vm.articleImages[key].pivot)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/images/${vm.articleImages[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleImages.splice(key, 1);
-                                Vue.toast('Article image detached successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleImages.splice(key, 1);
-
-                    Vue.toast('Article image detached successfully', {
-                        className: ['nau_toast', 'nau_success'],
-                    });
-                }
-            },
-
-            /**
-             * SLIDERS
-             */
-            //Add an article slider
-            addArticleSlider()
-            {
-                this.articleSliders.push({name: '', id: null, images: []});
-            },
-
-            //Confirm the delete of a slider
-            confirmSliderDelete(key)
-            {
-                swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abort',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
-                }).then(() => {
-                    this.deleteArticleSlider(key)
-                }).catch(swal.noop);
-            },
-
-            //Remove article slider
-            deleteArticleSlider(key)
-            {
-                let vm = this;
-
-                if(vm.articleSliders[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/sliders/${vm.articleSliders[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleSliders.splice(key, 1);
-                                Vue.toast('Article slider detached successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleSliders.splice(key, 1);
-                }
-            },
-
-            //Create or Update a slider
-            uploadArticleSliders(articleId)
-            {
-                let vm = this;
-
-                this.articleSliders.forEach(function (value, key)
-                {
-                    if(value.id && value.pivot && value.pivot.article_id === articleId)
-                    {
-                        vm.updateSliderDetails(value, key);
-                    }
-                    else
-                    {
-                        vm.createSliderDetails(value, key, articleId)
-                    }
-                })
-            },
-
-            //Create a slider details
-            createSliderDetails(slider, key, articleId)
-            {
-                let vm = this;
-                Api.http
-                    .post(`/articles/${articleId}/sliders`, {
-                        name: slider.name
-                    })
-                    .then(response => {
-                        if(response.status === 201)
-                        {
-                            let images = vm.articleSliders[key].images;
-                            vm.articleSliders[key] = response.data;
-                            vm.articleSliders[key]['images'] = images;
-                            vm.linkImagesToSlider(key);
-                            Vue.toast('Article slider added successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in creating the slider. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Update a slider details
-            updateSliderDetails(slider, key)
-            {
-                let vm = this;
-                Api.http
-                    .put(`/articles/${this.article.id}/sliders/${slider.id}`, {
-                        name: slider.name
-                    })
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            let images = vm.articleSliders[key].images;
-                            vm.articleSliders[key] = response.data;
-                            vm.articleSliders[key]['images'] = images;
-                            vm.linkImagesToSlider(key);
-                            Vue.toast('Article slider updated successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in updating the slider. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Link images to the slider
-            linkImagesToSlider(sliderKey)
-            {
-                let vm = this;
-
-                this.articleSliders[sliderKey].images.forEach(function (value, key)
-                {
-                    if(! (value.pivot.slider_id === vm.articleSliders[sliderKey].id))
-                    {
-                        vm.saveImageLinkToSlider(sliderKey, value.id, key);
-                    }
-                    else
-                    {
-                        Api.http
-                            .delete(`/sliders/${vm.articleSliders[sliderKey].id}/images/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    vm.saveImageLinkToSlider(sliderKey, value.id, key);
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Save image link to slider
-            saveImageLinkToSlider(sliderKey, imageId, key)
-            {
-                let vm = this;
-                Api.http
-                    .put(`/sliders/${vm.articleSliders[sliderKey].id}/images/${imageId}`, {
-                        'order' : key
-                    })
-                    .then(response => {
-                        if (response.status === 204)
-                        {
-                            vm.articleSliders[sliderKey].images[key].pivot.slider_id = vm.articleSliders[sliderKey].id;
-
-                            Vue.toast('Slider image added to article successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the image. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Confirm the delete of a slider image
-            confirmSliderImageDelete(key, imageKey)
-            {
-                swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abort',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
-                }).then(() => {
-                    this.deleteSliderImage(key, imageKey)
-                }).catch(swal.noop);
-            },
-
-            //Delete an image from a slider
-            deleteSliderImage(key, imageKey)
-            {
-                let vm = this;
-
-                if(! (vm.articleSliders[key].id) || ! (vm.articleSliders[key].images[imageKey].pivot.slider_id))
-                {
-                    vm.articleSliders[key].images.splice(imageKey, 1);
-                }
-                else
-                {
-                    Api.http
-                        .delete(`/sliders/${vm.articleSliders[key].id}/images/${vm.articleSliders[key].images[imageKey].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleSliders[key].images.splice(imageKey, 1);
-                                Vue.toast('Article slider image detached successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-            },
-
-            /**
-             * VIDEOS
-             */
-            //Handle when a video is  uploaded
-            articleVideosChange: function ()
-            {
-                var fileElement = document.getElementById('article_videos');
-                if (!fileElement) return;
-                for (var i = 0; i < fileElement.files.length; i++) {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(fileElement.files[i]);
-                    reader.onload = (e) => {
-                        this.articleVideos.push({ video: e.target.result, lead: '', id: null });
-                    };
-                }
-            },
-
-            //Get a video after a selection via the modal
-            getVideo(id)
-            {
-                Api.http
-                    .get(`/videos/${id}`)
-                    .then(response =>
-                    {
-                        if(response.status === 200)
-                        {
-                            this.articleVideos.push(response.data);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the selected video. Please retry again', {
-                                className : ['nau_toast','nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Upload article videos and link them to article
-            uploadArticleVideos(articleId)
-            {
-                let vm = this;
-
-                this.articleVideos.forEach(function (video, key)
-                {
-                    if(! video.id)
-                    {
-                        vm.submitVideoDetails(video, key, articleId);
-                    }
-                    else
-                    {
-                        if(! (video.pivot && video.pivot.article_id === articleId))
-                        {
-                            vm.linkVideoToArticle(video.id, key, articleId);
-                        }
-                    }
-
-                });
-            },
-
-            //Submit the video details
-            submitVideoDetails(video, key, articleId)
-            {
-                let vm = this;
-
-                Api.http
-                    .post(`/videos`, {
-                        name: this.article.title,
-                        lead: (video.lead !== '') ? video.lead : vm.article.title,
-                        source: vm.article.title,
-                        user_id: Api.user().id
-                    })
-                    .then(response => {
-                        if(response.status === 201)
-                        {
-                            vm.startVideoUpload(response, video, key, articleId);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in uploading the selected video. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Start the video upload
-            startVideoUpload(data, video, key, articleId)
-            {
-                let uploadUrl = data.data.upload_url;
-                let urlArray = uploadUrl.split("api-naut.livesystems.ch");
-                let tokenString = urlArray[urlArray.length - 1];
-
-                Api.http
-                    .put(tokenString, {
-                        video : video.video
-                    })
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            this.completeVideoUpload(response, video, key, articleId);
-                        }
-                        else
-                        {
-                            Vue.toast('Error in uploading the selected video. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Complete the video upload
-            completeVideoUpload(data, video, key, articleId)
-            {
-                let uploadUrl = data.data.complete_url;
-                let urlArray = uploadUrl.split("api-naut.livesystems.ch");
-                let tokenString = urlArray[urlArray.length - 1];
-
-                Api.http
-                    .post(tokenString)
-                    .then(response => {
-                        if (response.status === 200)
-                        {
-                            video.video = response.data;
-                            video.lead = response.data.lead;
-                            video.id = response.data.id;
-                            this.linkVideoToArticle(video.id, key, articleId);
-                        }
-                        else {
-                            Vue.toast('Error in uploading the selected video. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Link the video to the article
-            linkVideoToArticle(id, key, articleId)
-            {
-                Api.http
-                    .put(`/articles/${articleId}/videos/${id}`)
-                    .then(response => {
-                        if(response.status === 204)
-                        {
-                            this.articleVideos[key].pivot = {
-                                article_id: articleId,
-                                element_id: id
-                            };
-                            Vue.toast('Video linked successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the video. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            //Confirm the delete of a video
-            confirmVideoDelete(key)
-            {
-                swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abort',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
-                }).then(() => {
-                    this.deleteArticleVideo(key)
-                }).catch(swal.noop);
-            },
-
-            //Delete a video from an article
-            deleteArticleVideo(key)
-            {
-                let vm = this;
-
-                if(vm.articleVideos[key].pivot)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/videos/${vm.articleVideos[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleVideos.splice(key, 1);
-                                Vue.toast('Article video detached successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleVideos.splice(key, 1);
-                }
             },
 
             /**
