@@ -467,197 +467,197 @@
                     </div>
 
                     <!--Sorting-->
-                    <!--<div class="tab-pane" id="articleSorting">-->
-                        <!--<div class="form-body">-->
-                            <!--<div class="form-body">-->
-                                <!--<h3>{{ article.title}}</h3>-->
-                                <!--<p v-html="article.lead"></p>-->
-                            <!--</div>-->
-                            <!--<draggable v-model="articleElements">-->
-                                <!--<div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">-->
-                                    <!--&lt;!&ndash;Image&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'image'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Bilder</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p>{{ articleElement.name }}</p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">-->
-                                                <!--<img :src="articleElement.url" alt="">-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                    <div class="tab-pane" id="articleSorting">
+                        <div class="form-body">
+                            <div class="form-body">
+                                <h3>{{ article.title}}</h3>
+                                <p v-html="article.lead"></p>
+                            </div>
+                            <draggable v-model="articleElements">
+                                <div v-for="(articleElement, index) in articleElements" :key="articleElement.element_id" class="form-group">
+                                    <!--Image-->
+                                    <div v-if="articleElement.type == 'image'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Bilder</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p>{{ articleElement.name }}</p>
+                                            </div>
+                                            <div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">
+                                                <img :src="articleElement.url" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Body&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'body'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Artikel-Text</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p v-html="trimContent(articleElement.content)"></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
-                                                <!--<p v-html="articleElement.content"></p>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <!--Body-->
+                                    <div v-if="articleElement.type == 'body'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Artikel-Text</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.content)"></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <p v-html="articleElement.content"></p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Slider&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'slider'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Diashow</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p v-html="articleElement.name"></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content padding_top_15" v-if="displayedPanel === index">-->
-                                                <!--<div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">-->
-                                                    <!--&lt;!&ndash; Indicators &ndash;&gt;-->
-                                                    <!--<ol class="carousel-indicators">-->
-                                                        <!--<li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>-->
-                                                    <!--</ol>-->
+                                    <!--Slider-->
+                                    <div v-if="articleElement.type == 'slider'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Diashow</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="articleElement.name"></p>
+                                            </div>
+                                            <div class="panel_content padding_top_15" v-if="displayedPanel === index">
+                                                <div :id="getSliderIdName(articleElement.element_id)" class="carousel slide sliderSection" data-ride="carousel">
+                                                    <!-- Indicators -->
+                                                    <ol class="carousel-indicators">
+                                                        <li v-for="(image, index) in getSliderImages(articleElement.id)" :data-target="getSliderIdNameHashed(articleElement.element_id)" :data-slide-to="index" v-bind:class="index == 0 ? 'active' : ''"></li>
+                                                    </ol>
 
-                                                    <!--&lt;!&ndash; Wrapper for slides &ndash;&gt;-->
-                                                    <!--<div class="carousel-inner">-->
-                                                        <!--<div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">-->
-                                                            <!--<img :src="image.url">-->
-                                                        <!--</div>-->
-                                                    <!--</div>-->
+                                                    <!-- Wrapper for slides -->
+                                                    <div class="carousel-inner">
+                                                        <div v-for="(image, index) in getSliderImages(articleElement.id)" v-bind:class="index == 0 ? 'active item elementImageSection' : 'item elementImageSection'">
+                                                            <img :src="image.url">
+                                                        </div>
+                                                    </div>
 
-                                                    <!--&lt;!&ndash; Left and right controls &ndash;&gt;-->
-                                                    <!--<a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">-->
-                                                        <!--<span class="glyphicon glyphicon-chevron-left"></span>-->
-                                                        <!--<span class="sr-only">Previous</span>-->
-                                                    <!--</a>-->
-                                                    <!--<a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">-->
-                                                        <!--<span class="glyphicon glyphicon-chevron-right"></span>-->
-                                                        <!--<span class="sr-only">Next</span>-->
-                                                    <!--</a>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                                    <!-- Left and right controls -->
+                                                    <a class="left carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="prev">
+                                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="right carousel-control" :href="getSliderIdNameHashed(articleElement.element_id)" data-slide="next">
+                                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Learnings&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'learning'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Key Fact</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p v-html="trimContent(articleElement.text)"></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
-                                                <!--<p v-html="articleElement.text"></p>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <!--Learnings-->
+                                    <div v-if="articleElement.type == 'learning'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Key Fact</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.text)"></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <p v-html="articleElement.text"></p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Social Media&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'socialmedia'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Social</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
-                                                <!--<twitter-element :url="articleElement.url"></twitter-element>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <!--Social Media-->
+                                    <div v-if="articleElement.type == 'socialmedia'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Social</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <twitter-element :url="articleElement.url"></twitter-element>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Videos&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'video'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Video</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p v-html="articleElement.name"></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content elementImageSection " v-if="displayedPanel === index">-->
-                                                <!--<video controls>-->
-                                                    <!--<source :src="articleElement.urls[0]" type="video/mp4">-->
-                                                    <!--<source :src="articleElement.urls[1]" type="video/webm">-->
-                                                <!--</video>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <!--Videos-->
+                                    <div v-if="articleElement.type == 'video'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Video</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="articleElement.name"></p>
+                                            </div>
+                                            <div class="panel_content elementImageSection " v-if="displayedPanel === index">
+                                                <video controls>
+                                                    <source :src="articleElement.urls[0]" type="video/mp4">
+                                                    <source :src="articleElement.urls[1]" type="video/webm">
+                                                </video>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;Surveys&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'survey'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">Voting</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p v-html="trimContent(articleElement.question)"></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content elementImageSection" v-if="displayedPanel === index">-->
-                                                <!--<p>{{ articleElement.question }}</p>-->
-                                                <!--<ol>-->
-                                                    <!--<li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>-->
-                                                <!--</ol>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <!--Surveys-->
+                                    <div v-if="articleElement.type == 'survey'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">Voting</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p v-html="trimContent(articleElement.question)"></p>
+                                            </div>
+                                            <div class="panel_content elementImageSection" v-if="displayedPanel === index">
+                                                <p>{{ articleElement.question }}</p>
+                                                <ol>
+                                                    <li v-for="(answer, index) in articleElement.answers">{{ answer.answer }}</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <!--&lt;!&ndash;External Videos&ndash;&gt;-->
-                                    <!--<div v-if="articleElement.type == 'externalvideo'" class="form-body panel">-->
-                                        <!--<div class="panel_heading">-->
-                                            <!--<span class="panel_title">External Video</span>-->
-                                            <!--<button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>-->
-                                            <!--<button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>-->
-                                        <!--</div>-->
-                                        <!--<div class="panel_body">-->
-                                            <!--<div class="panel_preview" v-if="displayedPanel !== index">-->
-                                                <!--<p></p>-->
-                                            <!--</div>-->
-                                            <!--<div class="panel_content" v-if="displayedPanel === index">-->
-                                                <!--<div class="timeline">-->
-                                                    <!--<timeline-item :key="articleElement.id" :liveticker="articleElement" @delete="deleteArticleExternalVideo(index)">-->
-                                                        <!--<external-video-element :element="articleElement" />-->
-                                                    <!--</timeline-item>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</draggable>-->
-                        <!--</div>-->
-                        <!--<div class="form-actions">-->
-                            <!--<button-->
-                                    <!--class="btn btn-primary"-->
-                                    <!--type="button"-->
-                                    <!--@click="saveSortedElements(article.id)"-->
-                                    <!--:disabled="article.id == null">-->
-                                <!--Aufbau speichern-->
-                            <!--</button>-->
-                        <!--</div>-->
-                    <!--</div>-->
+                                    <!--External Videos-->
+                                    <div v-if="articleElement.type == 'externalvideo'" class="form-body panel">
+                                        <div class="panel_heading">
+                                            <span class="panel_title">External Video</span>
+                                            <button v-if="displayedPanel !== index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-plus"></i></button>
+                                            <button v-if="displayedPanel === index" type="button" class="btn btn-sm panel_toggle" @click="setDisplayedPanel(index)"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                        <div class="panel_body">
+                                            <div class="panel_preview" v-if="displayedPanel !== index">
+                                                <p></p>
+                                            </div>
+                                            <div class="panel_content" v-if="displayedPanel === index">
+                                                <div class="timeline">
+                                                    <timeline-item :key="articleElement.id" :liveticker="articleElement" @delete="deleteArticleExternalVideo(index)">
+                                                        <external-video-element :element="articleElement" />
+                                                    </timeline-item>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </draggable>
+                        </div>
+                        <div class="form-actions">
+                            <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    @click="saveSortedElements(article.id)"
+                                    :disabled="article.id == null">
+                                Aufbau speichern
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <!--<image-select-modal></image-select-modal>-->
-                <!--<video-select-modal></video-select-modal>-->
+                <image-select-modal></image-select-modal>
+                <video-select-modal></video-select-modal>
             </div>
         </form>
     </div>
