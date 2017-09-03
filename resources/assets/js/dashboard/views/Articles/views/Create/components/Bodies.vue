@@ -5,8 +5,8 @@
             <div v-for="(articleBody, index) in articleBodies" class="form-group wysihtmlBody">
 
                 <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Bold</a>
-                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">URL</a>
+                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Fett</a>
+                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">Link</a>
 
                     <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
                         <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
@@ -165,13 +165,12 @@
             confirmDelete(key)
             {
                 swal({
-                    title: 'Are you sure?',
-                    text: "The entry can not be restored!",
+                    title: 'Bist du sicher?',
                     type: 'warning',
                     showCancelButton: true,
-                    cancelButtonText: 'Abort',
+                    cancelButtonText: 'Verwerfen',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete!'
+                    confirmButtonText: 'Ja, löschen'
                 }).then(() => {
                     this.deleteArticleBody(key)
                 }).catch(swal.noop);

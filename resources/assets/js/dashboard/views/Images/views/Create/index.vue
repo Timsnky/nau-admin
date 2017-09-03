@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Images" sub="Create"/>
+        <page-title title="Bild" sub="erstellen "/>
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="image_hidden_section_remove">
-                            <button class="btn btn-danger" @click="removeFile">Remove image</button>
+                            <button class="btn btn-danger" @click="removeFile">Bild entfernen </button>
                         </div>
                     </div>
                     </label>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div v-if="imageupload" class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Name *</label>
                     <input
                             id="name"
                             type="text"
@@ -38,25 +38,25 @@
                 </div>
 
                 <div v-if="imageupload" class="form-group">
-                    <label for="lead">Lead</label>
+                    <label for="lead">SEO - Beschrieb</label>
                     <textarea
                             id="lead"
                             name="lead"
                             v-model.trim="image.lead"
-                            placeholder="Lead"
+                            placeholder="SEO - Beschrieb"
                             class="form-control"
                             rows="3"></textarea>
                 </div>
 
                 <div v-if="imageupload" class="form-group">
-                    <label for="name">Source</label>
+                    <label for="name">Quelle *</label>
                     <div class="source_div">
                         <input
                                 id="source"
                                 type="text"
                                 name="source"
                                 v-model.trim="image.source"
-                                placeholder="Source"
+                                placeholder="Quelle"
                                 class="form-control source_input">
                         <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
                             <option v-bind:value="source.name" v-for="source in sources">
@@ -72,13 +72,13 @@
                         class="btn btn-primary"
                         type="submit"
                         :disabled="!image.name || !image.lead || !image.source">
-                    Submit
+                    Erstellen
                 </button>
                 <button
                         class="btn btn-default"
                         type="button"
                         @click="reset">
-                    Reset
+                    Verwerfen
                 </button>
             </div>
         </form>
@@ -106,7 +106,7 @@
                 sources: [
                     {
                         name: '',
-                        displayName: 'Select source (optional)'
+                        displayName: 'Quelle  auswählen'
                     },
                     {
                         name: 'Dpa',

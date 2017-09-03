@@ -1,14 +1,14 @@
 <template>
     <div>
-        <page-title title="Images" sub="Edit" />
+        <page-title title="Bild" sub="Edit" />B
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_image_section">
-                    <img class="media-object" :src="oldImageDetails.url" alt="...">
+                    <img class="media-object" :Bildsrc="oldImageDetails.url" alt="...">
                 </div>
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Name *</label>
                     <input
                         id="name"
                         type="text"
@@ -19,25 +19,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="lead">Lead</label>
+                    <label for="lead">SEO - Beschrieb</label>
                     <textarea
                         id="lead"
                         name="lead"
                         v-model.trim="newImageDetails.lead"
-                        placeholder="Lead"
+                        placeholder="SEO - Beschrieb"
                         class="form-control"
                         rows="3"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">Source</label>
+                    <label for="name">Quelle *</label>
                     <div class="source_div">
                         <input
                                 id="source"
                                 type="text"
                                 name="source"
                                 v-model.trim="newImageDetails.source"
-                                placeholder="Source"
+                                placeholder="Quelle"
                                 class="form-control source_input">
                         <select class="form-control helper_input" @change="imageSourceSelected()" v-model="selectedSource">
                             <option v-bind:value="source.name" v-for="source in sources">
@@ -53,13 +53,13 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!newImageDetails.name || !newImageDetails.lead || !newImageDetails.source">
-                    Submit
+                    Erstellen
                 </button>
                 <button
                     class="btn btn-default"
                     type="button"
                     @click="reset">
-                    Reset
+                    Verwerfen
                 </button>
             </div>
         </form>
@@ -78,7 +78,7 @@
                 sources: [
                     {
                         name: '',
-                        displayName: 'Select source (optional)'
+                        displayName: 'Quelle  auswählen'
                     },
                     {
                         name: 'Dpa',

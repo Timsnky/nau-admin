@@ -29,12 +29,12 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Name *</label>
+                                <label>Dateiname* </label>
                                 <input
                                         type="text"
                                         name="name"
                                         v-model.trim="image.name"
-                                        placeholder="Name"
+                                        placeholder="Dateiname"
                                         class="form-control">
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                         type="text"
                                         name="lead"
                                         v-model.trim="image.lead"
-                                        placeholder="Lead"
+                                        placeholder="Bildunterschrift"
                                         class="form-control">
                                 </input>
                             </div>
@@ -58,7 +58,7 @@
                                             type="text"
                                             name="source"
                                             v-model.trim="image.source"
-                                            placeholder="Source"
+                                            placeholder="Quelle"
                                             class="form-control source_input">
                                     <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
                                         <option v-bind:value="source.name" v-for="source in sources">
@@ -108,7 +108,7 @@
                             </div>
                         </div>
 
-                        <h3 v-if="!isLoaded" class="text-center">Loading...</h3>
+                        <h3 v-if="!isLoaded" class="text-center">Laden...</h3>
 
                         <div v-else-if="images.length > 0">
                             <div class="row image_selection_rows">
@@ -173,7 +173,7 @@
                 sources: [
                     {
                         name: '',
-                        displayName: 'Select source (optional)'
+                        displayName: 'Quelle  auswählen'
                     },
                     {
                         name: 'Dpa',

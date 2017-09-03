@@ -23,24 +23,24 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Name</label>
+                                <label>Dateiname *</label>
                                 <input
                                         type="text"
                                         name="name"
                                         v-model.trim="video.name"
-                                        placeholder="Name"
+                                        placeholder="Dateiname"
                                         class="form-control">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Lead</label>
+                                <label>Bildunterschrift</label>
                                 <input
                                         type="text"
                                         name="lead"
                                         v-model.trim="video.lead"
-                                        placeholder="Lead"
+                                        placeholder="Bildunterschrift"
                                         class="form-control">
                                 </input>
                             </div>
@@ -88,13 +88,13 @@
 
                             <div class="col-md-6 text-right">
                                 <select class="form-control" name="user_id" id="user_id" v-model="userId">
-                                    <option :value="myUserId">My Videos</option>
-                                    <option :value="0">All Videos</option>
+                                    <option :value="myUserId">Meine Videos</option>
+                                    <option :value="0">Alle Videos</option>
                                 </select>
                             </div>
                         </div>
 
-                        <h2 v-if="!isLoaded" class="text-center">Loading...</h2>
+                        <h2 v-if="!isLoaded" class="text-center">Laden...</h2>
 
                         <div v-else-if="videos.length > 0">
                             <div class="row image_selection_rows">

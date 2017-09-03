@@ -120,7 +120,7 @@
                                     v-if="editingArticle"
                                     class="btn btn-primary"
                                     @click="duplicateArticle()">
-                                Artikel vervielfältigen
+                                Artikel kopieren
                             </button>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                                     Top Teaser hochladen
                                 </button>
                                 <button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">
-                                    Löschen Teaser Bild
+                                    Löschen
                                 </button>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
                                 <div v-for="(slider, sliderIndex) in articleSliders" class="slider_section">
                                     <div class="form-group">
                                         <input class="form-control" type="text" v-model="slider.name"
-                                               placeholder="Enter name for slider (required)"/>
+                                               placeholder="Name für Slider eingeben (zwingend)"/>
                                     </div>
                                     <div class="media_overflow">
                                         <draggable class="slider_images_section" v-model="slider.images">
@@ -293,7 +293,7 @@
                                             Bilder Hochladen
                                         </button>
                                         <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
-                                            Remove slider
+                                            Löschen
                                         </button>
                                     </div>
                                 </div>
@@ -1061,7 +1061,7 @@
 
                 if(errorString !== "")
                 {
-                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
+                    Vue.toast('Um zu speichern, müssen ' + errorString + ' vorhanden sein', {
                         className: ['nau_toast', 'nau_warning'],
                     });
                 }
@@ -1082,42 +1082,37 @@
 
                 if(! this.article.dateline)
                 {
-                    errorArray.push('dateline');
+                    errorArray.push('Überzeile');
                 }
 
                 if(! this.article.title)
                 {
-                    errorArray.push('title');
+                    errorArray.push('Titel Home');
                 }
 
                 if(! this.articleMainImage.url)
                 {
-                    errorArray.push('main article image');
-                }
-
-                if(! this.articleTeaserImage.url)
-                {
-                    errorArray.push('teaser image');
+                    errorArray.push('Teaser');
                 }
 
                 if(this.article.lead === '')
                 {
-                    errorArray.push('lead');
+                    errorArray.push('Lead');
                 }
 
                 if(this.articleAuthors.length === 0)
                 {
-                    errorArray.push('author');
+                    errorArray.push('Autor');
                 }
 
                 if(this.article.latitude === undefined || this.article.longitude === undefined)
                 {
-                    errorArray.push('location');
+                    errorArray.push('Ursprungsort der Geshcichte');
                 }
 
                 if(this.article.published_at === null || this.article.published_at === '')
                 {
-                    errorArray.push('publication date');
+                    errorArray.push('Publikationsdatum');
                 }
 
                 if(errorArray.length === 1)
@@ -1134,7 +1129,7 @@
                         }
                         else
                         {
-                            errorString += 'and ' + value;
+                            errorString += 'und ' + value;
                         }
                     });
                 }
@@ -1227,22 +1222,17 @@
 
                 if(! this.article.dateline)
                 {
-                    errorArray.push('dateline');
+                    errorArray.push('Überzeile');
                 }
 
                 if(! this.article.title)
                 {
-                    errorArray.push('title');
+                    errorArray.push('Titel Home');
                 }
-//
-//                if(! this.articleMainImage.url)
-//                {
-//                    errorArray.push('main article image');
-//                }
 
                 if(this.article.lead === '')
                 {
-                    errorArray.push('lead');
+                    errorArray.push('Lead');
                 }
 
                 if(errorArray.length === 1)
@@ -1259,7 +1249,7 @@
                         }
                         else
                         {
-                            errorString += 'and ' + value;
+                            errorString += 'und ' + value;
                         }
                     });
                 }
@@ -1303,7 +1293,7 @@
 
                 if(errorString !== "")
                 {
-                    Vue.toast('Please provide the ' + errorString + ' for the article in order to save', {
+                    Vue.toast('Um zu speichern, müssen ' + errorString + ' vorhanden sein', {
                         className: ['nau_toast', 'nau_warning'],
                     });
                 }

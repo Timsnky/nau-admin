@@ -13,13 +13,12 @@ let sliderMixin = {
         confirmSliderDelete(key)
         {
             swal({
-                title: 'Are you sure?',
-                text: "The entry can not be restored!",
+                title: 'Bist du sicher?',
                 type: 'warning',
                 showCancelButton: true,
-                cancelButtonText: 'Abort',
+                cancelButtonText: 'Verwerfen',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete!'
+                confirmButtonText: 'Ja, löschen'
             }).then(() => {
                 this.deleteArticleSlider(key)
             }).catch(swal.noop);
@@ -179,13 +178,12 @@ let sliderMixin = {
         confirmSliderImageDelete(key, imageKey)
         {
             swal({
-                title: 'Are you sure?',
-                text: "The entry can not be restored!",
+                title: 'Bist du sicher?',
                 type: 'warning',
                 showCancelButton: true,
-                cancelButtonText: 'Abort',
+                cancelButtonText: 'Verwerfen',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete!'
+                confirmButtonText: 'Ja, löschen'
             }).then(() => {
                 this.deleteSliderImage(key, imageKey)
             }).catch(swal.noop);

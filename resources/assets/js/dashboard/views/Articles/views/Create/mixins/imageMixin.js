@@ -111,13 +111,12 @@ let imageMixin = {
         confirmArticleImageDelete(key)
         {
             swal({
-                title: 'Are you sure?',
-                text: "The entry can not be restored!",
+                title: 'Bist du sicher?',
                 type: 'warning',
                 showCancelButton: true,
-                cancelButtonText: 'Abort',
+                cancelButtonText: 'Verwerfen',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete!'
+                confirmButtonText: 'Ja, löschen'
             }).then(() => {
                 this.deleteArticleImage(key)
             }).catch(swal.noop);
