@@ -3,9 +3,9 @@
         <ul class="pagination">
             <li :class="{'disabled': currentPage === 1}">
                 <a
-                    aria-label="Previous"
+                    aria-label="Zurück"
                     @click="stepDown">
-                    Previous
+                    Zurück
                 </a>
             </li>
             <pagination-link
@@ -16,9 +16,9 @@
                 :key="index"/>
             <li :class="{'disabled': currentPage === pagesCount}">
                 <a
-                    aria-label="Next"
+                    aria-label="Weiter"
                     @click="stepUp">
-                    Next
+                    Weiter
                 </a>
             </li>
         </ul>

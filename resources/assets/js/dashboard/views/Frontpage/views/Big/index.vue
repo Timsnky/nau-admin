@@ -83,9 +83,9 @@
                     return;
                 }
 
-                Api.http.get(`/articles?search=${query}`)
+                Api.http.get(`/articles?search=${query}&teaser=1`)
                     .then((response) => {
-                        this.options = response.data;
+                        this.options = response.data.data;
                         this.isLoading = false
                     })
             }, 400),
