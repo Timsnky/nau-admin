@@ -7,7 +7,7 @@
                     <input
                             type="text"
                             maxlength="100"
-                            v-model.trim="articleLearning.text"
+                            v-model.trim="articleLearnings[index]"
                             placeholder="Key Fact hinzufügen (max 100 Zeichen)"
                             class="form-control article_input">
                     <button
@@ -15,7 +15,7 @@
                             class="btn btn-danger btn-sm delete_btn"
                             type="button"> x
                     </button>
-                    <character-counter :limit="100" :itemString="articleLearning.text"></character-counter>
+                    <character-counter :limit="100" :itemString="articleLearning"></character-counter>
                 </div>
             </div>
         </div>
@@ -46,18 +46,9 @@
         data() {
             return {
                 articleLearnings: [
-                    {
-                        text: '',
-                        id: null
-                    },
-                    {
-                        text: '',
-                        id: null
-                    },
-                    {
-                        text: '',
-                        id: null
-                    }
+                    '',
+                    '',
+                    '',
                 ],
             }
         },
@@ -108,7 +99,7 @@
                         {
                             if(response.data.length !== 0)
                             {
-                                this.articleLearnings = response.data;
+                                this.articleLearnings = response.data.learnings;
                             }
                         }
                         else
@@ -128,7 +119,7 @@
             {
                 if(this.articleLearnings.length < 5)
                 {
-                    this.articleLearnings.push({text: '', id: null});
+                    this.articleLearnings.push('');
                 }
                 else
                 {
@@ -146,15 +137,7 @@
                     return false;
                 }
 
-                let totalLearnings = 0;
-
-                this.articleLearnings.forEach(function (value, key)
-                {
-                    if(value.text !== '')
-                    {
-                        totalLearnings ++;
-                    }
-                });
+                let totalLearnings = this.articleLearnings.filter(String).length;
 
                 return ! (totalLearnings >= limit);
             },
@@ -166,56 +149,25 @@
 
                 if(! this.validateLearnings(articleId, 3))
                 {
-                    this.articleLearnings.forEach(function (value, key)
-                    {
-                        if (value.id && articleId === vm.articleId)
-                        {
-                            Api.http
-                                .put(`/articles/${articleId}/learnings/${value.id}`, {
-                                    text: value.text,
-                                })
-                                .then(response => {
-                                    if (response.status === 200)
-                                    {
-                                        vm.articleLearnings[key] = response.data;
-                                        Vue.toast('Article learnings updated successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                    else
-                                    {
-                                        Vue.toast('Error in updating the learning. Please retry again', {
-                                            className: ['nau_toast', 'nau_warning'],
-                                        });
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            if (value.text !== '')
+                    Api.http
+                        .put(`/articles/${articleId}/learnings`, {
+                            learnings: vm.articleLearnings.filter(String),
+                        })
+                        .then(response => {
+                            if (response.status === 200)
                             {
-                                Api.http
-                                    .post(`/articles/${articleId}/learnings`, {
-                                        text: value.text,
-                                    })
-                                    .then(response => {
-                                        if (response.status === 201)
-                                        {
-                                            vm.articleLearnings[key] = response.data;
-                                            Vue.toast('Article learnings created successfully', {
-                                                className: ['nau_toast', 'nau_success'],
-                                            });
-                                        }
-                                        else
-                                        {
-                                            Vue.toast('Error in creating the learning. Please retry again', {
-                                                className: ['nau_toast', 'nau_warning'],
-                                            });
-                                        }
-                                    });
+                                vm.articleLearnings = response.data.learnings;
+                                Vue.toast('Article learnings updated successfully', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
                             }
-                        }
-                    });
+                            else
+                            {
+                                Vue.toast('Error in updating the learning. Please retry again', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
                 }
                 else
                 {
@@ -252,29 +204,10 @@
             //Delete a learning
             deleteArticleLearning(key)
             {
-                let vm = this;
-
-                if(vm.articleLearnings[key].id)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.articleId}/learnings/${vm.articleLearnings[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.articleLearnings.splice(key, 1);
-                                Vue.toast('Article learning deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                        });
-                }
-                else
-                {
-                    vm.articleLearnings.splice(key, 1);
-                    Vue.toast('Article learning deleted successfully', {
-                        className: ['nau_toast', 'nau_success'],
-                    });
-                }
+                this.articleLearnings.splice(key, 1);
+                Vue.toast('Article learning deleted successfully', {
+                    className: ['nau_toast', 'nau_success'],
+                });
             },
 
             //Duplicate the data based on the article id
