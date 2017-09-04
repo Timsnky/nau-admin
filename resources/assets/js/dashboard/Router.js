@@ -231,6 +231,16 @@ let routes = [{
             name: 'frontpage.big',
             component: require('./views/Frontpage/views/Big'),
         },
+        {
+            path: '/top',
+            name: 'frontpage.top',
+            component: require('./views/Frontpage/views/Top'),
+        },
+        {
+            path: '/top/community',
+            name: 'frontpage.top.community',
+            component: require('./views/Frontpage/views/TopCommunity'),
+        },
     ],
 },
 {

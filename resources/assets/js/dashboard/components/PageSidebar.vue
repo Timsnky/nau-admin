@@ -114,14 +114,19 @@
                     <ul class="sub-menu">
                         <router-link :to="{name: 'frontpage.big' }" tag="li" exact>
                             <a>
-                                <span class="title">Big Verwaltung</span>
+                                <span class="title">Big</span>
                             </a>
                         </router-link>
-                        <!-- <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
+                        <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
                             <a>
-                                <span class="title">Top Artikel Verwaltung</span>
+                                <span class="title">Top Artikel</span>
                             </a>
-                        </router-link> -->
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.community'}" tag="li" exact>
+                            <a>
+                                <span class="title">Community Top Artikel</span>
+                            </a>
+                        </router-link>
                     </ul>
                 </li>
             </ul>
