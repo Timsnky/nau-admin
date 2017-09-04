@@ -564,10 +564,12 @@
                                         </div>
                                         <div class="panel_body">
                                             <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p v-html="trimContent(articleElement.text)"></p>
+
                                             </div>
                                             <div class="panel_content" v-if="displayedPanel === index">
-                                                <p v-html="articleElement.text"></p>
+                                                <ul>
+                                                    <li v-for="learning in articleElement.learnings">{{ learning }}</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
