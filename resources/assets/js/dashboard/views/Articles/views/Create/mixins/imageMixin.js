@@ -62,7 +62,7 @@ let imageMixin = {
                             lead: value.lead,
                         })
                         .then(response => {
-                            if(response.status === 204)
+                            if(response.status === 200)
                             {
                             }
                             else
