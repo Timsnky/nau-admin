@@ -5,13 +5,13 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title">Titel</label>
                     <input
                         id="title"
                         type="text"
                         name="title"
                         v-model.trim="article.title"
-                        placeholder="Add title"
+                        placeholder="Titel"
                         class="form-control">
                 </div>
             </div>
@@ -24,7 +24,7 @@
                         type="text"
                         name="lead"
                         v-model.trim="article.lead"
-                        placeholder="Add lead"
+                        placeholder="Lead"
                         class="form-control">
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!article.title || !article.dateline || !article.dateline">
-                    Submit
+                    Erstellen
                 </button>
                 <button
                     class="btn btn-default"

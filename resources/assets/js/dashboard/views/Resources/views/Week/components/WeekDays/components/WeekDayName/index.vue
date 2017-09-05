@@ -9,7 +9,7 @@
         props: {
             day: Object
         },
-        
+
         computed: {
             url() {
                 return {
@@ -19,9 +19,9 @@
                     }
                 };
             },
-            
+
             dayName() {
-                return moment(this.day.date).format('dddd');
+                return moment(this.day.date).format('dddd DD.MM.YYYY');
             }
         }
     }
@@ -32,12 +32,12 @@
         background-color: #cccccc;
         height: auto;
         padding: 0;
-        
+
         a {
             color: #333333;
             display: block;
             padding: 20px 10px;
-            
+
             &:hover {
                 color: #333333;
             }

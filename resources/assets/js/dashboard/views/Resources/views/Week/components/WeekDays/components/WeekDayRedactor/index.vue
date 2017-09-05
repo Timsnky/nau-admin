@@ -8,7 +8,7 @@
             </li>
         </ul>
 
-        <h5 v-else>No shifts</h5>
+        <h5 v-else>Keine Schichten</h5>
     </div>
 </template>
 

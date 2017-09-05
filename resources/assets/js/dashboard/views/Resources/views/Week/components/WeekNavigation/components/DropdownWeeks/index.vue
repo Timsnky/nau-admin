@@ -37,9 +37,9 @@
                 const options = [];
                 let date = moment(`${this.week}-${this.year}`, 'WW-YYYY').subtract(2, 'week');
 
-                for (let i = -2; i <= 20; i++) {
+                for (let i = -2; i <= 15; i++) {
                     options.push({
-                        date: date.format('WW - DD.MM.YYYY'),
+                        date: date.format('[KW.] WW | DD.MM. - [' + date.clone().endOf('week').format('DD.MM.') + ']'),
                         year: date.year(),
                         week: date.week(),
                         selected: i === 0
