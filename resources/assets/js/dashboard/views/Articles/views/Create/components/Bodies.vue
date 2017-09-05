@@ -79,10 +79,6 @@
             {
                 this.initializeArticleBodies(this.articleId);
             }
-            else
-            {
-                this.initializeBodyEditor(this, 0);
-            }
         },
 
         created()

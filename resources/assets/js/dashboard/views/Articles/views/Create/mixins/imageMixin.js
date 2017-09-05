@@ -149,6 +149,26 @@ let imageMixin = {
                     className: ['nau_toast', 'nau_success'],
                 });
             }
+        },
+
+        //Update an image details
+        updateImage(key)
+        {
+            let vm = this;
+
+            Api.http
+                .put(`/images/${vm.articleImages[key].id}`, {
+                    lead: vm.articleImages[key].lead,
+                    source: vm.articleImages[key].source
+                })
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        Vue.toast('Article image updated successfully', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                    }
+                });
         }
     }
 };

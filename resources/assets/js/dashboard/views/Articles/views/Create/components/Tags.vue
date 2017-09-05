@@ -222,10 +222,10 @@
                     errorArray.push('at least 4 tags');
                 }
 
-                if(this.articleRelatedStories.length < 1)
-                {
-                    errorArray.push('at least 1 related story');
-                }
+//                if(this.articleRelatedStories.length < 1)
+//                {
+//                    errorArray.push('at least 1 related story');
+//                }
 
                 if(errorArray.length === 1)
                 {
@@ -398,7 +398,7 @@
                         Api.http
                             .get(`/articles?search=${this.searchedRelatedStory.query}`)
                             .then(response => {
-                                this.existingRelatedStories = response.data;
+                                this.existingRelatedStories = response.data.data;
                                 this.searchedRelatedStory.promise = true;
                                 this.relatedStoryIsLoading = false;
                             });

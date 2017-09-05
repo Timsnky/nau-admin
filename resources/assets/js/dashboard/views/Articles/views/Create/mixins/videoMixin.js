@@ -199,6 +199,26 @@ let videoMin = {
                 vm.articleVideos.splice(key, 1);
             }
         },
+
+        //Update a video details
+        updateVideo(key)
+        {
+            let vm = this;
+
+            Api.http
+                .put(`/videos/${vm.articleVideos[key].id}`, {
+                    lead: vm.articleVideos[key].lead,
+                    source: vm.articleVideos[key].source
+                })
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        Vue.toast('Article video updated successfully', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                    }
+                });
+        }
     }
 };
 

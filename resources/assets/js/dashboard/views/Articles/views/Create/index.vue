@@ -205,9 +205,9 @@
                                 <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Top Teaser hochladen
                                 </button>
-                                <button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">
-                                    Löschen
-                                </button>
+                                <!--<button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">-->
+                                    <!--Löschen-->
+                                <!--</button>-->
                             </div>
                         </div>
                         <div class="form-actions">
@@ -249,6 +249,12 @@
                                                         @click="confirmArticleImageDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
+                                                <button
+                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        type="button"
+                                                        @click="updateImage(index)">
+                                                    Update
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -278,11 +284,19 @@
                                                  class="col-md-3 slider_image">
                                                 <img :src="image.url" alt="">
                                                 <div class="form-group">
+                                                    <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
+                                                    <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                     <button
                                                             class="btn btn-danger btn-sm remove_btn"
                                                             type="button"
                                                             @click="confirmSliderImageDelete(sliderIndex, index)">
                                                         <i class="fa fa-trash"></i>
+                                                    </button>
+                                                    <button
+                                                            class="btn btn-primary btn-sm remove_btn"
+                                                            type="button"
+                                                            @click="updateSliderImage(sliderIndex, index)">
+                                                        Update
                                                     </button>
                                                 </div>
                                             </div>
@@ -329,6 +343,12 @@
                                                         type="button"
                                                         @click="confirmVideoDelete(index)">
                                                     <i class="fa fa-trash"></i>
+                                                </button>
+                                                <button
+                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        type="button"
+                                                        @click="updateVideo(index)">
+                                                    Update
                                                 </button>
                                             </div>
                                         </div>
@@ -1272,11 +1292,6 @@
                     this.article.internal_dateline = this.article.dateline;
                 }
 
-                if(this.article.seo_title === '')
-                {
-                    this.article.seo_title = this.article.title;
-                }
-
                 if(this.article.latitude === null)
                 {
                     delete this.article['latitude'];
@@ -2094,7 +2109,7 @@
         border-radius: 3px;
         padding: 10px;
         margin-bottom: 10px;
-        max-height: 400px;
+        max-height: 440px;
     }
 
     .media_image {
@@ -2123,7 +2138,7 @@
     .slider_image {
         padding: 10px;
         width: 320px;
-        height: 280px;
+        height: 320px;
         border: 1px solid #403E3E;
         border-radius: 3px;
         background: #e3e3e3;

@@ -213,6 +213,26 @@ let sliderMixin = {
                     });
             }
         },
+
+        //Update an image details
+        updateSliderImage(key, imageKey)
+        {
+            let vm = this;
+
+            Api.http
+                .put(`/images/${vm.articleSliders[key].images[imageKey].id}`, {
+                    lead: vm.articleSliders[key].images[imageKey].lead,
+                    source: vm.articleSliders[key].images[imageKey].source
+                })
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        Vue.toast('Article image updated successfully', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                    }
+                });
+        }
     }
 };
 
