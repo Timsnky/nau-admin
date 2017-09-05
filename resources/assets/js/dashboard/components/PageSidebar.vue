@@ -30,29 +30,50 @@
                     </a>
                 </router-link>
 
-                <router-link :to="{name: 'articles.list'}" tag="li" class="nav-item" exact>
-                    <a href="javascript:;" class="nav-link nav-toggle">
+                <li class="nav-item">
+                    <router-link :to="{name: 'articles.list'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-newspaper-o"></i>
-                        <span class="title">Articles</span>
-                    </a>
-                </router-link>
+                        <span class="title">Artikel</span>
+                        <span class="arrow"></span>
+                    </router-link>
+                    <ul class="sub-menu">
+                        <router-link :to="{name: 'articles.list'}" tag="li" class="nav-item" exact>
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="fa fa-newspaper-o"></i>
+                                <span class="title">News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'articles.community'}" tag="li" class="nav-item" exact>
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="fa fa-users"></i>
+                                <span class="title">Community</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'articles.live'}" tag="li" class="nav-item" exact>
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="fa fa-paper-plane"></i>
+                                <span class="title">Live</span>
+                            </a>
+                        </router-link>
+                    </ul>
+                </li>
 
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
+                    <router-link :to="{name: 'resources.week'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-calendar"></i>
-                        <span class="title">Resource management</span>
+                        <span class="title">Ressourcenmanagement</span>
                         <span class="arrow"></span>
-                    </a>
+                    </router-link>
                     <ul class="sub-menu">
                         <router-link :to="{name: 'resources.week' }" tag="li" exact>
                             <a>
-                                <span class="title">Calendar</span>
+                                <span class="title">Kalender</span>
                             </a>
                         </router-link>
                         <router-link :to="{name: 'holidays.list'}" tag="li" exact>
                             <a>
-                                <span class="title">Holidays</span>
-                                </a>
+                                <span class="title">Freitage</span>
+                            </a>
                         </router-link>
                     </ul>
                 </li>
@@ -60,7 +81,7 @@
                 <router-link :to="{name: 'ideas.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-lightbulb-o"></i>
-                        <span class="title">Ideas</span>
+                        <span class="title">Ideen</span>
                     </a>
                 </router-link>
 
@@ -68,7 +89,7 @@
                 <router-link :to="{name: 'images.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-image"></i>
-                        <span class="title">Images</span>
+                        <span class="title">Bilder</span>
                     </a>
                 </router-link>
 

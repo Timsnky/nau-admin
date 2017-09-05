@@ -5,7 +5,7 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label>Date</label>
+                    <label>Datum</label>
                     <date-time
                         @changeDate="changeDate"
                         :date="newTopic.date" />
@@ -28,7 +28,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!newTopic.name || !newTopic.date">
-                    Submit
+                    Bearbeiten
                 </button>
                 <button
                     class="btn btn-default"

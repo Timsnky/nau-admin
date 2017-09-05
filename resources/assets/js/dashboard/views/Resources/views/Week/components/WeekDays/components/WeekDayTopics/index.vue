@@ -7,8 +7,8 @@
                 <h5>{{ topic.name }}</h5>
             </li>
         </ul>
-        
-        <h5 v-else>No topics</h5>
+
+        <h5 v-else>Keine Themen</h5>
     </div>
 </template>
 
@@ -23,7 +23,7 @@
 <style lang="scss">
     .day__topics {
         background-color: #eeeeee;
-        
+
         ul {
             margin: 0;
             padding-left: 15px;

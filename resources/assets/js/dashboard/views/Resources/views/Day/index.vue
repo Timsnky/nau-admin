@@ -13,7 +13,7 @@
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
-                            <span class="caption-subject bold uppercase">Shifts</span>
+                            <span class="caption-subject bold uppercase">Schichten</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -29,7 +29,7 @@
                                 <router-link
                                     :to="{name: 'shifts.associate', params: { id: shift.id }}"
                                     class="btn btn-xs btn-warning pull-right">
-                                    Edit
+                                    Bearbeiten
                                 </router-link>
                             </li>
                             <li
@@ -41,14 +41,14 @@
                                 <router-link
                                     :to="{name: 'shifts.associate', params: { date, id: shift.id }}"
                                     class="btn btn-xs btn-info pull-right">
-                                    Assign
+                                    Zuweisen
                                 </router-link>
                             </li>
                         </ul>
                         <h4
                             v-else
                             class="text-center">
-                            No shifts found
+                            Keine Schichten gefunden
                         </h4>
                     </div>
                 </div>
@@ -57,7 +57,10 @@
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
-                            <span class="caption-subject bold uppercase">Topics</span>
+                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -78,7 +81,7 @@
                                                 <router-link
                                                     :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
                                                     class="btn btn-xs btn-warning pull-right">
-                                                    Edit
+                                                    Bearbeiten
                                                 </router-link>
                                             </h5>
 
@@ -95,7 +98,7 @@
                                             <h5
                                                 v-else
                                                 class="text-center">
-                                                No authors found
+                                                Keine Authoren gefunden
                                             </h5>
                                         </div>
                                     </div>
@@ -104,13 +107,13 @@
                                 <h4
                                     v-else
                                     class="text-center">
-                                    No stories found
+                                    Keine Artikel gefunden
                                 </h4>
 
                                 <router-link
                                     :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
                                     class="btn btn-primary">
-                                    Add Story
+                                    Artikel hinzufügen
                                 </router-link>
                             </div>
                         </div>
@@ -118,13 +121,13 @@
                         <h4
                             v-else
                             class="text-center">
-                            No topics found
+                            Keine Themen gefunden
                         </h4>
 
                         <router-link
                             :to="{name: 'topics.create', query: { date }}"
                             class="btn btn-primary">
-                            Add Topic
+                            Thema hinzufügen
                         </router-link>
                     </div>
                 </div>
@@ -157,6 +160,20 @@
                     this.isLoaded = true;
                     console.log('Show some error message here');
                 });
+        },
+
+        methods: {
+            moment(date) {
+                return moment(date);
+            }
         }
     }
 </script>
+
+<style lang="scss">
+    .portlet-fullscreen {
+        .btn {
+            display: none;
+        }
+    }
+</style>

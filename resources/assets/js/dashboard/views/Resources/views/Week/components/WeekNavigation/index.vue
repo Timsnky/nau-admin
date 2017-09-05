@@ -1,15 +1,17 @@
 <template>
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-md-4 col-md-push-4">
+            <h4 class="text-center">Wochen Übersicht</h4>
+        </div>
+
+        <div class="col-md-4 col-md-pull-4">
             <dropdownWeeks
                 :year="year"
                 :week="week"
                 @changeWeek="changeWeek"/>
         </div>
-        <div class="col-xs-4">
-            <h4 class="text-center">Week view</h4>
-        </div>
-        <div class="col-xs-4 text-right">
+
+        <div class="col-md-4 text-right">
             <button
                 @click="handlePrevWeek"
                 class="btn btn-default">
@@ -23,7 +25,7 @@
             <button
                 @click="handleCurrentWeek"
                 class="btn btn-default">
-                Current
+                Aktuelle Woche
             </button>
         </div>
     </div>

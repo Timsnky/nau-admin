@@ -7,7 +7,7 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label>Date</label>
+                    <label>Datum</label>
                     <date-time
                         @changeDate="changeDate"
                         :date="topic.date"/>
@@ -20,7 +20,7 @@
                         type="text"
                         name="name"
                         v-model.trim="topic.name"
-                        placeholder="Add name"
+                        placeholder="Name"
                         class="form-control">
                 </div>
             </div>
@@ -30,7 +30,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!topic.name || !topic.date">
-                    Submit
+                    Erstellen
                 </button>
                 <button
                     class="btn btn-default"

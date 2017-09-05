@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Artikel" />
+        <page-title title="Community Artikel" />
         <div class="row">
             <div class="col-md-6">
                 <div class="input-icon">
@@ -130,10 +130,10 @@
 
             getPaginatedData(page) {
                 if (this.searchTerm !== '') {
-                    return Api.http.get(`/articles?community=0&search=${this.searchTerm}&page=${page}`);
+                    return Api.http.get(`/articles?community=1&search=${this.searchTerm}&page=${page}`);
                 }
 
-                return Api.http.get(`/articles?community=0&page=${page}`);
+                return Api.http.get(`/articles?community=1&page=${page}`);
             },
 
             publicationDate(article)
