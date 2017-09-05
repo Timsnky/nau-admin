@@ -28,6 +28,7 @@
             <tr>
                 <th>Titel</th>
                 <th>Author</th>
+                <th><!-- Status --></th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
             </tr>
@@ -38,6 +39,9 @@
                 :key="article.id">
                 <td>{{ article.title }}</td>
                 <td>{{ article.authors[0] ? article.authors[0].name : '' }}</td>
+                <td>
+                    <span v-if="article.published" class="label label-sm label-success">Publiziert</span>
+                </td>
                 <td>{{ publicationDate(article) }}</td>
                 <td><router-link
                         :to="{name: 'articles.edit', params: {id: article.id}}"
