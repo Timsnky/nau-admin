@@ -57,7 +57,10 @@
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
-                            <span class="caption-subject bold uppercase">Themen</span>
+                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -157,6 +160,20 @@
                     this.isLoaded = true;
                     console.log('Show some error message here');
                 });
+        },
+
+        methods: {
+            moment(date) {
+                return moment(date);
+            }
         }
     }
 </script>
+
+<style lang="scss">
+    .portlet-fullscreen {
+        .btn {
+            display: none;
+        }
+    }
+</style>
