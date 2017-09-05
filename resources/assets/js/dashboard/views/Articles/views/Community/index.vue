@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="Articles" />
+        <page-title title="Community Artikel" />
         <div class="row">
             <div class="col-md-6">
                 <div class="input-icon">

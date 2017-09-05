@@ -24,6 +24,11 @@ let routes = [{
         component: require('./views/Articles/views/Community'),
     },
     {
+        path: '/live',
+        name: 'articles.live',
+        component: require('./views/Articles/views/Live'),
+    },
+    {
       path: 'create',
       name: 'articles.create',
       component: require('./views/Articles/views/Create'),

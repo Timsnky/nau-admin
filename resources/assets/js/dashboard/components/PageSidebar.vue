@@ -49,6 +49,12 @@
                                 <span class="title">Community</span>
                             </a>
                         </router-link>
+                        <router-link :to="{name: 'articles.live'}" tag="li" class="nav-item" exact>
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="fa fa-paper-plane"></i>
+                                <span class="title">Live</span>
+                            </a>
+                        </router-link>
                     </ul>
                 </li>
 
