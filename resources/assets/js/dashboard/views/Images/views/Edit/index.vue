@@ -1,11 +1,11 @@
 <template>
     <div>
-        <page-title title="Bild" sub="Edit" />B
+        <page-title title="Bild" sub="Edit" />
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_image_section">
-                    <img class="media-object" :Bildsrc="oldImageDetails.url" alt="...">
+                    <img class="media-object" :src="oldImageDetails.url" alt="...">
                 </div>
                 <div class="form-group">
                     <label for="name">Name *</label>
