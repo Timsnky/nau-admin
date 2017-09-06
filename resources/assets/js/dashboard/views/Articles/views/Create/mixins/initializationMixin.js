@@ -17,6 +17,13 @@ let initializationMixin = {
                         this.article = response.data;
                         this.articleTitle = this.article.title;
                         delete this.article['image'];
+
+                        this.articlePlaces = {
+                            name: this.article.location,
+                            latitude: this.article.latitude,
+                            longitude: this.article.longitude,
+                        }
+
                         this.initializeLeadEditor(this);
                         if(this.article.teaser_id)
                         {

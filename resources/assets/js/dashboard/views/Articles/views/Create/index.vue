@@ -727,8 +727,7 @@
                     lead: '',
                     id: null,
                     published_at: null,
-                    latitude: null,
-                    longitude: null
+                    location: '',
                 },
                 duplicateArticleId: null,
                 editingArticle: false,
@@ -900,10 +899,8 @@
 
             articlePlaces(newPlace, oldPlace)
             {
-                if(newPlace)
-                {
-                    this.article.latitude = newPlace.latitude;
-                    this.article.longitude = newPlace.longitude;
+                if(newPlace) {
+                    this.article.location = newPlace.name;
                 }
             }
         },
@@ -1127,7 +1124,7 @@
                     errorArray.push('Autor');
                 }
 
-                if(this.article.latitude === undefined || this.article.longitude === undefined)
+                if(this.article.location)
                 {
                     errorArray.push('Ursprungsort der Geshcichte');
                 }
@@ -1290,16 +1287,6 @@
                 if(this.article.internal_dateline === '')
                 {
                     this.article.internal_dateline = this.article.dateline;
-                }
-
-                if(this.article.latitude === null)
-                {
-                    delete this.article['latitude'];
-                }
-
-                if(this.article.longitude === null)
-                {
-                    delete this.article['longitude'];
                 }
             },
 
