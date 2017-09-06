@@ -6,7 +6,7 @@
                     <div class="image_section_image">
                         <router-link
                                 :to="{name: 'images.edit', params: {id: image.id}}">
-                            <img class="media-object" :src="image.url" :alt="image.name">
+                            <img class="media-object" :src="image.url + '?w=340&h=170'" :alt="image.name">
                         </router-link>
                     </div>
                     <div class="image_section_details">

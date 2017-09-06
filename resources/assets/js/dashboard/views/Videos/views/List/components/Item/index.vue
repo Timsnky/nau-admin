@@ -62,7 +62,6 @@
 
     .video_section_left {
         display: inline-flex;
-        height: 150px;
     }
 
     .video_section_video {
@@ -73,9 +72,9 @@
     }
 
     .video_section_video img {
-        max-height: 240px;
+        max-height: 180px;
         width: auto;
-        max-width: 320px;
+        max-width: 300px;
         height: auto;
     }
 
