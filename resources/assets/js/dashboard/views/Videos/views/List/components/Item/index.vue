@@ -22,7 +22,7 @@
                             class="btn btn-danger"
                             type="button"
                             @click="handleDeleteVideo">
-                        Delete
+                        Löschen
                     </button>
                     <div v-if="!video.processed">
                         <span><i class="fa fa-spin fa-spinner"></i> Wird verarbeitet ...</span>
@@ -62,7 +62,7 @@
 
     .video_section_left {
         display: inline-flex;
-        height: 240px;
+        height: 150px;
     }
 
     .video_section_video {

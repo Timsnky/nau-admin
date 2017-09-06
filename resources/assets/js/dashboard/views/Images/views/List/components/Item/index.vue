@@ -6,7 +6,7 @@
                     <div class="image_section_image">
                         <router-link
                                 :to="{name: 'images.edit', params: {id: image.id}}">
-                            <img class="media-object" :src="image.url" alt="...">
+                            <img class="media-object" :src="image.url" :alt="image.name">
                         </router-link>
                     </div>
                     <div class="image_section_details">
@@ -22,7 +22,7 @@
                             class="btn btn-danger"
                             type="button"
                             @click="handleDeleteImage">
-                        Delete
+                        Löschen
                     </button>
                 </div>
             </div>
@@ -59,7 +59,6 @@
 
     .image_section_left {
         display: inline-flex;
-        height: 240px;
     }
 
     .image_section_image {

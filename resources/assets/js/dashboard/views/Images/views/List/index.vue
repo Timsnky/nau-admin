@@ -8,7 +8,7 @@
                     <input
                         type="search"
                         class="form-control"
-                        placeholder="Search"
+                        placeholder="Suche"
                         name="searchTerm"
                         v-model.trim="searchTerm">
                 </div>
@@ -18,11 +18,8 @@
                 <router-link
                     :to="{name: 'images.create'}"
                     class="btn btn-primary pull-right">
-                    Upload
+                    Bild hochladen
                 </router-link>
-                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#imageSelectionModal">
-                    Choose Image
-                </button>
             </div>
             <image-select-modal></image-select-modal>
         </div>
@@ -53,7 +50,7 @@
             </div>
         </div>
 
-        <h2 v-else class="text-center">No images uploaded</h2>
+        <h2 v-else class="text-center">Keine Bilder gefunden</h2>
     </div>
 </template>
 <script>

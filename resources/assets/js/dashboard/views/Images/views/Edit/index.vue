@@ -5,7 +5,7 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_image_section">
-                    <img class="media-object" :src="oldImageDetails.url" alt="...">
+                    <img class="media-object" :src="oldImageDetails.url + '?w=340&h=170'" :alt="oldImageDetails.name">
                 </div>
                 <div class="form-group">
                     <label for="name">Name *</label>
