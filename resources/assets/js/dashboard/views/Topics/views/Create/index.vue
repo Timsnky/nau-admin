@@ -10,7 +10,7 @@
                     <label>Datum</label>
                     <date-time
                         @changeDate="changeDate"
-                        :date="topic.date"/>
+                        :date="topic.date" />
                 </div>
 
                 <div class="form-group">
@@ -22,6 +22,13 @@
                         v-model.trim="topic.name"
                         placeholder="Name"
                         class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Channel</label>
+                    <select v-model="topic.channel" class="form-control">
+                        <option v-for="channel in channels" :value="channel.id">{{ channel.display_name }}</option>
+                    </select>
                 </div>
             </div>
 
@@ -49,9 +56,11 @@
     export default {
         data() {
             return {
+                channels: [],
                 topic: {
                     name: '',
-                    date: this.$route.query.date
+                    date: this.$route.query.date,
+                    channel: null,
                 }
             }
         },
@@ -60,13 +69,21 @@
             dateTime: DateTime,
         },
 
+        created() {
+            Api.http.get('/channels')
+                .then(response => {
+                    this.channels = response.data;
+                    this.topic.channel = this.channels[0].id;
+                })
+        },
+
         methods: {
             handleSubmit() {
-                const { name, date } = this.topic;
+                const { name, date, channel } = this.topic;
 
                 if (name && date) {
                     Api.http
-                        .post('/topics', { name, date })
+                        .post('/topics', { name, date, channel_id: channel })
                         .then(response => this.$router.push({name: 'resources.day', params: { date }}))
                         .catch(err => console.log('Show some error message here'));
                 } else {

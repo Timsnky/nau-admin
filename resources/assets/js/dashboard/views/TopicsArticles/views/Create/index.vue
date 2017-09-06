@@ -42,6 +42,19 @@
                 </div>
             </div>
 
+            <div class="form-body">
+                <div class="form-group">
+                    <label for="time">Uhrzeit</label>
+                    <input
+                        id="time"
+                        type="text"
+                        name="time"
+                        v-model.trim="time"
+                        placeholder="10:50 (kann nicht bearbeitet werden)"
+                        class="form-control">
+                </div>
+            </div>
+
             <div class="form-actions">
                 <button
                     class="btn btn-primary"
@@ -65,10 +78,11 @@
         data() {
             return {
                 date: this.$route.query.date,
+                time: '',
                 article: {
                     title: '',
                     dateline: '',
-                    lead: ''
+                    lead: '',
                 }
             };
         },
@@ -84,7 +98,8 @@
                             lead,
                             dateline,
                             internal_title: title,
-                            internal_dateline: dateline
+                            internal_dateline: dateline,
+                            time: this.time
                         })
                         .then(response => this.$router.push({name: 'resources.day', params: { date: this.date }}))
                         .catch(err => console.log('Show some error message here'));

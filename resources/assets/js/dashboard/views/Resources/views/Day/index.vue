@@ -60,7 +60,7 @@
                             <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
                         </div>
                         <div class="tools">
-                            <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+                            <a href="javascript:;" class="fullscreen" data-original-title="" title="" @click="toggleFullscreen()"> </a>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -77,12 +77,15 @@
                                         class="panel panel-default"
                                         v-for="(article, index) in topic.articles">
                                         <div class="panel-body">
-                                            <h5 class="clearfix">{{ article.title }}
+                                            <h4 class="clearfix">{{ article.title }}
                                                 <router-link
                                                     :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
                                                     class="btn btn-xs btn-warning pull-right">
                                                     Bearbeiten
                                                 </router-link>
+                                            </h4>
+                                            <h5>
+                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.pivot.time, 'HH:mm:ss').format('HH:mm') }}
                                             </h5>
 
                                             <ul
@@ -141,6 +144,7 @@
         data() {
             return {
                 date: this.$route.params.date,
+                fullscreen: false,
                 day: {
                     shifts: [],
                     topics: [],
@@ -162,9 +166,23 @@
                 });
         },
 
+        mounted() {
+            if(this.$route.query.fullscreen == 'true') {
+                this.toggleFullscreen();
+                setTimeout(() => {
+                    $(this.$el).find('.fullscreen').click();
+                }, 1500);
+            }
+        },
+
         methods: {
-            moment(date) {
-                return moment(date);
+            moment(date, format) {
+                return moment(date, format);
+            },
+
+            toggleFullscreen() {
+                this.fullscreen = !this.fullscreen;
+                this.$router.push({ query: { fullscreen: this.fullscreen }})
             }
         }
     }
@@ -172,6 +190,10 @@
 
 <style lang="scss">
     .portlet-fullscreen {
+        * {
+            font-size: 3rem;
+        }
+
         .btn {
             display: none;
         }

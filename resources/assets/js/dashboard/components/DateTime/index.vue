@@ -1,6 +1,7 @@
 <template>
     <div class="input-group">
         <input
+            ref="datepicker"
             type="text"
             name="date"
             :value="date"
@@ -16,7 +17,7 @@
         },
 
         mounted() {
-            const $datepicker = $(this.$el).find('input');
+            const $datepicker = this.$refs.datepicker;
 
             $datepicker
                 .datepicker({
@@ -30,14 +31,14 @@
 
         watch: {
             date(value) {
-                const $datepicker = $(this.$el).find('input');
+                const $datepicker = this.$refs.datepicker;
 
                 $datepicker.datepicker('setDate', value);
             }
         },
 
         destroyed() {
-            $(this.$el).find('input')
+            this.$refs.datepicker
                 .off()
                 .datepicker('destroy');
         }

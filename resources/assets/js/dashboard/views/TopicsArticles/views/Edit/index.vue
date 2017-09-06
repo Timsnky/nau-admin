@@ -66,6 +66,7 @@
     export default {
         data() {
             return {
+                time: '',
                 date: this.$route.query.date,
                 article: {},
                 newArticle: {}
