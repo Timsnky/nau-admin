@@ -5,6 +5,14 @@
             <form @submit.prevent="handleSubmit">
                 <div class="form-body">
                     <div class="form-group">
+                        <label for="name">Avatar ändern</label><br>
+                        <img width="100px" height="100px" class="rounded" :src="user.avatar" />
+                        <input type="file" @change="onFileChange">
+                    </div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-group">
                         <label for="name">Name</label>
                         <input
                             id="name"
@@ -120,8 +128,10 @@
                 workTypes: {},
                 channels: {},
                 roles: {},
+                avatarChanged: false,
                 user: {
                     name: '',
+                    avatar: '',
                     email: '',
                     password: '',
                     passwordRepeat: '',
@@ -183,12 +193,36 @@
                 }
             },
 
+            onFileChange(e) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length)
+                    return;
+                this.createImage(files[0]);
+            },
+
+            createImage(file) {
+                var image = new Image();
+                var reader = new FileReader();
+                var vm = this;
+
+                reader.onload = (e) => {
+                    vm.user.avatar = e.target.result;
+                    vm.avatarChanged = true;
+                };
+                reader.readAsDataURL(file);
+            },
+
             handleSubmit() {
                 const { name, email, password, passwordRepeat, anonymous } = this.user;
 
                 if (name && email && (!password || (password && password === passwordRepeat))) {
+                    let data = { name, email, password, anonymous };
+                    if(this.avatarChanged) {
+                        data.avatar = this.user.avatar;
+                    }
+
                     Api.http
-                        .put(`/users/${this.$route.params.id}`, { name, email, password, anonymous })
+                        .put(`/users/${this.$route.params.id}`, data)
                         .then(response => this.$router.push({name: 'users.list'}))
                         .catch(err => console.log('Show some error message here'));
                 } else {
