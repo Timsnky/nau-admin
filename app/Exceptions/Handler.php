@@ -2,11 +2,9 @@
 
 namespace App\Exceptions;
 
-use Cookie;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,14 +44,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof NotFoundHttpException) {
-            if (Cookie::has('token') && count(explode('.', Cookie::get('token'))) === 3) {
-                return response()->view('app');
-            } else {
-                return response()->view('login');
-            }
-        }
-
         return parent::render($request, $exception);
     }
 
