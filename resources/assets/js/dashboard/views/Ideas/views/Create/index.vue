@@ -25,6 +25,15 @@
                         class="form-control"
                         rows="5"></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label>Channel</label>
+                    <select class="form-control" v-model="idea.channel">
+                        <option v-bind:value="channel.id" v-for="channel in channels">
+                            {{ channel.display_name }}
+                        </option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-actions">
@@ -51,8 +60,10 @@
             return {
                 idea: {
                     title: '',
-                    body: ''
-                }
+                    body: '',
+                    channel: 0
+                },
+                channels: []
             }
         },
 
@@ -63,7 +74,12 @@
                 if (title && body) {
                     Api.http
                         .post('/ideas', { title, body })
-                        .then(response => this.$router.push('/ideas'))
+                        .then(response => {
+                            Vue.toast('Idea created successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
+                            this.$router.push('/ideas')
+                        })
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
@@ -73,9 +89,35 @@
             reset() {
                 this.idea = {
                     title: '',
-                    body: ''
+                    body: '',
+                    channel_id: 0
                 }
-            }
+            },
+
+            //Get the channels for the dropdown
+            initializeChannels()
+            {
+                Api.http
+                    .get(`/channels`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.channels = response.data;
+                            this.idea.channel = this.channels[0].id;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the channels. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
+        },
+        mounted: function ()
+        {
+            this.initializeChannels();
         }
     }
 </script>

@@ -25,13 +25,21 @@
                         class="form-control"
                         rows="5"></textarea>
                 </div>
+                <div class="form-group">
+                    <label>Channel</label>
+                    <select class="form-control" v-model="newIdea.channel_id">
+                        <option v-bind:value="channel.id" v-for="channel in channels">
+                            {{ channel.display_name }}
+                        </option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-actions">
                 <button
                     class="btn btn-primary"
                     type="submit"
-                    :disabled="!newIdea.title || !newIdea.body">
+                    :disabled="!newIdea.title || !newIdea.body || !newIdea.channel_id">
                     Submit
                 </button>
                 <button
@@ -52,6 +60,7 @@
         data() {
             return {
                 idea: {},
+                channels: [],
                 newIdea: {}
             }
         },
@@ -61,28 +70,51 @@
                 .get(`/ideas/${this.$route.params.id}`)
                 .then(response => {
                     this.idea = response.data;
-                    this.newIdea = _pick(this.idea, ['title', 'body']);
+                    this.newIdea = _pick(this.idea, ['title', 'body', 'channel_id']);
                 })
                 .catch(err => console.log('Show some error message here'));
+            this.initializeChannels();
         },
 
         methods: {
             handleSubmit() {
-                const { title, body } = this.newIdea;
-
-                if (title && body) {
-                    Api.http
-                        .put(`/ideas/${this.idea.id}`, { title, body })
-                        .then(response => this.$router.push('/ideas'))
-                        .catch(err => console.log('Show some error message here'));
-                } else {
-                    console.log('Show some error message here');
-                }
+                Api.http
+                    .put(`/ideas/${this.idea.id}`, {
+                        'title': this.newIdea.title,
+                        'body': this.newIdea.body,
+                        'channel': this.newIdea.channel_id
+                    })
+                    .then(response => {
+                        Vue.toast('Idea updated successfully', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                        this.$router.push('/ideas')
+                    }).catch(err => console.log('Show some error message here'));
             },
 
             reset() {
-                this.newIdea = _pick(this.idea, ['title', 'body']);
-            }
+                this.newIdea = _pick(this.idea, ['title', 'body', 'channel_id']);
+            },
+
+            //Get the channels for the dropdown
+            initializeChannels()
+            {
+                Api.http
+                    .get(`/channels`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.channels = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the channels. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+
+            },
         }
     }
 </script>
