@@ -53,6 +53,12 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'urls' => [
+        'api' => env('API_URL', 'http://localhost'),
+        'amp' => env('AMP_URL', 'http://localhost'),
+        'nau' => env('NAU_URL', 'http://localhost'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

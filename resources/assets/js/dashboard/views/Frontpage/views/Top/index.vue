@@ -7,7 +7,7 @@
                 <h2>Sortierung</h2>
                 <draggable v-model="articles">
                     <div v-for="article in articles">
-                        <img :src="article.image.url" height="50px" width="100px" alt="Artikel Bild"/>
+                        <img :src="article.teaser.url" height="50px" width="100px" alt="Artikel Bild"/>
                         {{ article.title }}
                         <span class="form-group pull-right">
                             <button type="button" class="btn btn-primary" @click="toReplace = article">Ersetzen</button>
