@@ -511,7 +511,7 @@
                                         </div>
                                         <div class="panel_body">
                                             <div class="panel_preview" v-if="displayedPanel !== index">
-                                                <p>{{ articleElement.name }}</p>
+                                                <p>{{ articleElement.lead }}</p>
                                             </div>
                                             <div class="panel_content padding_top_15 elementImageSection" v-if="displayedPanel === index">
                                                 <img :src="articleElement.url" alt="">
