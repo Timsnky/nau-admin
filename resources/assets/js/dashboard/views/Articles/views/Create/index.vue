@@ -22,6 +22,13 @@
                         @click="handleSubmit()">
                     Speichern
                 </button>
+                <a
+                        v-if="article.id !== null"
+                        :href="article.preview_url"
+                        target="_blank"
+                        class="btn btn-primary pull-right margin_left_5">
+                    <i class="fa fa-desktop" aria-hidden="true"></i> Vorschau
+                </a>
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
