@@ -12,6 +12,12 @@
                                 <div class="form-control-static">{{ idea.title }}</div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="body">Channel</label>
+                            <div id="channel">
+                                <div class="form-control-static">{{ idea.channel.display_name }}</div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="body">Idea</label>

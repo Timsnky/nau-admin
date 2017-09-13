@@ -59,6 +59,18 @@ class Api {
         return this.store.dispatch('RESET_VIDEO');
     }
 
+    getVideoSelector() {
+        return this.store.state.video_selector_id;
+    }
+
+    setVideoSelector(id) {
+        return this.store.dispatch('SET_VIDEO_SELECTOR', id);
+    }
+
+    resetVideoSelector() {
+        return this.store.dispatch('RESET_VIDEO_SELECTOR');
+    }
+
     //Surveys
     getSurvey() {
         return this.store.state.selected_survey_id;

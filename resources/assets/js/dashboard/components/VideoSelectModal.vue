@@ -157,7 +157,7 @@
                     lead: '',
                     source: ''
                 },
-                submitting : false
+                submitting : false,
             }
         },
 
@@ -230,7 +230,8 @@
                 return Api.http.get(`/videos?` + searchString + userString + `page=${page}`);
             },
 
-            dispatchVideoSelected(id) {
+            dispatchVideoSelected(id)
+            {
                 Api.setVideo(id);
                 this.reset();
                 $('#videoSelectionModal').modal('hide');

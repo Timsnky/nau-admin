@@ -8,6 +8,7 @@ export const store = new Vuex.Store({
         'selected_image_id' : null,
         'selected_video_id' : null,
         'selected_survey_id': null,
+        'video_selector_id': null
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -36,6 +37,12 @@ export const store = new Vuex.Store({
         SET_VIDEO: ({commit}, video_id) => {
             commit('SET_VIDEO', video_id);
         },
+        SET_VIDEO_SELECTOR: ({commit}, video_selector_id) => {
+            commit('SET_VIDEO_SELECTOR', video_selector_id);
+        },
+        RESET_VIDEO_SELECTOR: ({commit}) => {
+            commit('RESET_VIDEO_SELECTOR');
+        },
         RESET_VIDEO: ({commit}) => {
             commit('RESET_VIDEO');
         },
@@ -61,6 +68,12 @@ export const store = new Vuex.Store({
         },
         SET_VIDEO: (state, video_id) => {
             state.selected_video_id = video_id;
+        },
+        SET_VIDEO_SELECTOR: (state, video_id) => {
+            state.video_selector_id = video_id;
+        },
+        RESET_VIDEO_SELECTOR: (state) => {
+            state.video_selector_id = null;
         },
         RESET_VIDEO: (state) => {
             state.selected_video_id = null;

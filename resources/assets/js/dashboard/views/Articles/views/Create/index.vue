@@ -56,6 +56,9 @@
                         <a href="#articleExternalVideos" data-toggle="tab">Youtube</a>
                     </li>
                     <li :class="[article.id == null ? 'disabledTab' : '']">
+                        <a href="#articleDoohVideos" data-toggle="tab">DOOH Filme</a>
+                    </li>
+                    <li :class="[article.id == null ? 'disabledTab' : '']">
                         <a href="#articleLearning" data-toggle="tab">Key Facts</a>
                     </li>
                     <!--<li :class="[article.id == null ? 'disabledTab' : '']">-->
@@ -362,7 +365,7 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#videoSelectionModal">
+                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showVideoSelectionModal()">
                                         Videos Hochladen
                                     </button>
                                     <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
@@ -387,6 +390,13 @@
                     <div class="tab-pane" id="articleExternalVideos">
                         <div class="form-body">
                             <external-videos :article-id="article.id"></external-videos>
+                        </div>
+                    </div>
+
+                    <!--DOOH Videos-->
+                    <div class="tab-pane" id="articleDoohVideos">
+                        <div class="form-body">
+                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh_video_id"></dooh-video>
                         </div>
                     </div>
 
@@ -715,6 +725,7 @@
     import ArticleSorting from './components/ArticleSorting';
     import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
+    import DoohVideo from './components/DOOHVideos';
 //    import InfoBoxes from './components/InfoBoxes';
     import videoMixin from './mixins/videoMixin';
     import imageMixin from './mixins/imageMixin';
@@ -740,6 +751,7 @@
                 editingArticle: false,
                 articleTitle: '',
                 type: 1,
+                videoSelectorId: 1,
                 leadEditor: null,
                 submitting_main: false,
                 articleMainImage: {
@@ -818,6 +830,7 @@
             ArticleSorting,
             TimelineItem,
             ExternalVideoElement,
+            DoohVideo
 //            InfoBoxes
         },
 
@@ -897,9 +910,10 @@
 
             selectedVideoId(newId, oldId)
             {
-                if(newId)
+                if(newId && Api.getVideoSelector() === this.videoSelectorId)
                 {
                     Api.resetVideo();
+                    Api.resetVideoSelector();
                     this.getVideo(newId);
                 }
             },
@@ -1482,6 +1496,14 @@
                 this.type = type;
 
                 $('#imageSelectionModal').modal('show');
+            },
+
+            //Trigger the video selection modal
+            showVideoSelectionModal()
+            {
+                Api.setVideoSelector(this.videoSelectorId);
+
+                $('#videoSelectionModal').modal('show');
             },
 
             //Get the image once we have obtained the selected id
