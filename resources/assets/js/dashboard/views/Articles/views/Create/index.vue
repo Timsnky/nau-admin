@@ -725,7 +725,7 @@
     import ArticleSorting from './components/ArticleSorting';
     import TimelineItem from '../Liveticker/views/Show/components/TimelineItem';
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
-    import DoohVideo from './components/DOOHVideos';
+    import DoohVideo from './components/DoohVideos';
 //    import InfoBoxes from './components/InfoBoxes';
     import videoMixin from './mixins/videoMixin';
     import imageMixin from './mixins/imageMixin';
