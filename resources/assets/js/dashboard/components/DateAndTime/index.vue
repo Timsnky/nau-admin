@@ -1,7 +1,7 @@
 <template>
     <div class="input-group">
         <input
-                id="dateTimePicker"
+                ref="datepicker"
                 type="text"
                 name="date"
                 :value="date"
@@ -24,7 +24,7 @@
                 let $today = new Date();
                 $today.setHours(0,0,0);
 
-                $('#dateTimePicker').datetimepicker({
+                $(vm.$refs.datepicker).datetimepicker({
                     minDate: $today,
                     format: 'YYYY-MM-DD HH:mm'
                 }).on("dp.change", function (e)
@@ -43,7 +43,7 @@
 
         destroyed()
         {
-            $('#dateTimePicker').off().datetimepicker('destroy');
+            $(this.$refs.datepicker).off().datetimepicker('destroy');
         }
     }
 </script>

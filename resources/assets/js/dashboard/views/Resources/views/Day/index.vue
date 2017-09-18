@@ -68,8 +68,9 @@
                             v-if="day.topics.length > 0"
                             v-for="(topic, index) in day.topics"
                             class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">{{ topic.name }}</h3>
+                            <div class="panel-heading clearfix">
+                                <h3 class="panel-title">{{ topic.name }} <router-link class="pull-right" :to="{name: 'topics.edit', params: {id: topic.id}}"><span class="fa fa-edit"></span> Bearbeiten</router-link></h3>
+
                             </div>
                             <div class="panel-body">
                                 <div v-if="topic.articles.length > 0">
