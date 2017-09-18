@@ -908,9 +908,10 @@
         watch: {
             selectedImageId(newId, oldId)
             {
-                if(newId)
+                if(newId && Api.getImageSelector() === this.type)
                 {
                     Api.resetImage();
+                    Api.resetImageSelector();
                     this.getMainImage(newId);
                 }
             },
@@ -1501,6 +1502,8 @@
                 }
 
                 this.type = type;
+
+                Api.setImageSelector(this.type);
 
                 $('#imageSelectionModal').modal('show');
             },

@@ -46,6 +46,18 @@ class Api {
         return this.store.dispatch('RESET_IMAGE');
     }
 
+    getImageSelector() {
+        return this.store.state.image_selector_id;
+    }
+
+    setImageSelector(id) {
+        return this.store.dispatch('SET_IMAGE_SELECTOR', id);
+    }
+
+    resetImageSelector() {
+        return this.store.dispatch('RESET_IMAGE_SELECTOR');
+    }
+
     //Videos
     getVideo() {
         return this.store.state.selected_video_id;

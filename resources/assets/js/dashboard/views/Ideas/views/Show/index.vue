@@ -25,6 +25,11 @@
                                 <div class="form-control-static">{{ idea.body }}</div>
                             </div>
                         </div>
+
+                        <label for="body">Images</label>
+                        <div class="form-group idea_images_section" v-for="(image, index) in idea.images">
+                            <img :src="image.url" alt="">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -81,5 +86,9 @@
     .form-control-static {
         display: block;
         white-space: pre-line;
+    }
+
+    .idea_images_section img {
+        height: 240px;
     }
 </style>
