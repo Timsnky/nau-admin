@@ -498,6 +498,13 @@
                                         @changeDate="changeDate"
                                         :date="article.published_at ? publicationDate : '' "/>
                             </div>
+                            <div class="form-group">
+                                <label>Push Notification</label> &nbsp;
+                                <input type="checkbox"
+                                       v-model="article.push_notification"
+                                       value="true"
+                                >
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button
