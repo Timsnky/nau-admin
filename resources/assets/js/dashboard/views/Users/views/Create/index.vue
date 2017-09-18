@@ -96,7 +96,7 @@
             handleSubmit() {
                 const { name, email, password, passwordRepeat, anonymous } = this.user;
 
-                if (name && email && password && password === passwordRepeat) {
+                if (name && email && (!password || password === passwordRepeat)) {
                     Api.http
                         .post('/users', { name, email, password, anonymous })
                         .then(response => this.$router.push({name: 'users.edit', params: {id: response.data.id}}))

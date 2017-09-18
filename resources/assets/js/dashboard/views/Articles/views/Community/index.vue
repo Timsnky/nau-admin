@@ -2,7 +2,7 @@
     <div>
         <page-title title="Community Artikel" />
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="input-icon">
                     <i class="fa fa-search"></i>
                     <input
@@ -11,6 +11,15 @@
                         placeholder="Suche"
                         name="searchTerm"
                         v-model.trim="searchTerm">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-icon">
+                    <i class="fa fa-filter"></i>
+                    <select class="form-control" v-model="stateFilter">
+                        <option :value="null">Alle</option>
+                        <option v-for="state in states" :value="state.id">{{ state.name }}</option>
+                    </select>
                 </div>
             </div>
             <div class="col-md-6 text-right">
@@ -52,13 +61,8 @@
                     <i class="fa fa-edit"></i>
                     Bearbeiten
                 </router-link>
-                <router-link
-                        :to="{name: 'articles.livetickers', params: {article: article.id}}"
-                        class="btn btn-primary">
-                    <i class="fa fa-paper-plane"></i>
-                    Liveticker
-                </router-link>
-                <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button>
+                <button v-if="article.article_status.name === 'review'" class="btn btn-primary" @click="publishArticle(article)"><i class="fa fa-check"></i> Publizieren</button>
+                <button v-if="article.article_status.name === 'review'" class="btn btn-danger" @click="declineArticle(article)"><i class="fa fa-ban"></i> Ablehnen</button>
                 </td>
             </tr>
             </tbody>
@@ -85,6 +89,8 @@
                 pagesCount: 1,
                 itemsPerPage: 15,
                 searchTerm: '',
+                states: [],
+                stateFilter: null,
                 articles: []
             }
         },
@@ -108,9 +114,17 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 });
+
+            Api.http.get('/article-states').then(response => {
+                this.states = response.data;
+            });
         },
 
         watch: {
+            stateFilter() {
+                this.navigate(1);
+            },
+
             searchTerm: _.debounce(function () {
                 this.navigate(1);
             }, 400),
@@ -132,11 +146,20 @@
             },
 
             getPaginatedData(page) {
+                var params = {
+                    community: 1,
+                    page: page,
+                };
+
                 if (this.searchTerm !== '') {
-                    return Api.http.get(`/articles?community=1&search=${this.searchTerm}&page=${page}`);
+                    params.search = this.searchTerm;
                 }
 
-                return Api.http.get(`/articles?community=1&page=${page}`);
+                if (this.stateFilter !== null) {
+                    params.state = this.stateFilter;
+                }
+
+                return Api.http.get(`/articles?${$.param(params)}`);
             },
 
             publicationDate(article)
@@ -146,24 +169,66 @@
 
             publishArticle(article)
             {
-                article.published_at = moment().format();
+                swal({
+                    title: 'Publizieren',
+                    text: 'Nachricht an den Author',
+                    type: 'warning',
+                    input: 'text',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Publizieren'
+                }).then((text) => {
+                    Api.http
+                        .put(`/articles/${article.id}/publish`, {
+                            message: text,
+                        })
+                        .then(response => {
+                            if(response.status === 200) {
+                                this.$set(this.articles, this.articles.indexOf(article), response.data);
+                                Vue.toast('Artikel erfolgreich publiziert.', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            } else {
+                                Vue.toast('Beim publizieren ist ein Fehler aufgetreten.', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        }
+                    );
+                });
+            },
 
-                Api.http
-                    .put(`/articles/${article.id}`, article)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            Vue.toast('Article published successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
+            declineArticle(article)
+            {
+                swal({
+                    title: 'Ablehnen',
+                    text: `${article.title}`,
+                    input: 'text',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ablehnen'
+                }).then((text) => {
+                    Api.http
+                        .put(`/articles/${article.id}/decline`, {
+                            message: text,
+                        })
+                        .then(response => {
+                            if(response.status === 200) {
+                                this.$set(this.articles, this.articles.indexOf(article), response.data);
+                                Vue.toast('Artikel erfolgreich abgelehnt.', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            } else {
+                                Vue.toast('Beim ablehnen ist ein Fehler aufgetreten.', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
                         }
-                        else
-                        {
-                            Vue.toast('Error in publishing the article. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
+                    );
+                });
             }
         }
     }
