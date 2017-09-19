@@ -35,15 +35,20 @@
             </thead>
             <tbody>
             <tr
+                :class="{danger: article.publish_failed, info: article.article_status.name === 'queued'}"
                 v-for="article in articles"
                 :key="article.id">
-                <td>{{ article.title }}</td>
+                <td>
+                    <i v-if="article.publish_failed" class="fa fa-exclamation-triangle"></i>
+                    {{ article.title }}
+                </td>
                 <td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>
                 <td>
                     <span v-if="article.article_status.name === 'published'" class="label label-sm label-success">Publiziert</span>
-                    <span v-if="article.article_status.name === 'draft'" class="label label-sm label-success">Entwurf</span>
-                    <span v-if="article.article_status.name === 'review'" class="label label-sm label-success">Review</span>
-                    <span v-if="article.article_status.name === 'declined'" class="label label-sm label-success">Abgelehnt</span>
+                    <span v-if="article.article_status.name === 'draft'" class="label label-sm label-default">Entwurf</span>
+                    <span v-if="article.article_status.name === 'review'" class="label label-sm label-info">Review</span>
+                    <span v-if="article.article_status.name === 'declined'" class="label label-sm label-danger">Abgelehnt</span>
+                    <span v-if="article.article_status.name === 'queued'" class="label label-sm label-info">Geplant</span>
                 </td>
                 <td>{{ publicationDate(article) }}</td>
                 <td><router-link
@@ -58,7 +63,7 @@
                     <i class="fa fa-paper-plane"></i>
                     Liveticker
                 </router-link>
-                <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button>
+                <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
                 </td>
             </tr>
             </tbody>
@@ -139,13 +144,11 @@
                 return Api.http.get(`/articles?community=0&page=${page}`);
             },
 
-            publicationDate(article)
-            {
-                return moment(article.published_at).format('HH:mm DD.MM.YY');
+            publicationDate(article) {
+                return moment(article.published_at).format('DD.MM.YY HH:mm');
             },
 
-            publishArticle(article)
-            {
+            publishArticle(article) {
                 article.published_at = moment().format();
 
                 Api.http

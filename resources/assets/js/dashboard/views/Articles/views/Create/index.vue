@@ -1,6 +1,13 @@
 <template>
     <div>
         <page-title title="Artikel" sub="Erfassen" />
+
+        <div class="note note-danger" v-for="error in errors">
+            <h4 class="block">{{ error.title }}</h4>
+            <p>{{ error.message }}</p>
+        </div>
+
+
         <div class="row">
             <div class="col-md-6">
             </div>
@@ -11,12 +18,12 @@
                         @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
-                <!-- <button
+                <button
                         type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndPublish()">
-                    Speichern & publish
-                </button> -->
+                    Speichern & Veröffentlichen
+                </button>
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
@@ -432,6 +439,7 @@
                                         :options="existingAuthors"
                                         placeholder="Type to search author"
                                         label="name"
+                                        :allow-empty="false"
                                         :max-height="500"
                                         :options-limit="100"
                                         :clear-on-select="false"
@@ -808,6 +816,7 @@
                 articleChannel: null,
                 saveArticleImagesDisabled: true,
                 displayedPanel: null,
+                errors: [],
             };
         },
 
@@ -1204,11 +1213,9 @@
                                 {
                                     this.submitArticleTeaserImage(this.article.id);
                                 }
-                                Vue.toast('Article updated and published successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
 
                                 this.saveArticleItems(this.article.id);
+                                this.publishArticle(this.article.id);
                             }
                             else
                             {
@@ -1302,6 +1309,31 @@
                 }
 
                 return errorString;
+            },
+
+            publishArticle(id) {
+                Api.http.put(`/articles/${id}/publish`)
+                .then(response => {
+                    setTimeout(() => {
+                        Vue.toast('Artikel wurde erfolgreich publiziert.', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                    }, 700);
+                })
+                .catch(error => {
+                    if(error.response.status === 422) {
+                        _.each(error.response.data.errors, (errors, field) => {
+                            _.each(errors, (error) => {
+                                this.errors.push({
+                                    title: 'Publizieren fehlgeschlagen',
+                                    message: error,
+                                })
+                            });
+                        });
+                    } else {
+                        console.error(error);
+                    }
+                })
             },
 
             //Setup some of the required saving defaults
