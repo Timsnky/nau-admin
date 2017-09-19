@@ -8,7 +8,8 @@ export const store = new Vuex.Store({
         'selected_image_id' : null,
         'selected_video_id' : null,
         'selected_survey_id': null,
-        'video_selector_id': null
+        'video_selector_id': null,
+        'image_selector_id': null
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -34,17 +35,23 @@ export const store = new Vuex.Store({
         RESET_IMAGE: ({commit}) => {
             commit('RESET_IMAGE');
         },
+        SET_IMAGE_SELECTOR: ({commit}, image_selector_id) => {
+            commit('SET_IMAGE_SELECTOR', image_selector_id);
+        },
+        RESET_IMAGE_SELECTOR: ({commit}) => {
+            commit('RESET_IMAGE_SELECTOR');
+        },
         SET_VIDEO: ({commit}, video_id) => {
             commit('SET_VIDEO', video_id);
+        },
+        RESET_VIDEO: ({commit}) => {
+            commit('RESET_VIDEO');
         },
         SET_VIDEO_SELECTOR: ({commit}, video_selector_id) => {
             commit('SET_VIDEO_SELECTOR', video_selector_id);
         },
         RESET_VIDEO_SELECTOR: ({commit}) => {
             commit('RESET_VIDEO_SELECTOR');
-        },
-        RESET_VIDEO: ({commit}) => {
-            commit('RESET_VIDEO');
         },
         SET_SURVEY: ({commit}, survey_id) => {
             commit('SET_SURVEY', survey_id);
@@ -65,6 +72,12 @@ export const store = new Vuex.Store({
         },
         RESET_IMAGE: (state) => {
             state.selected_image_id = null;
+        },
+        SET_IMAGE_SELECTOR: (state, image_id) => {
+            state.image_selector_id = image_id;
+        },
+        RESET_IMAGE_SELECTOR: (state) => {
+            state.image_selector_id = null;
         },
         SET_VIDEO: (state, video_id) => {
             state.selected_video_id = video_id;
