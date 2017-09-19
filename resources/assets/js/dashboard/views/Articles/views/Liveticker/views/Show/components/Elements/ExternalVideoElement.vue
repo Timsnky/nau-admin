@@ -19,18 +19,6 @@
             }
         },
 
-        methods: {
-            getParameterByName(name, url) {
-                if (!url) url = window.location.href;
-                name = name.replace(/[\[\]]/g, "\\$&");
-                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
-            }
-        },
-
         mounted() {
             switch(this.element.provider) {
                 case 'streamable':
@@ -41,7 +29,7 @@
                     break;
 
                 case 'youtube':
-                    this.youtubeId = this.getParameterByName('v', this.element.url);
+                    this.youtubeId = this.element.video_id;
                     break;
             }
 
