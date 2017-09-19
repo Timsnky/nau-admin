@@ -156,7 +156,7 @@
                 }
 
                 if (this.stateFilter !== null) {
-                    params.state = this.stateFilter;
+                    params.status_id = this.stateFilter;
                 }
 
                 return Api.http.get(`/articles?${$.param(params)}`);

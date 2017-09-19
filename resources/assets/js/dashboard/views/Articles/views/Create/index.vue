@@ -11,12 +11,12 @@
                         @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
-                <button
+                <!-- <button
                         type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndPublish()">
                     Speichern & publish
-                </button>
+                </button> -->
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
@@ -499,11 +499,10 @@
                                         :date="article.published_at ? publicationDate : '' "/>
                             </div>
                             <div class="form-group">
-                                <label>Push Notification</label> &nbsp;
-                                <input type="checkbox"
-                                       v-model="article.push_notification"
-                                       value="true"
-                                >
+                                <label class="mt-checkbox">
+                                    <input type="checkbox" v-model="article.push_notification" value="true"> Push Notification
+                                    <span></span>
+                                </label>
                             </div>
                         </div>
                         <div class="form-actions">

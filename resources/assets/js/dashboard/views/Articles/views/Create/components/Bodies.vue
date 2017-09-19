@@ -180,7 +180,7 @@
                 if(vm.articleBodies[key].id)
                 {
                     Api.http
-                        .delete(`/articles/${vm.articleId}/bodies/${vm.articleBodies[key].id}`)
+                        .delete(`/bodies/${vm.articleBodies[key].id}`)
                         .then(response => {
                             if(response.status === 204)
                             {
@@ -227,7 +227,7 @@
                         if(value.id && vm.articleId === articleId)
                         {
                             Api.http
-                                .put(`/articles/${articleId}/bodies/${value.id}`, {
+                                .put(`/bodies/${value.id}`, {
                                     content: value.content,
                                 })
                                 .then(response => {

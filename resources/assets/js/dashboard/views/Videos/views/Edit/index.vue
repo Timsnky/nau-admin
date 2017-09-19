@@ -1,13 +1,13 @@
 <template>
     <div>
-        <page-title title="Videos" sub="Edit" />
+        <page-title title="Videos" sub="Edit" /> <span><i class="fa fa-spin fa-spinner"></i> Wird verarbeitet ...</span>
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_video_section">
-                    <video controls>
-                        <source v-if="video" :src="video.urls[0]" type="video/mp4">
-                        <source v-if="video" :src="video.urls[1]" type="video/webm">
+                    <video controls :poster="video.thumbnail">
+                        <source v-if="!video.processing" :src="video.urls[0]" type="video/mp4">
+                        <source v-if="!video.processing" :src="video.urls[1]" type="video/webm">
                     </video>
                 </div>
                 <div class="form-group">

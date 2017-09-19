@@ -2,7 +2,7 @@
     <div>
         <div class="form-body">
             <h4><strong>Youtube / Streamable Videos</strong></h4>
-            <div class="form-group" v-if="addingExternalVideo">
+            <div class="form-group">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Link</label>
@@ -51,7 +51,6 @@
         data() {
             return {
                 articleExternalVideos: [],
-                addingExternalVideo: true,
                 externalVideo: {
                     url: '',
                     lead: '',
@@ -113,12 +112,6 @@
                     });
             },
 
-            //Add an article external video record
-            addArticleExternalVideo()
-            {
-                this.addingExternalVideo = true;
-            },
-
             //Validate the external video first
             validateExternalVideo()
             {
@@ -161,12 +154,16 @@
                     {
                         if(response.status === 204)
                         {
-                            this.addingExternalVideo = false;
                             this.articleExternalVideos = [];
                             this.initializeArticleExternalVideos(this.articleId);
                             Vue.toast('External video linked to article successfully', {
                                 className : ['nau_toast','nau_success'],
                             });
+
+                            this.externalVideo = {
+                                url: '',
+                                lead: '',
+                            };
                         }
                         else
                         {
@@ -181,7 +178,7 @@
             deleteArticleExternalVideo(key)
             {
                 Api.http
-                    .delete(`/article/${this.articleId}/livetickers/${this.articleExternalVideos[key].id}`)
+                    .delete(`/articles/${this.articleId}/external-videos/${this.articleExternalVideos[key].id}`)
                     .then(response => {
                         if(response.status === 204)
                         {

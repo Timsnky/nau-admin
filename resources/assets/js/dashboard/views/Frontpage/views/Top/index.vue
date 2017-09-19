@@ -84,7 +84,7 @@
                     return;
                 }
 
-                Api.http.get(`/articles?search=${query}&community=0&teaser=1`)
+                Api.http.get(`/articles?search=${query}&community=0&teaser=1&status=published`)
                     .then((response) => {
                         this.options = response.data.data;
                         this.isLoading = false

@@ -10,7 +10,7 @@
                     <label>Datum</label>
                     <date-time
                         @changeDate="changeDate"
-                        :date="topic.date" />
+                        :date="date" />
                 </div>
 
                 <div class="form-group">
@@ -69,6 +69,12 @@
             dateTime: DateTime,
         },
 
+        computed: {
+            date() {
+                return moment(this.topic.date).format('YYYY-MM-DD');
+            },
+        },
+
         created() {
             Api.http.get('/channels')
                 .then(response => {
@@ -83,7 +89,7 @@
 
                 if (name && date) {
                     Api.http
-                        .post('/topics', { name, date, channel_id: channel })
+                        .post('/topics', { name, date: this.date, channel_id: channel })
                         .then(response => this.$router.push({name: 'resources.day', params: { date }}))
                         .catch(err => console.log('Show some error message here'));
                 } else {

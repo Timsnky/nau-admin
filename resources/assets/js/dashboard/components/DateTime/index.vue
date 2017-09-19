@@ -5,6 +5,7 @@
             type="text"
             name="date"
             :value="date"
+            placeholder="2017-08-05"
             class="form-control">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>
@@ -17,30 +18,38 @@
         },
 
         mounted() {
-            const $datepicker = this.$refs.datepicker;
+            let vm = this;
 
-            $datepicker
-                .datepicker({
-                    format: "yyyy-mm-dd",
-                    orientation: "bottom left",
-                    autoclose: true,
-                    weekStart: 1
-                })
-                .on("changeDate", () => this.$emit('changeDate', $datepicker.val()));
+            $(function() {
+                var today = new Date();
+                var yesterday = new Date(today);
+                yesterday.setDate(today.getDate() - 1);
+
+                $(vm.$refs.datepicker).datetimepicker({
+                    minDate: yesterday,
+                    format: 'YYYY-MM-DD'
+                }).on("dp.change", function (e)
+                {
+                    if(e.date)
+                    {
+                        vm.$emit('changeDate', e.date.format());
+                    }
+                    else
+                    {
+                        vm.$emit('changeDate', '');
+                    }
+                });
+            });
         },
 
-        watch: {
-            date(value) {
-                const $datepicker = this.$refs.datepicker;
-
-                $datepicker.datepicker('setDate', value);
-            }
-        },
-
-        destroyed() {
-            this.$refs.datepicker
-                .off()
-                .datepicker('destroy');
+        destroyed()
+        {
+            $(this.$refs.datepicker).off().datetimepicker('destroy');
         }
     }
 </script>
+<style>
+    #dateTimePicker {
+        z-index: auto;
+    }
+</style>
