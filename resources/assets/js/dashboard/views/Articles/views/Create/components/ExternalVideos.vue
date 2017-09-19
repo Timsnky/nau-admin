@@ -181,7 +181,7 @@
             deleteArticleExternalVideo(key)
             {
                 Api.http
-                    .delete(`/article/${this.articleId}/external-videos/${this.articleExternalVideos[key].id}`)
+                    .delete(`/articles/${this.articleId}/external-videos/${this.articleExternalVideos[key].id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
