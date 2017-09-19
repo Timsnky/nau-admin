@@ -11,12 +11,12 @@
                         @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
-                <button
+                <!-- <button
                         type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndPublish()">
                     Speichern & publish
-                </button>
+                </button> -->
                 <button
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSubmit()">
