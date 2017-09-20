@@ -5,14 +5,14 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="video_dropbox">
-                    <input v-if="!videoupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="videoupload" @change="onChange">
-                    <p v-if="!videoupload">
+                    <input v-if="!file" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="file" @change="onChange">
+                    <p v-if="!file">
                         Drag your video here to begin<br> or click to browse
                     </p>
                     <div class="video_hidden_section display-inline align-center" v-else v-bind:class="{ 'video': true }">
                         <div class="video_hidden_section_video">
                             <video controls>
-                                <source :src="videoupload">
+                                <!-- <source :src="file"> -->
                             </video>
                         </div>
                         <div class="video_hidden_section_remove">
@@ -22,7 +22,7 @@
                     </label>
                 </div>
 
-                <div v-if="videoupload" class="form-group">
+                <div v-if="file" class="form-group">
                     <label for="name">Name</label>
                     <input
                             id="name"
@@ -33,7 +33,7 @@
                             class="form-control">
                 </div>
 
-                <div v-if="videoupload" class="form-group">
+                <div v-if="file" class="form-group">
                     <label for="lead">Lead</label>
                     <textarea
                             id="lead"
@@ -44,7 +44,7 @@
                             rows="3"></textarea>
                 </div>
 
-                <div v-if="videoupload" class="form-group">
+                <div v-if="file" class="form-group">
                     <label for="name">Source</label>
                     <input
                             id="source"
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div v-if="videoupload" class="form-actions">
+            <div v-if="file" class="form-actions">
                 <button
                         class="btn btn-primary"
                         type="submit"
@@ -83,10 +83,7 @@
                     lead: '',
                     source: '',
                 },
-                videoBlob : {
-                    video: ''
-                },
-                videoupload: null,
+                file: null,
                 uploadToken: null
             }
         },
@@ -110,15 +107,11 @@
             },
 
             handleVideoUpload(data) {
-
                 var uploadUrl = data.data.upload_url;
-                var urlArray = uploadUrl.split("api-naut.livesystems.ch");
-                var tokenString = urlArray[urlArray.length - 1];
-
-                const {video} = this.videoBlob;
-
+                var data = new FormData();
+                data.append('video', this.file);
                 Api.http
-                    .put(tokenString, {video})
+                    .post(uploadUrl, data)
                     .then(response => this.completeUpload(response))
                     .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
                         className : ['nau_toast','nau_warning'],
@@ -147,7 +140,7 @@
                 this.videoBlob = {
                     video: ''
                 };
-                this.videoupload = null;
+                this.file = null;
             },
 
             onDrop(e) {
@@ -178,15 +171,7 @@
                     return;
                 }
 
-                let reader = new FileReader();
-                let vm = this;
-
-                reader.onload = function (e) {
-                    vm.videoupload = e.target.result;
-                    vm.videoBlob.video = e.target.result;
-                };
-
-                reader.readAsDataURL(file);
+                this.file = file;
             },
 
             removeFile() {

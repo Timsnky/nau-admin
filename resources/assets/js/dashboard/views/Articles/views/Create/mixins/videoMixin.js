@@ -169,7 +169,7 @@ let videoMin = {
                 showCancelButton: true,
                 cancelButtonText: 'Verwerfen',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ja, löschen'
+                confirmButtonText: 'Ja, entfernen'
             }).then(() => {
                 this.deleteArticleVideo(key)
             }).catch(swal.noop);

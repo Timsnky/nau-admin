@@ -474,7 +474,7 @@
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
     .modal_title_bar {
         display: inline-flex;
         width: 100%;

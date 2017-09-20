@@ -2295,7 +2295,7 @@
         width: 100%;
     }
 
-    img {
+ /*   img {
         max-width: 100%;
-    }
+    }*/
 </style>

@@ -68,7 +68,8 @@
                                     class="btn btn-primary"
                                     type="button"
                                     :disabled="! video.video || !video.name || !video.source || !video.lead || submitting">
-                                Video hinzufügen <span v-if="submitting"> &nbsp;(Uploading <i class="fa fa-spinner fa-spin"></i>)</span>
+                                    <span v-if="submitting">Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i></span>
+                                    <span v-else>Video hinzufügen</span>
                             </button>
                         </div>
                     </div>
@@ -101,15 +102,16 @@
                                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
                                     <div class="image_section_left video_chooser_section">
                                         <div class="image_selection_section_image">
-                                            <video controls>
+                                            <video controls :poser="video.thumbnail" v-if="video.processed">
                                                 <source :src="video.urls[0]" type="video/mp4">
                                                 <source :src="video.urls[1]" type="video/webm">
                                             </video>
+                                            <img v-else :src="video.thumbnail">
                                         </div>
                                         <div class="image_section_details">
                                             <p><strong>{{ video.name }}</strong></p>
                                             <p>{{ video.lead }}</p>
-                                            <p><a href="#" class="btn btn-primary btn-sm" @click="dispatchVideoSelected(video.id)">Select Video</a></p>
+                                            <p><a href="#" class="btn btn-primary btn-sm" @click="dispatchVideoSelected(video.id)">Auswählen</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -151,8 +153,9 @@
                 userId : 0,
                 myUserId : 0,
                 addingVideo: false,
+                uploadPercentage: 0,
                 video: {
-                    video: '',
+                    video: null,
                     name: '',
                     lead: '',
                     source: ''
@@ -256,7 +259,7 @@
                 this.addingVideo = false;
                 this.submitting = false;
                 this.video = {
-                    video: '',
+                    video: null,
                     lead: '',
                     name: '',
                     source: ''
@@ -264,24 +267,18 @@
             },
 
             //Handle when video is uploaded
-            videoAdded()
+            videoAdded(e)
             {
-                let fileElement = document.getElementById('video');
-                let vm = this;
+                let files = e.target.files;
+                if (!files[0])
+                    return;
 
-                if (!fileElement) return;
+                this.video.name = this.getFileName(files[0].name);
+                this.video.video = files[0];
+            },
 
-                for (var i = 0; i < fileElement.files.length; i++)
-                {
-                    var reader = new FileReader();
-
-                    reader.readAsDataURL(fileElement.files[i]);
-
-                    reader.onload = (e) =>
-                    {
-                        vm.video.video = e.target.result;
-                    };
-                }
+            getFileName(name) {
+                return name.split('.')[0];
             },
 
             //Submit the video details
@@ -318,9 +315,16 @@
                 let urlArray = uploadUrl.split("api-naut.livesystems.ch");
                 let tokenString = urlArray[urlArray.length - 1];
 
+                let formData = new FormData();
+                formData.append('video', this.video.video);
+
+                var vm = this;
+
                 Api.http
-                    .put(tokenString, {
-                        video : this.video.video
+                    .post(tokenString, formData, {
+                        onUploadProgress(e) {
+                            vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                        }
                     })
                     .then(response => {
                         if(response.status === 200)
@@ -364,7 +368,15 @@
 
 </script>
 
-<style>
+<style lang="scss" scoped>
+    .image_selection_section_image {
+        width: 50%;
+
+        video, img {
+            width: 100%;
+        }
+    }
+
     #videoSelectionModal .close {
         text-indent: initial !important;
     }
@@ -378,6 +390,17 @@
         padding-bottom: 10px;
     }
 
+    .image_section_details {
+        width: 40%;
+        margin-left: 5%;
+
+        p {
+            margin-top: 0;
+            margin-bottom: .5em;
+            word-wrap: break-word;
+        }
+    }
+
     .image_selection_rows {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -386,7 +409,6 @@
     .video_chooser_section {
         padding-top: 10px;
         padding-bottom: 10px;
-        overflow: scroll;
     }
 
     .modal_title_bar {
