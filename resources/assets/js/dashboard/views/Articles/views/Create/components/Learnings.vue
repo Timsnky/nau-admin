@@ -2,21 +2,24 @@
     <div class="form-body">
         <div class="form-body">
             <p>Key Facts (min. 3)</p>
-            <div v-for="(articleLearning, index) in articleLearnings" class="form-group">
-                <div class="form-group">
+            <div v-for="(articleLearning, index) in articleLearnings" class="form-group clearfix">
+
+                <div class="input-group">
                     <input
-                            type="text"
-                            maxlength="100"
-                            v-model.trim="articleLearnings[index]"
-                            placeholder="Key Fact hinzufügen (max 100 Zeichen)"
-                            class="form-control article_input">
-                    <button
-                            @click="confirmDelete(index)"
-                            class="btn btn-danger btn-sm delete_btn"
-                            type="button"> x
-                    </button>
-                    <character-counter :limit="100" :itemString="articleLearning"></character-counter>
+                        type="text"
+                        maxlength="100"
+                        v-model.trim="articleLearnings[index]"
+                        placeholder="Key Fact hinzufügen (max 100 Zeichen)"
+                        class="form-control">
+                    <span class="input-group-btn">
+                        <button
+                        @click="confirmDelete(index)"
+                        class="btn btn-danger btn-sm"
+                        type="button"><i class="fa fa-times"></i></button>
+                    </span>
                 </div>
+                <character-counter :limit="100" :itemString="articleLearning"></character-counter>
+
             </div>
         </div>
         <div class="form-actions item_add">
