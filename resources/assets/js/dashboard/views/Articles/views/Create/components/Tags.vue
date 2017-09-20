@@ -217,10 +217,11 @@
                     return errorString;
                 }
 
-                if(this.articleTags.length < 4)
-                {
-                    errorArray.push('at least 4 tags');
-                }
+                // Temporary removed
+                // if(this.articleTags.length < 4)
+                // {
+                //     errorArray.push('at least 4 tags');
+                // }
 
 //                if(this.articleRelatedStories.length < 1)
 //                {
