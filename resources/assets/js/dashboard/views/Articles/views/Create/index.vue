@@ -1161,11 +1161,10 @@
                     errorArray.push('Autor');
                 }
 
-                // Not needed as there is a default value
-                // if(this.article.location)
-                // {
-                //     errorArray.push('Ursprungsort der Geshcichte');
-                // }
+                if(!this.article.location)
+                {
+                    errorArray.push('Ursprungsort der Geshcichte');
+                }
 
                 if(this.article.published_at === null || this.article.published_at === '')
                 {
