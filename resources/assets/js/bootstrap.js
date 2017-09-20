@@ -70,16 +70,3 @@ console.log(this);
 
     return Promise.reject(error);
 });
-
-
-// Globaly replace << and >>
-window.replaceQuotes = (text) => {
-    return text
-        .replace(/<</g, '«')
-        .replace(/>>/g, '»')
-        .replace(/&lt;&lt;/g, '«');
-}
-
-$('textbox,input').keyup(function() {
-    this.value = replaceQuotes(this.value);
-});
