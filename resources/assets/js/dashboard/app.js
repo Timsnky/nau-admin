@@ -27,3 +27,11 @@ const app = new Vue({
     store,
     router
 });
+
+// Globaly replace << and >>
+$('textbox,input').keyup(function() {
+    var updatedText = this.value.replace(/<</g, '«');
+    var updatedText = updatedText.replace(/>>/g, '»');
+    if (updatedText != this.value)
+        this.value = updatedText;
+});
