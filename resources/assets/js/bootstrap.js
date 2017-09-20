@@ -62,10 +62,24 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => { return response } , error => {
     const status = error.response.status;
 
+console.log(this);
     if (status === 401) {
-        Api.invalidateToken()
-        Api.deleteToken();
+        // Api.invalidateToken();
+        // Api.deleteToken();
     }
 
     return Promise.reject(error);
+});
+
+
+// Globaly replace << and >>
+window.replaceQuotes = (text) => {
+    return text
+        .replace(/<</g, '«')
+        .replace(/>>/g, '»')
+        .replace(/&lt;&lt;/g, '«');
+}
+
+$('textbox,input').keyup(function() {
+    this.value = replaceQuotes(this.value);
 });

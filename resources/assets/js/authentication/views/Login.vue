@@ -32,6 +32,7 @@
                             </div>
                             <h3 class="or">oder</h3>
                             <h5>{{ user.email }}</h5>
+                            <span v-if="errors.email" class="text-danger help-block">{{ errors.email[0] }}</span>
                             <div :class="{ 'form-group': true, 'has-error': errors.password }">
                                 <input
                                 required
@@ -107,6 +108,7 @@
                         } else {
                             this.errors = error.response.data.errors;
                         }
+                        console.error(error);
                     });
                 }
             },
