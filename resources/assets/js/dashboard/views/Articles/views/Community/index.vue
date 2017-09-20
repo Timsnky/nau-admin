@@ -49,10 +49,7 @@
                 <td>{{ article.title }}</td>
                 <td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>
                 <td>
-                    <span v-if="article.article_status.name === 'published'" class="label label-sm label-success">Publiziert</span>
-                    <span v-if="article.article_status.name === 'draft'" class="label label-sm label-default">Entwurf</span>
-                    <span v-if="article.article_status.name === 'review'" class="label label-sm label-info">Review</span>
-                    <span v-if="article.article_status.name === 'declined'" class="label label-sm label-danger">Abgelehnt</span>
+                    <status-display :status="article.article_status.name" />
                 </td>
                 <td>{{ publicationDate(article) }}</td>
                 <td><router-link

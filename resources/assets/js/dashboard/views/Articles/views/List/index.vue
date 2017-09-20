@@ -44,11 +44,7 @@
                 </td>
                 <td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>
                 <td>
-                    <span v-if="article.article_status.name === 'published'" class="label label-sm label-success">Publiziert</span>
-                    <span v-if="article.article_status.name === 'draft'" class="label label-sm label-default">Entwurf</span>
-                    <span v-if="article.article_status.name === 'review'" class="label label-sm label-info">Review</span>
-                    <span v-if="article.article_status.name === 'declined'" class="label label-sm label-danger">Abgelehnt</span>
-                    <span v-if="article.article_status.name === 'queued'" class="label label-sm label-info">Geplant</span>
+                    <status-display :status="article.article_status.name" />
                 </td>
                 <td>{{ publicationDate(article) }}</td>
                 <td><router-link
@@ -82,6 +78,7 @@
 </template>
 <script>
     import Pagination from 'dashboard/components/Pagination/Pagination';
+    import ArticleStatus from 'dashboard/components/StatusDisplay';
 
     export default {
         data() {
@@ -95,7 +92,8 @@
         },
 
         components: [
-            Pagination
+            Pagination,
+            ArticleStatus
         ],
 
         created() {
@@ -145,7 +143,7 @@
             },
 
             publicationDate(article) {
-                return moment(article.published_at).format('DD.MM.YY HH:mm');
+                return article.published_at ? moment(article.published_at).format('DD.MM.YY HH:mm') : '';
             },
 
             publishArticle(article) {
