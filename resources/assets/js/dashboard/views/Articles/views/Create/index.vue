@@ -19,6 +19,7 @@
                     Speichern & Schliessen
                 </button>
                 <button
+                        v-if="article.article_status && article.article_status.name !== 'published'"
                         type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndPublish()">
@@ -1166,6 +1167,8 @@
                     errorArray.push('Ursprungsort der Geshcichte');
                 }
 
+                console.log('Ursprungsort der Geshcichte: ' + this.article.location);
+
                 if(this.article.published_at === null || this.article.published_at === '')
                 {
                     errorArray.push('Publikationsdatum');
@@ -1314,11 +1317,12 @@
             publishArticle(id) {
                 Api.http.put(`/articles/${id}/publish`)
                 .then(response => {
-                    setTimeout(() => {
-                        Vue.toast('Artikel wurde erfolgreich publiziert.', {
-                            className: ['nau_toast', 'nau_success'],
-                        });
-                    }, 700);
+                    this.$router.push('/articles');
+                    swal(
+                      'Artikel veröffentlicht!',
+                      '',
+                      'success'
+                    );
                 })
                 .catch(error => {
                     if(error.response.status === 422) {
