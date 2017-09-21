@@ -18,7 +18,7 @@ class Api {
     }
 
     setToken(key, value) {
-        Vue.cookie.set(key, value, { expires: '1h', 'domain': this.getCookieDomain() });
+        Vue.cookie.set(key, value, { expires: '1M', 'domain': this.getCookieDomain() });
     }
 
     invalidateToken() {
