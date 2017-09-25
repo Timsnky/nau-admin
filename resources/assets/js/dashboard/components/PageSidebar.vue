@@ -102,7 +102,7 @@
                 </router-link>
 
                 <!--Users -->
-                <router-link :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
+                <router-link v-if="Api.isAdmin()" :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-user"></i>
                         <span class="title">Benutzer</span>
@@ -158,3 +158,13 @@
     </div>
     <!-- END SIDEBAR -->
 </template>
+
+<script>
+    export default {
+        computed: {
+            Api() {
+                return Api;
+            }
+        }
+    }
+</script>

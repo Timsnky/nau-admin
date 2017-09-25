@@ -33,6 +33,18 @@ class Api {
         return this.store.state.user;
     }
 
+    hasRole(roleName) {
+        var matches = this.user().roles.filter((role) => {
+            return role.name == roleName;
+        });
+
+        return matches.length !== 0
+    }
+
+    isAdmin() {
+        return this.hasRole('admin');
+    }
+
     //Images
     getImage() {
         return this.store.state.selected_image_id;

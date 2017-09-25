@@ -60,6 +60,7 @@
                     Liveticker
                 </router-link>
                 <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
+                <button v-if="Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
                 </td>
             </tr>
             </tbody>
@@ -119,6 +120,12 @@
             }, 400),
         },
 
+        computed: {
+            Api() {
+                return Api;
+            }
+        },
+
         methods: {
             navigate(page) {
                 this.getPaginatedData(page)
@@ -165,7 +172,33 @@
                             });
                         }
                     });
-            }
+            },
+
+            deleteArticle(article) {
+                swal({
+                    title: 'Artikel wirklich löschen?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ja, löschen'
+                }).then(() => {
+                    Api.http.delete(`/articles/${article.id}`)
+                        .then((response) => {
+                            swal({
+                                title: 'Artikel gelöscht',
+                                type: 'success',
+                            });
+
+                            this.articles.splice(this.articles.indexOf(article), 1);
+                        }).catch((error) => {
+                            swal({
+                                title: 'Fehler beim löschen',
+                                type: 'error',
+                            })
+                        })
+                });
+            },
         }
     }
 </script>
