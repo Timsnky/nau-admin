@@ -3,7 +3,10 @@
         <page-title title="Kommentare" />
         <div class="row">
             <div class="col-lg-6 col-xs-12 col-sm-12">
-                <div class="portlet light bordered comment-approval">
+                <div v-if="isLoading">
+                    <h3>Laden <i class="fa fa-spinner fa-spin"></i></h3>
+                </div>
+                <div v-else class="portlet light bordered comment-approval">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
                             <i class="fa fa-comments font-green-sharp"></i>
@@ -12,9 +15,23 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-                        <div class="general-item-list">
+                        <label>Kommentare für folgenden Nutzer anzeigen.</label>
+                        <multiselect
+                            v-model="selectedAuthor"
+                            placeholder="Artikel Author suchen"
+                            label="name"
+                            :max-height="500"
+                            :options="authors"
+                            :options-limit="20"
+                            :close-on-select="true"
+                            track-by="id"
+                            open-direction="bottom"
+                            :show-labels="false">
+                        </multiselect>
+                        <hr>
 
-                            <div class="item" v-for="comment in comments">
+                        <div class="general-item-list">
+                            <div class="item comment" v-for="comment in comments">
                                 <div class="item-head">
                                     <div class="item-details">
                                         <img class="item-pic rounded" :src="comment.author.avatar">
@@ -27,6 +44,7 @@
                                     </div>
                                 </div>
                                 <div class="item-body linebreaks">{{ comment.content }}</div>
+                                <img class="comment-image" v-if="comment.image" :src="comment.image.url">
                             </div>
 
                         </div>
@@ -41,25 +59,53 @@
         data() {
             return {
                 comments: [],
+                selectedAuthor: Api.user(),
+                authors: [],
+                isLoading: true,
             }
         },
 
-        mounted() {
-            Api.http
-                .get('/comments?status=approval')
-                .then(response => {
-                    this.comments = response.data;
-                })
-                .catch(err => {
-                    Vue.toast('Kommentare konnten nicht geladen werden.', {
-                        className : ['nau_toast','nau_warning'],
-                    });
+        async mounted() {
+            await Api.http
+                .get('/authors')
+                .then((response) => {
+                    this.authors = response.data;
                 });
+
+            this.getComments();
+            this.isLoading = false;
+        },
+
+        watch: {
+            selectedAuthor(author) {
+                this.isLoading = true;
+                this.getComments();
+                this.isLoading = false;
+            }
         },
 
         methods: {
             humanize(date) {
                 return moment(date, moment.ISO_8601).fromNow();
+            },
+
+            getComments() {
+                var url = '/comments?status=approval';
+
+                if(this.selectedAuthor != null) {
+                    url += '&author_id=' + this.selectedAuthor.id;
+                }
+
+                return Api.http
+                    .get(url)
+                    .then(response => {
+                        this.comments = response.data;
+                    })
+                    .catch(err => {
+                        Vue.toast('Kommentare konnten nicht geladen werden.', {
+                            className : ['nau_toast','nau_warning'],
+                        });
+                    });
             },
 
             approve(comment) {
@@ -105,5 +151,11 @@
     }
     .fade-enter, .fade-leave-to {
       opacity: 0
+    }
+
+    .comment {
+        .comment-image {
+            width: 100%;
+        }
     }
 </style>

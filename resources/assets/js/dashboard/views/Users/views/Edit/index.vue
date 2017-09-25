@@ -112,6 +112,23 @@
                     <span></span>
                 </label>
             </div>
+
+            <h3>Socialmedia Namen</h3>
+            <div class="form-group">
+                <label>Twitter</label>
+                <input type="text" class="form-control" v-model="social.twitter" placeholder="nau_live">
+            </div>
+
+            <div class="form-group">
+                <label>Facebook</label>
+                <input type="text" class="form-control" v-model="social.facebook" placeholder="naumedia">
+            </div>
+
+            <div class="form-group">
+                <label>Instagram</label>
+                <input type="text" class="form-control" v-model="social.instagram" placeholder="carba37">
+            </div>
+
         </div>
 
 
@@ -125,6 +142,11 @@
     export default {
         data() {
             return {
+                social: {
+                    twitter: '',
+                    facebook: '',
+                    instagram: '',
+                },
                 workTypes: {},
                 channels: {},
                 roles: {},
@@ -162,6 +184,16 @@
                 .get('/channels')
                 .then(response => this.channels = response.data)
             ;
+        },
+
+        watch: {
+            user(user) {
+                if(user.social_account_names != null) {
+                    user.social_account_names.forEach((social) => {
+                        this.social[social.provider] = social.name;
+                    })
+                }
+            }
         },
 
         methods: {
@@ -220,6 +252,12 @@
                     if(this.avatarChanged) {
                         data.avatar = this.user.avatar;
                     }
+
+                    data.social_account_names = {
+                        twitter: this.social.twitter,
+                        facebook: this.social.facebook,
+                        instagram: this.social.instagram,
+                    };
 
                     Api.http
                         .put(`/users/${this.$route.params.id}`, data)
