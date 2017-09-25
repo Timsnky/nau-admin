@@ -25,7 +25,12 @@ Vue.component('surveySelectModal', require('./components/SurveySelectModal.vue')
 const app = new Vue({
     el: '#app',
     store,
-    router
+    router,
+    computed: {
+        user() {
+            return Api.user()
+        }
+    },
 });
 
 // Globaly replace << and >>

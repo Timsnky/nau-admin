@@ -51,7 +51,7 @@
 <!-- END HEAD -->
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
-    <div class="page-wrapper" id="app">
+    <div class="page-wrapper" id="app" v-if="user">
         <page-header></page-header>
         <!-- BEGIN HEADER & CONTENT DIVIDER -->
         <div class="clearfix"> </div>
