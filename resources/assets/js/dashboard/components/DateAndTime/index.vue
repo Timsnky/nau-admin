@@ -35,7 +35,7 @@
                     }
                     else
                     {
-                        vm.$emit('changeDate', '');
+                        vm.$emit('changeDate', null);
                     }
                 });
             });

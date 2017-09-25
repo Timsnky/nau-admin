@@ -508,8 +508,32 @@
                                         :date="article.published_at ? publicationDate : '' "/>
                             </div>
                             <div class="form-group">
-                                <label class="mt-checkbox">
+                                <label class="mt-checkbox no_margin_bottom">
                                     <input type="checkbox" v-model="article.push_notification" value="true"> Push Notification
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="article.display" value="true">Übersicht anzeigen
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in Liste anzeigen wenn Big
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="article.geo_switzerland_only" value="true">Nur Schweiz
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="article.authenticated_only" value="true">Nur für eingeloggte Benutzer
                                     <span></span>
                                 </label>
                             </div>
@@ -761,6 +785,11 @@
                     id: null,
                     published_at: null,
                     location: '',
+                    push_notification: false,
+                    display: true,
+                    display_while_big: false,
+                    geo_switzerland_only: false,
+                    authenticated_only: false
                 },
                 duplicateArticleId: null,
                 editingArticle: false,
@@ -2293,6 +2322,10 @@
 
     .surveys_section table{
         width: 100%;
+    }
+
+    .no_margin_bottom {
+        margin-bottom: 0px !important;
     }
 
  /*   img {

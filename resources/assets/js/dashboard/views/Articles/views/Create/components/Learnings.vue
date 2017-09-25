@@ -51,7 +51,6 @@
                 articleLearnings: [
                     '',
                     '',
-                    '',
                 ],
             }
         },
@@ -150,7 +149,7 @@
             {
                 let vm = this;
 
-                if(! this.validateLearnings(articleId, 3))
+                if(! this.validateLearnings(articleId, 2))
                 {
                     Api.http
                         .put(`/articles/${articleId}/learnings`, {
@@ -174,7 +173,7 @@
                 }
                 else
                 {
-                    Vue.toast('Please provide at least 3 learnings inorder to save', {
+                    Vue.toast('Please provide at least 2 learnings inorder to save', {
                         className: ['nau_toast', 'nau_warning'],
                     });
                 }
@@ -183,7 +182,7 @@
             //Confirm the deletion of an item
             confirmDelete(key)
             {
-                if(! this.validateLearnings(this.articleId, 4))
+                if(! this.validateLearnings(this.articleId, 3))
                 {
                     swal({
                         title: 'Bist du sicher?',
@@ -198,7 +197,7 @@
                 }
                 else
                 {
-                    Vue.toast('Please provide more than three learnings in order to be allowed to delete', {
+                    Vue.toast('Please provide more than two learnings in order to be allowed to delete', {
                         className: ['nau_toast', 'nau_warning'],
                     });
                 }
