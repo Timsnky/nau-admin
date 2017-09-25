@@ -3,7 +3,7 @@
         <td>{{ idea.id }}</td>
         <td>{{ date }}</td>
         <td>{{ idea.title }}</td>
-        <td>{{ idea.author.display_name }}</td>
+        <td>{{ idea.author.name }}</td>
         <td>
             <router-link
                 :to="{name: 'ideas.show', params: {id: idea.id}}"
