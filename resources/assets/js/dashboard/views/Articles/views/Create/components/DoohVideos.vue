@@ -23,6 +23,15 @@
                 Remove DOOH Video
             </button>
         </div>
+        <div class="form-group">
+            <label>Push Notification Regions</label>
+            <div class="col-md-3 col-sm-12 idea_images_section" v-for="(region, index) in articleRegions">
+                <label class="mt-checkbox no_margin_bottom">
+                    <input type="checkbox" v-model="region.id" value="true">{{ region.name }}
+                    <span></span>
+                </label>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,7 +44,9 @@
                     id: null,
                     url: ''
                 },
-                videoSelectorId: 2
+                videoSelectorId: 2,
+                regions:[],
+                doohRegions: []
             }
         },
 
@@ -84,6 +95,8 @@
             {
                 this.getVideo(this.doohVideoId);
             }
+
+            this.initializeRegions();
         },
 
         methods: {
@@ -185,7 +198,98 @@
                 };
 
                 this.doohVideoId = null;
-            }
+            },
+
+            //Get the regions for the checkboxes
+            initializeRegions()
+            {
+                Api.http
+                    .get(`/regions`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.regions = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the regions. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Get the dooh regions
+            initializeDoohRegions(id)
+            {
+                Api.http
+                    .get(`/articles/${id}/dooh-regions`)
+                    .then(response => {
+                        if(response.status === 200)
+                        {
+                            this.doohRegions = response.data;
+                        }
+                        else
+                        {
+                            Vue.toast('Error in retrieving the dooh regions. Please retry again', {
+                                className: ['nau_toast', 'nau_warning'],
+                            });
+                        }
+                    });
+            },
+
+            //Link regions to dooh video
+            linkRegionsToDooh(articleId)
+            {
+                let vm = this;
+
+                this.doohRegions.forEach(function (value, key)
+                {
+                    if(! (value.pivot && value.pivot.article_id === articleId))
+                    {
+                        Api.http
+                            .put(`/articles/${articleId}/dooh-regions/${value.id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article dooh region linked successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                                else
+                                {
+                                    Vue.toast('Error in linking the article dooh regio. Please retry again', {
+                                        className: ['nau_toast', 'nau_warning'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
+            //Delete any dooh regions
+            deleteDoohRegions(region)
+            {
+                let vm = this;
+
+                vm.doohRegions.forEach(function (value, key)
+                {
+                    if(value.id === region.id && value.pivot)
+                    {
+                        Api.http
+                            .delete(`/articles/${vm.article.id}/dooh-regions/${vm.doohRegions[key].id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    Vue.toast('Article dooh region deleted successfully', {
+                                        className: ['nau_toast', 'nau_success'],
+                                    });
+                                }
+                            });
+                    }
+                });
+            },
+
         }
     }
 </script>

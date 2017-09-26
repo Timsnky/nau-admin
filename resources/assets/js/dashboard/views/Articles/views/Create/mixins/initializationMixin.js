@@ -212,6 +212,45 @@ let initializationMixin = {
 
         },
 
+        //Get the regions for the checkboxes
+        initializeRegions()
+        {
+            Api.http
+                .get(`/regions`)
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        this.regions = response.data;
+                    }
+                    else
+                    {
+                        Vue.toast('Error in retrieving the regions. Please retry again', {
+                            className: ['nau_toast', 'nau_warning'],
+                        });
+                    }
+                });
+
+        },
+
+        //Get the article regions
+        initializeArticleRegions(id)
+        {
+            Api.http
+                .get(`/articles/${id}/notification-regions`)
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        this.articleRegions = response.data;
+                    }
+                    else
+                    {
+                        Vue.toast('Error in retrieving the notification regions. Please retry again', {
+                            className: ['nau_toast', 'nau_warning'],
+                        });
+                    }
+                });
+        },
+
         //Get the article elements for ordering
         initializeArticleElements(id)
         {

@@ -508,10 +508,25 @@
                                         :date="article.published_at ? publicationDate : '' "/>
                             </div>
                             <div class="form-group">
+                                <label>Order Date</label>
+                                <date-and-time
+                                        @changeDate="changeOrderDate"
+                                        :date="article.order_date ? orderDate : '' "/>
+                            </div>
+                            <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
                                     <input type="checkbox" v-model="article.push_notification" value="true"> Push Notification
                                     <span></span>
                                 </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Push Notification Regions</label>
+                                <div class="col-md-3 col-sm-12 idea_images_section" v-for="(region, index) in articleRegions">
+                                    <label class="mt-checkbox no_margin_bottom">
+                                        <input type="checkbox" v-model="region.id" value="true">{{ region.name }}
+                                        <span></span>
+                                    </label>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
@@ -784,6 +799,7 @@
                     lead: '',
                     id: null,
                     published_at: null,
+                    order_date: null,
                     location: '',
                     push_notification: false,
                     display: true,
@@ -847,6 +863,8 @@
                 saveArticleImagesDisabled: true,
                 displayedPanel: null,
                 errors: [],
+                articleRegions:[],
+                regions: []
             };
         },
 
@@ -856,6 +874,7 @@
             sliderMixin,
             sortingMixin,
             initializationMixin,
+            publishMixin
         ],
 
         components: {
@@ -934,6 +953,12 @@
             publicationDate()
             {
                 return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
+            },
+
+            //Compute the order date
+            orderDate()
+            {
+                return moment(this.article.order_date).format('YYYY-MM-DD HH:mm');
             },
 
             //Article title has changed
@@ -1839,246 +1864,6 @@
 
                 return errorString;
             },
-
-            /**
-             * PLACES
-             */
-            searchPlaces(query)
-            {
-                this.searchedPlace.query = query;
-                this.placesIsLoading = true;
-
-                if(this.searchedPlace.promise)
-                {
-                    this.searchedPlace.promise = false;
-
-                    setTimeout(() => {
-                        if(this.searchedPlace.query !== '')
-                        {
-                            Api.http
-                                .get(`/places?search=${this.searchedPlace.query}`)
-                                .then(response => {
-                                    this.existingPlaces = response.data;
-                                    this.searchedPlace.promise = true;
-                                    this.placesIsLoading = false;
-                                });
-                        }
-                        else
-                        {
-                            this.searchedPlace.promise = true;
-                            this.placesIsLoading = false;
-                        }
-                    }, 400);
-                }
-            },
-
-            /**
-             * CHANNELS
-             */
-            linkChannelToArticle(articleId)
-            {
-                Api.http
-                    .put(`/articles/${articleId}/channels/${this.articleChannel}`)
-                    .then(response => {
-                        if(response.status === 204)
-                        {
-                            Vue.toast('Article channel linked successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in linking the article channel. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
-            },
-
-            /**
-             *  PUBLICATION DATE
-             */
-            changeDate(date)
-            {
-                this.article.published_at = date;
-            },
-
-            /**
-             * ARTICLE INFORMANTS
-             */
-            //Search for an informant
-            searchInformants(query)
-            {
-                this.searchedInformant.query = query;
-                this.informantsIsLoading = true;
-
-                if(this.searchedInformant.promise)
-                {
-                    this.searchedInformant.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/users?search=${this.searchedInformant.query}`)
-                            .then(response => {
-                                this.existingInformants = response.data;
-                                this.searchedInformant.promise = true;
-                                this.informantsIsLoading = false;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Link informant to article
-            linkInformantToArticle(articleId)
-            {
-                let vm = this;
-
-                this.articleInformants.forEach(function (value, key)
-                {
-                    if(! (value.pivot && value.pivot.article_id === articleId))
-                    {
-                        Api.http
-                            .put(`/articles/${articleId}/informants/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    vm.articleInformants[key].pivot = {
-                                        article_id : articleId,
-                                        informant_id : vm.articleInformants[key].id
-                                    };
-                                    Vue.toast('Article informant linked successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the article informant. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Delete any informants
-            deleteInformants(informant)
-            {
-                let vm = this;
-
-                vm.articleInformants.forEach(function (value, key)
-                {
-                    if(value.id === informant.id && value.pivot)
-                    {
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/informants/${vm.articleInformants[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article informant deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            /**
-             *  ARTICLE AUTHORS
-             */
-            //Search for an author
-            searchAuthors(query)
-            {
-                this.searchedAuthor.query = query;
-                this.authorsIsLoading = true;
-
-                if(this.searchedAuthor.promise)
-                {
-                    this.searchedAuthor.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/authors?search=${this.searchedAuthor.query}`)
-                            .then(response => {
-                                this.existingAuthors = response.data;
-                                this.searchedAuthor.promise = true;
-                                this.authorsIsLoading = false;
-                            });
-                    }, 400);
-                }
-            },
-
-            //Save the settings for the article
-            saveSettings(articleId)
-            {
-                this.saveArticleAuthorsAndIdeas(articleId);
-                this.linkAuthorToArticle(articleId);
-                this.updateArticle(articleId);
-            },
-
-            //Save authors and ideas
-            saveArticleAuthorsAndIdeas(articleId)
-            {
-                this.linkInformantToArticle(articleId);
-                this.linkChannelToArticle(articleId);
-            },
-
-            //Link author to article
-            linkAuthorToArticle(articleId)
-            {
-                let vm = this;
-
-                this.articleAuthors.forEach(function (value, key)
-                {
-                    if(! (value.pivot && value.pivot.article_id === articleId))
-                    {
-                        Api.http
-                            .put(`/articles/${articleId}/authors/${value.id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    vm.articleAuthors[key].pivot = {
-                                        article_id : articleId,
-                                        author_id : vm.articleAuthors[key].id
-                                    };
-                                    Vue.toast('Article author linked successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                                else
-                                {
-                                    Vue.toast('Error in linking the article author. Please retry again', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
-
-            //Delete any authors
-            deleteAuthors(author)
-            {
-                let vm = this;
-
-                vm.articleAuthors.forEach(function (value, key)
-                {
-                    if(value.id === author.id && value.pivot)
-                    {
-                        Api.http
-                            .delete(`/articles/${vm.article.id}/authors/${vm.articleAuthors[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article author deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
-            },
         },
 
         mounted: function ()
@@ -2095,6 +1880,7 @@
             }
 
             this.initializeChannels();
+            this.initializeRegions();
         },
 
         created()
