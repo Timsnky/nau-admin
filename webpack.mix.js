@@ -22,4 +22,5 @@ mix
     .options({
         processCssUrls: false
     })
+    .sourceMaps()
     .version();
