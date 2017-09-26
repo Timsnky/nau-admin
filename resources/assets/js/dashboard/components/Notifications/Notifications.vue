@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import Notification from './Notification.js';
+    import Notification from './Notification';
     import { mapState } from 'vuex'
 
     export default {
