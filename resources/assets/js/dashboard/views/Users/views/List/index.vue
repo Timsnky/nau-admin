@@ -21,6 +21,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>E-Mail</th>
                         <th>Erstellt</th>
                         <th>Aktionen</th>
                     </tr>
@@ -29,6 +30,7 @@
                         <tr v-for="user in users">
                             <td>{{ user.id }}</td>
                             <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
                             <td>{{ formatDate(user.created_at) }}</td>
                             <td>
                                 <router-link
