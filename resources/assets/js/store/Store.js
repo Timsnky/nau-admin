@@ -9,7 +9,9 @@ export const store = new Vuex.Store({
         'selected_video_id' : null,
         'selected_survey_id': null,
         'video_selector_id': null,
-        'image_selector_id': null
+        'image_selector_id': null,
+        notifications: [],
+        unreadNotifications: 0,
 	},
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -58,9 +60,22 @@ export const store = new Vuex.Store({
         },
         RESET_SURVEY: ({commit}) => {
             commit('RESET_SURVEY');
-        }
+        },
+        ADD_NOTIFICATION: ({commit}, notification) => {
+            commit('ADD_NOTIFICATION', notification);
+            commit('INCREMENT_UNREAD_NOTIFICATIONS', notification);
+        },
     },
     mutations: {
+        CLEAR_NEW_NOTIFICATIONS: (state) => {
+            state.unreadNotifications = 0;
+        },
+        INCREMENT_UNREAD_NOTIFICATIONS: (state) => {
+            state.unreadNotifications += 1;
+        },
+        ADD_NOTIFICATION: (state, notification) => {
+            state.notifications.unshift(notification);
+        },
         SET_USER: (state, { user }) => {
             state.user = user;
         },

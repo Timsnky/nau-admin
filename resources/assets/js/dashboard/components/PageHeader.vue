@@ -24,7 +24,7 @@
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
-                    <notifications></notifications>
+                    <notifications />
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
@@ -49,12 +49,19 @@
 </template>
 
 <script>
+    import Notifications from './Notifications/Notifications';
+
     export default {
         computed: {
             user() {
                 return this.$store.state.user
             },
         },
+
+        components: {
+            Notifications
+        },
+
         methods: {
             logout() {
                 Api.invalidateToken().then((response) => {

@@ -15,7 +15,6 @@ Vue.component('pageHeader', require('./components/PageHeader.vue'));
 Vue.component('pageSidebar', require('./components/PageSidebar.vue'));
 Vue.component('pageFooter', require('./components/PageFooter.vue'));
 Vue.component('pageTitle', require('./components/PageTitle.vue'));
-Vue.component('notifications', require('./components/Notifications.vue'));
 Vue.component('pagination', require('./components/Pagination/Pagination.vue'));
 Vue.component('status-display', require('./components/StatusDisplay.vue'));
 import multiselect from 'vue-multiselect';
