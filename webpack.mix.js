@@ -21,4 +21,5 @@ mix
     .sass('resources/assets/sass/app.scss', 'public/css')
     .options({
         processCssUrls: false
-    });
+    })
+    .version();
