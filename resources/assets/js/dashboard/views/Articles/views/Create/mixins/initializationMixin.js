@@ -291,10 +291,10 @@ let initializationMixin = {
             {
                 let ed = this;
                 $('.wysihtml5-sandbox').contents().find('body').on("keyup", function(event) {
-                    vm.article.lead = ed.getValue();
+                    vm.article.lead = ed.getValue().replace(/&nbsp;/g, ' ');
                 });
             }).on("change", function () {
-                vm.article.lead = this.getValue();
+                vm.article.lead = this.getValue().replace(/&nbsp;/g, ' ');
             });
 
             this.leadEditor = leadEditor;
