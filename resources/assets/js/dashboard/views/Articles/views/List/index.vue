@@ -98,6 +98,9 @@
         ],
 
         created() {
+            this.currentPage = parseInt(this.$route.query.page || 1);
+            this.searchTerm = this.$route.query.search || '';
+
             this.getPaginatedData(this.currentPage)
                 .then(response => {
                     const { data, current_page, per_page, last_page } = response.data;
@@ -135,10 +138,24 @@
                         this.articles = data;
                         this.currentPage = current_page;
                         this.pagesCount = last_page;
+
+                        this.buildQuery();
                     })
                     .catch(err => Vue.toast('Ein Fehler ist aufgetreten', {
                         className : ['nau_toast','nau_warning'],
                     }));
+            },
+
+            buildQuery() {
+                let query = {
+                    page: this.currentPage,
+                };
+
+                if(this.searchTerm != '') {
+                    query.search = this.searchTerm;
+                }
+
+                this.$router.push({ query });
             },
 
             getPaginatedData(page) {
