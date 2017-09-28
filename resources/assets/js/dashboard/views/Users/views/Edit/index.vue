@@ -76,7 +76,7 @@
                     <button
                         class="btn btn-primary"
                         type="submit">
-                        Bearbeiten
+                        Speichern
                     </button>
                     <router-link class="btn btn-danger" :to="{name: 'users.list'}">Abbrechen</router-link>
                 </div>
