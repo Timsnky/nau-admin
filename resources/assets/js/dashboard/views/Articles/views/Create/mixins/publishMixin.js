@@ -251,6 +251,49 @@ let publishMixin = {
         /**
          *  NOTIFICATION REGIONS
          */
+        //Check if a region is in the articles region
+        checkRegion(id)
+        {
+            let checkedRegion = 0;
+
+            this.articleRegions.forEach(function (value, key)
+            {
+                console.log(value);
+                if(value.id == id)
+                {
+                    checkedRegion = 1;
+                }
+            });
+            console.log(checkedRegion);
+
+            return checkedRegion;
+        },
+
+        //Trigger when a region checkbox is checked
+        regionChecked(id, key)
+        {
+            let regionExists = null;
+
+            this.articleRegions.forEach(function (value, key)
+            {
+                if(value.id === id)
+                {
+                    regionExists = key;
+                }
+            });
+
+            if(regionExists !== null)
+            {
+                this.articleRegions.splice(regionExists, 1);
+            }
+            else
+            {
+                this.articleRegions.push(this.regions[key]);
+            }
+
+            console.log(regionExists, id, key, this.articleRegions);
+        },
+
         //Link regions to article
         linkRegionsToArticle(articleId)
         {

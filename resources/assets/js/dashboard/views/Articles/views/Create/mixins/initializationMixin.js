@@ -220,7 +220,7 @@ let initializationMixin = {
                 .then(response => {
                     if(response.status === 200)
                     {
-                        this.regions = response.data;
+                        // this.regions = response.data;
                     }
                     else
                     {

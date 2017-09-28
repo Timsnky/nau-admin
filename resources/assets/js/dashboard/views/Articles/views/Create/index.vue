@@ -519,13 +519,19 @@
                                     <span></span>
                                 </label>
                             </div>
-                            <div class="form-group">
-                                <label>Push Notification Regions</label>
-                                <div class="col-md-3 col-sm-12 idea_images_section" v-for="(region, index) in articleRegions">
-                                    <label class="mt-checkbox no_margin_bottom">
-                                        <input type="checkbox" v-model="region.id" value="true">{{ region.name }}
-                                        <span></span>
-                                    </label>
+                            <div class="form-group" v-if="article.push_notification">
+                                <div class="form-group no_margin_bottom">
+                                    <label>Push Notification Regions</label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-12 idea_images_section no_padding_left"
+                                         v-for="(region, index) in regions">
+                                        <label class="no_margin_bottom">
+                                            <input type="checkbox" @change="regionChecked(region.id, index)" :checked="false">{{ region.name }}
+                                            <!--<span></span>-->
+                                        </label>
+                                    </div>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -786,6 +792,7 @@
     import sliderMixin from './mixins/sliderMixin';
     import sortingMixin from './mixins/sortingMixin';
     import initializationMixin from './mixins/initializationMixin';
+    import publishMixin from './mixins/publishMixin';
 
     export default {
         data: () => {
@@ -864,7 +871,36 @@
                 displayedPanel: null,
                 errors: [],
                 articleRegions:[],
-                regions: []
+                regions: [
+                    {
+                        id: 1,
+                        name: 'Region 1'
+                    },
+                    {
+                        id: 2,
+                        name: 'Region 2'
+                    },
+                    {
+                        id: 3,
+                        name: 'Region 3'
+                    },
+                    {
+                        id: 4,
+                        name: 'Region 4'
+                    },
+                    {
+                        id: 5,
+                        name: 'Region 5'
+                    },
+                    {
+                        id: 6,
+                        name: 'Region 6'
+                    },
+                    {
+                        id: 7,
+                        name: 'Region 7'
+                    }
+                ]
             };
         },
 
@@ -2112,6 +2148,10 @@
 
     .no_margin_bottom {
         margin-bottom: 0px !important;
+    }
+
+    .no_padding_left {
+        padding-left: 0px !important;
     }
 
  /*   img {

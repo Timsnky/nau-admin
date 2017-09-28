@@ -24,12 +24,18 @@
             </button>
         </div>
         <div class="form-group">
-            <label>Push Notification Regions</label>
-            <div class="col-md-3 col-sm-12 idea_images_section" v-for="(region, index) in articleRegions">
-                <label class="mt-checkbox no_margin_bottom">
-                    <input type="checkbox" v-model="region.id" value="true">{{ region.name }}
-                    <span></span>
-                </label>
+            <div class="form-group no_margin_bottom">
+                <label>Dooh Regions</label>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-12 idea_images_section no_padding_left"
+                     v-for="(region, index) in regions">
+                    <label class="mt-checkbox no_margin_bottom">
+                        <input type="checkbox" v-model="region.id" value="checkRegion(region.id)">{{ region.name }}
+                        <span></span>
+                    </label>
+                </div>
+                <div class="clearfix"></div>
             </div>
         </div>
     </div>
@@ -86,7 +92,6 @@
                     this.submitVideo(newId);
                 }
             },
-
         },
 
         mounted()
