@@ -3,8 +3,12 @@ import createPersistedState from 'vuex-persistedstate'
 
 export const store = new Vuex.Store({
     plugins: [createPersistedState()],
-	state: {
-		'user': {},
+    state: {
+        'user': {
+            "name": "Loading",
+            "avatar": "https://media.nau.ch/default_avatar.png",
+            "roles": []
+        },
         'selected_image_id' : null,
         'selected_video_id' : null,
         'selected_survey_id': null,
@@ -12,7 +16,7 @@ export const store = new Vuex.Store({
         'image_selector_id': null,
         notifications: [],
         unreadNotifications: 0,
-	},
+    },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
             Api.http.get('/me').then((response) => {

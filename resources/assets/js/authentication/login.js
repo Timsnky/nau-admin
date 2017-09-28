@@ -8,3 +8,7 @@ const app = new Vue({
 
     router,
 });
+
+
+// Make sure to clear the local storage
+localStorage.clear();
