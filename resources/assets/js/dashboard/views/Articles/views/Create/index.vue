@@ -1001,7 +1001,8 @@
             //Prepare the article data before duplication
             prepareDuplication()
             {
-                this.article.lead = this.leadEditor.getValue();
+                // Is this required? as it updates on keydown
+                // this.article.lead = this.leadEditor.getValue();
             },
 
             //Create a duplicate article
@@ -1164,7 +1165,6 @@
             {
                 let errorString = "";
                 let errorArray = [];
-                this.article.lead = this.leadEditor.getValue();
 
                 if(! this.article.dateline)
                 {
@@ -1304,7 +1304,6 @@
             {
                 let errorString = "";
                 let errorArray = [];
-                this.article.lead = this.leadEditor.getValue();
 
                 if(! this.article.dateline)
                 {
