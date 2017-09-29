@@ -234,6 +234,7 @@
                                     if(response.status === 200)
                                     {
                                         vm.articleBodies[key] = response.data;
+                                        vm.articleBodyEditors[key].editor.setValue(vm.articleBodies[key].content);
                                         Vue.toast('Article body updated successfully', {
                                             className: ['nau_toast', 'nau_success'],
                                         });
@@ -250,6 +251,7 @@
                                     if(response.status === 201)
                                     {
                                         vm.articleBodies[key] = response.data;
+                                        vm.articleBodyEditors[key].editor.setValue(vm.articleBodies[key].content);
                                         Vue.toast('Article body created successfully', {
                                             className: ['nau_toast', 'nau_success'],
                                         });
