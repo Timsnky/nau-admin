@@ -34,6 +34,7 @@ let initializationMixin = {
                         this.initializeArticleVideos(id);
                         this.initializeArticleAuthors(id);
                         this.initializeArticleInformants(id);
+                        this.initializeArticleRegions(id);
                         this.initializeArticleElements(id);
                     }
                     else
@@ -220,7 +221,7 @@ let initializationMixin = {
                 .then(response => {
                     if(response.status === 200)
                     {
-                        // this.regions = response.data;
+                        this.regions = response.data;
                     }
                     else
                     {
@@ -229,7 +230,6 @@ let initializationMixin = {
                         });
                     }
                 });
-
         },
 
         //Get the article regions
@@ -260,6 +260,7 @@ let initializationMixin = {
                     if(response.status === 200)
                     {
                         this.articleElements = response.data;
+                        this.setupArticleRegions();
                     }
                     else
                     {
@@ -268,6 +269,24 @@ let initializationMixin = {
                         });
                     }
                 });
+        },
+
+        //Setup the article regions
+        setupArticleRegions()
+        {
+            let vm = this;
+
+            this.articleRegions.forEach(function (value, key)
+            {
+                vm.regions.forEach(function (regionValue, regionKey)
+                {
+                    if(value.id === regionValue.id)
+                    {
+                        vm.regions[regionKey].checked = true;
+                        vm.regions[regionKey].linked = vm.article.id;
+                    }
+                })
+            })
         },
 
         /**

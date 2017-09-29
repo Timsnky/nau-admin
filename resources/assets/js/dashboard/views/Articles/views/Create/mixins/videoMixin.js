@@ -17,6 +17,14 @@ let videoMin = {
             }
         },
 
+        //Trigger the video selection modal
+        showVideoSelectionModal()
+        {
+            Api.setVideoSelector(this.videoSelectorId);
+
+            $('#videoSelectionModal').modal('show');
+        },
+
         //Get a video after a selection via the modal
         getVideo(id)
         {

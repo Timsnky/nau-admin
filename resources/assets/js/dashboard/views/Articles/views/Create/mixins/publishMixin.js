@@ -31,6 +31,7 @@ let publishMixin = {
             this.saveArticleAuthorsAndIdeas(articleId);
             this.linkAuthorToArticle(articleId);
             this.updateArticle(articleId);
+            this.submitArticleNotificationRegions(articleId);
         },
 
         //Save authors and ideas
@@ -251,103 +252,76 @@ let publishMixin = {
         /**
          *  NOTIFICATION REGIONS
          */
-        //Check if a region is in the articles region
-        checkRegion(id)
+        //Reset the notification regions when one uncheck the push notification checkbox
+        resetArticleRegions()
         {
-            let checkedRegion = 0;
+            let vm = this;
 
-            this.articleRegions.forEach(function (value, key)
+            if(! this.article.push_notification)
             {
-                console.log(value);
-                if(value.id == id)
+                this.regions.forEach(function (value, key)
                 {
-                    checkedRegion = 1;
-                }
-            });
-            console.log(checkedRegion);
-
-            return checkedRegion;
+                    vm.regions[key].checked = false;
+                });
+            }
         },
 
-        //Trigger when a region checkbox is checked
-        regionChecked(id, key)
+        //Submit the notification regions for an article
+        submitArticleNotificationRegions(articleId)
         {
-            let regionExists = null;
+            let vm = this;
 
-            this.articleRegions.forEach(function (value, key)
+            this.regions.forEach(function (value, key)
             {
-                if(value.id === id)
+                if(value.checked === true && value.linked !== articleId)
                 {
-                    regionExists = key;
+                    vm.linkRegionsToArticle(articleId, key);
+                }
+                else if(value.linked === articleId && value.checked == false)
+                {
+                    vm.deleteArticleRegions(articleId, key);
                 }
             });
-
-            if(regionExists !== null)
-            {
-                this.articleRegions.splice(regionExists, 1);
-            }
-            else
-            {
-                this.articleRegions.push(this.regions[key]);
-            }
-
-            console.log(regionExists, id, key, this.articleRegions);
         },
 
         //Link regions to article
-        linkRegionsToArticle(articleId)
+        linkRegionsToArticle(articleId, key)
         {
-            let vm = this;
-
-            this.articleRegions.forEach(function (value, key)
-            {
-                if(! (value.pivot && value.pivot.article_id === articleId))
-                {
-                    Api.http
-                        .put(`/articles/${articleId}/notification-regions/${value.id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-
-                                Vue.toast('Article notification region linked successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                            else
-                            {
-                                Vue.toast('Error in linking the article notification regio. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
+            Api.http
+                .put(`/articles/${articleId}/notification-regions/${this.regions[key].id}`)
+                .then(response => {
+                    if(response.status === 204)
+                    {
+                        this.regions[key].linked = articleId;
+                        Vue.toast('Article notification region linked successfully', {
+                            className: ['nau_toast', 'nau_success'],
                         });
-                }
-            });
+                    }
+                    else
+                    {
+                        Vue.toast('Error in linking the article notification region. Please retry again', {
+                            className: ['nau_toast', 'nau_warning'],
+                        });
+                    }
+                });
         },
 
         //Delete any notification regions
-        deleteArticleRegions(region)
+        deleteArticleRegions(articleId, key)
         {
-            let vm = this;
+            Api.http
+                .delete(`/articles/${articleId}/notification-regions/${this.regions[key].id}`)
+                .then(response => {
+                    if(response.status === 204)
+                    {
+                        this.regions[key].linked = null;
 
-            vm.articleRegions.forEach(function (value, key)
-            {
-                if(value.id === region.id && value.pivot)
-                {
-                    Api.http
-                        .delete(`/articles/${vm.article.id}/notification-regions/${vm.articleRegions[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                Vue.toast('Article notification region deleted successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
+                        Vue.toast('Article notification region deleted successfully', {
+                            className: ['nau_toast', 'nau_success'],
                         });
-                }
-            });
+                    }
+                });
         },
-
-
     }
 };
 
