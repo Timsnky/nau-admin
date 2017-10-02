@@ -21,11 +21,15 @@ class HomeController extends Controller
         }
 
         $token = Cookie::get('token');
-        $result = $this->api->getClient()->get('/me', [
-            'headers' => [
-                'Authorization' => "Bearer $token",
-            ],
-        ]);
+        try {
+            $result = $this->api->getClient()->get('/me', [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->view('login');
+        }
 
         $user = json_decode($result->getBody());
         $user->roles = collect($user->roles);
