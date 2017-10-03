@@ -72,7 +72,10 @@
                         class="btn btn-primary"
                         type="submit"
                         :disabled="!image.name || !image.lead || !image.source">
-                    Erstellen
+                        <span v-if="uploadPercentage !== 0">
+                            Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
+                        </span>
+                        <span v-else>Bild hinzufügen</span>
                 </button>
                 <button
                         class="btn btn-default"
@@ -96,13 +99,13 @@
                     lead: '',
                     source: '',
                     image: '',
-                    user_id: '',
                     selectedSource: ''
                 },
                 imageupload: null,
                 imageCropper: null,
                 imageCropHeight: 0,
                 imageCropWidth: 0,
+                uploadPercentage: 0,
                 sources: [
                     {
                         name: '',
@@ -138,26 +141,45 @@
 
         methods: {
             handleSubmit() {
-                const {name, lead, source, image, user_id} = this.image;
+                const {name, lead, source, image} = this.image;
 
-                if (name && lead && source && image)
-                {
-                    if(this.imageCropper)
-                    {
-                        this.finishCrop();
-                    }
-
-                    Api.http
-                        .post('/images', {name, lead, source, image, user_id})
-                        .then(response => this.$router.push('/images'))
-                        .catch(err => Vue.toast('Error in uploading the Image. Please retry the upload', {
-                            className : ['nau_toast','nau_warning'],
-                        }));
-                } else {
+                if(!name || !lead || !source || !image) {
                     Vue.toast('Please provide the name, lead and source for the image', {
                         className : ['nau_toast','nau_warning'],
                     });
+                    return false;
                 }
+
+                this.imageCropper.getCroppedCanvas().toBlob((blob) => {
+                    let formData = new FormData();
+
+                    formData.append('image', blob);
+                    formData.append('name', name);
+                    formData.append('source', source);
+                    formData.append('lead', lead);
+
+                    var vm = this;
+
+                    Api.http
+                        .post('/images', formData, {
+                            onUploadProgress(e) {
+                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                            }
+                        })
+                        .then(response => {
+                            if(response.status === 201)
+                            {
+                                this.$router.push('/images');
+                            }
+                            else
+                            {
+                                Vue.toast('Fehler beim hochladen des Bildes.', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                });
+                this.imageCropper.destroy();
             },
 
             reset() {
@@ -166,7 +188,6 @@
                     lead: '',
                     source: '',
                     image: '',
-                    user_id: ''
                 }
                 this.imageupload = null;
                 if(this.imageCropper)
@@ -210,7 +231,6 @@
                 reader.onload = function (e) {
                     vm.imageupload = e.target.result;
                     vm.image.image = e.target.result.split(';base64,')[1];
-                    vm.image.user_id = Api.user().id;
                 };
 
                 reader.readAsDataURL(file);
