@@ -70,11 +70,11 @@
 
                         </div>
                         <div class="form-actions">
-                            <button
-                                    @click="uploadImage()"
-                                    class="btn btn-primary"
-                                    type="button">
-                                Bild hinzufügen <span v-if="submitting"> &nbsp;(Uploading <i class="fa fa-spinner fa-spin"></i>)</span>
+                            <button @click="uploadImage()" class="btn btn-primary" type="button">
+                                <span v-if="submitting">
+                                    Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
+                                </span>
+                                <span v-else>Bild hinzufügen</span>
                             </button>
                             <button
                                     @click="closeAddImage()"
@@ -366,13 +366,6 @@
                 });
             },
 
-            //Finish the cropping process and save image
-            finishCrop()
-            {
-                this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
-                this.imageCropper.destroy();
-            },
-
             //Save selected source of article image
             imageSourceSelected()
             {
@@ -440,20 +433,25 @@
                     Vue.toast('Please provide the ' + errorString + ' for the image in order to save', {
                         className: ['nau_toast', 'nau_warning'],
                     });
+                    this.submitting = false;
+                    return false;
                 }
-                else
-                {
-                    if(this.imageCropper)
-                    {
-                        this.finishCrop();
-                    }
+
+                this.imageCropper.getCroppedCanvas().toBlob((blob) => {
+                    let formData = new FormData();
+
+                    formData.append('image', blob);
+                    formData.append('name', this.image.name);
+                    formData.append('source', this.image.source);
+                    formData.append('lead', this.image.lead);
+
+                    var vm = this;
 
                     Api.http
-                        .post(`/images`, {
-                            image: this.image.image,
-                            name: this.image.name,
-                            source: this.image.source,
-                            lead: this.image.lead
+                        .post('/images', formData, {
+                            onUploadProgress(e) {
+                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                            }
                         })
                         .then(response => {
                             if(response.status === 201)
@@ -463,12 +461,13 @@
                             }
                             else
                             {
-                                Vue.toast('Error in uploading the Image. Please retry again', {
+                                Vue.toast('Fehler beim hochladen des Bildes.', {
                                     className: ['nau_toast', 'nau_warning'],
                                 });
                             }
                         });
-                }
+                });
+                this.imageCropper.destroy();
             },
         }
     }
