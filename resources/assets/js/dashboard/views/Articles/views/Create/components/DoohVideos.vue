@@ -34,7 +34,7 @@
                     v-if="doohVideo.id"
                     class="btn btn-primary"
                     type="button"
-                    @click="handleSubmit()">
+                    @click="handleSubmit(articleId)">
                 Speichern
             </button>
             <button
@@ -124,7 +124,19 @@
             }
         },
 
+        created()
+        {
+            this.$parent.$on('duplicateData', this.duplicateData);
+            this.$parent.$on('saveData', this.handleSubmit);
+        },
+
         methods: {
+            //Receive the event to duplicate data and do so
+            duplicateData(articleId)
+            {
+                this.handleSubmit(articleId);
+            },
+
             //Trigger the video selection modal
             showVideoSelectionModal()
             {
@@ -186,7 +198,8 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ja, löschen'
                 }).then(() => {
-                    this.detachDoohVideo()
+                    this.detachDoohVideo();
+                    this.clearDoohRegions();
                 }).catch(swal.noop);
             },
 
@@ -211,7 +224,17 @@
                             });
                         }
                     });
+            },
 
+            //Remove the dooh regions too when you delete the dooh video
+            clearDoohRegions()
+            {
+                let vm = this;
+
+                this.doohRegions.forEach(function (value, key)
+                {
+                    vm.deleteDoohRegions(vm.articleId, key)
+                })
             },
 
             //Reset the dooh video
@@ -221,8 +244,6 @@
                     id: null,
                     url: ''
                 };
-
-                this.doohVideoId = null;
             },
 
             //Get the regions for the checkboxes
@@ -285,9 +306,9 @@
             },
 
             //Submit the data in the dooh tab
-            handleSubmit()
+            handleSubmit(articleId)
             {
-                this.submitArticleDoohRegions(this.articleId);
+                this.submitArticleDoohRegions(articleId);
             },
 
             //Submit the dooh regions for an article
@@ -340,6 +361,7 @@
                         if(response.status === 204)
                         {
                             this.regions[key].linked = null;
+                            this.regions[key].checked = 0;
 
                             Vue.toast('Article dooh region deleted successfully', {
                                 className: ['nau_toast', 'nau_success'],
