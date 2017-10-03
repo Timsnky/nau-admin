@@ -59,24 +59,8 @@
                 },
                 videoSelectorId: 2,
                 regions:[
-                    {
-                        id: 1,
-                        name: 'Test',
-                        checked: 1
-                    },
-                    {
-                        id: 2,
-                        name: 'Test',
-                        checked: 1
-                    },
-                    {
-                        id: 3,
-                        name: 'Test',
-                        checked: 1
-                    }
                 ],
                 doohRegions: [
-
                 ]
             }
         },
@@ -104,6 +88,13 @@
                 if(this.doohVideoId)
                 {
                     this.getVideo(this.doohVideoId);
+                }
+            },
+
+            articleId()
+            {
+                if(this.articleId)
+                {
                     this.initializeDoohRegions(this.articleId);
                 }
             },
@@ -125,6 +116,10 @@
             if(this.doohVideoId)
             {
                 this.getVideo(this.doohVideoId);
+            }
+
+            if(this.articleId)
+            {
                 this.initializeDoohRegions(this.articleId);
             }
         },
@@ -233,6 +228,7 @@
             //Get the regions for the checkboxes
             initializeRegions()
             {
+                this.regions = [];
                 Api.http
                     .get(`/regions`)
                     .then(response => {
