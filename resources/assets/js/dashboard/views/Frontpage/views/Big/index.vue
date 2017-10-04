@@ -4,43 +4,34 @@
 
         <div class="row">
             <div class="col-md-8">
-                <div class="form-group">
-                    <span class="control-label">Artikel</span>
-                    <multiselect
-                        v-model="selectedArticle"
-                        placeholder="Artikel Suchen"
-                        label="title"
-                        :max-height="500"
-                        :options="options"
-                        :loading="isLoading"
-                        :options-limit="20"
-                        :clear-on-select="true"
-                        :close-on-select="true"
-                        track-by="id"
-                        open-direction="bottom"
-                        :show-labels="false"
-                        :internal-search="false"
-                        @search-change="searchArticle">
-                            <template slot="clear" scope="props">
-                                <div class="multiselect__clear" v-if="options.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
-                            </template><span slot="noResult">Keine Artikel gefunden</span>
-                        </multiselect>
+                <div class="big" :style="{'background-image': 'url(' + big.image + ')'}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="half">
+                                <article-dropdown v-model="articles[0]"></article-dropdown>
+                            </div>
+                            <div class="half">
+                                <article-dropdown v-model="articles[1]"></article-dropdown>
+                            </div>
                         </div>
 
-                    <div class="form-group">
-                        <span class="control-label">Position</span>
-                        <select class="form-control" v-model="position">
-                            <option value="1">Oben</option>
-                            <option value="2">Unten</option>
-                        </select>
+                        <div class="col-md-6">
+                            <div class="third">
+                                <article-dropdown v-model="articles[2]"></article-dropdown>
+                            </div>
+                            <div class="third">
+                                <article-dropdown v-model="articles[3]"></article-dropdown>
+                            </div>
+                            <div class="third">
+                                <article-dropdown v-model="articles[4]"></article-dropdown>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" @click="replaceBig">Ersetzen</button>
-                    </div>
+                </div>
             </div>
+
             <div class="col-md-4">
-                <div v-if="big && big.article">
+                <div v-if="hasBig()">
                     <div class="form-group">
                         <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig">Big entfernen</button>
                     </div>
@@ -54,47 +45,39 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
     import Article from '../../components/Article';
+    import ArticleDropdown from './components/ArticleDropdown';
 
     export default {
         data() {
             return {
+                articles: [{}, {}, {}, {}, {}],
                 big: {},
                 options: [],
                 selectedArticle: {},
-                isLoading: false,
                 position: 1,
             }
         },
 
         components: {
             'article-element': Article,
+            'article-dropdown': ArticleDropdown,
         },
 
         methods: {
-            searchArticle: _.debounce(function (query) {
-                if(!query) {
-                    this.options = [];
-                    return;
-                }
-
-                Api.http.get(`/articles?search=${query}&teaser=1`)
-                    .then((response) => {
-                        this.options = response.data.data;
-                        this.isLoading = false
-                    })
-            }, 400),
+            hasBig() {
+                return !_.isEmpty(this.big);
+            },
 
             replaceBig() {
-                Api.http.post(`/big-article/${this.selectedArticle.id}`, {position: this.position})
-                    .then((response) => {
-                        this.big = response.data;
-                    });
+                Api.http.post(`/big/${this.selectedArticle.id}`, {position: this.position})
+                .then((response) => {
+                    this.big = response.data;
+                });
             },
 
             removeBig() {
@@ -109,7 +92,7 @@
                     confirmButtonText: 'Ja, entfernen',
                     cancelButtonText: 'Abbrechen',
                 }).then(function () {
-                    Api.http.delete('/big-article')
+                    Api.http.delete('/big')
                     .then(() => {
                         vm.big = null;
                         swal(
@@ -125,10 +108,33 @@
 
         mounted() {
             Api.http
-                .get(`/big-article`)
-                .then(response => {
-                    this.big = response.data;
-                });
+            .get(`/big`)
+            .then(response => {
+                this.big = response.data;
+            });
         },
     }
 </script>
+
+<style lang="scss" scoped>
+    .big {
+        height: 600px;
+
+        .col-md-6 {
+            padding: 0;
+            margin: 0;
+        }
+
+        .half, .third {
+            border: 2px solid black;
+        }
+
+        .half {
+            height: 300px;
+        }
+
+        .third {
+            height: 200px;
+        }
+    }
+</style>
