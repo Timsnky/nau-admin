@@ -1,7 +1,7 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <p>Key Facts (min. 3)</p>
+            <p>Key Facts (min. 2)</p>
             <div v-for="(articleLearning, index) in articleLearnings" class="form-group clearfix">
 
                 <div class="input-group">

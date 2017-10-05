@@ -31,7 +31,6 @@ let publishMixin = {
             this.saveArticleAuthorsAndIdeas(articleId);
             this.linkAuthorToArticle(articleId);
             this.updateArticle(articleId);
-            this.submitArticleNotificationRegions(articleId);
         },
 
         //Save authors and ideas
@@ -39,6 +38,7 @@ let publishMixin = {
         {
             this.linkInformantToArticle(articleId);
             this.linkChannelToArticle(articleId);
+            this.submitArticleNotificationRegions(articleId);
         },
 
         //Link author to article
@@ -315,6 +315,7 @@ let publishMixin = {
                     if(response.status === 204)
                     {
                         this.regions[key].linked = null;
+                        this.regions[key].checked = 0;
 
                         Vue.toast('Article notification region deleted successfully', {
                             className: ['nau_toast', 'nau_success'],
