@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-                        <label>Kommentare für folgenden Nutzer anzeigen.</label>
+                        <label>Nur Kommentare für folgenden Author anzeigen.</label>
                         <multiselect
                             v-model="selectedAuthor"
                             placeholder="Artikel Author suchen"
@@ -59,7 +59,7 @@
         data() {
             return {
                 comments: [],
-                selectedAuthor: Api.user(),
+                selectedAuthor: null,
                 authors: [],
                 isLoading: true,
             }
