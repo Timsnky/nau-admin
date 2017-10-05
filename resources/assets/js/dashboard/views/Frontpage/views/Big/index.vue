@@ -4,7 +4,10 @@
 
         <div class="row">
             <div class="col-md-8">
-                <div class="big" :style="{'background-image': 'url(' + big.image + ')'}">
+                <button v-if="!image" type="button" class="btn btn-primary">
+                    Big Bild hochladen
+                </button>
+                <div class="big" :style="{'background-image': 'url(' + big.image + ')'}" v-else>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="half">
@@ -41,7 +44,17 @@
                     </div>
                 </div>
                 <div v-else>
-                    <h3>Es exisitert kein Big</h3>
+                    <div class="form-group">
+                        <label>Position</label>
+                        <select v-model="position" class="form-control">
+                            <option value="1">Oben</option>
+                            <option value="2">Unten</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" :disabled="validate" @click="createBig()">Big erstellen</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,6 +69,7 @@
         data() {
             return {
                 articles: [{}, {}, {}, {}, {}],
+                image: null,
                 big: {},
                 options: [],
                 selectedArticle: {},
@@ -73,11 +87,27 @@
                 return !_.isEmpty(this.big);
             },
 
-            replaceBig() {
+            createBig() {
                 Api.http.post(`/big/${this.selectedArticle.id}`, {position: this.position})
                 .then((response) => {
                     this.big = response.data;
                 });
+            },
+
+            validate() {
+                var ret = true;
+
+                if(!this.image) {
+                    return false;
+                }
+
+                this.articles.each((article) => {
+                    if(_.isEmpty(this.big)) {
+                        ret = false;
+                    }
+                });
+
+                return ret;
             },
 
             removeBig() {
@@ -121,8 +151,14 @@
         height: 600px;
 
         .col-md-6 {
-            padding: 0;
-            margin: 0;
+
+            &:first-of-type {
+                padding-right: 0;
+            }
+
+            &:last-of-type {
+                padding-left: 0;
+            }
         }
 
         .half, .third {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <multiselect
-        v-model="value"
+        v-model="selected"
         placeholder="Artikel Suchen"
         label="title"
         :max-height="500"
@@ -33,6 +33,17 @@
             return {
                 options: [],
                 isLoading: false,
+            }
+        },
+
+        computed: {
+            selected: {
+                get() {
+                    return this.value;
+                },
+                set(value) {
+                    this.$emit('input', value);
+                }
             }
         },
 
