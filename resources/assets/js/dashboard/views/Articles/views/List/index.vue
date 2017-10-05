@@ -46,7 +46,7 @@
                 <td>
                     <status-display :status="article.article_status.name" />
                 </td>
-                <td>{{ publicationDate(article) }}</td>
+                <td>{{ moment(article.published_at).isValid() ? moment(article.published_at).format('DD.MM.YY HH:mm') : '' }}</td>
                 <td><router-link
                         :to="{name: 'articles.edit', params: {id: article.id}}"
                         class="btn btn-warning">
@@ -60,6 +60,7 @@
                     Liveticker
                 </router-link>
                 <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
+                <button v-if="article.article_status.name === 'published'" class="btn btn-danger" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
                 <button v-if="Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
                 </td>
             </tr>
@@ -126,7 +127,11 @@
         computed: {
             Api() {
                 return Api;
-            }
+            },
+
+            moment() {
+                return moment;
+            },
         },
 
         methods: {
@@ -166,10 +171,6 @@
                 return Api.http.get(`/articles?community=0&page=${page}`);
             },
 
-            publicationDate(article) {
-                return article.published_at ? moment(article.published_at).format('DD.MM.YY HH:mm') : '';
-            },
-
             publishArticle(article) {
                 article.published_at = moment().format();
 
@@ -189,6 +190,33 @@
                             });
                         }
                     });
+            },
+
+            unpublishArticle(article) {
+                swal({
+                    title: 'Artikel wirklich zurück auf Entwurf setzten?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ja, ich bin mir sicher'
+                }).then(() => {
+                    Api.http.put(`/articles/${article.id}`, {published_at: null})
+                        .then((response) => {
+                            swal({
+                                title: 'Artikel auf Entwurf gesetzt',
+                                type: 'success',
+                            });
+
+                            this.$set(this.articles, this.articles.indexOf(article), response.data);
+                        }).catch((error) => {
+                            console.error(error);
+                            swal({
+                                title: 'Fehler beim zurücksetzen',
+                                type: 'error',
+                            })
+                        })
+                });
             },
 
             deleteArticle(article) {
