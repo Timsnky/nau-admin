@@ -34,7 +34,6 @@
             <button
                     @click="addArticleBody()"
                     class="btn btn-primary item_add_btn"
-                    :disabled="articleBodies.length >= 5"
                     type="button"> +
             </button>
         </div>
