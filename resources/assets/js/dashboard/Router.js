@@ -107,6 +107,10 @@ let routes = [{
         path: 'day/:date',
         name: 'resources.day',
         component: require('./views/Resources/views/Day'),
+    }, {
+        path: 'foldermaster',
+        name: 'resources.foldermaster',
+        component: require('./views/Resources/views/Foldermaster'),
     }],
 }, {
     path: '/resource-management/day/:date/shifts',
