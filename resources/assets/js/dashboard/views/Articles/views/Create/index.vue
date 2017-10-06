@@ -19,11 +19,25 @@
                     Speichern & Schliessen
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name !== 'published'"
+                        v-if="article.article_status && article.article_status.name == 'draft'"
+                        type="button"
+                        class="btn btn-primary pull-right margin_left_5"
+                        @click="handleSaveAndReady()">
+                    Speichern & Ready
+                </button>
+                <button
+                        v-if="article.article_status && article.article_status.name == 'ready'"
+                        type="button"
+                        class="btn btn-primary pull-right margin_left_5"
+                        @click="handleSaveAndVerified()">
+                    Speichern & Verifizieren
+                </button>
+                <button
+                        v-if="article.article_status && article.article_status.name == 'verified'"
                         type="button"
                         class="btn btn-primary pull-right margin_left_5"
                         @click="handleSaveAndPublish()">
-                    Speichern & Veröffentlichen
+                    Speichern & Publizieren
                 </button>
                 <button
                         class="btn btn-primary pull-right margin_left_5"
@@ -404,7 +418,7 @@
                     <!--DOOH Videos-->
                     <div class="tab-pane" id="articleDoohVideos">
                         <div class="form-body">
-                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh.video_id"></dooh-video>
+                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh ? article.dooh.video_id : null"></dooh-video>
                         </div>
                     </div>
 

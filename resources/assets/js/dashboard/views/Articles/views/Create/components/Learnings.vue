@@ -119,16 +119,7 @@
             //Add article learnings
             addArticleLearning()
             {
-                if(this.articleLearnings.length < 5)
-                {
-                    this.articleLearnings.push('');
-                }
-                else
-                {
-                    Vue.toast('Only a maximum of 5 learnings can be added', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
+                this.articleLearnings.push('');
             },
 
             //Validate learnings save
