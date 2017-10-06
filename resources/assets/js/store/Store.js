@@ -71,7 +71,7 @@ export const store = new Vuex.Store({
         },
     },
     mutations: {
-        CLEAR_NEW_NOTIFICATIONS: (state) => {
+        READ_NEW_NOTIFICATIONS: (state) => {
             state.unreadNotifications = 0;
         },
         INCREMENT_UNREAD_NOTIFICATIONS: (state) => {
@@ -79,6 +79,9 @@ export const store = new Vuex.Store({
         },
         ADD_NOTIFICATION: (state, notification) => {
             state.notifications.unshift(notification);
+        },
+        CLEAR_NOTIFICATIONS: (state) => {
+            state.notifications = [];
         },
         SET_USER: (state, { user }) => {
             state.user = user;
