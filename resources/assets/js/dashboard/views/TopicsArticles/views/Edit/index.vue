@@ -1,110 +1,67 @@
-<template>
-    <div>
-        <page-title title="Articles" sub="Edit" />
-
-        <form @submit.prevent="handleSubmit">
-            <div class="form-body">
-                <div class="form-group">
-                    <label for="title">Titel</label>
-                    <input
-                        id="title"
-                        type="text"
-                        name="title"
-                        v-model.trim="newArticle.title"
-                        placeholder="Titel"
-                        class="form-control">
-                </div>
-            </div>
-
-            <div class="form-body">
-                <div class="form-group">
-                    <label for="lead">Lead</label>
-                    <input
-                        id="lead"
-                        type="text"
-                        name="lead"
-                        v-model.trim="newArticle.lead"
-                        placeholder="Lead"
-                        class="form-control">
-                </div>
-            </div>
-
-            <div class="form-body">
-                <div class="form-group">
-                    <label for="dateline">Dateline</label>
-                    <input
-                        id="dateline"
-                        type="text"
-                        name="dateline"
-                        v-model.trim="newArticle.dateline"
-                        placeholder="Add dateline"
-                        class="form-control">
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button
-                    class="btn btn-primary"
-                    type="submit"
-                    :disabled="!newArticle.title || !newArticle.dateline || !newArticle.dateline">
-                    Bearbeiten
-                </button>
-                <button
-                    class="btn btn-default"
-                    type="button"
-                    @click="reset">
-                    Reset
-                </button>
-            </div>
-        </form>
-    </div>
-</template>
-
 <script>
-    import _pick from 'lodash/pick';
+    import Form from '../mixins/Form';
 
     export default {
+        mixins: [Form],
+
         data() {
             return {
-                time: '',
-                date: this.$route.query.date,
-                article: {},
-                newArticle: {}
+                pageTitle: 'Artikel bearbeiten',
+                submitLabel: 'Speichern',
             };
         },
 
         created() {
-            Api.http
-                .get(`/articles/${this.$route.params.articleID}`)
-                .then(response => {
+            this.initializeChannels();
+            Api.http.get(`/articles/${this.$route.params.articleID}`)
+                .then((response) => {
                     this.article = response.data;
-                    this.newArticle = _pick(this.article, ['title', 'lead', 'dateline']);
-                })
-                .catch(err => console.log('Show some error message here'));
+                    var date = moment(this.article.published_at);
+                    if(date.isValid()) {
+                        this.time = date.format('HH:mm');
+                    }
+                });
         },
 
-        methods: {
-            handleSubmit() {
-                const { title, lead, dateline } = this.newArticle;
 
-                if (title && lead && dateline) {
-                    Api.http
-                        .put(`/topics/${this.$route.params.topicID}/articles/${this.article.id}`, {
-                            title,
-                            lead,
-                            dateline,
-                            internal_title: title,
-                            internal_dateline: dateline
-                        })
-                        .then(response => this.$router.push({name: 'resources.day', params: { date: this.date }}))
-                        .catch(err => console.log('Show some error message here'));
-                } else {
-                    console.log('Show some error message here');
+        methods: {
+            async handleSubmit() {
+                const { title } = this.article;
+
+                try {
+                    var response = await Api.http.put(`/articles/${this.article.id}`, {
+                        title,
+                        internal_title: title,
+                        published_at: this.article.published_at ? this.article.published_at.format() : null,
+                        channel_id: this.article.channel.id,
+                    });
+                    var article = response.data;
+
+                    this.authors.removed.forEach((author) => {
+                        Api.http.delete(`/articles/${article.id}/authors/${author.id}`)
+                    });
+
+                    this.authors.new.forEach((author) => {
+                        Api.http.put(`/articles/${article.id}/authors/${author.id}`)
+                    });
+                } catch (error) {
+                    console.error(error);
+                    Vue.toast('Ein Fehler ist aufgetreten.', {
+                        className : ['nau_toast','nau_warning'],
+                    });
+                    return false;
+                }
+
+                this.$router.push({name: 'resources.day', params: { date: this.date }})
+            },
+
+            reset() {
+                this.article = {
+                    title: '',
+                    dateline: '',
+                    lead: ''
                 }
             },
-            reset() {
-                this.newArticle = _pick(this.article, ['title', 'lead', 'dateline']);
-            }
-        }
+        },
     }
 </script>

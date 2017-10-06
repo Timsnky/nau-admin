@@ -78,7 +78,7 @@
                                         class="panel panel-default"
                                         v-for="(article, index) in topic.articles">
                                         <div class="panel-body">
-                                            <h4 class="clearfix">{{ article.title }}
+                                            <h4 class="clearfix"><router-link :to="{name: 'articles.edit', params: { id: article.id }}">{{ article.title }}</router-link>
                                                 <router-link
                                                     :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
                                                     class="btn btn-xs btn-warning pull-right">
@@ -86,7 +86,7 @@
                                                 </router-link>
                                             </h4>
                                             <h5>
-                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.pivot.time, 'HH:mm:ss').format('HH:mm') }}
+                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at, 'HH:mm:ss').format('HH:mm') }}
                                             </h5>
 
                                             <ul

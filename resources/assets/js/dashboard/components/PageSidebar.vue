@@ -61,7 +61,7 @@
                 <li class="nav-item">
                     <router-link :to="{name: 'resources.week'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-calendar"></i>
-                        <span class="title">Ressourcenmanagement</span>
+                        <span class="title">Tagesplanung</span>
                         <span class="arrow"></span>
                     </router-link>
                     <ul class="sub-menu">
