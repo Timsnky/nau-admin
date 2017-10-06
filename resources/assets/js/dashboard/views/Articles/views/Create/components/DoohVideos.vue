@@ -1,7 +1,7 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <label><b>DOOH Videos</b></label>
+            <label><b>DOOH Videos</b><span class="text-warning" v-if="$parent.article.dooh.should_include_video"> (Sollte ein Video enthalten)</span></label>
             <div class="form-group">
                 <div v-if="doohVideo.id" class="edit_video_section">
                     <video controls>

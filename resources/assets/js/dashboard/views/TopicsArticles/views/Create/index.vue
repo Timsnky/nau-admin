@@ -30,6 +30,7 @@
                         internal_dateline: 'Bitte ausfüllen',
                         published_at: this.article.published_at ? this.article.published_at.format() : null,
                         channel_id: this.article.channel.id,
+                        should_include_dooh_video: this.article.dooh.should_include_video,
                     });
                     var article = response.data;
 

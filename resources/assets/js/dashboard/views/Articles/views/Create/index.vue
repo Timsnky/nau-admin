@@ -404,7 +404,7 @@
                     <!--DOOH Videos-->
                     <div class="tab-pane" id="articleDoohVideos">
                         <div class="form-body">
-                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh_video_id"></dooh-video>
+                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh.video_id"></dooh-video>
                         </div>
                     </div>
 

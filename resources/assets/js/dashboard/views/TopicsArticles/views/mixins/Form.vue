@@ -59,6 +59,13 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label class="mt-checkbox no_margin_bottom">
+                <input type="checkbox" v-model="article.dooh.should_include_video" @change="resetArticleRegions()" value="true"> Sollte ein Dooh Video enthalten
+                <span></span>
+            </label>
+        </div>
+
         <div class="form-actions">
             <button
             class="btn btn-primary"
@@ -91,6 +98,9 @@
                         id: null
                     },
                     published_at: null,
+                    dooh: {
+                        should_include_video: false,
+                    }
                 }
             };
         },
