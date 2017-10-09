@@ -77,8 +77,6 @@
 </template>
 
 <script>
-    import DateTime from 'dashboard/components/DateTime';
-
     export default {
         data() {
             return {

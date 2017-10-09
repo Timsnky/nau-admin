@@ -418,7 +418,7 @@
                     <!--DOOH Videos-->
                     <div class="tab-pane" id="articleDoohVideos">
                         <div class="form-body">
-                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh ? article.dooh.video_id : null"></dooh-video>
+                            <dooh-video v-if="article.dooh" :dooh-timeout="article.dooh.timeout" :article-id="article.id" :dooh-video-id="article.dooh ? article.dooh.video_id : null"></dooh-video>
                         </div>
                     </div>
 

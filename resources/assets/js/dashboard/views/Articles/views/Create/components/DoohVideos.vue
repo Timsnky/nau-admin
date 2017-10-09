@@ -10,6 +10,11 @@
                     </video>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label>Letzte Ausstrahlung</label>
+                <date-time format="DD.MM.YYYY HH:mm" v-model="timeout" />
+            </div>
         </div>
         <div v-if="doohVideo.url || doohVideo.id" class="form-group">
             <div class="form-group no_margin_bottom">
@@ -49,14 +54,20 @@
 </template>
 
 <script>
+    import DateTime from 'dashboard/components/DateTime';
 
     export default {
+        components: {
+            DateTime
+        },
+
         data() {
             return {
                 doohVideo: {
                     id: null,
                     url: ''
                 },
+                timeout: null,
                 videoSelectorId: 2,
                 regions:[
                 ],
@@ -71,7 +82,8 @@
             },
             doohVideoId : {
                 type: Number,
-            }
+            },
+            doohTimeout: String,
         },
 
         computed: {
@@ -106,21 +118,22 @@
                     Api.resetVideo();
                     Api.resetVideoSelector();
                     this.getVideo(newId);
-                    this.submitVideo(newId);
                 }
             },
         },
 
         mounted()
         {
-            if(this.doohVideoId)
-            {
+            if(this.doohVideoId) {
                 this.getVideo(this.doohVideoId);
             }
 
-            if(this.articleId)
-            {
+            if(this.articleId) {
                 this.initializeDoohRegions(this.articleId);
+            }
+
+            if(this.doohTimeout) {
+                this.timeout = this.doohTimeout;
             }
         },
 
@@ -165,28 +178,6 @@
                     });
             },
 
-            //Submit the selected video and disply it
-            submitVideo(id)
-            {
-                Api.http
-                    .put(`/articles/${this.articleId}/dooh/${id}`)
-                    .then(response =>
-                    {
-                        if(response.status === 204)
-                        {
-                            Vue.toast('DOOH Video linked successfully to article', {
-                                className : ['nau_toast','nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the selected video. Please retry again', {
-                                className : ['nau_toast','nau_warning'],
-                            });
-                        }
-                    });
-            },
-
             //Confirm detach
             confirmDelete()
             {
@@ -207,18 +198,14 @@
             detachDoohVideo()
             {
                 Api.http
-                    .delete(`/articles/${this.articleId}/dooh`)
-                    .then(response =>
-                    {
-                        if(response.status === 204)
-                        {
+                    .put(`/articles/${this.articleId}/dooh`, {video: null})
+                    .then(response => {
+                        if(response.status === 200) {
                             this.reset();
-                            Vue.toast('DOOH Video detached successfully', {
+                            Vue.toast('Dooh Video erfolgreich entfernt', {
                                 className : ['nau_toast','nau_success'],
                             });
-                        }
-                        else
-                        {
+                        } else {
                             Vue.toast('Error in detaching the DOOH video. Please retry again', {
                                 className : ['nau_toast','nau_warning'],
                             });
@@ -306,33 +293,43 @@
             },
 
             //Submit the data in the dooh tab
-            handleSubmit(articleId)
+            async handleSubmit(articleId)
             {
-                this.submitArticleDoohRegions(articleId);
+                var {timeout} = this;
+                try {
+                    await Api.http.put(`/articles/${articleId}/dooh`, {
+                        timeout: moment(timeout).format('YYYY-MM-DD HH:mm:ss'),
+                        video: this.doohVideo.id,
+                    });
+                    await this.submitArticleDoohRegions(articleId);
+                } catch(error) {
+                    console.error(error);
+                    Vue.toast('Ein Fehler ist aufgetreten', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
             },
 
             //Submit the dooh regions for an article
             submitArticleDoohRegions(articleId)
             {
-                let vm = this;
+                return new Promise((resolve, reject) => {
+                    this.regions.forEach((value, key) => {
+                        if(value.checked === true && value.linked !== articleId) {
+                            this.linkDoohRegionsToArticle(articleId, key);
+                        } else if(value.linked === articleId && value.checked == false) {
+                            this.deleteDoohRegions(articleId, key);
+                        }
+                    });
 
-                this.regions.forEach(function (value, key)
-                {
-                    if(value.checked === true && value.linked !== articleId)
-                    {
-                        vm.linkDoohRegionsToArticle(articleId, key);
-                    }
-                    else if(value.linked === articleId && value.checked == false)
-                    {
-                        vm.deleteDoohRegions(articleId, key);
-                    }
+                    resolve(true);
                 });
             },
 
             //Link regions to article dooh video
             linkDoohRegionsToArticle(articleId, key)
             {
-                Api.http
+                return Api.http
                     .put(`/articles/${articleId}/dooh-regions/${this.regions[key].id}`)
                     .then(response => {
                         if(response.status === 204)
@@ -355,7 +352,7 @@
             //Delete any dooh regions
             deleteDoohRegions(articleId, key)
             {
-                Api.http
+                return Api.http
                     .delete(`/articles/${articleId}/dooh-regions/${this.regions[key].id}`)
                     .then(response => {
                         if(response.status === 204)

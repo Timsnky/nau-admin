@@ -6,9 +6,7 @@
             <div class="form-body">
                 <div class="form-group">
                     <label>Datum</label>
-                    <date-time
-                        @changeDate="changeDate"
-                        :date="date" />
+                    <date-time v-model="topic.date" format="DD.MM.YYYY" />
                 </div>
 
                 <div class="form-group">
@@ -60,12 +58,6 @@
             dateAndTime: DateAndTime,
         },
 
-        computed: {
-            date() {
-                return moment(this.topic.date).format('YYYY-MM-DD');
-            },
-        },
-
         created() {
             Api.http
                 .get(`/topics/${this.$route.params.id}`)
@@ -73,7 +65,7 @@
                     this.topic = {
                         id: response.data.id,
                         name: response.data.name,
-                        date: moment(response.data.date).format('YYYY-MM-DD'),
+                        date: moment(response.data.date),
                         channel_id: response.data.channel_id,
                     };
                 })
@@ -86,22 +78,16 @@
         },
 
         methods: {
-            handleSubmit() {
+            async handleSubmit() {
                 const { name, date, channel_id } = this.topic;
 
-                if (name && date) {
-                    Api.http
-                        .put(`/topics/${this.topic.id}`, { name, date: moment(date).format('YYYY-MM-DD'), channel_id })
-                        .then(response => this.$router.push({name: 'resources.day', params: {date: moment(this.topic.date).format('YYYY-MM-DD')}}))
-                        .catch(err => console.log('Show some error message here'));
+                if (name && date && channel_id) {
+                    var response = await Api.http.put(`/topics/${this.topic.id}`, { name, date: date.format('YYYY-MM-DD'), channel_id });
+                    this.$router.push({name: 'resources.day', params: {date: date.format('YYYY-MM-DD')}});
                 } else {
                     console.log('Show some error message here');
                 }
             },
-
-            changeDate(date) {
-                this.topic.date = date;
-            }
         }
     }
 </script>

@@ -17,9 +17,7 @@
 
                 <div class="form-group">
                     <label>Date</label>
-                    <date-time
-                        @changeDate="changeDate"
-                        :date="newHoliday.date" />
+                    <date-time v-model="newHoliday.date" format="DD.MM.YYYY" />
                 </div>
             </div>
 
@@ -65,7 +63,7 @@
                     this.holiday = response.data;
                     this.newHoliday = {
                         name: this.holiday.name,
-                        date: moment(this.holiday.date).format('YYYY-MM-DD')
+                        date: moment(this.holiday.date)
                     };
                 })
                 .catch(err => console.log('Show some error message here'));
@@ -73,16 +71,12 @@
 
         methods: {
             handleSubmit() {
-                const { name, date } = this.newHoliday;
-
-                if (name && date) {
-                    Api.http
-                        .put(`/holidays/${this.holiday.id}`, { name, date })
-                        .then(response => this.$router.push('/holidays'))
-                        .catch(err => console.log('Show some error message here'));
-                } else {
-                    console.log('Show some error message here');
-                }
+                Api.http
+                    .put(`/holidays/${this.holiday.id}`, {
+                        name: this.newHoliday.name,
+                        date: this.newHoliday.date.format('YYYY-MM-DD')
+                    })
+                    .then(response => this.$router.push('/holidays'))
             },
 
             reset() {
