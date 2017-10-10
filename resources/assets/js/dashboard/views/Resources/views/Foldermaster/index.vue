@@ -9,10 +9,8 @@
                 placeholder="Type to search author"
                 label="name"
                 :max-height="500"
-                :clear-on-select="false"
                 :close-on-select="true"
                 track-by="id"
-                :multiple="false"
                 open-direction="bottom"
                 :internal-search="false"
                 @search-change="searchAuthors"
@@ -45,7 +43,7 @@
                 Api.http
                     .get(`/authors?search=${query}`)
                     .then(response => {
-                        this.authors.list = response.data;
+                        this.authors = response.data;
                     });
             }, 500),
 
