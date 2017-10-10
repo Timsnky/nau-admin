@@ -77,7 +77,7 @@
                                 <div v-if="topic.articles.length > 0">
                                     <div class="row center" v-for="(article, index) in topic.articles">
                                         <div class="col-sm-2">
-                                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at, 'HH:mm:ss').format('HH:mm') }}
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
                                         </div>
                                         <div class="col-sm-7">
                                             <h4>
