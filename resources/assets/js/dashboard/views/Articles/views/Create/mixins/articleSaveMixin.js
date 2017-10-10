@@ -23,8 +23,11 @@ export default {
                 });
             } else {
                 this.setSavingDefaults();
-                this.article.status = 'ready';
+                var user = await this.$refs['verification-modal'].getUserForVerification();
                 await this.save();
+                await Api.http.put(`/articles/${this.article.id}/ready`, {message: user.id});
+                this.$router.push('/articles');
+                swal('Artikel ist Bereit', '', 'success')
             }
         },
 
@@ -39,6 +42,8 @@ export default {
                 this.setSavingDefaults();
                 this.article.status = 'verified';
                 await this.save();
+                this.$router.push('/articles');
+                swal('Artikel ist Verifiziert', '', 'success')
             }
         },
 
@@ -68,6 +73,7 @@ export default {
                 this.article.status = 'published';
                 await this.save();
                 this.$router.push('/articles');
+                swal('Artikel ist Publiziert', '', 'success')
             }
         },
 

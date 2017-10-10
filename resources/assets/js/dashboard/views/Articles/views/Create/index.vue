@@ -13,35 +13,36 @@
             </div>
             <div class="col-md-6 text-right">
                 <button
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndExit()">
+                    type="button"
+                    class="btn btn-primary pull-right margin_left_5"
+                    @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name == 'draft'"
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndReady()">
+                    v-if="article.article_status && article.article_status.name == 'draft'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndReady()">
                     Speichern & Ready
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name == 'ready'"
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndVerified()">
+                    v-if="article.article_status && article.article_status.name == 'ready'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndVerified()">
                     Speichern & Verifizieren
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name == 'verified'"
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndPublish()">
+                    v-if="article.article_status && article.article_status.name == 'verified'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndPublish()">
                     Speichern & Publizieren
                 </button>
                 <button
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSubmit()">
+                    class="btn btn-primary pull-right margin_left_5"
+                    @click="handleSubmit()">
+                    <i class="fa fa-floppy-o"></i>
                     Speichern
                 </button>
                 <a
@@ -778,6 +779,7 @@
                 </div>
                 <image-select-modal></image-select-modal>
                 <video-select-modal></video-select-modal>
+                <verification-modal ref="verification-modal"></verification-modal>
             </div>
         </form>
     </div>
@@ -794,6 +796,7 @@
     import Tags from './components/Tags';
     import Learnings from './components/Learnings';
     import SocialMedia from './components/SocialMedia';
+    import VerificationModal from './components/VerificationModal';
     import Bodies from './components/Bodies';
     import CharacterCounter from 'dashboard/components/CharacterCounter';
     import ArticleSorting from './components/ArticleSorting';
@@ -920,7 +923,8 @@
             ArticleSorting,
             TimelineItem,
             ExternalVideoElement,
-            DoohVideo
+            DoohVideo,
+            VerificationModal
 //            InfoBoxes
         },
 
