@@ -2,7 +2,7 @@
     <div>
         <page-title title="Artikel" />
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="input-icon">
                     <i class="fa fa-search"></i>
                     <input
@@ -11,6 +11,15 @@
                         placeholder="Suche"
                         name="searchTerm"
                         v-model.trim="searchTerm">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-icon">
+                    <i class="fa fa-filter"></i>
+                    <select class="form-control" v-model="stateFilter">
+                        <option :value="null">Alle</option>
+                        <option v-for="state in states" :value="state.id">{{ state.name }}</option>
+                    </select>
                 </div>
             </div>
             <div class="col-md-6 text-right">
@@ -89,6 +98,8 @@
                 pagesCount: 1,
                 itemsPerPage: 15,
                 searchTerm: '',
+                states: [],
+                stateFilter: null,
                 articles: []
             }
         },
@@ -116,9 +127,17 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 });
+
+            Api.http.get('/article-states').then(response => {
+                this.states = response.data;
+            });
         },
 
         watch: {
+            stateFilter() {
+                this.navigate(1);
+            },
+
             searchTerm: _.debounce(function () {
                 this.navigate(1);
             }, 400),
@@ -164,11 +183,20 @@
             },
 
             getPaginatedData(page) {
+                var params = {
+                    community: 0,
+                    page: page,
+                };
+
                 if (this.searchTerm !== '') {
-                    return Api.http.get(`/articles?community=0&search=${this.searchTerm}&page=${page}`);
+                    params.search = this.searchTerm;
                 }
 
-                return Api.http.get(`/articles?community=0&page=${page}`);
+                if (this.stateFilter !== null) {
+                    params.status_id = this.stateFilter;
+                }
+
+                return Api.http.get(`/articles?${$.param(params)}`);
             },
 
             publishArticle(article) {
