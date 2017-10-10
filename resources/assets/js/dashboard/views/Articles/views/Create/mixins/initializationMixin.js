@@ -21,6 +21,8 @@ let initializationMixin = {
                             longitude: this.article.longitude,
                         }
 
+                        this.articleChannel = this.article.channel.id;
+
                         this.initializeLeadEditor(this);
                         if (this.article.teaser_id) {
                             this.initializeArticleTeaserImage(this.article.teaser_id);
@@ -163,7 +165,10 @@ let initializationMixin = {
                 .then(response => {
                     if (response.status === 200) {
                         this.existingChannels = response.data;
-                        this.articleChannel = this.existingChannels[0].id;
+
+                        if(!this.articleChannel) {
+                            this.articleChannel = this.existingChannels[0].id;
+                        }
                     } else {
                         Vue.toast('Error in retrieving the channels. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
