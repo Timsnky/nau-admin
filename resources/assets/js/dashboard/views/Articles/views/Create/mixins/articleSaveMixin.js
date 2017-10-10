@@ -103,6 +103,7 @@ export default {
                     this.article = response.data;
                     this.submitArticleImage(this.article.id);
                     this.submitArticleTeaserImage(this.article.id);
+                    this.initializeArticleAuthors(this.article.id);
                     Vue.toast('Article erfolgreich gespeichert', {
                         className: ['nau_toast', 'nau_success'],
                     });
