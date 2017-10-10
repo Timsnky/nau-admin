@@ -12,7 +12,7 @@
             <li>
                 <ul class="dropdown-menu-list" data-handle-color="#637283" data-initialized="1">
                     <li v-for="notification in notifications">
-                        <a href="javascript:;">
+                        <a :href="notification.link ? notification.link : '#'">
                             <span class="time">{{ moment(notification.time).format('HH:mm') }}</span>
                             <span class="details">
                                 <span :class="['label', 'label-sm', 'label-icon', 'label-' + notification.type]">
