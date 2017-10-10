@@ -47,8 +47,9 @@
         }
     }
 </script>
-<style>
-    #dateTimePicker {
-        z-index: auto;
+
+<style scoped>
+    .input-group .form-control {
+        z-index: auto !important;
     }
 </style>

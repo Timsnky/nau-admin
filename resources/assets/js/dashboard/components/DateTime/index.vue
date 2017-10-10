@@ -63,3 +63,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .input-group .form-control {
+        z-index: auto !important;
+    }
+</style>
