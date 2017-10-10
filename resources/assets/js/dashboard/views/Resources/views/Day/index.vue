@@ -57,7 +57,8 @@
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
-                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
+                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span><br>
+                            <small>Foldermaster: {{ foldermaster ? foldermaster.name : '' }}</small>
                         </div>
                         <div class="tools">
                             <a href="javascript:;" class="fullscreen" data-original-title="" title="" @click="toggleFullscreen()"> </a>
@@ -74,36 +75,24 @@
                             </div>
                             <div class="panel-body">
                                 <div v-if="topic.articles.length > 0">
-                                    <div
-                                        class="panel panel-default"
-                                        v-for="(article, index) in topic.articles">
-                                        <div class="panel-body">
-                                            <h4 class="clearfix"><router-link :to="{name: 'articles.edit', params: { id: article.id }}">{{ article.title }}</router-link>
-                                                <router-link
-                                                    :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
-                                                    class="btn btn-xs btn-warning pull-right">
-                                                    Bearbeiten
-                                                </router-link>
+                                    <div class="row center" v-for="(article, index) in topic.articles">
+                                        <div class="col-sm-2">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at, 'HH:mm:ss').format('HH:mm') }}
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <h4>
+                                                <router-link :to="{name: 'articles.edit', params: { id: article.id }}">{{ article.title }}</router-link>
+                                                <small v-if="article.authors.length > 0">
+                                                    – {{ article.authors.map((author) => {return author.name}).join(', ') }}
+                                                </small>
                                             </h4>
-                                            <h5>
-                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at, 'HH:mm:ss').format('HH:mm') }}
-                                            </h5>
-
-                                            <ul
-                                                class="list-group"
-                                                v-if="article.authors.length > 0">
-                                                <li
-                                                    class="list-group-item"
-                                                    v-for="author in article.authors">
-                                                    {{ author.name }}
-                                                </li>
-                                            </ul>
-
-                                            <h5
-                                                v-else
-                                                class="text-center">
-                                                Keine Authoren gefunden
-                                            </h5>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <router-link
+                                                :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
+                                                class="btn btn-xs btn-warning pull-right">
+                                                Bearbeiten
+                                            </router-link>
                                         </div>
                                     </div>
                                 </div>
@@ -151,6 +140,7 @@
                     topics: [],
                 },
                 isLoaded: false,
+                foldermaster: null,
             };
         },
 
@@ -165,6 +155,8 @@
                     this.isLoaded = true;
                     console.log('Show some error message here');
                 });
+
+            Api.http.get('/foldermaster').then((response) => this.foldermaster = response.data.user);
         },
 
         mounted() {
@@ -189,7 +181,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .portlet-fullscreen {
         * {
             font-size: 3rem;
@@ -198,5 +190,10 @@
         .btn {
             display: none;
         }
+    }
+
+    .center { // add a new class to your row and target your newest class
+        display: flex;
+        align-items: center;
     }
 </style>
