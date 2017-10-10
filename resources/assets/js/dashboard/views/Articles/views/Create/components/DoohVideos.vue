@@ -2,8 +2,8 @@
     <div class="form-body">
         <div class="form-body">
             <label><b>DOOH Videos</b><span class="text-warning" v-if="$parent.article.dooh && $parent.article.dooh.should_include_video"> (Sollte ein Video enthalten)</span></label>
-            <div class="form-group">
-                <div v-if="doohVideo.id" class="edit_video_section">
+            <div v-if="doohVideo.id" class="form-group">
+                <div class="edit_video_section">
                     <video controls>
                         <source v-if="doohVideo.urls[0]" :src="doohVideo.urls[0]" type="video/mp4">
                         <source v-if="doohVideo.urls[1]" :src="doohVideo.urls[1]" type="video/webm">
@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div v-if="doohVideo.id" class="form-group">
                 <label>Letzte Ausstrahlung</label>
                 <date-time format="DD.MM.YYYY HH:mm" v-model="timeout" />
             </div>
@@ -298,7 +298,7 @@
                 var {timeout} = this;
                 try {
                     await Api.http.put(`/articles/${articleId}/dooh`, {
-                        timeout: moment(timeout).format('YYYY-MM-DD HH:mm:ss'),
+                        timeout: timeout ? moment(timeout).format('YYYY-MM-DD HH:mm:ss') : null,
                         video: this.doohVideo.id,
                     });
                     await this.submitArticleDoohRegions(articleId);
