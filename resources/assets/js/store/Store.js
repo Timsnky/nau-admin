@@ -9,6 +9,29 @@ export const store = new Vuex.Store({
             "avatar": "https://media.nau.ch/default_avatar.png",
             "roles": []
         },
+        'imageTypes': [
+            {
+                id: 1,
+                name: 'Normal Image'
+            },
+            {
+                id: 2,
+                name: 'Teaser Image',
+            },
+            {
+                id: 3,
+                name: 'Top Teaser Image',
+            },
+            {
+                id: 4,
+                name: 'Comment Image',
+            }
+
+        ],
+        'imageType' : {
+            id: 1,
+            name: 'Normal Image'
+        },
         'selected_image_id' : null,
         'selected_video_id' : null,
         'selected_survey_id': null,
@@ -34,6 +57,12 @@ export const store = new Vuex.Store({
                     reject(error);
                 })
             })
+        },
+        SET_IMAGE_TYPE: ({commit}, image_type) => {
+            commit('SET_IMAGE_TYPE', image_type);
+        },
+        RESET_IMAGE_TYPE: ({commit}) => {
+            commit('RESET_IMAGE_TYPE');
         },
         SET_IMAGE: ({commit}, image_id) => {
             commit('SET_IMAGE', image_id);
@@ -118,6 +147,15 @@ export const store = new Vuex.Store({
         },
         RESET_SURVEY: (state) => {
             state.selected_survey_id = null;
+        },
+        SET_IMAGE_TYPE: (state, image_type) => {
+            state.imageType = state.imageTypes[image_type];
+        },
+        RESET_IMAGE_TYPE: (state) => {
+            state.imageType = {
+                id: 1,
+                name: 'Normal Image'
+            }
         }
     }
 });

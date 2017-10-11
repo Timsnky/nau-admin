@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Bilder</h4>
+                        <h4 class="modal-title" id="myModalLabel">Bilder <small>{{imageType.name}}</small></h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingImage" @click="showAddImage()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                     </div>
@@ -170,6 +170,7 @@
                 imageCropper: null,
                 imageCropHeight: 0,
                 imageCropWidth: 0,
+                imageAspectRatio: NaN,
                 sources: [
                     {
                         name: '',
@@ -196,11 +197,23 @@
                         displayName: 'Zvg'
                     }
                 ],
-                submitting: false
+                submitting: false,
+                imageType: {
+                    id: 1,
+                    name: 'Normal Image'
+                },
+                uploadPercentage: 0
             }
         },
 
+        created()
+        {
+            this.$parent.$on('imageTypeChange', this.changeImageType);
+        },
+
         mounted() {
+            this.imageType = Api.getImageType();
+
             this.getPaginatedData(this.currentPage)
                 .then(response => {
                     const { data, current_page, per_page, last_page } = response.data;
@@ -230,12 +243,31 @@
             searchTerm() {
                 this.navigate(1);
             },
+
             userId() {
                 this.navigate(1);
-            }
+            },
         },
 
         methods: {
+            //Update the image type when it is changed
+            changeImageType()
+            {
+                let type = Api.getImageType();
+
+                if(type.id !== this.imageType.id)
+                {
+                    this.imageType = type;
+
+                    this.navigate(1);
+                }
+
+                this.imageAspectRatio = this.imageType.id !== 1 ? 2 : NaN;
+
+                this.reset();
+                this.closeAddImage();
+            },
+
             deleteImage(image) {
                 Api.http
                     .delete(`/images/${image.id}`)
@@ -265,6 +297,7 @@
                 var searchString = '';
                 var userString = '';
 
+
                 if (this.searchTerm !== '') {
                     searchString += `search=${this.searchTerm}&`;
                 }
@@ -274,7 +307,7 @@
                     userString += `user_id=${this.userId}&`;
                 }
 
-                return Api.http.get(`/images?` + searchString + userString + `page=${page}`);
+                return Api.http.get(`/images?type=${this.imageType.id}&` + searchString + userString + `page=${page}`);
             },
 
             dispatchImageSelected(id) {
@@ -313,6 +346,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -322,6 +356,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
 
                 let fileElement = document.getElementById('image');
@@ -350,7 +385,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: 2,
+                    aspectRatio: vm.imageAspectRatio,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
@@ -444,6 +479,7 @@
                     formData.append('name', this.image.name);
                     formData.append('source', this.image.source);
                     formData.append('lead', this.image.lead);
+                    formData.append('type', this.imageType.id);
 
                     var vm = this;
 
@@ -468,8 +504,9 @@
                         });
                 });
                 this.imageCropper.destroy();
+                this.imageCropper = null;
             },
-        }
+        },
     }
 </script>
 
