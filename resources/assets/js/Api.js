@@ -70,6 +70,18 @@ class Api {
         return this.store.dispatch('RESET_IMAGE_SELECTOR');
     }
 
+    getImageType() {
+        return this.store.state.imageType;
+    }
+
+    setImageType(type) {
+        return this.store.dispatch('SET_IMAGE_TYPE', type);
+    }
+
+    resetImageType() {
+        return this.store.dispatch('RESET_IMAGE_TYPE');
+    }
+
     //Videos
     getVideo() {
         return this.store.state.selected_video_id;

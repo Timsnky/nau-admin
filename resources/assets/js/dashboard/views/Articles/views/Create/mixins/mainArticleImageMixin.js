@@ -38,8 +38,32 @@ let mainArticleImageMixin = {
             this.type = type;
 
             Api.setImageSelector(this.type);
+            this.saveImageType(type);
+
 
             $('#imageSelectionModal').modal('show');
+        },
+
+        //Save the image type in store
+        saveImageType(type)
+        {
+            let imageType = 0;
+
+            if(type === 1)
+            {
+                imageType = 1;
+            }
+            else if(type === 2 || type === 3)
+            {
+                imageType = 0;
+            }
+            else if(type === 4)
+            {
+                imageType = 2;
+            }
+
+            Api.setImageType(imageType);
+            this.$emit('imageTypeChange');
         },
 
         //Get the image once we have obtained the selected id
