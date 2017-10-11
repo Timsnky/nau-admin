@@ -4,6 +4,16 @@
 
         <div class="row">
             <div class="col-md-6">
+                <div v-if="!video.processed" class="video-processing"><i class="fa fa-spin fa-spinner"></i> Video wird verarbeitet ...</div>
+                <div v-else class="edit_video_section" >
+                    <video controls :poster="video.thumbnail">
+                        <source :src="video.urls[0]" type="video/mp4" />
+                        <source :src="video.urls[1]" type="video/webm" />
+                    </video>
+                </div>
+            </div>
+
+            <div class="col-md-6">
                 <form @submit.prevent="handleSubmit">
                     <div class="form-body">
                         <div class="form-group">
@@ -47,16 +57,6 @@
                         >Speichern</button>
                     </div>
                 </form>
-            </div>
-
-            <div class="col-md-6">
-                <p v-if="!video.processed"><i class="fa fa-spin fa-spinner"></i> Video wird verarbeitet ...</p>
-                <div v-else class="edit_video_section" >
-                    <video controls :poster="video.thumbnail">
-                        <source :src="video.urls[0]" type="video/mp4" />
-                        <source :src="video.urls[1]" type="video/webm" />
-                    </video>
-                </div>
             </div>
         </div>
     </div>
@@ -111,5 +111,11 @@
 
     .edit_video_section video {
         width: 100%;
+    }
+
+    .video-processing {
+        width: 100%;
+        text-align: center;
+        font-size: 1.5em;
     }
 </style>
