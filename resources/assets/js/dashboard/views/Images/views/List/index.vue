@@ -15,11 +15,12 @@
             </div>
 
             <div class="col-md-6 text-right">
-                <router-link
+                <span class="text-danger">Temporär ist das hochladen von Bildern hier nicht möglich. Bilder bitte im Artikel direkt hochladen.</span>
+                <!-- <router-link
                     :to="{name: 'images.create'}"
-                    class="btn btn-primary pull-right">
+                    class="btn btn-primary">
                     Bild hochladen
-                </router-link>
+                </router-link> -->
             </div>
             <image-select-modal></image-select-modal>
         </div>

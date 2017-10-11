@@ -5,7 +5,8 @@
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="edit_image_section">
-                    <img class="media-object" :src="oldImageDetails.url + '?w=1024&h=512'" :alt="oldImageDetails.name">
+                    <img v-if="oldImageDetails.type_id == 2 || oldImageDetails.type_id == 3" class="media-object" :src="oldImageDetails.url + '?w=1024&h=512'" :alt="oldImageDetails.name">
+                    <img v-if="oldImageDetails.type_id == 1 || oldImageDetails.type_id == 4" class="media-object" :src="oldImageDetails.url + '?size=large'" :alt="oldImageDetails.name">
                 </div>
                 <div class="form-group">
                     <label for="name">Name *</label>
