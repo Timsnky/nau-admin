@@ -4,14 +4,15 @@
             <div class="image_section">
                 <div class="image_section_left">
                     <div class="image_section_image">
-                        <router-link
-                                :to="{name: 'images.edit', params: {id: image.id}}">
+                        <router-link :to="{name: 'images.edit', params: {id: image.id}}">
                             <img v-if="image.type_id == 2 || image.type_id == 3" class="media-object" :src="image.url + '?w=340&h=170'" :alt="image.name">
                             <img v-if="image.type_id == 1 || image.type_id == 4" class="media-object" :src="image.url + '?size=small'" :alt="image.name">
                         </router-link>
                     </div>
                     <div class="image_section_details">
-                        <p><strong>{{ image.name }}</strong></p>
+                        <router-link :to="{name: 'images.edit', params: {id: image.id}}">
+                            <p><strong>{{ image.name }}</strong></p>
+                        </router-link>
                         <p>{{ image.lead }}</p>
                     </div>
                 </div>

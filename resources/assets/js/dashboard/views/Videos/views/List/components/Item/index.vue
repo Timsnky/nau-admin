@@ -4,13 +4,14 @@
             <div class="video_section">
                 <div class="video_section_left">
                     <div class="video_section_video">
-                        <router-link
-                                :to="{name: 'videos.edit', params: {id: video.id}}">
+                        <router-link :to="{name: 'videos.edit', params: {id: video.id}}">
                             <img :src="video.thumbnail" alt="Video Thumbnail">
                         </router-link>
                     </div>
                     <div class="video_section_details">
-                        <p><strong>{{ video.name }}</strong></p>
+                        <router-link :to="{name: 'videos.edit', params: {id: video.id}}">
+                            <p><strong>{{ video.name }}</strong></p>
+                        </router-link>
                         <p>{{ video.lead }}</p>
                     </div>
                 </div>
