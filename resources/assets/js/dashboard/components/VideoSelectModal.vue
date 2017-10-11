@@ -18,6 +18,7 @@
                                         class="form-control"
                                         type="file"
                                         name="video"
+                                        accept="video/*"
                                         id="video"
                                         @change="videoAdded"/>
 

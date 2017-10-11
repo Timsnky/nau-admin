@@ -24,6 +24,7 @@
                                         class="form-control"
                                         type="file"
                                         name="image"
+                                        accept="image/*"
                                         id="image"
                                         @change="imageAdded"/>
 
