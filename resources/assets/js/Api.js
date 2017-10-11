@@ -74,6 +74,10 @@ class Api {
         return this.store.state.imageType;
     }
 
+    getImageTypes() {
+        return this.store.state.imageTypes;
+    }
+
     setImageType(type) {
         return this.store.dispatch('SET_IMAGE_TYPE', type);
     }

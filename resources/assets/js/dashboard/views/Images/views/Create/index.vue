@@ -4,6 +4,15 @@
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
+                <div v-if="! imageupload" class="form-group">
+                    <label for="name">Image Type *</label>
+                    <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
+                        <option v-bind:value="type" v-for="type in imageTypes">
+                            {{ type.name}}
+                        </option>
+                    </select>
+                </div>
+
                 <div class="image_dropbox center_text">
                     <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
                     <p v-if="!imageupload">
@@ -131,12 +140,27 @@
                         name: 'Zvg',
                         displayName: 'Zvg'
                     }
-                ]
+                ],
+                imageType: {
+                    id: 1,
+                    name: 'Normal Image'
+                },
+                imageAspectRatio: NaN
             }
         },
 
         components: {
             ImageQuality
+        },
+
+        computed: {
+            imageTypes() {
+                return Api.getImageTypes();
+            }
+        },
+
+        mounted() {
+            this.imageType = this.imageTypes[0];
         },
 
         methods: {
@@ -157,8 +181,9 @@
                     formData.append('name', name);
                     formData.append('source', source);
                     formData.append('lead', lead);
+                    formData.append('type', vm.imageType.id);
 
-                    var vm = this;
+                    let vm = this;
 
                     Api.http
                         .post('/images', formData, {
@@ -180,6 +205,7 @@
                         });
                 });
                 this.imageCropper.destroy();
+                this.imageCropper = null;
             },
 
             reset() {
@@ -193,6 +219,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -247,6 +274,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -258,7 +286,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: 2,
+                    aspectRatio: vm.imageAspectRatio,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
@@ -279,6 +307,7 @@
             {
                 this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
                 this.imageCropper.destroy();
+                this.imageCropper = null;
             },
 
             //Save selected source of article image
@@ -286,6 +315,12 @@
             {
                 this.image.source = this.image.selectedSource;
             },
+
+            //Save the selected image type
+            imageTypeSelected()
+            {
+                this.imageAspectRatio = this.imageType.id !== 1 ? 2 : NaN;
+            }
         }
     }
 </script>
