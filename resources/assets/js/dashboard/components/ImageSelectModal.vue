@@ -461,6 +461,7 @@
             uploadImage()
             {
                 this.submitting = true;
+                this.uploadPercentage = 0;
 
                 let errorString = this.validateImageSave();
 
@@ -508,7 +509,7 @@
                                             this.uploadPercentage += 1;
                                         }
                                     }
-                                    img.src = response.data.url;
+                                    img.src = response.data.url + '?' + Math.floor(Date.now() / 1000);
                                 }, 1000);
                             }
                             else
