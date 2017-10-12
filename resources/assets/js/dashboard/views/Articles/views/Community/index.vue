@@ -77,8 +77,6 @@
     </div>
 </template>
 <script>
-    import Pagination from 'dashboard/components/Pagination/Pagination';
-
     export default {
         data() {
             return {
@@ -91,10 +89,6 @@
                 articles: []
             }
         },
-
-        components: [
-            Pagination
-        ],
 
         created() {
             this.getPaginatedData(this.currentPage)

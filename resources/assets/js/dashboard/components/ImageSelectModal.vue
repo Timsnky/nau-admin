@@ -146,7 +146,6 @@
 </template>
 
 <script>
-    import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
     import ImageQuality from 'dashboard/components/ImageQuality';
 
     export default {
@@ -236,7 +235,6 @@
         },
 
         components: {
-            Pagination,
             ImageQuality
         },
 

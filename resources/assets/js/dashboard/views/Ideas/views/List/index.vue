@@ -63,7 +63,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
 
     export default {
         data() {
@@ -96,7 +95,6 @@
 
         components: {
             Item,
-            Pagination
         },
 
         watch: {

@@ -140,7 +140,6 @@
 </template>
 
 <script>
-    import Pagination from 'dashboard/views/Videos/views/List/components/Pagination';
 
     export default {
         data() {
@@ -184,10 +183,6 @@
                     });
                     this.isLoaded = true;
                 });
-        },
-
-        components: {
-            Pagination
         },
 
         watch: {

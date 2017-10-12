@@ -56,7 +56,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
     import ImageSelectModal from 'dashboard/components/ImageSelectModal';
 
     export default {
@@ -92,7 +91,6 @@
 
         components: {
             Item,
-            Pagination,
             ImageSelectModal
         },
 

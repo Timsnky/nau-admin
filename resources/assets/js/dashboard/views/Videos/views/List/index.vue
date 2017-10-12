@@ -55,7 +55,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
     import VideoSelectModal from 'dashboard/components/VideoSelectModal';
 
     export default {
@@ -91,7 +90,6 @@
 
         components: {
             Item,
-            Pagination,
             VideoSelectModal
         },
 

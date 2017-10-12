@@ -18,37 +18,40 @@
             </div>
         </div>
 
-        <table class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th>Frage</th>
-                <th>Erstellt</th>
-                <th>Aktionen</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="table-scrollable">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>Frage</th>
+                    <th>Erstellt</th>
+                    <th>Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
                 <tr v-for="survey in surveys">
                     <td>{{ survey.question }}</td>
                     <td>{{ formatDate(survey.created_at) }}</td>
                     <td>
                         <router-link
-                            :to="{name: 'surveys.edit', params: {id: survey.id}}"
-                            class="btn btn-warning">
+                                :to="{name: 'surveys.edit', params: {id: survey.id}}"
+                                class="btn btn-warning">
                             Bearbeiten
                         </router-link>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
-        <pagination
-            class="pull-right"
-            :items="surveys"
-            :currentPage="currentPage"
-            :pagesCount="pagesCount"
-            :itemsPerPage="itemsPerPage"
-            @navigate="navigate"/>
-
+        <div class="clearfix">
+            <pagination
+                    class="pull-right"
+                    :items="surveys"
+                    :currentPage="currentPage"
+                    :pagesCount="pagesCount"
+                    :itemsPerPage="itemsPerPage"
+                    @navigate="navigate"/>
+        </div>
     </div>
 </template>
 <script>
