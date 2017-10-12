@@ -24,6 +24,9 @@
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    <li>
+                        <span v-if="foldermaster" class="navbar-text hidden-xs">Foldermaster: {{ foldermaster.name }}</span>
+                    </li>
                     <notifications />
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
@@ -56,6 +59,9 @@
             user() {
                 return this.$store.state.user
             },
+            foldermaster() {
+                return this.$store.state.foldermaster;
+            }
         },
 
         components: {
@@ -73,3 +79,9 @@
         }
     }
 </script>
+
+<style>
+    .navbar-text {
+        color: #c6cfda;
+    }
+</style>

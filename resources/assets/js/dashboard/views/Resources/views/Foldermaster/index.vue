@@ -4,12 +4,13 @@
 
         <div class="form-group">
             <multiselect
-                v-model="master"
+                v-model="selected"
                 :options="authors"
                 placeholder="Type to search author"
                 label="name"
                 :max-height="500"
                 :close-on-select="true"
+                :allow-empty="false"
                 track-by="id"
                 open-direction="bottom"
                 :internal-search="false"
@@ -26,12 +27,18 @@
         data() {
             return {
                 authors: [],
-                master: null,
+                selected: null,
             };
         },
 
-        async created() {
-            this.master = (await Api.http.get('/foldermaster')).data.user;
+        computed: {
+            foldermaster() {
+                return this.$store.state.foldermaster;
+            }
+        },
+
+        mounted() {
+            this.selected = this.foldermaster
         },
 
         methods: {
@@ -47,17 +54,11 @@
                     });
             }, 500),
 
-            save() {
-                Api.http.put('/foldermaster', {
-                    user_id: this.master.id,
-                }).then(() => {
-                    Vue.toast('Foldermaster wurde gesetzt', {
-                        className: ['nau_toast', 'nau_success'],
-                    });
-                }).catch(() => {
-                    Vue.toast('Foldermaster konnte nicht gesetzt werden', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
+            async save() {
+                await this.$store.dispatch('SET_FOLDERMASTER', this.selected.id);
+
+                Vue.toast('Foldermaster wurde gesetzt', {
+                    className: ['nau_toast', 'nau_success'],
                 });
             },
         }

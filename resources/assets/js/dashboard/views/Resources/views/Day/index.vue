@@ -58,7 +58,7 @@
                     <div class="portlet-title">
                         <div class="caption">
                             <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span><br>
-                            <small>Foldermaster: {{ foldermaster ? foldermaster.name : '' }}</small>
+                            <small v-if="foldermaster">Foldermaster: {{ foldermaster.name }}</small>
                         </div>
                         <div class="tools">
                             <a href="javascript:;" class="fullscreen" data-original-title="" title="" @click="toggleFullscreen()"> </a>
@@ -144,13 +144,15 @@
                     topics: [],
                 },
                 isLoaded: false,
-                foldermaster: null,
             };
         },
 
         computed: {
             Api() {
                 return Api;
+            },
+            foldermaster() {
+                return this.$store.state.foldermaster;
             }
         },
 
@@ -165,8 +167,6 @@
                     this.isLoaded = true;
                     console.log('Show some error message here');
                 });
-
-            Api.http.get('/foldermaster').then((response) => this.foldermaster = response.data.user);
         },
 
         mounted() {
