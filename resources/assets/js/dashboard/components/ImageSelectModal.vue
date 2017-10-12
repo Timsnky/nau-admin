@@ -459,6 +459,7 @@
             uploadImage()
             {
                 this.submitting = true;
+                this.uploadPercentage = 0;
 
                 let errorString = this.validateImageSave();
 
@@ -485,14 +486,31 @@
                     Api.http
                         .post('/images', formData, {
                             onUploadProgress(e) {
-                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                                vm.uploadPercentage = Math.round(90 / e.total * e.loaded);
                             }
                         })
-                        .then(response => {
+                        .then(async (response) => {
                             if(response.status === 201)
                             {
-                                this.closeAddImage();
-                                this.navigate(1);
+                                // Wait for the image to be available
+                                var loaded = false;
+                                var interval = await setInterval(() => {
+                                    var img = new Image();
+                                    img.onload = () => {
+                                        this.uploadPercentage = 100;
+                                        clearInterval(interval);
+                                        setTimeout(() => {
+                                            this.closeAddImage();
+                                            this.navigate(1);
+                                        }, 200);
+                                    };
+                                    img.onerror = () => {
+                                        if(this.uploadPercentage < 99) {
+                                            this.uploadPercentage += 1;
+                                        }
+                                    }
+                                    img.src = response.data.url + '?' + Math.floor(Date.now() / 1000);
+                                }, 1000);
                             }
                             else
                             {

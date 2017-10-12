@@ -25,7 +25,6 @@
     <link href="{{asset('assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/vue-multiselect/vue-multiselect.min.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/global/plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/global/plugins/cropperjs/cropper.min.css')}}" rel="stylesheet" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME GLOBAL STYLES -->

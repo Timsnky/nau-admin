@@ -6,8 +6,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="edit_image_section">
-                        <img v-if="oldImageDetails.type_id == 2 || oldImageDetails.type_id == 3" class="media-object" :src="oldImageDetails.url + '?w=1024&h=512'" :alt="oldImageDetails.name">
-                        <img v-if="oldImageDetails.type_id == 1 || oldImageDetails.type_id == 4" class="media-object" :src="oldImageDetails.url + '?size=large'" :alt="oldImageDetails.name">
+                        <img class="media-object" :src="oldImageDetails.url + '?w=1024&h=512'" :alt="oldImageDetails.name">
                     </div>
                 </div>
 

@@ -26,7 +26,30 @@
 					</div>
 				</router-link>
 			</div>
+		</div>
 
+		<hr>
+
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Hast Du ein technisches Problem?</h3>
+			</div>
+			<div class="col-md-2">
+				<p>
+					<b>Montag - Freitag:</b><br>
+					<i class="fa fa-envelope-o"></i> <a href="mailto:helpdesk@nau.ch">helpdesk@nau.ch</a><br>
+					<i class="fa fa-phone"></i> <a href="tel:+41318100240">+41 31 810 02 40</a><br>
+					<i class="fa fa-clock-o"></i> 06:00 - 23:30 (MEZ)
+				</p>
+			</div>
+			<div class="col-md-2">
+				<p>
+					<b>Samstag und Sonntag:</b><br>
+					<i class="fa fa-envelope-o"></i> <a href="mailto:helpdesk@nau.ch">helpdesk@nau.ch</a><br>
+					<i class="fa fa-phone"></i> <a href="tel:+41318100240">+41 31 810 02 40</a><br>
+					<i class="fa fa-clock-o"></i> 07:30 - 22:00 (MEZ)
+				</p>
+			</div>
 		</div>
 
 	</section>

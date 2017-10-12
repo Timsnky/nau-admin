@@ -39,6 +39,7 @@ export const store = new Vuex.Store({
         'image_selector_id': null,
         notifications: [],
         unreadNotifications: 0,
+        foldermaster: null,
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -57,6 +58,16 @@ export const store = new Vuex.Store({
                     reject(error);
                 })
             })
+        },
+        FETCH_FOLDERMASTER: async ({commit}) => {
+            var response = await Api.http.get('/foldermaster');
+            commit('SET_FOLDERMASTER', response.data.user);
+        },
+        SET_FOLDERMASTER: async ({commit}, userId) => {
+            var response = await Api.http.put('/foldermaster', {
+                user_id: userId,
+            });
+            commit('SET_FOLDERMASTER', response.data.user);
         },
         SET_IMAGE_TYPE: ({commit}, image_type) => {
             commit('SET_IMAGE_TYPE', image_type);
@@ -114,6 +125,9 @@ export const store = new Vuex.Store({
         },
         SET_USER: (state, { user }) => {
             state.user = user;
+        },
+        SET_FOLDERMASTER: (state, foldermaster) => {
+            state.foldermaster = foldermaster;
         },
         LOGOUT: (state) => {
             state.user = null;

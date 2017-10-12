@@ -1,5 +1,5 @@
 <template>
-    <div class="day day__name m-grid-col m-grid-col-middle m-grid-col-left">
+    <div :class="{'is-today': isToday, 'day': true, 'day__name': true, 'm-grid-col': true, 'm-grid-col-middle': true, 'm-grid-col-left': true}">
         <router-link :to="url">{{ dayName }}</router-link>
     </div>
 </template>
@@ -20,6 +20,10 @@
                 };
             },
 
+            isToday() {
+                return moment(this.day.date).format('DDMMYYYY') == moment().format('DDMMYYYY');
+            },
+
             dayName() {
                 return moment(this.day.date).format('dddd DD.MM.YYYY');
             }
@@ -27,7 +31,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .day__name {
         background-color: #cccccc;
         height: auto;
@@ -42,5 +46,9 @@
                 color: #333333;
             }
         }
+    }
+
+    .is-today {
+        background-color: darkgray;
     }
 </style>
