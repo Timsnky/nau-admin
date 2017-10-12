@@ -490,22 +490,26 @@
                                 vm.uploadPercentage = Math.round(90 / e.total * e.loaded);
                             }
                         })
-                        .then(response => {
+                        .then(async (response) => {
                             if(response.status === 201)
                             {
-                                setTimeout(() => {
-                                    vm.uploadPercentage = 95;
-                                }, 500);
-
-                                setTimeout(() => {
-                                    vm.uploadPercentage = 100;
-                                }, 1200);
-
                                 // Wait for the image to be available
-                                setTimeout(() => {
-                                    this.closeAddImage();
-                                    this.navigate(1);
-                                }, 1500);
+                                var loaded = false;
+                                var interval = await setInterval(() => {
+                                    var img = new Image();
+                                    img.onload = () => {
+                                        this.uploadPercentage = 100;
+                                        clearInterval(interval);
+                                        this.closeAddImage();
+                                        this.navigate(1);
+                                    };
+                                    img.onerror = () => {
+                                        if(this.uploadPercentage < 99) {
+                                            this.uploadPercentage += 1;
+                                        }
+                                    }
+                                    img.src = response.data.url;
+                                }, 1000);
                             }
                             else
                             {
