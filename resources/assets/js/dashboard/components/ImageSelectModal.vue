@@ -501,8 +501,10 @@
                                     img.onload = () => {
                                         this.uploadPercentage = 100;
                                         clearInterval(interval);
-                                        this.closeAddImage();
-                                        this.navigate(1);
+                                        setTimeout(() => {
+                                            this.closeAddImage();
+                                            this.navigate(1);
+                                        }, 200);
                                     };
                                     img.onerror = () => {
                                         if(this.uploadPercentage < 99) {
