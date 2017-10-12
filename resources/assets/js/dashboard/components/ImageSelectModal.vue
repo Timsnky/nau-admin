@@ -487,14 +487,25 @@
                     Api.http
                         .post('/images', formData, {
                             onUploadProgress(e) {
-                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                                vm.uploadPercentage = Math.round(90 / e.total * e.loaded);
                             }
                         })
                         .then(response => {
                             if(response.status === 201)
                             {
-                                this.closeAddImage();
-                                this.navigate(1);
+                                setTimeout(() => {
+                                    vm.uploadPercentage = 95;
+                                }, 500);
+
+                                setTimeout(() => {
+                                    vm.uploadPercentage = 100;
+                                }, 1200);
+
+                                // Wait for the image to be available
+                                setTimeout(() => {
+                                    this.closeAddImage();
+                                    this.navigate(1);
+                                }, 1500);
                             }
                             else
                             {
