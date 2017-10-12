@@ -117,6 +117,9 @@
                 {
                     Api.resetVideo();
                     Api.resetVideoSelector();
+                    this.regions.forEach((region) => {
+                        region.checked = true;
+                    });
                     this.getVideo(newId);
                 }
             },
@@ -285,7 +288,7 @@
                     {
                         if(value.id === regionValue.id)
                         {
-                            vm.regions[regionKey].checked = 1;
+                            vm.regions[regionKey].checked = true;
                             vm.regions[regionKey].linked = vm.articleId;
                         }
                     })
