@@ -16,7 +16,7 @@
 
 
                     <div class="image_dropbox center_text">
-                        <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
+                        <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop" accept="image/*" type="file" name="imageupload" @change="onChange">
                         <p v-if="!imageupload">
                             Drag your image here to begin<br> or click to browse
                         </p>
