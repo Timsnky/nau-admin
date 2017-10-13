@@ -258,6 +258,15 @@ let routes = [{
     ],
 },
 {
+    path: '/avatars',
+    component: require('./views/Avatars'),
+    children: [{
+        path: 'download',
+        name: 'avatars.download',
+        component: require('./views/Avatars/views/Download'),
+    }],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }
