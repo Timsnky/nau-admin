@@ -36,7 +36,7 @@
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
@@ -162,7 +162,7 @@
             {
                 swal({
                     title: 'Publizieren',
-                    text: 'Nachricht an den Author',
+                    text: 'Nachricht an den Autor',
                     type: 'warning',
                     input: 'text',
                     showCancelButton: true,

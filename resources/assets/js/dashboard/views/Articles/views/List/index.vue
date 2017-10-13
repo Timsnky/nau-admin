@@ -36,7 +36,7 @@
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
