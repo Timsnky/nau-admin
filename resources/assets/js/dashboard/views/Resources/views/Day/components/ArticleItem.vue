@@ -89,7 +89,7 @@
         padding: 0 15px;
 
         &.time {
-            width: 175px;
+            width: 210px;
         }
 
         &.article {
