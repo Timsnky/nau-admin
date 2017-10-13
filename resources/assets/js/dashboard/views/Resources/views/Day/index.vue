@@ -75,37 +75,10 @@
                             </div>
                             <div class="panel-body">
                                 <div v-if="topic.articles.length > 0">
-                                    <div class="row center" v-for="(article, index) in topic.articles">
-                                        <div class="col-sm-2">
-                                            <span v-if="moment(article.published_at).isValid()">
-                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
-                                            </span>
-                                            <i v-if="article.dooh.should_include_video && article.dooh.video_id === null" title="Dooh Video fehlt" class="text-danger fa fa-film"></i>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <h4>
-                                                <router-link :to="{name: 'articles.edit', params: { id: article.id }}">{{ article.title }}</router-link>
-                                                <small v-if="article.authors.length > 0">
-                                                    – {{ article.authors.map((author) => {return author.name}).join(', ') }}
-                                                </small>
-                                            </h4>
-                                        </div>
-                                        <div class="col-sm-3 text-right">
-                                            <router-link
-                                                :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
-                                                class="btn btn-xs btn-warning">
-                                                <span class="fa fa-edit"></span> Bearbeiten
-                                            </router-link>
-                                            <button v-if="Api.isAdmin()" @click="unlinkArticle(topic, article)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Entfernen</button>
-                                        </div>
-                                    </div>
+                                    <article-item v-for="(article, index) in topic.articles" :key="article.id" :article="article" :topic="topic" />
                                 </div>
 
-                                <h4
-                                    v-else
-                                    class="text-center">
-                                    Keine Artikel gefunden
-                                </h4>
+                                <h4 v-else class="text-center"> Keine Artikel gefunden</h4>
 
                                 <router-link
                                     :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
@@ -134,6 +107,8 @@
 </template>
 
 <script>
+    import ArticleItem from './components/ArticleItem';
+
     export default {
         data() {
             return {
@@ -145,6 +120,10 @@
                 },
                 isLoaded: false,
             };
+        },
+
+        components: {
+            ArticleItem
         },
 
         computed: {
@@ -187,26 +166,6 @@
                 this.fullscreen = !this.fullscreen;
                 this.$router.push({ query: { fullscreen: this.fullscreen }})
             },
-
-            async unlinkArticle(topic, article) {
-                await swal({
-                    title: 'Sind sie sicher?',
-                    text: "Artikel von diesem Tag entfernen.",
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abbrechen',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ja, entfernen.'
-                });
-
-                topic.articles.splice(topic.articles.indexOf(article), 1)
-
-                var response = await Api.http.delete(`/topics/${topic.id}/articles/${article.id}`)
-
-                Vue.toast('Artikel wurde entfernt', {
-                    className : ['nau_toast','nau_success'],
-                });
-            }
         }
     }
 </script>
@@ -220,10 +179,5 @@
         .btn {
             display: none;
         }
-    }
-
-    .center { // add a new class to your row and target your newest class
-        display: flex;
-        align-items: center;
     }
 </style>

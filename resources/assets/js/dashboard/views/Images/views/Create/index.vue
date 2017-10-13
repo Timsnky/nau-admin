@@ -1,97 +1,101 @@
 <template>
     <div>
-        <page-title title="Bild" sub="erstellen "/>
+        <page-title title="Bild" sub="hochladen "/>
 
         <form @submit.prevent="handleSubmit">
-            <div class="form-body">
-                <div v-if="! imageupload" class="form-group">
-                    <label for="name">Image Type *</label>
-                    <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
-                        <option v-bind:value="type" v-for="type in imageTypes">
-                            {{ type.name}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="image_dropbox center_text">
-                    <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
-                    <p v-if="!imageupload">
-                        Drag your image here to begin<br> or click to browse
-                    </p>
-                    <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
-                        <div class="image_crop_section">
-                            <div class="image_hidden_section_image">
-                                <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
-                            </div>
-                        </div>
-                        <div class="image_hidden_section_remove">
-                            <button class="btn btn-danger" @click="removeFile">Bild entfernen </button>
-                        </div>
-                    </div>
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="name">Name *</label>
-                    <input
-                            id="name"
-                            type="text"
-                            name="name"
-                            v-model.trim="image.name"
-                            placeholder="Name"
-                            class="form-control">
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="lead">SEO - Beschrieb</label>
-                    <textarea
-                            id="lead"
-                            name="lead"
-                            v-model.trim="image.lead"
-                            placeholder="SEO - Beschrieb"
-                            class="form-control"
-                            rows="3"></textarea>
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="name">Quelle *</label>
-                    <div class="source_div">
-                        <input
-                                id="source"
-                                type="text"
-                                name="source"
-                                v-model.trim="image.source"
-                                placeholder="Quelle"
-                                class="form-control source_input">
-                        <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
-                            <option v-bind:value="source.name" v-for="source in sources">
-                                {{ source.displayName}}
+            <div class="row">
+                <div class="col-md-6">
+                    <div v-if="! imageupload" class="form-group">
+                        <label for="name">Bild Typ *</label>
+                        <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
+                            <option v-bind:value="type" v-for="type in imageTypes">
+                                {{ type.name}}
                             </option>
                         </select>
                     </div>
-                </div>
-            </div>
 
-            <div v-if="imageupload" class="form-actions">
-                <button
+
+                    <div class="image_dropbox center_text">
+                        <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop" accept="image/*" type="file" name="imageupload" @change="onChange">
+                        <p v-if="!imageupload">
+                            Drag your image here to begin<br> or click to browse
+                        </p>
+                        <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
+                            <div class="image_crop_section">
+                                <div class="image_hidden_section_image">
+                                    <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
+                                </div>
+                            </div>
+                            <div class="image_hidden_section_remove">
+                                <button class="btn btn-danger" @click="removeFile">Bild entfernen </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
+                    </div>
+                </div>
+
+                <div class="col-md-6" v-if="imageupload">
+                    <div class="form-group">
+                        <label for="name">Dateiname *</label>
+                        <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        v-model.trim="image.name"
+                        placeholder="Name"
+                        class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lead">Beldunterschrift *</label>
+                        <textarea
+                        id="lead"
+                        name="lead"
+                        v-model.trim="image.lead"
+                        placeholder="Beldunterschrift"
+                        class="form-control"
+                        rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Quelle *</label>
+                        <div class="source_div">
+                            <input
+                            id="source"
+                            type="text"
+                            name="source"
+                            v-model.trim="image.source"
+                            placeholder="Quelle"
+                            class="form-control source_input">
+                            <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
+                                <option v-bind:value="source.name" v-for="source in sources">
+                                    {{ source.displayName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
                         class="btn btn-primary"
                         type="submit"
                         :disabled="!image.name || !image.lead || !image.source">
-                        <span v-if="uploadPercentage !== 0">
-                            Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
-                        </span>
-                        <span v-else>Bild hinzufügen</span>
-                </button>
-                <button
+                            <span v-if="uploadPercentage !== 0">
+                                Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            <span v-else>Bild hinzufügen</span>
+                        </button>
+                        <button
                         class="btn btn-default"
                         type="button"
                         @click="reset">
-                    Verwerfen
-                </button>
+                            Verwerfen
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

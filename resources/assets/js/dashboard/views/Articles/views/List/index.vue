@@ -36,7 +36,7 @@
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
@@ -70,7 +70,7 @@
                 </router-link>
                 <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
                 <button v-if="article.article_status.name === 'published'" class="btn btn-danger" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
-                <button v-if="Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
+                <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
                 </td>
             </tr>
             </tbody>

@@ -33,7 +33,7 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>Title</th>
-                        <th>Author</th>
+                        <th>Autor</th>
                         <th>Options</th>
                     </tr>
                     </thead>

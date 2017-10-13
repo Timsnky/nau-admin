@@ -30,7 +30,7 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Dateiname* </label>
+                                <label>Dateiname * </label>
                                 <input
                                         type="text"
                                         name="name"

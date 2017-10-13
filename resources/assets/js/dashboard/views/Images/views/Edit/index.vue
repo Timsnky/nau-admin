@@ -23,12 +23,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="lead">SEO - Beschrieb</label>
+                        <label for="lead">Beldunterschrift *</label>
                         <textarea
                         id="lead"
                         name="lead"
                         v-model.trim="newImageDetails.lead"
-                        placeholder="SEO - Beschrieb"
+                        placeholder="Beldunterschrift"
                         class="form-control"
                         rows="3"></textarea>
                     </div>

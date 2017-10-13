@@ -106,6 +106,14 @@
                     </a>
                 </router-link>
 
+                <!--Avatars -->
+                <router-link :to="{name: 'avatars.download'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-user-circle-o"></i>
+                        <span class="title">Avatars</span>
+                    </a>
+                </router-link>
+
                 <!--Users -->
                 <router-link v-if="Api.isAdmin()" :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
