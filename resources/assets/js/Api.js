@@ -45,6 +45,10 @@ class Api {
         return this.hasRole('admin');
     }
 
+    isChefJournalist() {
+        return this.hasRole('chef-journalist');
+    }
+
     //Images
     getImage() {
         return this.store.state.selected_image_id;

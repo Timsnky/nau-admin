@@ -96,7 +96,7 @@
                                                 class="btn btn-xs btn-warning">
                                                 <span class="fa fa-edit"></span> Bearbeiten
                                             </router-link>
-                                            <button v-if="Api.isAdmin()" @click="unlinkArticle(topic, article)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Entfernen</button>
+                                            <button v-if="Api.isChefJournalist() || Api.isAdmin()" @click="unlinkArticle(topic, article)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Entfernen</button>
                                         </div>
                                     </div>
                                 </div>
