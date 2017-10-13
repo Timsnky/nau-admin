@@ -181,7 +181,7 @@
                     formData.append('name', name);
                     formData.append('source', source);
                     formData.append('lead', lead);
-                    formData.append('type', vm.imageType.id);
+                    formData.append('type', this.imageType.id);
 
                     let vm = this;
 
