@@ -5,8 +5,8 @@
         <form @submit.prevent="handleSubmit">
             <div class="row">
                 <div class="col-md-6">
-                    <div v-if="! imageupload" class="form-group">
-                        <label for="name">Bild Typ *</label>
+                    <div  class="form-group">
+                        <label for="name">Bild Type *</label>
                         <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
                             <option v-bind:value="type" v-for="type in imageTypes">
                                 {{ type.name}}
@@ -324,6 +324,11 @@
             imageTypeSelected()
             {
                 this.imageAspectRatio = this.imageType.id !== 1 ? 2 : NaN;
+
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio);
+                }
             }
         }
     }
