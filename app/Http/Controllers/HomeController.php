@@ -19,7 +19,6 @@ class HomeController extends Controller
         if (!Cookie::has('token') or count(explode('.', Cookie::get('token'))) !== 3) {
             return response()->view('login');
         }
-        return response()->view('app');
 
         $token = Cookie::get('token');
         try {
