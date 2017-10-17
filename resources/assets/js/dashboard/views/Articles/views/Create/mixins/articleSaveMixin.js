@@ -81,8 +81,8 @@ export default {
             return Api.http
                 .put(`/articles/${this.article.id}`, {
                     ...this.article,
-                    published_at: this.article.published_at.format(),
-                    order_date: this.article.order_date.format(),
+                    published_at: this.article.published_at ? this.article.published_at.format() : null,
+                    order_date: this.article.order_date ? this.article.order_date.format() : null,
                 })
                 .then(response => {
                     this.article = response.data;
