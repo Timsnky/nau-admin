@@ -14,6 +14,14 @@
                         </select>
                     </div>
 
+                    <div v-if="imageType.id == 1" class="form-group">
+                        <label for="name">Aspect Ratio *</label>
+                        <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
+                            <option v-bind:value="ratio" v-for="ratio in aspectRatios">
+                                {{ ratio.name}}
+                            </option>
+                        </select>
+                    </div>
 
                     <div class="image_dropbox center_text">
                         <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop" accept="image/*" type="file" name="imageupload" @change="onChange">
@@ -149,7 +157,20 @@
                     id: 1,
                     name: 'Normal Image'
                 },
-                imageAspectRatio: NaN
+                aspectRatios: [
+                    {
+                        value: NaN,
+                        name: 'Free'
+                    },
+                    {
+                        value: 2,
+                        name: '2 : 1'
+                    }
+                ],
+                imageAspectRatio: {
+                    value: NaN,
+                    name: 'Free'
+                }
             }
         },
 
@@ -165,6 +186,7 @@
 
         mounted() {
             this.imageType = this.imageTypes[0];
+            this.imageAspectRatio = this.aspectRatios[0];
         },
 
         methods: {
@@ -290,7 +312,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: vm.imageAspectRatio,
+                    aspectRatio: vm.imageAspectRatio.value,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
@@ -323,11 +345,20 @@
             //Save the selected image type
             imageTypeSelected()
             {
-                this.imageAspectRatio = this.imageType.id !== 1 ? 2 : NaN;
+                this.imageAspectRatio = this.imageType.id !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
 
                 if(this.imageCropper)
                 {
-                    this.imageCropper.setAspectRatio( this.imageAspectRatio);
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
+                }
+            },
+
+            //Change the aspect ratio of cropper
+            aspectRatioSelected()
+            {
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
                 }
             }
         }

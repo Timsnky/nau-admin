@@ -18,6 +18,14 @@
                         </div>
                         <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
                         <div class="row">
+                            <div v-if="imageType.id == 1" class="col-md-6 form-group">
+                                <label>Aspect Ratio *</label>
+                                <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
+                                    <option v-bind:value="ratio" v-for="ratio in aspectRatios">
+                                        {{ ratio.name}}
+                                    </option>
+                                </select>
+                            </div>
                             <div class="col-md-6 form-group">
                                 <label>Bild</label>
                                 <input
@@ -29,6 +37,9 @@
                                         @change="imageAdded"/>
 
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Dateiname * </label>
                                 <input
@@ -38,9 +49,6 @@
                                         placeholder="Dateiname"
                                         class="form-control">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Bildunterschrift *</label>
                                 <input
@@ -51,7 +59,10 @@
                                         class="form-control">
                                 </input>
                             </div>
+                        </div>
 
+                        <div class="row">
+                            
                             <div class="col-md-6 form-group">
                                 <label>Quelle *</label>
                                 <div class="source_div">
@@ -170,7 +181,6 @@
                 imageCropper: null,
                 imageCropHeight: 0,
                 imageCropWidth: 0,
-                imageAspectRatio: NaN,
                 sources: [
                     {
                         name: '',
@@ -202,7 +212,21 @@
                     id: 1,
                     name: 'Normal Image'
                 },
-                uploadPercentage: 0
+                uploadPercentage: 0,
+                aspectRatios: [
+                    {
+                        value: NaN,
+                        name: 'Free'
+                    },
+                    {
+                        value: 2,
+                        name: '2 : 1'
+                    }
+                ],
+                imageAspectRatio: {
+                    value: NaN,
+                    name: 'Free'
+                }
             }
         },
 
@@ -261,10 +285,19 @@
                     this.navigate(1);
                 }
 
-                this.imageAspectRatio = this.imageType.id !== 1 ? 2 : NaN;
+                this.imageAspectRatio = this.imageType.id !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
 
                 this.reset();
                 this.closeAddImage();
+            },
+
+            //Change the aspect ratio of cropper
+            aspectRatioSelected()
+            {
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
+                }
             },
 
             deleteImage(image) {
@@ -384,7 +417,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: vm.imageAspectRatio,
+                    aspectRatio: vm.imageAspectRatio.value,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
