@@ -530,7 +530,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Notification
+                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Nachricht
                                     <span></span>
                                 </label>
                             </div>
@@ -551,13 +551,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display" value="true">Übersicht anzeigen
+                                    <input type="checkbox" v-model="article.display" value="true">In Übersicht anzeigen
                                     <span></span>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in Liste anzeigen wenn Big
+                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in der Liste anzeigen wenn Big
                                     <span></span>
                                 </label>
                             </div>

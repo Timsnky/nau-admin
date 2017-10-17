@@ -27,8 +27,7 @@ let publishMixin = {
         saveSettings(articleId) {
             this.saveArticleAuthorsAndIdeas(articleId);
             this.linkAuthorToArticle(articleId);
-            // Disabled as it caused a save loop
-            // this.updateArticle(articleId);
+            this.saveCheckboxes(articleId);
         },
 
         //Save authors and ideas
@@ -63,6 +62,15 @@ let publishMixin = {
                         });
                 }
             });
+        },
+
+        saveCheckboxes(articleId) {
+            Api.http.put(`/articles/${articleId}`, {
+                display: this.article.display,
+                display_while_big: this.article.display_while_big,
+                geo_switzerland_only: this.article.geo_switzerland_only,
+                authenticated_only: this.article.authenticated_only,
+            })
         },
 
         //Delete any authors
