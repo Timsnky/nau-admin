@@ -160,16 +160,16 @@
                 aspectRatios: [
                     {
                         value: NaN,
-                        name: 'Free'
+                        name: 'Frei auswählbar'
                     },
                     {
                         value: 2,
-                        name: '2 : 1'
+                        name: '2:1'
                     }
                 ],
                 imageAspectRatio: {
                     value: NaN,
-                    name: 'Free'
+                    name: 'Frei auswählbar'
                 }
             }
         },

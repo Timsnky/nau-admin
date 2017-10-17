@@ -18,14 +18,6 @@
                         </div>
                         <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
                         <div class="row">
-                            <div v-if="imageType.id == 1" class="col-md-6 form-group">
-                                <label>Aspect Ratio *</label>
-                                <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
-                                    <option v-bind:value="ratio" v-for="ratio in aspectRatios">
-                                        {{ ratio.name}}
-                                    </option>
-                                </select>
-                            </div>
                             <div class="col-md-6 form-group">
                                 <label>Bild</label>
                                 <input
@@ -35,7 +27,15 @@
                                         accept="image/*"
                                         id="image"
                                         @change="imageAdded"/>
+                            </div>
 
+                            <div v-if="imageType.id == 1" class="col-md-6 form-group">
+                                <label>Aspect Ratio *</label>
+                                <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
+                                    <option v-bind:value="ratio" v-for="ratio in aspectRatios">
+                                        {{ ratio.name}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="row">
-                            
+
                             <div class="col-md-6 form-group">
                                 <label>Quelle *</label>
                                 <div class="source_div">
@@ -216,16 +216,16 @@
                 aspectRatios: [
                     {
                         value: NaN,
-                        name: 'Free'
+                        name: 'Frei auswählbar'
                     },
                     {
                         value: 2,
-                        name: '2 : 1'
+                        name: '2:1'
                     }
                 ],
                 imageAspectRatio: {
                     value: NaN,
-                    name: 'Free'
+                    name: 'Frei auswählbar'
                 }
             }
         },
