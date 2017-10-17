@@ -22,7 +22,15 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="mt-checkbox">
+                        <input type="checkbox" v-model="doohFilter" value="true">Fehlendes Dooh Video
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
                 <router-link
                     :to="{name: 'articles.create'}"
                     class="btn btn-primary pull-right">
@@ -102,7 +110,8 @@
                 searchTerm: '',
                 states: [],
                 stateFilter: null,
-                articles: []
+                articles: [],
+                doohFilter: false,
             }
         },
 
@@ -138,6 +147,10 @@
 
         watch: {
             stateFilter() {
+                this.navigate(1);
+            },
+
+            doohFilter() {
                 this.navigate(1);
             },
 
@@ -197,6 +210,10 @@
 
                 if (this.stateFilter !== null) {
                     params.status_id = this.stateFilter;
+                }
+
+                if (this.doohFilter) {
+                    params.dooh_missing = this.doohFilter;
                 }
 
                 return Api.http.get(`/articles?${$.param(params)}`);
