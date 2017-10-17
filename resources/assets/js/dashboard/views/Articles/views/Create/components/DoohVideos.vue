@@ -2,6 +2,14 @@
     <div class="form-body">
         <div class="form-body">
             <label><b>DOOH Videos</b><span class="text-warning" v-if="$parent.article.dooh && $parent.article.dooh.should_include_video"> (Sollte ein Video enthalten)</span></label>
+
+            <div class="form-group">
+                <label class="mt-checkbox">
+                    <input type="checkbox" v-model="shouldIncludeVideo" value="true">Sollte ein Video enthalten
+                    <span></span>
+                </label>
+            </div>
+
             <div v-if="doohVideo.id" class="form-group">
                 <div class="edit_video_section">
                     <video controls>
@@ -71,6 +79,7 @@
                 videoSelectorId: 2,
                 regions:[
                 ],
+                shouldIncludeVideo: false,
                 doohRegions: [
                 ]
             }
@@ -108,6 +117,7 @@
                 if(this.articleId)
                 {
                     this.initializeDoohRegions(this.articleId);
+                    this.shouldIncludeVideo = this.$parent.article.dooh.should_include_video;
                 }
             },
 
@@ -133,6 +143,7 @@
 
             if(this.articleId) {
                 this.initializeDoohRegions(this.articleId);
+                this.shouldIncludeVideo = this.$parent.article.dooh.should_include_video;
             }
 
             if(this.doohTimeout) {
@@ -303,6 +314,7 @@
                     await Api.http.put(`/articles/${articleId}/dooh`, {
                         timeout: timeout ? moment(timeout).format('YYYY-MM-DD HH:mm:ss') : null,
                         video: this.doohVideo.id,
+                        should_include_video: this.shouldIncludeVideo,
                     });
                     await this.submitArticleDoohRegions(articleId);
                 } catch(error) {
