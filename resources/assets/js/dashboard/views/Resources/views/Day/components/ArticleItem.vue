@@ -4,7 +4,7 @@
             <span v-if="moment(article.published_at).isValid()">
                 <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
             </span>
-            <i v-if="article.dooh.should_include_video && article.dooh.video_id === null" title="Dooh Video fehlt" class="text-danger fa fa-film"></i>
+            <dooh-video-status :dooh="article.dooh" />
             <status-display class="pull-right" :status="article.article_status.name" />
         </div>
         <div class="flex-item article">
@@ -28,6 +28,7 @@
 
 <script>
     import ArticleStatus from 'dashboard/components/StatusDisplay';
+    import DoohVideoStatus from 'dashboard/components/DoohVideoStatus';
 
     export default {
         data() {
@@ -42,7 +43,8 @@
         ],
 
         components: {
-            ArticleStatus
+            ArticleStatus,
+            DoohVideoStatus
         },
 
         computed: {

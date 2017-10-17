@@ -50,6 +50,7 @@
                 <td>
                     <i v-if="article.publish_failed" class="fa fa-exclamation-triangle"></i>
                     {{ article.title }}
+                    <dooh-video-status :dooh="article.dooh" />
                 </td>
                 <td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>
                 <td>
@@ -90,6 +91,7 @@
 <script>
     import Pagination from 'dashboard/components/Pagination/Pagination';
     import ArticleStatus from 'dashboard/components/StatusDisplay';
+    import DoohVideoStatus from 'dashboard/components/DoohVideoStatus';
 
     export default {
         data() {
@@ -104,10 +106,11 @@
             }
         },
 
-        components: [
+        components: {
             Pagination,
-            ArticleStatus
-        ],
+            ArticleStatus,
+            DoohVideoStatus
+        },
 
         created() {
             this.currentPage = parseInt(this.$route.query.page || 1);
