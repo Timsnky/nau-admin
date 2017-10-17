@@ -208,20 +208,6 @@ let publishMixin = {
         },
 
         /**
-         *  PUBLICATION DATE
-         */
-        changeDate(date) {
-            this.article.published_at = date;
-        },
-
-        /**
-         *  ORDER DATE
-         */
-        changeOrderDate(date) {
-            this.article.order_date = date;
-        },
-
-        /**
          *  NOTIFICATION REGIONS
          */
         //Reset the notification regions when one uncheck the push notification checkbox

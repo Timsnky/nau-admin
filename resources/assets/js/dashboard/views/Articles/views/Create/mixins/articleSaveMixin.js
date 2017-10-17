@@ -79,7 +79,11 @@ export default {
 
         updateArticle() {
             return Api.http
-                .put(`/articles/${this.article.id}`, this.article)
+                .put(`/articles/${this.article.id}`, {
+                    ...this.article,
+                    published_at: this.article.published_at.format(),
+                    order_date: this.article.order_date.format(),
+                })
                 .then(response => {
                     this.article = response.data;
                     if (!(response.data.image && response.data.image.id === this.articleMainImage.id)) {

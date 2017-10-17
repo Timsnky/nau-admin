@@ -44,8 +44,18 @@
             });
         },
 
+        watch: {
+            value(date) {
+                if(date._isAMomentObject) {
+                    return;
+                }
+
+                this.$emit('input', this.getMoment(date));
+            }
+        },
+
         methods: {
-            formatDate(date) {
+            getMoment(date) {
                 if(!date) {
                     return null;
                 }
@@ -54,7 +64,15 @@
                     date = moment(date);
                 }
 
-                return date.format(this.format);
+                return date;
+            },
+
+            formatDate(date) {
+                if(!date) {
+                    return null;
+                }
+
+                return this.getMoment(date).format(this.format);
             }
         },
 

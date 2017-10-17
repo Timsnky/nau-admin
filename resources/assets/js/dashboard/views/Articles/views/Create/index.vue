@@ -518,15 +518,17 @@
                             </div>
                             <div class="form-group">
                                 <label>Publikationsdatum</label>
-                                <date-and-time
-                                        @changeDate="changeDate"
-                                        :date="article.published_at ? publicationDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.published_at"
+                                />
                             </div>
                             <div class="form-group">
                                 <label>Order Date</label>
-                                <date-and-time
-                                        @changeDate="changeOrderDate"
-                                        :date="article.order_date ? orderDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.order_date"
+                                />
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
@@ -787,7 +789,7 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import TwitterElement from 'dashboard/components/TwitterTweet';
-    import DateAndTime from 'dashboard/components/DateAndTime';
+    import DateTime from 'dashboard/components/DateTime';
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
@@ -909,7 +911,7 @@
         components: {
             Multiselect,
             TwitterElement,
-            DateAndTime,
+            DateTime,
             draggable,
             Surveys,
             ExternalVideos,
@@ -977,12 +979,6 @@
                 }
 
                 return false;
-            },
-
-            //Compute the publication date
-            publicationDate()
-            {
-                return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
             },
 
             //Compute the order date
