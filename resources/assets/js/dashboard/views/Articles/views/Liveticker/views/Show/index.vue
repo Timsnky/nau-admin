@@ -39,7 +39,7 @@
 
                 <socialmedia-element v-if="liveticker.type === 'socialmedia'" :element="liveticker" />
                 <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
-                <body-element v-if="liveticker.type === 'body'">{{ liveticker.content }}</body-element>
+                <body-element v-if="liveticker.type === 'body'"><span v-html="liveticker.content"></span></body-element>
                 <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
 
             </timeline-item>
