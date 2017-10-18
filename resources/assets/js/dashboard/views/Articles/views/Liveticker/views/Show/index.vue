@@ -105,9 +105,14 @@
             },
 
             fetchLivetickers() {
+                this.reset();
                 Api.http
                     .get(`/articles/${this.$route.params.article}/livetickers`)
                     .then(response => this.livetickers = response.data);
+            },
+
+            reset() {
+                this.type = '';
             },
 
             deleteAll() {
