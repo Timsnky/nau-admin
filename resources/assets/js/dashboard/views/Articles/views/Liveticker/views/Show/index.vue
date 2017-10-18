@@ -113,7 +113,7 @@
             deleteAll() {
                 swal({
                     title: 'Sind sie sicher?',
-                    text: "Die Einträge kann nicht wiederhergestellt werden!",
+                    text: "Die Einträge können nicht wiederhergestellt werden!",
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonText: 'Abbrechen',
