@@ -29,6 +29,7 @@
                             <socialmedia-input v-if="type.value === 'socialmedia'" @new-post="fetchLivetickers" />
                             <body-input v-if="type.value === 'body'" @new-post="fetchLivetickers" />
                             <external-video-input v-if="type.value === 'external-video'" @new-post="fetchLivetickers" />
+                            <sport-ticker-input v-if="type.value === 'sport-ticker'" @new-post="fetchLivetickers" />
                             <comment-input v-if="type.value === 'comment'" @new-post="fetchLivetickers" />
                         </span>
                     </div>
@@ -41,6 +42,7 @@
                 <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
                 <body-element v-if="liveticker.type === 'body'"><span v-html="liveticker.content"></span></body-element>
                 <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
+                <sport-ticker-element v-if="liveticker.type === 'sportticker'" :element="liveticker" />
 
             </timeline-item>
         </div>
@@ -56,6 +58,8 @@
     import ExternalVideoElement from './components/Elements/ExternalVideoElement'
     import CommentInput from './components/Inputs/CommentInput'
     import CommentElement from './components/Elements/CommentElement'
+    import SportTickerInput from './components/Inputs/SportTickerInput'
+    import SportTickerElement from './components/Elements/SportTickerElement'
 
     export default {
         data() {
@@ -69,6 +73,7 @@
                     {name: 'Socialmedia', value: 'socialmedia'},
                     {name: 'Externes Video', value: 'external-video'},
                     {name: 'Kommentar', value: 'comment'},
+                    {name: 'Sport Ticker', value: 'sport-ticker'},
                 ]
             }
         },
@@ -80,6 +85,8 @@
             'socialmedia-input': SocialmediaInput,
             'socialmedia-element': SocialmediaElement,
             'external-video-input': ExternalVideoInput,
+            SportTickerInput,
+            SportTickerElement,
             'external-video-element': ExternalVideoElement,
             'comment-input': CommentInput,
             'comment-element': CommentElement,
