@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Bilder <small>{{imageType.name}}</small></h4>
+                        <h4 class="modal-title" id="myModalLabel">Bilder <small>{{ imageTypeNames }}</small></h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingImage" @click="showAddImage()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                     </div>
@@ -208,6 +208,7 @@
                     }
                 ],
                 submitting: false,
+                imageTypes: [],
                 imageType: {
                     id: 1,
                     name: 'Normal Image'
@@ -235,8 +236,16 @@
             this.$parent.$on('imageTypeChange', this.changeImageType);
         },
 
+        computed: {
+            imageTypeNames() {
+                return this.imageTypes.map((type) => {
+                    return type.name;
+                }).join(', ');
+            }
+        },
+
         mounted() {
-            this.imageType = Api.getImageTypes();
+            this.changeImageType();
 
             this.getPaginatedData(this.currentPage)
                 .then(response => {
@@ -276,16 +285,15 @@
             //Update the image type when it is changed
             changeImageType()
             {
-                let type = Api.getImageType();
+                let types = Api.getImageTypes();
 
-                if(type.id !== this.imageType.id)
-                {
-                    this.imageType = type;
-
+                if(types !== this.imageTypes) {
+                    this.imageTypes = types;
+                    this.imageType = types[0];
                     this.navigate(1);
                 }
 
-                this.imageAspectRatio = this.imageType.id !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
+                this.imageAspectRatio = this.imageType !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
 
                 this.reset();
                 this.closeAddImage();
@@ -326,20 +334,19 @@
             },
 
             getPaginatedData(page) {
-                var searchString = '';
-                var userString = '';
+                var params = {
+                    search: this.searchTerm,
+                    type: this.imageTypes.map((type) => {
+                        return type.id;
+                    }),
+                    page
+                };
 
-
-                if (this.searchTerm !== '') {
-                    searchString += `search=${this.searchTerm}&`;
+                if(this.userId != 0) {
+                    params.user_id = this.userId;
                 }
 
-                if(this.userId != 0)
-                {
-                    userString += `user_id=${this.userId}&`;
-                }
-
-                return Api.http.get(`/images?type=${this.imageType.id}&` + searchString + userString + `page=${page}`);
+                return Api.http.get('/images?' + $.param(params));
             },
 
             dispatchImageSelected(id) {

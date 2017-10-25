@@ -180,7 +180,7 @@
 
         computed: {
             imageTypes() {
-                return Api.getImageTypes();
+                return Api.getAvailableImageTypes();
             }
         },
 
