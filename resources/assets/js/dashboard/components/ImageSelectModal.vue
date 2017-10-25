@@ -236,7 +236,7 @@
         },
 
         mounted() {
-            this.imageType = Api.getImageType();
+            this.imageType = Api.getImageTypes();
 
             this.getPaginatedData(this.currentPage)
                 .then(response => {
