@@ -1,7 +1,7 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <p>Key Facts (min. 3)</p>
+            <p>Key Facts (min. 2)</p>
             <div v-for="(articleLearning, index) in articleLearnings" class="form-group clearfix">
 
                 <div class="input-group">
@@ -119,16 +119,7 @@
             //Add article learnings
             addArticleLearning()
             {
-                if(this.articleLearnings.length < 5)
-                {
-                    this.articleLearnings.push('');
-                }
-                else
-                {
-                    Vue.toast('Only a maximum of 5 learnings can be added', {
-                        className: ['nau_toast', 'nau_warning'],
-                    });
-                }
+                this.articleLearnings.push('');
             },
 
             //Validate learnings save

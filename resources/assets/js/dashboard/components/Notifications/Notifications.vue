@@ -1,23 +1,24 @@
 <template>
-    <li class="slim-scroll dropdown dropdown-extended dropdown-notification" ref="notifications" @click="clear()">
+    <li class="slim-scroll dropdown dropdown-extended dropdown-notification" ref="notifications" @click="read()">
         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
             <i class="icon-bell"></i>
             <span v-show="hasNew()" class="badge badge-default">{{ unread }}</span>
         </a>
         <ul class="dropdown-menu">
             <li class="external">
-                <h3><span class="bold">Nachrichten</span></h3>
+                <h3><span class="bold">Mitteilungen</span></h3>
+                <a v-show="notifications.length > 0" @click.prevent="clear()" href="#">Alle Mitteilungen löschen</a>
             </li>
             <li>
                 <ul class="dropdown-menu-list" data-handle-color="#637283" data-initialized="1">
                     <li v-for="notification in notifications">
-                        <a href="javascript:;">
+                        <a :href="notification.link ? notification.link : '#'">
                             <span class="time">{{ moment(notification.time).format('HH:mm') }}</span>
                             <span class="details">
                                 <span :class="['label', 'label-sm', 'label-icon', 'label-' + notification.type]">
                                     <i :class="['fa', notification.icon]"></i>
                                 </span>
-                                <span v-html="notification.text"></span>
+                                <span v-html="notification.content"></span>
                             </span>
                         </a>
                     </li>
@@ -28,7 +29,6 @@
 </template>
 
 <script>
-    import Notification from './Notification';
     import { mapState } from 'vuex'
 
     export default {
@@ -46,32 +46,58 @@
         methods: {
             push(notification) {
                 this.$store.dispatch('ADD_NOTIFICATION', notification);
+                this.sendDesktopNotification(notification);
             },
 
             hasNew() {
                 return this.unread !== 0;
             },
 
-            clear() {
-                this.$store.commit('CLEAR_NEW_NOTIFICATIONS');
+            read() {
+                this.$store.commit('READ_NEW_NOTIFICATIONS');
             },
+
+            clear() {
+                this.$store.commit('CLEAR_NOTIFICATIONS');
+            },
+
+            checkDesktopNotifications() {
+                if(!Notification) {
+                    // Browser does not support notifications
+                    return false;
+                }
+
+                if (Notification.permission !== 'granted')
+                    Notification.requestPermission();
+            },
+
+            sendDesktopNotification(notification) {
+                var desktopNotification = new Notification(notification.title, {
+                    icon: '/android-chrome-192x192.png',
+                    body: notification.text,
+                });
+
+                if(notification.link) {
+                    desktopNotification.onclick = () => {
+                        window.open(notification.link);
+                    };
+                }
+            }
         },
 
         mounted() {
+            this.checkDesktopNotifications();
+
             Echo.private('notifications.' + Api.user().id)
-                .listen('VideoProcessed', (e) => {
-                    this.push(new Notification(
-                        e.video.name + ' ist nun fertig verarbeitet.',
-                    ));
+                .listen('Notification', (notification) => {
+                    console.log(notification);
+                    this.push(notification);
                 });
 
-            Echo.channel('version')
-                .listen('NewVersion', (e) => {
-                    this.push(new Notification(
-                        'Eine neue Version ist verfügbar <a href="">Jetzt aktuallisieren</a>',
-                        'warning',
-                        'fa-arrow-circle-o-down',
-                    ));
+            Echo.channel('notifications')
+                .listen('Notification', (notification) => {
+                    console.log(notification);
+                    this.push(notification);
                 });
         }
     }

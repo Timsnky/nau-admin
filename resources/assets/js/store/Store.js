@@ -9,6 +9,29 @@ export const store = new Vuex.Store({
             "avatar": "https://media.nau.ch/default_avatar.png",
             "roles": []
         },
+        'availableImageTypes': [
+            {
+                id: 1,
+                name: 'Normal Image'
+            },
+            {
+                id: 2,
+                name: 'Teaser Image',
+            },
+            {
+                id: 3,
+                name: 'Top Teaser Image',
+            },
+            {
+                id: 4,
+                name: 'Comment Image',
+            }
+
+        ],
+        'imageType' : {
+            id: 1,
+            name: 'Normal Image'
+        },
         'selected_image_id' : null,
         'selected_video_id' : null,
         'selected_survey_id': null,
@@ -16,6 +39,7 @@ export const store = new Vuex.Store({
         'image_selector_id': null,
         notifications: [],
         unreadNotifications: 0,
+        foldermaster: null,
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -34,6 +58,22 @@ export const store = new Vuex.Store({
                     reject(error);
                 })
             })
+        },
+        FETCH_FOLDERMASTER: async ({commit}) => {
+            var response = await Api.http.get('/foldermaster');
+            commit('SET_FOLDERMASTER', response.data.user);
+        },
+        SET_FOLDERMASTER: async ({commit}, userId) => {
+            var response = await Api.http.put('/foldermaster', {
+                user_id: userId,
+            });
+            commit('SET_FOLDERMASTER', response.data.user);
+        },
+        SET_IMAGE_TYPES: ({commit}, types) => {
+            commit('SET_IMAGE_TYPES', types);
+        },
+        RESET_IMAGE_TYPES: ({commit}) => {
+            commit('RESET_IMAGE_TYPES');
         },
         SET_IMAGE: ({commit}, image_id) => {
             commit('SET_IMAGE', image_id);
@@ -71,7 +111,7 @@ export const store = new Vuex.Store({
         },
     },
     mutations: {
-        CLEAR_NEW_NOTIFICATIONS: (state) => {
+        READ_NEW_NOTIFICATIONS: (state) => {
             state.unreadNotifications = 0;
         },
         INCREMENT_UNREAD_NOTIFICATIONS: (state) => {
@@ -80,8 +120,14 @@ export const store = new Vuex.Store({
         ADD_NOTIFICATION: (state, notification) => {
             state.notifications.unshift(notification);
         },
+        CLEAR_NOTIFICATIONS: (state) => {
+            state.notifications = [];
+        },
         SET_USER: (state, { user }) => {
             state.user = user;
+        },
+        SET_FOLDERMASTER: (state, foldermaster) => {
+            state.foldermaster = foldermaster;
         },
         LOGOUT: (state) => {
             state.user = null;
@@ -115,6 +161,12 @@ export const store = new Vuex.Store({
         },
         RESET_SURVEY: (state) => {
             state.selected_survey_id = null;
+        },
+        SET_IMAGE_TYPES: (state, types) => {
+            state.imageTypes = types;
+        },
+        RESET_IMAGE_TYPES: (state) => {
+            state.imageTypes = [];
         }
     }
 });

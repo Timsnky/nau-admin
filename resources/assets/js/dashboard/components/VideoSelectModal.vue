@@ -18,6 +18,7 @@
                                         class="form-control"
                                         type="file"
                                         name="video"
+                                        accept="video/*"
                                         id="video"
                                         @change="videoAdded"/>
 
@@ -139,7 +140,6 @@
 </template>
 
 <script>
-    import Pagination from 'dashboard/views/Videos/views/List/components/Pagination';
 
     export default {
         data() {
@@ -183,10 +183,6 @@
                     });
                     this.isLoaded = true;
                 });
-        },
-
-        components: {
-            Pagination
         },
 
         watch: {

@@ -36,7 +36,7 @@
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
@@ -77,8 +77,6 @@
     </div>
 </template>
 <script>
-    import Pagination from 'dashboard/components/Pagination/Pagination';
-
     export default {
         data() {
             return {
@@ -91,10 +89,6 @@
                 articles: []
             }
         },
-
-        components: [
-            Pagination
-        ],
 
         created() {
             this.getPaginatedData(this.currentPage)
@@ -168,7 +162,7 @@
             {
                 swal({
                     title: 'Publizieren',
-                    text: 'Nachricht an den Author',
+                    text: 'Nachricht an den Autor',
                     type: 'warning',
                     input: 'text',
                     showCancelButton: true,

@@ -2,7 +2,7 @@
     <div>
         <page-title title="Artikel" />
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="input-icon">
                     <i class="fa fa-search"></i>
                     <input
@@ -13,7 +13,24 @@
                         v-model.trim="searchTerm">
                 </div>
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-md-2">
+                <div class="input-icon">
+                    <i class="fa fa-filter"></i>
+                    <select class="form-control" v-model="stateFilter">
+                        <option :value="null">Alle</option>
+                        <option v-for="state in states" :value="state.id">{{ state.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="mt-checkbox">
+                        <input type="checkbox" v-model="doohFilter" value="true">Fehlendes Dooh Video
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
                 <router-link
                     :to="{name: 'articles.create'}"
                     class="btn btn-primary pull-right">
@@ -27,7 +44,7 @@
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
                 <th>Optionen</th>
@@ -41,12 +58,13 @@
                 <td>
                     <i v-if="article.publish_failed" class="fa fa-exclamation-triangle"></i>
                     {{ article.title }}
+                    <dooh-video-status :dooh="article.dooh" />
                 </td>
                 <td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>
                 <td>
                     <status-display :status="article.article_status.name" />
                 </td>
-                <td>{{ publicationDate(article) }}</td>
+                <td>{{ moment(article.published_at).isValid() ? moment(article.published_at).format('DD.MM.YY HH:mm') : '' }}</td>
                 <td><router-link
                         :to="{name: 'articles.edit', params: {id: article.id}}"
                         class="btn btn-warning">
@@ -60,7 +78,8 @@
                     Liveticker
                 </router-link>
                 <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
-                <button v-if="Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
+                <button v-if="article.article_status.name === 'published'" class="btn btn-danger" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
+                <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
                 </td>
             </tr>
             </tbody>
@@ -80,6 +99,7 @@
 <script>
     import Pagination from 'dashboard/components/Pagination/Pagination';
     import ArticleStatus from 'dashboard/components/StatusDisplay';
+    import DoohVideoStatus from 'dashboard/components/DoohVideoStatus';
 
     export default {
         data() {
@@ -88,14 +108,18 @@
                 pagesCount: 1,
                 itemsPerPage: 15,
                 searchTerm: '',
-                articles: []
+                states: [],
+                stateFilter: null,
+                articles: [],
+                doohFilter: false,
             }
         },
 
-        components: [
+        components: {
             Pagination,
-            ArticleStatus
-        ],
+            ArticleStatus,
+            DoohVideoStatus
+        },
 
         created() {
             this.currentPage = parseInt(this.$route.query.page || 1);
@@ -115,9 +139,21 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 });
+
+            Api.http.get('/article-states').then(response => {
+                this.states = response.data;
+            });
         },
 
         watch: {
+            stateFilter() {
+                this.navigate(1);
+            },
+
+            doohFilter() {
+                this.navigate(1);
+            },
+
             searchTerm: _.debounce(function () {
                 this.navigate(1);
             }, 400),
@@ -126,7 +162,11 @@
         computed: {
             Api() {
                 return Api;
-            }
+            },
+
+            moment() {
+                return moment;
+            },
         },
 
         methods: {
@@ -159,15 +199,24 @@
             },
 
             getPaginatedData(page) {
+                var params = {
+                    community: 0,
+                    page: page,
+                };
+
                 if (this.searchTerm !== '') {
-                    return Api.http.get(`/articles?community=0&search=${this.searchTerm}&page=${page}`);
+                    params.search = this.searchTerm;
                 }
 
-                return Api.http.get(`/articles?community=0&page=${page}`);
-            },
+                if (this.stateFilter !== null) {
+                    params.status_id = this.stateFilter;
+                }
 
-            publicationDate(article) {
-                return article.published_at ? moment(article.published_at).format('DD.MM.YY HH:mm') : '';
+                if (this.doohFilter) {
+                    params.dooh_missing = this.doohFilter;
+                }
+
+                return Api.http.get(`/articles?${$.param(params)}`);
             },
 
             publishArticle(article) {
@@ -189,6 +238,33 @@
                             });
                         }
                     });
+            },
+
+            unpublishArticle(article) {
+                swal({
+                    title: 'Artikel wirklich zurück auf Entwurf setzten?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ja, ich bin mir sicher'
+                }).then(() => {
+                    Api.http.put(`/articles/${article.id}`, {published_at: null})
+                        .then((response) => {
+                            swal({
+                                title: 'Artikel auf Entwurf gesetzt',
+                                type: 'success',
+                            });
+
+                            this.$set(this.articles, this.articles.indexOf(article), response.data);
+                        }).catch((error) => {
+                            console.error(error);
+                            swal({
+                                title: 'Fehler beim zurücksetzen',
+                                type: 'error',
+                            })
+                        })
+                });
             },
 
             deleteArticle(article) {

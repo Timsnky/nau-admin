@@ -107,6 +107,10 @@ let routes = [{
         path: 'day/:date',
         name: 'resources.day',
         component: require('./views/Resources/views/Day'),
+    }, {
+        path: 'foldermaster',
+        name: 'resources.foldermaster',
+        component: require('./views/Resources/views/Foldermaster'),
     }],
 }, {
     path: '/resource-management/day/:date/shifts',
@@ -250,6 +254,31 @@ let routes = [{
             path: '/top/community',
             name: 'frontpage.top.community',
             component: require('./views/Frontpage/views/TopCommunity'),
+        },
+    ],
+},
+{
+    path: '/avatars',
+    component: require('./views/Avatars'),
+    children: [{
+        path: 'download',
+        name: 'avatars.download',
+        component: require('./views/Avatars/views/Download'),
+    }],
+},
+{
+    path: '/sport-tickers',
+    component: require('./views/SportTicker'),
+    children: [
+        {
+            path: '/replacements',
+            name: 'sportticker.replacements',
+            component: require('./views/SportTicker/views/Replacements'),
+        },
+        {
+            path: '/replacements/:id/edit',
+            name: 'sportticker.replacements.edit',
+            component: require('./views/SportTicker/views/Replacements/views/Edit'),
         },
     ],
 },

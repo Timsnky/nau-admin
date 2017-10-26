@@ -1,85 +1,109 @@
 <template>
     <div>
-        <page-title title="Bild" sub="erstellen "/>
+        <page-title title="Bild" sub="hochladen "/>
 
         <form @submit.prevent="handleSubmit">
-            <div class="form-body">
-                <div class="image_dropbox center_text">
-                    <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="imageupload" @change="onChange">
-                    <p v-if="!imageupload">
-                        Drag your image here to begin<br> or click to browse
-                    </p>
-                    <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
-                        <div class="image_crop_section">
-                            <div class="image_hidden_section_image">
-                                <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
-                            </div>
-                        </div>
-                        <div class="image_hidden_section_remove">
-                            <button class="btn btn-danger" @click="removeFile">Bild entfernen </button>
-                        </div>
-                    </div>
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="name">Name *</label>
-                    <input
-                            id="name"
-                            type="text"
-                            name="name"
-                            v-model.trim="image.name"
-                            placeholder="Name"
-                            class="form-control">
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="lead">SEO - Beschrieb</label>
-                    <textarea
-                            id="lead"
-                            name="lead"
-                            v-model.trim="image.lead"
-                            placeholder="SEO - Beschrieb"
-                            class="form-control"
-                            rows="3"></textarea>
-                </div>
-
-                <div v-if="imageupload" class="form-group">
-                    <label for="name">Quelle *</label>
-                    <div class="source_div">
-                        <input
-                                id="source"
-                                type="text"
-                                name="source"
-                                v-model.trim="image.source"
-                                placeholder="Quelle"
-                                class="form-control source_input">
-                        <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
-                            <option v-bind:value="source.name" v-for="source in sources">
-                                {{ source.displayName}}
+            <div class="row">
+                <div class="col-md-6">
+                    <div  class="form-group">
+                        <label for="name">Bild Type *</label>
+                        <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
+                            <option v-bind:value="type" v-for="type in imageTypes">
+                                {{ type.name}}
                             </option>
                         </select>
                     </div>
-                </div>
-            </div>
 
-            <div v-if="imageupload" class="form-actions">
-                <button
+                    <div v-if="imageType.id == 1" class="form-group">
+                        <label for="name">Aspect Ratio *</label>
+                        <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
+                            <option v-bind:value="ratio" v-for="ratio in aspectRatios">
+                                {{ ratio.name}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="image_dropbox center_text">
+                        <input v-if="!imageupload" class="input-file" @dragover.prevent @drop="onDrop" accept="image/*" type="file" name="imageupload" @change="onChange">
+                        <p v-if="!imageupload">
+                            Drag your image here to begin<br> or click to browse
+                        </p>
+                        <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
+                            <div class="image_crop_section">
+                                <div class="image_hidden_section_image">
+                                    <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
+                                </div>
+                            </div>
+                            <div class="image_hidden_section_remove">
+                                <button class="btn btn-danger" @click="removeFile">Bild entfernen </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <image-quality :display="imageCropper ? 1 : 0" :image-height="imageCropHeight" :image-width="imageCropWidth"></image-quality>
+                    </div>
+                </div>
+
+                <div class="col-md-6" v-if="imageupload">
+                    <div class="form-group">
+                        <label for="name">Dateiname *</label>
+                        <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        v-model.trim="image.name"
+                        placeholder="Name"
+                        class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lead">Beldunterschrift *</label>
+                        <textarea
+                        id="lead"
+                        name="lead"
+                        v-model.trim="image.lead"
+                        placeholder="Beldunterschrift"
+                        class="form-control"
+                        rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Quelle *</label>
+                        <div class="source_div">
+                            <input
+                            id="source"
+                            type="text"
+                            name="source"
+                            v-model.trim="image.source"
+                            placeholder="Quelle"
+                            class="form-control source_input">
+                            <select class="form-control helper_input" @change="imageSourceSelected()" v-model="image.selectedSource">
+                                <option v-bind:value="source.name" v-for="source in sources">
+                                    {{ source.displayName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
                         class="btn btn-primary"
                         type="submit"
                         :disabled="!image.name || !image.lead || !image.source">
-                    Erstellen
-                </button>
-                <button
+                            <span v-if="uploadPercentage !== 0">
+                                Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            <span v-else>Bild hinzufügen</span>
+                        </button>
+                        <button
                         class="btn btn-default"
                         type="button"
                         @click="reset">
-                    Verwerfen
-                </button>
+                            Verwerfen
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -96,13 +120,13 @@
                     lead: '',
                     source: '',
                     image: '',
-                    user_id: '',
                     selectedSource: ''
                 },
                 imageupload: null,
                 imageCropper: null,
                 imageCropHeight: 0,
                 imageCropWidth: 0,
+                uploadPercentage: 0,
                 sources: [
                     {
                         name: '',
@@ -128,7 +152,25 @@
                         name: 'Zvg',
                         displayName: 'Zvg'
                     }
-                ]
+                ],
+                imageType: {
+                    id: 1,
+                    name: 'Normal Image'
+                },
+                aspectRatios: [
+                    {
+                        value: NaN,
+                        name: 'Frei auswählbar'
+                    },
+                    {
+                        value: 2,
+                        name: '2:1'
+                    }
+                ],
+                imageAspectRatio: {
+                    value: NaN,
+                    name: 'Frei auswählbar'
+                }
             }
         },
 
@@ -136,28 +178,60 @@
             ImageQuality
         },
 
+        computed: {
+            imageTypes() {
+                return Api.getAvailableImageTypes();
+            }
+        },
+
+        mounted() {
+            this.imageType = this.imageTypes[0];
+            this.imageAspectRatio = this.aspectRatios[0];
+        },
+
         methods: {
             handleSubmit() {
-                const {name, lead, source, image, user_id} = this.image;
+                const {name, lead, source, image} = this.image;
 
-                if (name && lead && source && image)
-                {
-                    if(this.imageCropper)
-                    {
-                        this.finishCrop();
-                    }
-
-                    Api.http
-                        .post('/images', {name, lead, source, image, user_id})
-                        .then(response => this.$router.push('/images'))
-                        .catch(err => Vue.toast('Error in uploading the Image. Please retry the upload', {
-                            className : ['nau_toast','nau_warning'],
-                        }));
-                } else {
+                if(!name || !lead || !source || !image) {
                     Vue.toast('Please provide the name, lead and source for the image', {
                         className : ['nau_toast','nau_warning'],
                     });
+                    return false;
                 }
+
+                this.imageCropper.getCroppedCanvas().toBlob((blob) => {
+                    let formData = new FormData();
+
+                    formData.append('image', blob);
+                    formData.append('name', name);
+                    formData.append('source', source);
+                    formData.append('lead', lead);
+                    formData.append('type', this.imageType.id);
+
+                    let vm = this;
+
+                    Api.http
+                        .post('/images', formData, {
+                            onUploadProgress(e) {
+                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                            }
+                        })
+                        .then(response => {
+                            if(response.status === 201)
+                            {
+                                this.$router.push('/images');
+                            }
+                            else
+                            {
+                                Vue.toast('Fehler beim hochladen des Bildes.', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
+                        });
+                });
+                this.imageCropper.destroy();
+                this.imageCropper = null;
             },
 
             reset() {
@@ -166,12 +240,12 @@
                     lead: '',
                     source: '',
                     image: '',
-                    user_id: ''
                 }
                 this.imageupload = null;
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -210,7 +284,6 @@
                 reader.onload = function (e) {
                     vm.imageupload = e.target.result;
                     vm.image.image = e.target.result.split(';base64,')[1];
-                    vm.image.user_id = Api.user().id;
                 };
 
                 reader.readAsDataURL(file);
@@ -227,6 +300,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -238,7 +312,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: 2,
+                    aspectRatio: vm.imageAspectRatio.value,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
@@ -259,6 +333,7 @@
             {
                 this.image.image = this.imageCropper.getCroppedCanvas().toDataURL('image/jpeg');
                 this.imageCropper.destroy();
+                this.imageCropper = null;
             },
 
             //Save selected source of article image
@@ -266,6 +341,26 @@
             {
                 this.image.source = this.image.selectedSource;
             },
+
+            //Save the selected image type
+            imageTypeSelected()
+            {
+                this.imageAspectRatio = this.imageType.id !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
+
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
+                }
+            },
+
+            //Change the aspect ratio of cropper
+            aspectRatioSelected()
+            {
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
+                }
+            }
         }
     }
 </script>

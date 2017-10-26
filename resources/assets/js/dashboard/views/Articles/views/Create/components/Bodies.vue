@@ -34,7 +34,6 @@
             <button
                     @click="addArticleBody()"
                     class="btn btn-primary item_add_btn"
-                    :disabled="articleBodies.length >= 5"
                     type="button"> +
             </button>
         </div>
@@ -63,7 +62,6 @@
                 ],
                 articleBodyEditors: [
                 ],
-                articleBodyWithContent: false,
             }
         },
 
@@ -213,58 +211,34 @@
             //Save the bodies for the articles
             saveArticleBodies(articleId)
             {
-                this.articleBodyWithContent = false;
+                var articleBodyWithContent = false;
                 let vm = this;
 
-                this.articleBodies.forEach(function (value, key)
-                {
-                    value.content = vm.articleBodyEditors[key].editor.getValue();
+                var bodies = this.articleBodies.filter((value, key) => {
+                    value.content = this.articleBodyEditors[key].editor.getValue();
 
-                    if(value.content !== '')
-                    {
-                        vm.articleBodyWithContent = true;
-
-                        if(value.id && vm.articleId === articleId)
-                        {
-                            Api.http
-                                .put(`/bodies/${value.id}`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 200)
-                                    {
-                                        vm.articleBodies[key] = response.data;
-                                        Vue.toast('Article body updated successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            Api.http
-                                .post(`/articles/${articleId}/bodies`, {
-                                    content: value.content,
-                                })
-                                .then(response => {
-                                    if(response.status === 201)
-                                    {
-                                        vm.articleBodies[key] = response.data;
-                                        Vue.toast('Article body created successfully', {
-                                            className: ['nau_toast', 'nau_success'],
-                                        });
-                                    }
-                                });
-                        }
-                    }
+                    return value.content !== '';
                 });
 
-                if(! (this.articleBodyWithContent && this.articleId === articleId))
-                {
-                    Vue.toast('Please make sure that you have content in the body', {
-                        className: ['nau_toast', 'nau_warning'],
+                Api.http
+                    .put(`/articles/${articleId}`, { bodies })
+                    .then(response => {
+                        if(response.status === 200) {
+                            response.data.bodies.forEach((value, key) => {
+                                this.articleBodies[key] = value;
+                                this.articleBodyEditors[key].editor.setValue(this.articleBodies[key].content);
+                                Vue.toast('Atikel Texte gespeichert', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Vue.toast('Fehler beim speichern der Texte', {
+                            className: ['nau_toast', 'nau_warning'],
+                        });
+                        console.error(error);
                     });
-                }
             },
 
             //Duplicate the data based on the supplied articleid

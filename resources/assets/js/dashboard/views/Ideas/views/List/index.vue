@@ -33,7 +33,7 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>Title</th>
-                        <th>Author</th>
+                        <th>Autor</th>
                         <th>Options</th>
                     </tr>
                     </thead>
@@ -63,7 +63,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
 
     export default {
         data() {
@@ -96,7 +95,6 @@
 
         components: {
             Item,
-            Pagination
         },
 
         watch: {

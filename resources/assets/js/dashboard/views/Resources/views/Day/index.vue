@@ -9,7 +9,7 @@
         </h2>
 
         <div v-else class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
@@ -53,11 +53,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption">
-                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
+                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span><br>
+                            <small v-if="foldermaster">Foldermaster: {{ foldermaster.name }}</small>
                         </div>
                         <div class="tools">
                             <a href="javascript:;" class="fullscreen" data-original-title="" title="" @click="toggleFullscreen()"> </a>
@@ -69,55 +70,20 @@
                             v-for="(topic, index) in day.topics"
                             class="panel panel-default">
                             <div class="panel-heading clearfix">
-                                <h3 class="panel-title">{{ topic.name }} <router-link class="pull-right" :to="{name: 'topics.edit', params: {id: topic.id}}"><span class="fa fa-edit"></span> Bearbeiten</router-link></h3>
-
+                                <h3 class="panel-title">{{ topic.name }} <router-link class="pull-right" :to="{name: 'topics.edit', params: {id: topic.id}}">
+                                <button type="button" class="btn btn-warning btn-sm"><span class="fa fa-edit"></span> Bearbeiten</button></router-link></h3>
                             </div>
                             <div class="panel-body">
                                 <div v-if="topic.articles.length > 0">
-                                    <div
-                                        class="panel panel-default"
-                                        v-for="(article, index) in topic.articles">
-                                        <div class="panel-body">
-                                            <h4 class="clearfix">{{ article.title }}
-                                                <router-link
-                                                    :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
-                                                    class="btn btn-xs btn-warning pull-right">
-                                                    Bearbeiten
-                                                </router-link>
-                                            </h4>
-                                            <h5>
-                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.pivot.time, 'HH:mm:ss').format('HH:mm') }}
-                                            </h5>
-
-                                            <ul
-                                                class="list-group"
-                                                v-if="article.authors.length > 0">
-                                                <li
-                                                    class="list-group-item"
-                                                    v-for="author in article.authors">
-                                                    {{ author.name }}
-                                                </li>
-                                            </ul>
-
-                                            <h5
-                                                v-else
-                                                class="text-center">
-                                                Keine Authoren gefunden
-                                            </h5>
-                                        </div>
-                                    </div>
+                                    <article-item v-for="(article, index) in topic.articles" :key="article.id" :article="article" :topic="topic" />
                                 </div>
 
-                                <h4
-                                    v-else
-                                    class="text-center">
-                                    Keine Artikel gefunden
-                                </h4>
+                                <h4 v-else class="text-center"> Keine Artikel gefunden</h4>
 
                                 <router-link
                                     :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
                                     class="btn btn-primary">
-                                    Artikel hinzufügen
+                                    <i class="fa fa-newspaper-o"></i> Artikel hinzufügen
                                 </router-link>
                             </div>
                         </div>
@@ -131,7 +97,7 @@
                         <router-link
                             :to="{name: 'topics.create', query: { date }}"
                             class="btn btn-primary">
-                            Thema hinzufügen
+                            <i class="fa fa-plus"></i> Thema hinzufügen
                         </router-link>
                     </div>
                 </div>
@@ -141,6 +107,8 @@
 </template>
 
 <script>
+    import ArticleItem from './components/ArticleItem';
+
     export default {
         data() {
             return {
@@ -152,6 +120,19 @@
                 },
                 isLoaded: false,
             };
+        },
+
+        components: {
+            ArticleItem
+        },
+
+        computed: {
+            Api() {
+                return Api;
+            },
+            foldermaster() {
+                return this.$store.state.foldermaster;
+            }
         },
 
         created() {
@@ -184,12 +165,12 @@
             toggleFullscreen() {
                 this.fullscreen = !this.fullscreen;
                 this.$router.push({ query: { fullscreen: this.fullscreen }})
-            }
+            },
         }
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .portlet-fullscreen {
         * {
             font-size: 3rem;

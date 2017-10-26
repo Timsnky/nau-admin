@@ -13,21 +13,36 @@
             </div>
             <div class="col-md-6 text-right">
                 <button
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndExit()">
+                    type="button"
+                    class="btn btn-primary pull-right margin_left_5"
+                    @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name !== 'published'"
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndPublish()">
-                    Speichern & Veröffentlichen
+                    v-if="article.article_status && article.article_status.name == 'draft'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndReady()">
+                    Speichern & Ready
                 </button>
                 <button
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSubmit()">
+                    v-if="article.article_status && article.article_status.name == 'ready'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndVerified()">
+                    Speichern & Verifizieren
+                </button>
+                <button
+                    v-if="article.article_status && article.article_status.name == 'verified'"
+                    type="button"
+                    class="btn green-meadow pull-right margin_left_5"
+                    @click="handleSaveAndPublish()">
+                    Speichern & Publizieren
+                </button>
+                <button
+                    class="btn btn-primary pull-right margin_left_5"
+                    @click="handleSubmit()">
+                    <i class="fa fa-floppy-o"></i>
                     Speichern
                 </button>
                 <a
@@ -404,7 +419,7 @@
                     <!--DOOH Videos-->
                     <div class="tab-pane" id="articleDoohVideos">
                         <div class="form-body">
-                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh_video_id"></dooh-video>
+                            <dooh-video v-if="article.dooh" :dooh-timeout="article.dooh.timeout" :article-id="article.id" :dooh-video-id="article.dooh ? article.dooh.video_id : null"></dooh-video>
                         </div>
                     </div>
 
@@ -503,19 +518,21 @@
                             </div>
                             <div class="form-group">
                                 <label>Publikationsdatum</label>
-                                <date-and-time
-                                        @changeDate="changeDate"
-                                        :date="article.published_at ? publicationDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.published_at"
+                                />
                             </div>
                             <div class="form-group">
                                 <label>Order Date</label>
-                                <date-and-time
-                                        @changeDate="changeOrderDate"
-                                        :date="article.order_date ? orderDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.order_date"
+                                />
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Notification
+                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Nachricht
                                     <span></span>
                                 </label>
                             </div>
@@ -536,13 +553,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display" value="true">Übersicht anzeigen
+                                    <input type="checkbox" v-model="article.display" value="true">In Übersicht anzeigen
                                     <span></span>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in Liste anzeigen wenn Big
+                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in der Liste anzeigen wenn Big
                                     <span></span>
                                 </label>
                             </div>
@@ -764,6 +781,7 @@
                 </div>
                 <image-select-modal></image-select-modal>
                 <video-select-modal></video-select-modal>
+                <verification-modal ref="verification-modal"></verification-modal>
             </div>
         </form>
     </div>
@@ -771,7 +789,7 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import TwitterElement from 'dashboard/components/TwitterTweet';
-    import DateAndTime from 'dashboard/components/DateAndTime';
+    import DateTime from 'dashboard/components/DateTime';
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
@@ -780,6 +798,7 @@
     import Tags from './components/Tags';
     import Learnings from './components/Learnings';
     import SocialMedia from './components/SocialMedia';
+    import VerificationModal from './components/VerificationModal';
     import Bodies from './components/Bodies';
     import CharacterCounter from 'dashboard/components/CharacterCounter';
     import ArticleSorting from './components/ArticleSorting';
@@ -892,7 +911,7 @@
         components: {
             Multiselect,
             TwitterElement,
-            DateAndTime,
+            DateTime,
             draggable,
             Surveys,
             ExternalVideos,
@@ -906,7 +925,8 @@
             ArticleSorting,
             TimelineItem,
             ExternalVideoElement,
-            DoohVideo
+            DoohVideo,
+            VerificationModal
 //            InfoBoxes
         },
 
@@ -959,12 +979,6 @@
                 }
 
                 return false;
-            },
-
-            //Compute the publication date
-            publicationDate()
-            {
-                return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
             },
 
             //Compute the order date

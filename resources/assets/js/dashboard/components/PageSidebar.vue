@@ -61,7 +61,7 @@
                 <li class="nav-item">
                     <router-link :to="{name: 'resources.week'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-calendar"></i>
-                        <span class="title">Ressourcenmanagement</span>
+                        <span class="title">Tagesplanung</span>
                         <span class="arrow"></span>
                     </router-link>
                     <ul class="sub-menu">
@@ -73,6 +73,11 @@
                         <router-link :to="{name: 'holidays.list'}" tag="li" exact>
                             <a>
                                 <span class="title">Freitage</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'resources.foldermaster'}" tag="li" exact>
+                            <a>
+                                <span class="title">Foldermaster</span>
                             </a>
                         </router-link>
                     </ul>
@@ -101,6 +106,14 @@
                     </a>
                 </router-link>
 
+                <!--Avatars -->
+                <router-link :to="{name: 'avatars.download'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-user-circle-o"></i>
+                        <span class="title">Avatars</span>
+                    </a>
+                </router-link>
+
                 <!--Users -->
                 <router-link v-if="Api.isAdmin()" :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -122,6 +135,14 @@
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-question"></i>
                         <span class="title">Umfragen</span>
+                    </a>
+                </router-link>
+
+                <!--Surveys -->
+                <router-link :to="{name: 'sportticker.replacements'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-futbol-o"></i>
+                        <span class="title">Sport Ticker</span>
                     </a>
                 </router-link>
 

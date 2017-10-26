@@ -1,14 +1,27 @@
 <template>
     <div class="form-body">
         <div class="form-body">
-            <label><b>DOOH Videos</b></label>
+            <label><b>DOOH Videos</b><span class="text-warning" v-if="$parent.article.dooh && $parent.article.dooh.should_include_video"> (Sollte ein Video enthalten)</span></label>
+
             <div class="form-group">
-                <div v-if="doohVideo.id" class="edit_video_section">
+                <label class="mt-checkbox">
+                    <input type="checkbox" v-model="shouldIncludeVideo" value="true">Sollte ein Video enthalten
+                    <span></span>
+                </label>
+            </div>
+
+            <div v-if="doohVideo.id" class="form-group">
+                <div class="edit_video_section">
                     <video controls>
                         <source v-if="doohVideo.urls[0]" :src="doohVideo.urls[0]" type="video/mp4">
                         <source v-if="doohVideo.urls[1]" :src="doohVideo.urls[1]" type="video/webm">
                     </video>
                 </div>
+            </div>
+
+            <div v-if="doohVideo.id" class="form-group">
+                <label>Letzte Ausstrahlung</label>
+                <date-time format="DD.MM.YYYY HH:mm" v-model="timeout" />
             </div>
         </div>
         <div v-if="doohVideo.url || doohVideo.id" class="form-group">
@@ -34,7 +47,7 @@
                     v-if="doohVideo.id"
                     class="btn btn-primary"
                     type="button"
-                    @click="handleSubmit()">
+                    @click="handleSubmit(articleId)">
                 Speichern
             </button>
             <button
@@ -49,34 +62,25 @@
 </template>
 
 <script>
+    import DateTime from 'dashboard/components/DateTime';
 
     export default {
+        components: {
+            DateTime
+        },
+
         data() {
             return {
                 doohVideo: {
                     id: null,
                     url: ''
                 },
+                timeout: null,
                 videoSelectorId: 2,
                 regions:[
-                    {
-                        id: 1,
-                        name: 'Test',
-                        checked: 1
-                    },
-                    {
-                        id: 2,
-                        name: 'Test',
-                        checked: 1
-                    },
-                    {
-                        id: 3,
-                        name: 'Test',
-                        checked: 1
-                    }
                 ],
+                shouldIncludeVideo: false,
                 doohRegions: [
-
                 ]
             }
         },
@@ -87,7 +91,8 @@
             },
             doohVideoId : {
                 type: Number,
-            }
+            },
+            doohTimeout: String,
         },
 
         computed: {
@@ -104,7 +109,15 @@
                 if(this.doohVideoId)
                 {
                     this.getVideo(this.doohVideoId);
+                }
+            },
+
+            articleId()
+            {
+                if(this.articleId)
+                {
                     this.initializeDoohRegions(this.articleId);
+                    this.shouldIncludeVideo = this.$parent.article.dooh.should_include_video;
                 }
             },
 
@@ -114,22 +127,43 @@
                 {
                     Api.resetVideo();
                     Api.resetVideoSelector();
+                    this.regions.forEach((region) => {
+                        region.checked = true;
+                    });
                     this.getVideo(newId);
-                    this.submitVideo(newId);
                 }
             },
         },
 
         mounted()
         {
-            if(this.doohVideoId)
-            {
+            if(this.doohVideoId) {
                 this.getVideo(this.doohVideoId);
+            }
+
+            if(this.articleId) {
                 this.initializeDoohRegions(this.articleId);
+                this.shouldIncludeVideo = this.$parent.article.dooh.should_include_video;
+            }
+
+            if(this.doohTimeout) {
+                this.timeout = this.doohTimeout;
             }
         },
 
+        created()
+        {
+            this.$parent.$on('duplicateData', this.duplicateData);
+            this.$parent.$on('saveData', this.handleSubmit);
+        },
+
         methods: {
+            //Receive the event to duplicate data and do so
+            duplicateData(articleId)
+            {
+                this.handleSubmit(articleId);
+            },
+
             //Trigger the video selection modal
             showVideoSelectionModal()
             {
@@ -158,28 +192,6 @@
                     });
             },
 
-            //Submit the selected video and disply it
-            submitVideo(id)
-            {
-                Api.http
-                    .put(`/articles/${this.articleId}/dooh/${id}`)
-                    .then(response =>
-                    {
-                        if(response.status === 204)
-                        {
-                            Vue.toast('DOOH Video linked successfully to article', {
-                                className : ['nau_toast','nau_success'],
-                            });
-                        }
-                        else
-                        {
-                            Vue.toast('Error in retrieving the selected video. Please retry again', {
-                                className : ['nau_toast','nau_warning'],
-                            });
-                        }
-                    });
-            },
-
             //Confirm detach
             confirmDelete()
             {
@@ -191,7 +203,8 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ja, löschen'
                 }).then(() => {
-                    this.detachDoohVideo()
+                    this.detachDoohVideo();
+                    this.clearDoohRegions();
                 }).catch(swal.noop);
             },
 
@@ -199,24 +212,30 @@
             detachDoohVideo()
             {
                 Api.http
-                    .delete(`/articles/${this.articleId}/dooh`)
-                    .then(response =>
-                    {
-                        if(response.status === 204)
-                        {
+                    .put(`/articles/${this.articleId}/dooh`, {video: null})
+                    .then(response => {
+                        if(response.status === 200) {
                             this.reset();
-                            Vue.toast('DOOH Video detached successfully', {
+                            Vue.toast('Dooh Video erfolgreich entfernt', {
                                 className : ['nau_toast','nau_success'],
                             });
-                        }
-                        else
-                        {
+                        } else {
                             Vue.toast('Error in detaching the DOOH video. Please retry again', {
                                 className : ['nau_toast','nau_warning'],
                             });
                         }
                     });
+            },
 
+            //Remove the dooh regions too when you delete the dooh video
+            clearDoohRegions()
+            {
+                let vm = this;
+
+                this.doohRegions.forEach(function (value, key)
+                {
+                    vm.deleteDoohRegions(vm.articleId, key)
+                })
             },
 
             //Reset the dooh video
@@ -226,13 +245,12 @@
                     id: null,
                     url: ''
                 };
-
-                this.doohVideoId = null;
             },
 
             //Get the regions for the checkboxes
             initializeRegions()
             {
+                this.regions = [];
                 Api.http
                     .get(`/regions`)
                     .then(response => {
@@ -281,7 +299,7 @@
                     {
                         if(value.id === regionValue.id)
                         {
-                            vm.regions[regionKey].checked = 1;
+                            vm.regions[regionKey].checked = true;
                             vm.regions[regionKey].linked = vm.articleId;
                         }
                     })
@@ -289,33 +307,44 @@
             },
 
             //Submit the data in the dooh tab
-            handleSubmit()
+            async handleSubmit(articleId)
             {
-                this.submitArticleDoohRegions(this.articleId);
+                var {timeout} = this;
+                try {
+                    await Api.http.put(`/articles/${articleId}/dooh`, {
+                        timeout: timeout ? moment(timeout).format('YYYY-MM-DD HH:mm:ss') : null,
+                        video: this.doohVideo.id,
+                        should_include_video: this.shouldIncludeVideo,
+                    });
+                    await this.submitArticleDoohRegions(articleId);
+                } catch(error) {
+                    console.error(error);
+                    Vue.toast('Ein Fehler ist aufgetreten', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                }
             },
 
             //Submit the dooh regions for an article
             submitArticleDoohRegions(articleId)
             {
-                let vm = this;
+                return new Promise((resolve, reject) => {
+                    this.regions.forEach((value, key) => {
+                        if(value.checked === true && value.linked !== articleId) {
+                            this.linkDoohRegionsToArticle(articleId, key);
+                        } else if(value.linked === articleId && value.checked == false) {
+                            this.deleteDoohRegions(articleId, key);
+                        }
+                    });
 
-                this.regions.forEach(function (value, key)
-                {
-                    if(value.checked === true && value.linked !== articleId)
-                    {
-                        vm.linkDoohRegionsToArticle(articleId, key);
-                    }
-                    else if(value.linked === articleId && value.checked == false)
-                    {
-                        vm.deleteDoohRegions(articleId, key);
-                    }
+                    resolve(true);
                 });
             },
 
             //Link regions to article dooh video
             linkDoohRegionsToArticle(articleId, key)
             {
-                Api.http
+                return Api.http
                     .put(`/articles/${articleId}/dooh-regions/${this.regions[key].id}`)
                     .then(response => {
                         if(response.status === 204)
@@ -338,12 +367,13 @@
             //Delete any dooh regions
             deleteDoohRegions(articleId, key)
             {
-                Api.http
+                return Api.http
                     .delete(`/articles/${articleId}/dooh-regions/${this.regions[key].id}`)
                     .then(response => {
                         if(response.status === 204)
                         {
                             this.regions[key].linked = null;
+                            this.regions[key].checked = 0;
 
                             Vue.toast('Article dooh region deleted successfully', {
                                 className: ['nau_toast', 'nau_success'],

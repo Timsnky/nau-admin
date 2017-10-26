@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="author">Author</label>
+                    <label for="author">Autor</label>
                     <dropdown-users
                         :users="users"
                         :newAssignment="newAssignment"

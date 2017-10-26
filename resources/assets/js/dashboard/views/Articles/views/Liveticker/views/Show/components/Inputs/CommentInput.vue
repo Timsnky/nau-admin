@@ -50,7 +50,7 @@
             Api.http
                 .get(`/articles/${this.$route.params.article}/comments`)
                 .then(response => {
-                    this.comments = response.data;
+                    this.comments = response.data.comments;
                 });
         },
     }

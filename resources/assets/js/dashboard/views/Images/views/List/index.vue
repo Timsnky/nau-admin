@@ -17,7 +17,7 @@
             <div class="col-md-6 text-right">
                 <router-link
                     :to="{name: 'images.create'}"
-                    class="btn btn-primary pull-right">
+                    class="btn btn-primary">
                     Bild hochladen
                 </router-link>
             </div>
@@ -55,7 +55,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
     import ImageSelectModal from 'dashboard/components/ImageSelectModal';
 
     export default {
@@ -91,7 +90,6 @@
 
         components: {
             Item,
-            Pagination,
             ImageSelectModal
         },
 
