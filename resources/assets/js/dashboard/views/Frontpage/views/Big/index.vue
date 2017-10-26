@@ -4,10 +4,10 @@
 
         <div class="row">
             <div class="col-md-8">
-                <button v-if="!image" type="button" class="btn btn-primary">
+                <button v-if="image == null" @click="showImageSelectionModal" type="button" class="btn btn-primary btn-lg">
                     Big Bild hochladen
                 </button>
-                <div class="big" :style="{'background-image': 'url(' + big.image + ')'}" v-else>
+                <div class="big" :style="{'background-image': 'url(' + image.url + ')'}" v-else>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="half">
@@ -34,16 +34,11 @@
             </div>
 
             <div class="col-md-4">
-                <div v-if="hasBig()">
+                <div>
                     <div class="form-group">
-                        <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig">Big entfernen</button>
+                        <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig"><i class="fa fa-trash"></i> Big entfernen</button>
                     </div>
-                    <article-element :article="big.article" />
-                    <div>
-                        <h5>Position: {{ big.position == 1 ? 'oben' : 'unten' }}</h5>
-                    </div>
-                </div>
-                <div v-else>
+
                     <div class="form-group">
                         <label>Position</label>
                         <select v-model="position" class="form-control">
@@ -53,45 +48,52 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary" :disabled="validate" @click="createBig()">Big erstellen</button>
+                        <button type="button" class="btn btn-primary" :disabled="!validate || this.saving" @click="createBig()">
+                            <i v-if="!saving" class="fa fa-floppy-o"></i>
+                            <i v-if="saving" class="fa fa-spinner fa-spin"></i>
+                            Big speichern
+                        </button>
+                    </div>
+
+                    <div v-if="!validate" class="note note-info">
+                        <h4 class="block">Information</h4>
+                        <p>Um den Big speichern zu können müssen alle 5 Artikel felder ausgefüllt sein.</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <image-select-modal></image-select-modal>
     </div>
 </template>
 
 <script>
     import Article from '../../components/Article';
     import ArticleDropdown from './components/ArticleDropdown';
+    import ImageSelectModal from 'dashboard/components/ImageSelectModal';
 
     export default {
         data() {
             return {
                 articles: [{}, {}, {}, {}, {}],
                 image: null,
-                big: {},
                 options: [],
                 selectedArticle: {},
                 position: 1,
+                saving: false,
             }
         },
 
         components: {
             'article-element': Article,
-            'article-dropdown': ArticleDropdown,
+            ArticleDropdown,
+            ImageSelectModal,
         },
 
-        methods: {
-            hasBig() {
-                return !_.isEmpty(this.big);
-            },
-
-            createBig() {
-                Api.http.post(`/big/${this.selectedArticle.id}`, {position: this.position})
-                .then((response) => {
-                    this.big = response.data;
-                });
+        computed: {
+            selectedImageId()
+            {
+                return Api.getImage();
             },
 
             validate() {
@@ -101,17 +103,71 @@
                     return false;
                 }
 
-                this.articles.each((article) => {
-                    if(_.isEmpty(this.big)) {
+                this.articles.forEach((article) => {
+                    if(_.isEmpty(article)) {
                         ret = false;
                     }
                 });
 
                 return ret;
             },
+        },
+
+        watch: {
+            selectedImageId(image) {
+                if(image === null) {
+                    return;
+                }
+
+                this.getImage(image).then(({data}) => {
+                    this.image = data;
+                });
+            }
+        },
+
+        methods: {
+            getImage(id) {
+                return Api.http.get(`/images/${id}`);
+            },
+
+            showImageSelectionModal()
+            {
+                Api.resetImage();
+                Api.setImageType(2);
+                this.$emit('imageTypeChange');
+                $('#imageSelectionModal').modal('show');
+            },
+
+            createBig() {
+                this.saving = true;
+                Api.http.post(`/big`, {
+                    articles: this.articles.map((article) => {
+                        return article.id;
+                    }),
+                    image: this.image.id,
+                    position: this.position
+                })
+                .then(({data}) => {
+                    this.image = data.image;
+                    this.articles = data.articles;
+                    this.position = data.position;
+                    this.saving = false;
+                    swal(
+                        'Erfolgreich!',
+                        'Der Big wurde gespeichert.',
+                        'success'
+                    )
+                })
+                .catch((error) => {
+                    console.error(error);
+                    this.saving = false;
+                    Vue.toast('Big konnte nicht gespeichert werden.', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                });
+            },
 
             removeBig() {
-                var vm = this;
                 swal({
                     title: 'Sind Sie sicher,',
                     text: "dass der Big Artikel entfernt werden soll?",
@@ -121,10 +177,11 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ja, entfernen',
                     cancelButtonText: 'Abbrechen',
-                }).then(function () {
+                }).then(() => {
                     Api.http.delete('/big')
                     .then(() => {
-                        vm.big = null;
+                        this.articles = [{}, {}, {}, {}, {}];
+                        this.image = null;
                         swal(
                             'Erfolgreich!',
                             'Der Big wurde entfernt.',
@@ -139,8 +196,10 @@
         mounted() {
             Api.http
             .get(`/big`)
-            .then(response => {
-                this.big = response.data;
+            .then(({data}) => {
+                this.image = data.image;
+                this.articles = data.articles;
+                this.position = data.position;
             });
         },
     }
