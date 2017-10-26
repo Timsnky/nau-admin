@@ -138,6 +138,14 @@
                     </a>
                 </router-link>
 
+                <!--Surveys -->
+                <router-link :to="{name: 'sportticker.replacements'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-futbol-o"></i>
+                        <span class="title">Sport Ticker</span>
+                    </a>
+                </router-link>
+
                 <!--Frontpage -->
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link nav-toggle">

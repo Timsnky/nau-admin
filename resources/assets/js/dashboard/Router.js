@@ -267,6 +267,22 @@ let routes = [{
     }],
 },
 {
+    path: '/sport-tickers',
+    component: require('./views/SportTicker'),
+    children: [
+        {
+            path: '/replacements',
+            name: 'sportticker.replacements',
+            component: require('./views/SportTicker/views/Replacements'),
+        },
+        {
+            path: '/replacements/:id/edit',
+            name: 'sportticker.replacements.edit',
+            component: require('./views/SportTicker/views/Replacements/views/Edit'),
+        },
+    ],
+},
+{
     path: "*",
     component: require('./views/Error'),
 }
