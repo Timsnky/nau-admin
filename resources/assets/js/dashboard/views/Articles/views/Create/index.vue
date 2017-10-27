@@ -141,6 +141,21 @@
                                         class="form-control">
                                 <character-counter :limit="100" :itemString="article.seo_title"></character-counter>
                             </div>
+
+                            <div class="form-group" style="margin-top: 4em">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label for="notes">Notizen</label>
+                                    </div>
+
+                                    <div class="col-xs-6">
+                                        <div ref="notes-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
+                                            <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Fett</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <textarea id="notes" ref="notes" v-model="article.notes" class="form-control" placeholder="Notizen zum Artikel" rows="8"></textarea>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button
@@ -825,6 +840,7 @@
                     internal_dateline: '',
                     internal_title: '',
                     lead: '',
+                    notes: '',
                     id: null,
                     published_at: null,
                     order_date: null,

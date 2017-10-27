@@ -34,6 +34,7 @@ let initializationMixin = {
                         this.initializeArticleInformants(id);
                         this.initializeArticleRegions(id);
                         this.initializeArticleElements(id);
+                        this.initializeEditors(id);
                     } else {
                         Vue.toast('Error in retrieving the article for edit. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
@@ -243,7 +244,8 @@ let initializationMixin = {
          */
         //Initialize the editors when creating an article
         initializeEditors() {
-            this.initializeLeadEditor(this);
+            // this.initializeLeadEditor(this);
+            this.initializeNotesEditor(this);
         },
 
         //Initialize lead editor
@@ -263,6 +265,21 @@ let initializationMixin = {
             });
 
             this.leadEditor = leadEditor;
+        },
+
+        initializeNotesEditor(vm) {
+            let editor = new wysihtml5.Editor(this.$refs.notes, {
+                toolbar: this.$refs['notes-toolbar'],
+                parserRules: wysihtml5ParserRules,
+            }).on("load", function() {
+                $(this.composer.editableArea).contents().find('body').on("keyup", function(event) {
+                    vm.article.notes = this.getValue();
+                });
+            }).on("change", function() {
+                vm.article.notes = this.getValue();
+            });
+
+            this.notesEditor = editor;
         },
     }
 };
