@@ -194,10 +194,11 @@
         },
 
         mounted() {
+            Api.resetImage();
             Api.http
             .get(`/big`)
-            .then(({data, status_code}) => {
-                if(status_code === 200) {
+            .then(({data, status}) => {
+                if(status === 200) {
                     this.image = data.image;
                     this.articles = data.articles;
                     this.position = data.position;
