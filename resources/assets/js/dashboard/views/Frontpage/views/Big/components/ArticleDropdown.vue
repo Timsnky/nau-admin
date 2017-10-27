@@ -16,7 +16,7 @@
         :internal-search="false"
         @search-change="searchArticle">
         <template slot="option" scope="props">
-            <img class="option-image" width="140" height="70" :src="props.option.teaser.url + '?w=140&h70'" :alt="props.option.title">
+            <img class="option-image" width="140" height="70" :src="(props.option.teaser ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
             <div class="option-desc">
                 <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
             </div>
@@ -54,8 +54,9 @@
                     return;
                 }
 
-                Api.http.get(`/articles?search=${query}&teaser=1`)
+                Api.http.get(`/articles?search=${query}&status=published`)
                 .then((response) => {
+                    console.log(response.data);
                     this.options = response.data.data;
                     this.isLoading = false
                 })

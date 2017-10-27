@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" v-if="image && image.id">
                 <div>
                     <div class="form-group">
                         <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig"><i class="fa fa-trash"></i> Big entfernen</button>
@@ -196,10 +196,13 @@
         mounted() {
             Api.http
             .get(`/big`)
-            .then(({data}) => {
-                this.image = data.image;
-                this.articles = data.articles;
-                this.position = data.position;
+            .then(({data, status_code}) => {
+                if(status_code === 200) {
+                    this.image = data.image;
+                    this.articles = data.articles;
+                    this.position = data.position;
+                    this.saving = false;
+                }
             });
         },
     }
