@@ -103,11 +103,7 @@
                                 <div v-for="video in videos" class="col-md-6 col-lg-6 col-sm-6">
                                     <div class="image_section_left video_chooser_section">
                                         <div class="image_selection_section_image">
-                                            <video controls :poser="video.thumbnail" v-if="video.processed">
-                                                <source :src="video.urls[0]" type="video/mp4">
-                                                <source :src="video.urls[1]" type="video/webm">
-                                            </video>
-                                            <img v-else :src="video.thumbnail">
+                                            <img :src="video.thumbnail">
                                         </div>
                                         <div class="image_section_details">
                                             <p><strong>{{ video.name }}</strong></p>
