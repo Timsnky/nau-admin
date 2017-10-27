@@ -95,6 +95,10 @@ let routes = [{
         path: ':articleID/edit',
         name: 'topics.articles.edit',
         component: require('./views/TopicsArticles/views/Edit'),
+    }, {
+        path: 'link',
+        name: 'topics.articles.link',
+        component: require('./views/TopicsArticles/views/Link'),
     }],
 }, {
     path: '/resource-management',

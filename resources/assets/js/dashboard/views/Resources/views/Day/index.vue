@@ -83,7 +83,13 @@
                                 <router-link
                                     :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
                                     class="btn btn-primary">
-                                    <i class="fa fa-newspaper-o"></i> Artikel hinzufügen
+                                    <i class="fa fa-newspaper-o"></i> Neuen Artikel hinzufügen
+                                </router-link>
+
+                                <router-link
+                                    :to="{name: 'topics.articles.link', params: { topicID: topic.id }, query: { date }}"
+                                    class="btn btn-primary">
+                                    <i class="fa fa-newspaper-o"></i> Bestehenden Artikel hinzufügen
                                 </router-link>
                             </div>
                         </div>
