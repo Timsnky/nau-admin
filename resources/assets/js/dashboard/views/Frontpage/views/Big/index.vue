@@ -4,10 +4,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <button v-if="image == null" @click="showImageSelectionModal" type="button" class="btn btn-primary btn-lg">
-                    Big Bild hochladen
-                </button>
-                <div class="big" :style="{'background-image': 'url(' + image.url + ')'}" v-else>
+                <div class="big" :style="{'background-image': 'url(' + image.url + ')'}" v-if="image !== null">
                     <div class="ratio"></div>
                     <div class="big-column">
                         <div class="half">
@@ -32,26 +29,31 @@
                 </div>
             </div>
 
-            <div class="col-md-4" v-if="image && image.id">
-                <div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig"><i class="fa fa-trash"></i> Big entfernen</button>
-                    </div>
-
-                    <div class="form-group">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <button @click="showImageSelectionModal" type="button" class="btn btn-block btn-success btn-lg">
+                        <i class="fa fa-upload"></i> Big Bild <span v-if="image">ändern</span><span v-else>hochladen</span>
+                    </button>
+                </div>
+                <div v-if="image && image.id">
+                    <!-- <div class="form-group">
                         <label>Position</label>
                         <select v-model="position" class="form-control">
                             <option value="1">Oben</option>
                             <option value="2">Unten</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary" :disabled="!validate || this.saving" @click="createBig()">
+                        <button type="button" class="btn btn-lg btn-primary btn-block" :disabled="!validate || this.saving" @click="createBig()">
                             <i v-if="!saving" class="fa fa-floppy-o"></i>
                             <i v-if="saving" class="fa fa-spinner fa-spin"></i>
                             Big speichern
                         </button>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-danger btn-block btn-lg" @click="removeBig"><i class="fa fa-trash"></i> Big entfernen</button>
                     </div>
 
                     <div v-if="!validate" class="note note-info">
@@ -78,7 +80,7 @@
                 image: null,
                 options: [],
                 selectedArticle: {},
-                position: 1,
+                position: 2,
                 saving: false,
             }
         },
