@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div  class="form-group">
-                        <label for="name">Bild Type *</label>
+                        <label for="name">Bild Typ *</label>
                         <select class="form-control helper_input" @change="imageTypeSelected()" v-model="imageType">
                             <option v-bind:value="type" v-for="type in imageTypes">
                                 {{ type.name}}

@@ -81,7 +81,7 @@ class Api {
     }
 
     getAvailableImageTypes() {
-        return this.store.state.imageTypes;
+        return this.store.state.availableImageTypes;
     }
 
     setImageType(type) {
