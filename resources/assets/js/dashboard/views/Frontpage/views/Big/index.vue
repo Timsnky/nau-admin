@@ -8,26 +8,25 @@
                     Big Bild hochladen
                 </button>
                 <div class="big" :style="{'background-image': 'url(' + image.url + ')'}" v-else>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="half">
-                                <article-dropdown v-model="articles[0]"></article-dropdown>
-                            </div>
-                            <div class="half">
-                                <article-dropdown v-model="articles[1]"></article-dropdown>
-                            </div>
+                    <div class="ratio"></div>
+                    <div class="big-column">
+                        <div class="half">
+                            <article-dropdown v-model="articles[0]"></article-dropdown>
                         </div>
+                        <div class="half">
+                            <article-dropdown v-model="articles[1]"></article-dropdown>
+                        </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <div class="third">
-                                <article-dropdown v-model="articles[2]"></article-dropdown>
-                            </div>
-                            <div class="third">
-                                <article-dropdown v-model="articles[3]"></article-dropdown>
-                            </div>
-                            <div class="third">
-                                <article-dropdown v-model="articles[4]"></article-dropdown>
-                            </div>
+                    <div class="big-column">
+                        <div class="third">
+                            <article-dropdown v-model="articles[2]"></article-dropdown>
+                        </div>
+                        <div class="third">
+                            <article-dropdown v-model="articles[3]"></article-dropdown>
+                        </div>
+                        <div class="third">
+                            <article-dropdown v-model="articles[4]"></article-dropdown>
                         </div>
                     </div>
                 </div>
@@ -211,17 +210,18 @@
 
 <style lang="scss" scoped>
     .big {
-        height: 600px;
+        display: flex;
+        background-size: cover;
+        background-position: center;
 
-        .col-md-6 {
+        .ratio {
+            // enforce 2:1 aspect ratio
+            padding-bottom: 50%;
+        }
 
-            &:first-of-type {
-                padding-right: 0;
-            }
-
-            &:last-of-type {
-                padding-left: 0;
-            }
+        .big-column {
+            width: 50%;
+            display: inline-block;
         }
 
         .half, .third {
@@ -229,11 +229,11 @@
         }
 
         .half {
-            height: 300px;
+            height: 50%;
         }
 
         .third {
-            height: 200px;
+            height: 33.33333%;
         }
     }
 </style>
