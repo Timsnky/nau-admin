@@ -11,6 +11,12 @@ import swal from 'sweetalert2';
 import Multiselect from 'vue-multiselect';
 import Cropper from 'cropperjs';
 
+if(Promise === null) {
+    window.Promise = require('promise-polyfill');
+    var setAsap = require('setasap');
+    Promise._immediateFn = setAsap;
+}
+
 const request = axios.create({
     withCredentials: true,
     baseURL: env.API_DOMAIN,
