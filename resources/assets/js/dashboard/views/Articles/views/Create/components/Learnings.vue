@@ -7,9 +7,9 @@
                 <div class="input-group">
                     <input
                         type="text"
-                        maxlength="100"
+                        maxlength="190"
                         v-model.trim="articleLearnings[index]"
-                        placeholder="Key Fact hinzufügen (max 100 Zeichen)"
+                        placeholder="Key Fact hinzufügen (max 190 Zeichen)"
                         class="form-control">
                     <span class="input-group-btn">
                         <button
@@ -18,7 +18,7 @@
                         type="button"><i class="fa fa-times"></i></button>
                     </span>
                 </div>
-                <character-counter :limit="100" :itemString="articleLearning"></character-counter>
+                <character-counter :limit="190" :itemString="articleLearning"></character-counter>
 
             </div>
         </div>
