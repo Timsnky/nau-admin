@@ -33,7 +33,7 @@
             <div class="col-md-4 text-right">
                 <router-link
                     :to="{name: 'articles.create'}"
-                    class="btn btn-primary pull-right">
+                    class="btn btn-lg blue pull-right">
                     <i class="fa fa-plus"></i>
                     Neuen Artikel erstellen
                 </router-link>
@@ -67,19 +67,19 @@
                 <td>{{ moment(article.published_at).isValid() ? moment(article.published_at).format('DD.MM.YY HH:mm') : '' }}</td>
                 <td><router-link
                         :to="{name: 'articles.edit', params: {id: article.id}}"
-                        class="btn btn-warning">
+                        class="btn default">
                     <i class="fa fa-edit"></i>
                     Bearbeiten
                 </router-link>
                 <router-link
                         :to="{name: 'articles.livetickers', params: {article: article.id}}"
-                        class="btn btn-primary">
+                        class="btn blue">
                     <i class="fa fa-paper-plane"></i>
                     Liveticker
                 </router-link>
                 <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
-                <button v-if="article.article_status.name === 'published'" class="btn btn-danger" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
-                <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn btn-danger" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
+                <button v-if="article.article_status.name === 'published'" class="btn blue-dark" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
+                <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn red" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
                 </td>
             </tr>
             </tbody>
@@ -295,3 +295,9 @@
         }
     }
 </script>
+
+<style lang="scss">
+    .label {
+        font-size: .9em;
+    }
+</style>
