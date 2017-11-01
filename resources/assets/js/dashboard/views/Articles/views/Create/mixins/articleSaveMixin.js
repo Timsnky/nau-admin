@@ -10,7 +10,7 @@ export default {
             } else {
                 this.setSavingDefaults();
                 await this.save()
-                this.$router.push('/articles');
+                this.close();
             }
         },
 
@@ -26,7 +26,7 @@ export default {
                 var user = await this.$refs['verification-modal'].getUserForVerification();
                 await this.save();
                 await Api.http.put(`/articles/${this.article.id}/ready`, {message: user.id});
-                this.$router.push('/articles');
+                this.close();
                 swal('Artikel ist Bereit', '', 'success')
             }
         },
@@ -42,7 +42,7 @@ export default {
                 this.setSavingDefaults();
                 this.article.status = 'verified';
                 await this.save();
-                this.$router.push('/articles');
+                this.close();
                 swal('Artikel ist Verifiziert', '', 'success')
             }
         },
@@ -72,7 +72,7 @@ export default {
                 this.setSavingDefaults();
                 this.article.status = 'published';
                 await this.save();
-                this.$router.push('/articles');
+                this.close();
                 swal('Artikel ist Publiziert', '', 'success')
             }
         },
@@ -276,5 +276,13 @@ export default {
         sendSaveActionEvent(articleId) {
             this.$emit('saveData', articleId);
         },
+
+        close() {
+            if(this.article.community)  {
+                this.$router.push('/community');
+            } else {
+                this.$router.push('/articles');
+            }
+        }
     }
 }

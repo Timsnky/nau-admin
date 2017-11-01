@@ -66,21 +66,17 @@
                 </td>
                 <td>{{ moment(article.published_at).isValid() ? moment(article.published_at).format('DD.MM.YY HH:mm') : '' }}</td>
                 <td class="text-right">
-                    <router-link
-                            :to="{name: 'articles.edit', params: {id: article.id}}"
-                            class="btn default">
-                        <i class="fa fa-edit"></i>
-                        Bearbeiten
-                    </router-link>
-                    <router-link
-                            :to="{name: 'articles.livetickers', params: {article: article.id}}"
-                            class="btn blue">
-                        <i class="fa fa-paper-plane"></i>
-                        Liveticker
-                    </router-link>
-                    <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
                     <button v-if="article.article_status.name === 'published'" class="btn blue-dark" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
-                    <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn red" @click="deleteArticle(article)"><i class="fa fa-trash"></i> Löschen</button>
+                    <div class="btn-group">
+                        <router-link
+                                :to="{name: 'articles.edit', params: {id: article.id}}"
+                                class="btn default">
+                            <i class="fa fa-edit"></i>
+                            Bearbeiten
+                        </router-link>
+                        <button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn red" @click="deleteArticle(article)"><i class="fa fa-trash"></i></button>
+                    </div>
+                    <!-- <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> -->
                 </td>
             </tr>
             </tbody>
@@ -220,25 +216,36 @@
                 return Api.http.get(`/articles?${$.param(params)}`);
             },
 
-            publishArticle(article) {
-                article.published_at = moment().format();
-
-                Api.http
-                    .put(`/articles/${article.id}`, article)
-                    .then(response => {
-                        if(response.status === 200)
-                        {
-                            Vue.toast('Article published successfully', {
-                                className: ['nau_toast', 'nau_success'],
-                            });
+            communityPublishArticle(article)
+            {
+                swal({
+                    title: 'Publizieren',
+                    text: 'Nachricht an den Autor',
+                    type: 'warning',
+                    input: 'text',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Publizieren'
+                }).then((text) => {
+                    Api.http
+                        .put(`/articles/${article.id}/publish`, {
+                            message: text,
+                        })
+                        .then(response => {
+                            if(response.status === 200) {
+                                this.$set(this.articles, this.articles.indexOf(article), response.data);
+                                Vue.toast('Artikel erfolgreich publiziert.', {
+                                    className: ['nau_toast', 'nau_success'],
+                                });
+                            } else {
+                                Vue.toast('Beim publizieren ist ein Fehler aufgetreten.', {
+                                    className: ['nau_toast', 'nau_warning'],
+                                });
+                            }
                         }
-                        else
-                        {
-                            Vue.toast('Error in publishing the article. Please retry again', {
-                                className: ['nau_toast', 'nau_warning'],
-                            });
-                        }
-                    });
+                    );
+                });
             },
 
             unpublishArticle(article) {

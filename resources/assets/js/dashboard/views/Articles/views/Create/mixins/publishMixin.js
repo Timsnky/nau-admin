@@ -4,24 +4,27 @@ let publishMixin = {
          *  ARTICLE AUTHORS
          */
         //Search for an author
-        searchAuthors(query) {
-            this.searchedAuthor.query = query;
+        searchAuthors: _.debounce(function(query) {
+            if(!query) {
+                return;
+            }
+
             this.authorsIsLoading = true;
 
-            if (this.searchedAuthor.promise) {
-                this.searchedAuthor.promise = false;
-
-                setTimeout(() => {
-                    Api.http
-                        .get(`/authors?search=${this.searchedAuthor.query}`)
-                        .then(response => {
-                            this.existingAuthors = response.data;
-                            this.searchedAuthor.promise = true;
-                            this.authorsIsLoading = false;
-                        });
-                }, 400);
+            if(this.article.community) {
+                var url = `/users?search=${query}`;
+            } else {
+                var url = `/authors?search=${query}`;
             }
-        },
+
+            Api.http
+                .get(url)
+                .then(response => {
+                    this.existingAuthors = response.data;
+                    this.searchedAuthor.promise = true;
+                    this.authorsIsLoading = false;
+                });
+        }, 200),
 
         //Save the settings for the article
         saveSettings(articleId) {

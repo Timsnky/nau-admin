@@ -1,57 +1,67 @@
 <template>
     <div>
-        <page-title title="Artikel" sub="Erfassen" />
-
         <div class="note note-danger" v-for="error in errors">
             <h4 class="block">{{ error.title }}</h4>
             <p>{{ error.message }}</p>
         </div>
 
 
-        <div class="row">
+        <div class="row actions">
             <div class="col-md-6">
+                <a
+                    v-if="article.id !== null"
+                    :href="article.preview_url"
+                    target="_blank"
+                    class="btn default blue-stripe">
+                    <i class="fa fa-desktop" aria-hidden="true"></i> Vorschau
+                </a>
+                <router-link
+                    :to="{name: 'articles.livetickers', params: {article: article.id}}"
+                    class="btn default blue-stripe">
+                    <i class="fa fa-paper-plane"></i> Liveticker
+                </router-link>
             </div>
             <div class="col-md-6 text-right">
                 <button
+                    v-if="article.article_status && article.article_status.name == 'draft' && !article.community"
                     type="button"
-                    class="btn btn-primary pull-right margin_left_5"
-                    @click="handleSaveAndExit()">
-                    Speichern & Schliessen
-                </button>
-                <button
-                    v-if="article.article_status && article.article_status.name == 'draft'"
-                    type="button"
-                    class="btn green-meadow pull-right margin_left_5"
+                    class="btn blue-dark margin_left_5"
                     @click="handleSaveAndReady()">
                     Speichern & Ready
                 </button>
                 <button
-                    v-if="article.article_status && article.article_status.name == 'ready'"
+                    v-if="article.article_status && article.article_status.name == 'ready' && !article.community"
                     type="button"
-                    class="btn green-meadow pull-right margin_left_5"
+                    class="btn blue-dark margin_left_5"
                     @click="handleSaveAndVerified()">
                     Speichern & Verifizieren
                 </button>
+                <div class="btn-group" v-if="article.community">
+                    <button v-if="article.article_status.name === 'review'" class="btn blue-dark" @click="communityPublishArticle(article)"><i class="fa fa-thumbs-up"></i> Freischalten</button>
+                    <button v-if="article.article_status.name === 'review'" class="btn red" @click="communityDeclineArticle(article)"><i class="fa fa-thumbs-down"></i> Ablehnen</button>
+                </div>
                 <button
-                    v-if="article.article_status && article.article_status.name == 'verified'"
+                    v-if="article.article_status && (article.article_status.name == 'verified')"
                     type="button"
-                    class="btn green-meadow pull-right margin_left_5"
+                    class="btn blue-dark margin_left_5"
                     @click="handleSaveAndPublish()">
-                    Speichern & Publizieren
+                    <i class="fa fa-paper-plane-o"></i> Speichern & Publizieren
                 </button>
+
                 <button
-                    class="btn btn-primary pull-right margin_left_5"
+                    class="btn blue margin_left_5"
                     @click="handleSubmit()">
                     <i class="fa fa-floppy-o"></i>
                     Speichern
                 </button>
-                <a
-                        v-if="article.id !== null"
-                        :href="article.preview_url"
-                        target="_blank"
-                        class="btn btn-primary pull-right margin_left_5">
-                    <i class="fa fa-desktop" aria-hidden="true"></i> Vorschau
-                </a>
+
+                <button
+                    type="button"
+                    class="btn blue-madison margin_left_5"
+                    @click="handleSaveAndExit()">
+                    Speichern & Schliessen
+                </button>
+
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
@@ -821,6 +831,7 @@
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
     import DoohVideo from './components/DoohVideos';
 //    import InfoBoxes from './components/InfoBoxes';
+    import communityMixin from './mixins/communityMixin';
     import videoMixin from './mixins/videoMixin';
     import imageMixin from './mixins/imageMixin';
     import sliderMixin from './mixins/sliderMixin';
@@ -921,7 +932,8 @@
             initializationMixin,
             publishMixin,
             articleSaveMixin,
-            mainArticleImageMixin
+            mainArticleImageMixin,
+            communityMixin,
         ],
 
         components: {
@@ -1213,6 +1225,7 @@
         beforeDestroy: function ()
         {
             this.leadEditor.destroy();
+            this.notesEditor.destroy();
         }
     }
 </script>
@@ -1440,4 +1453,8 @@
  /*   img {
         max-width: 100%;
     }*/
+
+    .actions {
+        margin-bottom: 1em;
+    }
 </style>
