@@ -165,10 +165,22 @@
                     return false;
                 }
 
-                Promise.all([
+                let promises = [
                     Api.http.delete(`/topics/${this.topicId}/articles/${this.article.id}`),
                     Api.http.put(`/topics/${this.newTopic.id}/articles/${this.article.id}`),
-                ]).then(() => {
+                ];
+
+                if(this.article.published_at) {
+                    var publishedAt = moment(this.article.published_at);
+                    var dateOfNewTopic = moment(this.newTopic.date);
+
+                    publishedAt.day(dateOfNewTopic.day());
+                    publishedAt.month(dateOfNewTopic.month());
+                    publishedAt.year(dateOfNewTopic.year());
+                    promises.push(Api.http.put(`/articles/${this.article.id}`, {published_at: publishedAt.format()}));
+                }
+
+                Promise.all(promises).then(() => {
                     Vue.toast('Artikel verschoben.', {
                         className : ['nau_toast','nau_success'],
                     });
