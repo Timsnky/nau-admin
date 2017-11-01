@@ -20,6 +20,13 @@
                     class="btn default blue-stripe">
                     <i class="fa fa-paper-plane"></i> Liveticker
                 </router-link>
+                <button
+                    type="button"
+                    v-if="editingArticle"
+                    class="btn default blue-stripe"
+                    @click="duplicateArticle()">
+                    <i class="fa fa-copy"></i> Artikel kopieren
+                </button>
             </div>
             <div class="col-md-6 text-right">
                 <button
@@ -57,7 +64,7 @@
 
                 <button
                     type="button"
-                    class="btn blue-madison margin_left_5"
+                    class="btn blue margin_left_5"
                     @click="handleSaveAndExit()">
                     Speichern & Schliessen
                 </button>
@@ -153,32 +160,22 @@
                             </div>
 
                             <div class="form-group" style="margin-top: 4em">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <label for="notes">Notizen</label>
-                                    </div>
+                                <label for="notes">Notizen</label>
 
-                                    <div class="col-xs-6">
-                                        <div ref="notes-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                                            <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Fett</a>
-                                        </div>
-                                    </div>
+                                <div ref="notes-toolbar" style="display: none;">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn blue btn-outline btn-sm"><i class="fa fa-bold"></i></a>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
                                 <textarea id="notes" ref="notes" v-model="article.notes" class="form-control" placeholder="Notizen zum Artikel" rows="8"></textarea>
                             </div>
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                            <button
-                                    type="button"
-                                    v-if="editingArticle"
-                                    class="btn btn-primary"
-                                    @click="duplicateArticle()">
-                                Artikel kopieren
                             </button>
                         </div>
                     </div>
@@ -229,7 +226,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
@@ -248,7 +245,7 @@
                                         <img id="mainImage" v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
+                                <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(1,null)">
                                     Teaser hochladen
                                 </button>
                             </div>
@@ -260,17 +257,17 @@
                                         <img v-if="articleTeaserImage.url" :src="articleTeaserImage.url" alt="">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
+                                <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Top Teaser hochladen
                                 </button>
-                                <!--<button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">-->
+                                <!--<button type="button" class="btn red image_selection_btn" @click="deleteTeaserImage(article.id)">-->
                                     <!--Löschen-->
                                 <!--</button>-->
                             </div>
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
@@ -302,13 +299,13 @@
                                                 <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                 <button
-                                                        class="btn btn-danger btn-sm remove_btn"
+                                                        class="btn red btn-sm remove_btn"
                                                         type="button"
                                                         @click="confirmArticleImageDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                                 <button
-                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        class="btn blue btn-sm remove_btn"
                                                         type="button"
                                                         @click="updateImage(index)">
                                                     Update
@@ -318,13 +315,13 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
+                                    <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(2, null)">
                                         Bilder Hochladen
                                     </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
+                                    <!--<input type="file" class="btn blue" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>-->
+                            <!--<button class="btn blue" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>-->
                         </div>
 
                         <!--Sliders-->
@@ -345,13 +342,13 @@
                                                     <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                     <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                     <button
-                                                            class="btn btn-danger btn-sm remove_btn"
+                                                            class="btn red btn-sm remove_btn"
                                                             type="button"
                                                             @click="confirmSliderImageDelete(sliderIndex, index)">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                     <button
-                                                            class="btn btn-primary btn-sm remove_btn"
+                                                            class="btn blue btn-sm remove_btn"
                                                             type="button"
                                                             @click="updateSliderImage(sliderIndex, index)">
                                                         Update
@@ -361,18 +358,18 @@
                                         </draggable>
                                     </div>
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
+                                        <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
                                             Bilder Hochladen
                                         </button>
-                                        <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
+                                        <button type="button" class="btn red image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
                                             Löschen
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" @click="addArticleSlider()">Diashow hinzufügen
+                            <button type="button" class="btn blue" @click="addArticleSlider()">Diashow hinzufügen
                             </button>
-                            <!--<button class="btn btn-primary" type="button"-->
+                            <!--<button class="btn blue" type="button"-->
                                     <!--:disabled="articleSliders.length == 0 || article.id == null"-->
                                     <!--@click="uploadArticleSliders(article.id)">Save sliders-->
                             <!--</button>-->
@@ -397,13 +394,13 @@
                                                 <input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
                                                 <button
-                                                        class="btn btn-danger btn-sm remove_btn"
+                                                        class="btn red btn-sm remove_btn"
                                                         type="button"
                                                         @click="confirmVideoDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                                 <button
-                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        class="btn blue btn-sm remove_btn"
                                                         type="button"
                                                         @click="updateVideo(index)">
                                                     Update
@@ -413,17 +410,17 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showVideoSelectionModal()">
+                                    <button type="button" class="btn blue image_selection_btn" @click="showVideoSelectionModal()">
                                         Videos Hochladen
                                     </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
+                                    <!--<input type="file" class="btn blue" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
                                 </div>
 
                             </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>-->
+                            <!--<button class="btn blue" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>-->
                         </div>
                         <div class="form-actions">
-                            <button type="button" class="btn btn-primary image_selection_btn" @click="saveArticleMedia(article.id)">
+                            <button type="button" class="btn blue image_selection_btn" @click="saveArticleMedia(article.id)">
                                 Save Media
                             </button>
                         </div>
@@ -603,7 +600,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="button"
                                     @click="saveSettings(article.id)"
                                     :disabled="articleAuthors.length < 1 || article.id == null">
@@ -795,7 +792,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="button"
                                     @click="saveSortedElements(article.id)"
                                     :disabled="article.id == null">

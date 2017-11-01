@@ -12,7 +12,7 @@
                             class="form-control article_input">
                     <button
                             @click="confirmDelete(index)"
-                            class="btn btn-danger btn-sm delete_btn"
+                            class="btn red btn-sm delete_btn"
                             type="button"> x
                     </button>
                 </div>
@@ -24,13 +24,13 @@
         <div class="form-actions item_add">
             <button
                     @click="addArticleSocialMedia()"
-                    class="btn btn-primary item_add_btn"
+                    class="btn blue item_add_btn"
                     type="button"> +
             </button>
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleSocialMedias(articleId)"
                     :disabled="articleId == null">

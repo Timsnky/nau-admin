@@ -40,12 +40,12 @@
             </div>
         </div>
         <div class="form-actions">
-            <button v-if="! doohVideo.id" type="button" class="btn btn-primary image_selection_btn" @click="showVideoSelectionModal()">
+            <button v-if="! doohVideo.id" type="button" class="btn blue image_selection_btn" @click="showVideoSelectionModal()">
                 Select Video
             </button>
             <button
                     v-if="doohVideo.id"
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="handleSubmit(articleId)">
                 Speichern

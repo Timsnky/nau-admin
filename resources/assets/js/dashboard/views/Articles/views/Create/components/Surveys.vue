@@ -3,10 +3,10 @@
         <div class="form-group surveys_section">
             <h4>Votings</h4>
             <div class="form-actions selection_sections">
-                <button type="button" class="btn btn-primary image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
+                <button type="button" class="btn blue image_selection_btn" data-toggle="modal" data-target="#surveySelectionModal">
                     Voting auswählen
                 </button>
-                <button type="button" class="btn btn-primary image_selection_btn" :disabled="addingSurvey" @click="showAddSurvey()">
+                <button type="button" class="btn blue image_selection_btn" :disabled="addingSurvey" @click="showAddSurvey()">
                     Voting hinzufügen
                 </button>
                 <survey-select></survey-select>
@@ -31,7 +31,7 @@
                                    placeholder="Antwort"
                                    class="form-control">
                             <span class="input-group-btn">
-                                        <button class="btn btn-danger" type="button" @click="removeAnswer(key)">
+                                        <button class="btn red" type="button" @click="removeAnswer(key)">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </span>
@@ -39,20 +39,20 @@
                     </div>
                 </div>
                 <div class="form-group" v-show="survey && survey.answers.length <= 5">
-                    <button type="button" class="btn btn-block btn-primary" @click="addAnswer()">
+                    <button type="button" class="btn btn-block blue" @click="addAnswer()">
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
                 <div class="form-actions">
                     <button
                             @click="closeAddSurvey()"
-                            class="btn btn-danger"
+                            class="btn red"
                             type="button">
                         Schliessen
                     </button>
                     <button
                             @click="saveSurvey()"
-                            class="btn btn-primary"
+                            class="btn blue"
                             type="button"
                             :disabled="! survey.question || disableSaveSurvey">
                         Voting speichern
@@ -74,7 +74,7 @@
                         <td>
                             <div class="form-group">
                                 <button
-                                        class="btn btn-danger btn-sm remove_btn"
+                                        class="btn red btn-sm remove_btn"
                                         type="button"
                                         @click="confirmDelete(index)">
                                     <i class="fa fa-trash"></i>
@@ -92,7 +92,7 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-primary" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Votings speichern</button>
+        <button class="btn blue" type="button" :disabled="articleSurveys.length == 0 || articleId == null" @click="saveArticleSurveys(articleId)">Votings speichern</button>
     </div>
 </template>
 
