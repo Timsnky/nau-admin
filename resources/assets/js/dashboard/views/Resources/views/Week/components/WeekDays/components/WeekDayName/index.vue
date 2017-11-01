@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'is-today': isToday, 'day': true, 'day__name': true, 'm-grid-col': true, 'm-grid-col-middle': true, 'm-grid-col-left': true}">
+    <div :class="{'bg-font-blue-hoki bg-blue-hoki': isToday, 'bg-font-default bg-default': !isToday, 'day': true, 'day__name': true, 'm-grid-col': true, 'm-grid-col-middle': true, 'm-grid-col-left': true}">
         <router-link :to="url">{{ dayName }}</router-link>
     </div>
 </template>
@@ -33,22 +33,14 @@
 
 <style lang="scss" scoped>
     .day__name {
-        background-color: #cccccc;
         height: auto;
+        font-weight: bold;
         padding: 0;
 
         a {
-            color: #333333;
+            color: currentColor;
             display: block;
             padding: 20px 10px;
-
-            &:hover {
-                color: #333333;
-            }
         }
-    }
-
-    .is-today {
-        background-color: darkgray;
     }
 </style>

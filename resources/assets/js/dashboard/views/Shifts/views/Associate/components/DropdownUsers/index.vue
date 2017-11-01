@@ -1,13 +1,8 @@
 <template>
-    <select
-        class="form-control selectpicker"
-        :disabled="options.length == 0">
-        <option
-            v-for="(option, index) in options"
-            :key="option.id"
-            :value="index"
-            :selected="option.selected">
-            {{ option.display_name }}
+    <select class="form-control" v-model="selected">
+        <option disabled :value="null">Benutzer wählen</option>
+        <option v-for="user in users" :value="user">
+            {{ user.name }}
         </option>
     </select>
 </template>
@@ -16,46 +11,29 @@
     export default {
         props: {
             users: Array,
-            assignments: Array,
-            newAssignment: {}
+            value: Object,
         },
 
-        mounted() {
-            const $selectpicker = $(this.$el);
-
-            $selectpicker
-                .selectpicker({
-                    title: 'Select an author'
-                })
-                .on('changed.bs.select', () => this.$emit('selectAuthor', this.users[$selectpicker.val()]));
+        data() {
+            return {
+                selected: null,
+            };
         },
 
-        updated () {
-            $(this.$el).selectpicker('refresh');
-        },
+        watch: {
+            selected(value) {
+                this.$emit('input', value);
+            },
 
-        computed: {
-            options() {
-                const options = this.users.map(user => ({
-                    id: user.id,
-                    display_name: user.display_name,
-                    selected: user.id === this.newAssignment.user_id
-                }));
-
-                return options;
+            value(value) {
+                if(this.selected != value) {
+                    this.selected = value;
+                }
             }
         },
 
-        destroyed() {
-            $(this.$el)
-                .off()
-                .selectpicker('destroy');
+        created() {
+            this.selected = this.value;
         }
     }
 </script>
-
-<style scoped>
-    .selectpicker {
-        z-index: 0 !important;
-    }
-</style>

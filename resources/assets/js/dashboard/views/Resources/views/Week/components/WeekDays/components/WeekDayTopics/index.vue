@@ -22,8 +22,6 @@
 
 <style lang="scss">
     .day__topics {
-        background-color: #eeeeee;
-
         ul {
             margin: 0;
             padding-left: 15px;

@@ -34,32 +34,6 @@
                     </tbody>
                 </table>
 
-
-                    <!-- <li
-                        class="list-group-item clearfix"
-                        v-for="(shift, index) in day.shifts"
-                        v-if="shift.assigned"
-                        :key="index">
-                        {{ shift.name }} : {{ shift.assigned.name }}
-                        <router-link
-                            :to="{name: 'shifts.associate', params: { id: shift.id }}"
-                            class="btn btn-xs btn-warning pull-right">
-                            Bearbeiten
-                        </router-link>
-                    </li>
-                    <li
-                        class="list-group-item clearfix"
-                        v-for="(shift, index) in day.shifts"
-                        v-if="!shift.assigned"
-                        :key="index">
-                        {{ shift.name }}
-                        <router-link
-                            :to="{name: 'shifts.associate', params: { date, id: shift.id }}"
-                            class="btn btn-xs default pull-right">
-                            <i class="fa fa-user"></i> Zuweisen
-                        </router-link>
-                    </li> -->
-
             </div>
             <div class="col-md-8">
                 <h3 class="title">
