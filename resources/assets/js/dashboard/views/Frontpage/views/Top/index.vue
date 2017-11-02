@@ -4,6 +4,12 @@
     export default {
         mixins: [Top],
 
+        data() {
+            return {
+                limit: 11,
+            };
+        },
+
         methods: {
             async getArticles(search) {
                 var response = await Api.http.get(`/articles?search=${search}&community=0&teaser=1&status=published`);

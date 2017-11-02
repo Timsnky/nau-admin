@@ -1,7 +1,5 @@
 <template>
     <div>
-        <page-title title="Frontpage" sub="Top" />
-
         <div class="row">
             <div class="col-md-8 scroll">
                 <h2>Sortierung</h2><p>Drag and Drop um die Position zu ändern</p>
@@ -10,7 +8,7 @@
                         <hr>
                         <button type="button" class="btn btn-block btn-success" @click="addAtIndex(key)"><i class="fa fa-plus"></i> Hinzufügen</button>
                         <hr>
-                        <div :class="{'bg-danger': key > 7}">
+                        <div :class="{'bg-danger': key > limit - 1}">
                             <h2 class="ranking-number">{{ key + 1 }}</h2>
                             <img :src="article.teaser.url + '?w=140&h70'" height="50px" width="100px" alt="Artikel Bild"/>
                             <div class="row-text">
@@ -118,6 +116,7 @@
             return {
                 articles: [],
                 options: [],
+                limit: 8,
                 selectedArticle: {},
                 isLoading: false,
                 showAddDropdown: false,
@@ -184,7 +183,7 @@
             },
 
             save() {
-                this.saveTopArticles(this.articles.slice(0, 8))
+                this.saveTopArticles(this.articles.slice(0, this.limit))
                 .then(response => {
                     Vue.toast('Top Artikel erfolgreich gespeichert.', {
                         className: ['nau_toast', 'nau_success'],
