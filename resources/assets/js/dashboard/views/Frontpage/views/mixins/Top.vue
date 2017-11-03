@@ -224,15 +224,15 @@
             },
 
             save() {
-                var articles = {};
+                var articles = [];
                 this.layouts.filter((layout) => {
                     // Filter out layouts that can not be edited
                     return layout.editable;
                 }).forEach((layout, key) => {
-                    articles[this.topArticleIds[layout.articleIndex]] = {
+                    articles.push({
+                        id: this.topArticleIds[layout.articleIndex],
                         article_id: this.articles[key].id,
-                        order: layout.articleIndex,
-                    };
+                    });
                 })
 
                 this.saveTopArticles(articles)
