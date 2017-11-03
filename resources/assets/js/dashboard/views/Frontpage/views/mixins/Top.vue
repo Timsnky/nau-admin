@@ -172,7 +172,7 @@
                         var result = true;
 
                         // Exclude already used articles
-                        this.articles.forEach((topArticle) => {
+                        this.allArticles.forEach((topArticle) => {
                             if(topArticle.id === article.id) {
                                 result = false;
                             }
@@ -227,8 +227,6 @@
                         order: layout.articleIndex,
                     };
                 })
-
-                console.log(articles);
 
                 this.saveTopArticles(articles)
                 .then(response => {
