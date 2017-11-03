@@ -174,11 +174,6 @@
                                 <span class="title">Top Videos</span>
                             </a>
                         </router-link>
-                        <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
-                            <a>
-                                <span class="title">Top Artikel Old</span>
-                            </a>
-                        </router-link>
                         <router-link :to="{name: 'frontpage.top.community'}" tag="li" exact>
                             <a>
                                 <span class="title">Community Top Artikel</span>

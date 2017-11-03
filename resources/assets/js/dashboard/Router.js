@@ -248,11 +248,6 @@ let routes = [{
             path: '/big',
             name: 'frontpage.big',
             component: require('./views/Frontpage/views/Big'),
-        },
-        {
-            path: '/top',
-            name: 'frontpage.top',
-            component: require('./views/Frontpage/views/Top'),
         }, {
             path: '/top-breaking',
             name: 'frontpage.top.breaking',
