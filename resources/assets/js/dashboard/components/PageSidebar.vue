@@ -159,9 +159,24 @@
                                 <span class="title">Big</span>
                             </a>
                         </router-link>
+                        <router-link :to="{name: 'frontpage.top.breaking'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Breaking News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.news'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.video'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Videos</span>
+                            </a>
+                        </router-link>
                         <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
                             <a>
-                                <span class="title">Top Artikel</span>
+                                <span class="title">Top Artikel Old</span>
                             </a>
                         </router-link>
                         <router-link :to="{name: 'frontpage.top.community'}" tag="li" exact>

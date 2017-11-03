@@ -253,8 +253,19 @@ let routes = [{
             path: '/top',
             name: 'frontpage.top',
             component: require('./views/Frontpage/views/Top'),
-        },
-        {
+        }, {
+            path: '/top-breaking',
+            name: 'frontpage.top.breaking',
+            component: require('./views/Frontpage/views/TopBreaking'),
+        }, {
+            path: '/top-videos',
+            name: 'frontpage.top.video',
+            component: require('./views/Frontpage/views/TopVideo'),
+        }, {
+            path: '/top-news',
+            name: 'frontpage.top.news',
+            component: require('./views/Frontpage/views/TopNews'),
+        }, {
             path: '/top/community',
             name: 'frontpage.top.community',
             component: require('./views/Frontpage/views/TopCommunity'),

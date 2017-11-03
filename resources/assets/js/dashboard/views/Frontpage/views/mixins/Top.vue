@@ -1,40 +1,33 @@
 <template>
     <div>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
         <div class="row">
-            <div class="col-md-8 scroll">
-                <h2>Sortierung</h2><p>Drag and Drop um die Position zu ändern</p>
-                <draggable v-model="articles">
-                    <div v-for="(article, key) in articles" :key="article.id">
-                        <hr>
-                        <button type="button" class="btn btn-block btn-success" @click="addAtIndex(key)"><i class="fa fa-plus"></i> Hinzufügen</button>
-                        <hr>
-                        <div :class="{'bg-danger': key > limit - 1}">
-                            <h2 class="ranking-number">{{ key + 1 }}</h2>
-                            <img :src="article.teaser.url + '?w=140&h70'" height="50px" width="100px" alt="Artikel Bild"/>
-                            <div class="row-text">
-                                <p class="aritcle-title">{{ article.dateline }} - <b>{{ article.title }}</b></p>
-                                <p class="aritcle-publish-date">Publiziert am: {{ moment(article.published_at).format('DD.MM.YY HH:mm') }}</p>
-                            </div>
+            <div class="col-md-6">
+                <div class="row  equal">
 
-                            <span class="form-group pull-right">
-                                <button type="button" class="btn btn-primary" @click="replaceAtIndex(key)">Ersetzen</button>
-                            </span>
-                        </div>
-                    </div>
-                </draggable>
+                    <top-article
+                        v-for="(layout, key) in layouts"
+                        v-if="topArticles[layout.articleIndex]"
+                        :key="key"
+                        :layout="layout"
+                        :article="topArticles[layout.articleIndex].article"
+                        @add="addAtIndex(layout.articleIndex)"
+                        @replace="replaceAtIndex(layout.articleIndex)"
+                    />
+
+                </div>
             </div>
-
             <div class="col-md-4 sticky" v-if="!showReplaceDropdown && !showAddDropdown">
                 <h3>Aktuelle Sortierung speichern</h3>
                 <div class="form-group">
-                    <button type="button" class="btn btn-lg btn-primary btn-block" @click="save()">Speichern</button>
+                    <button type="button" class="btn btn-lg blue btn-block" @click="save()">Speichern</button>
                 </div>
             </div>
 
             <div class="col-md-4 sticky" v-if="showReplaceDropdown">
                 <div class="form-group">
                     <h3>Artikel ersetzen</h3>
-                    <h5>{{ articles[selectedIndex].title }}</h5>
+                    <h5>{{ topArticles[selectedIndex].title }}</h5>
                     <span class="control-label">Artikel</span>
                     <multiselect
                     v-model="selectedArticle"
@@ -52,8 +45,43 @@
                     :show-labels="false"
                     :internal-search="false"
                     @search-change="searchArticle">
+                        <template slot="option" scope="props">
+                            <img class="option-image" width="140" height="70" :src="(this.layouts[0].indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                            <div class="option-desc">
+                                <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
+                            </div>
+                        </template>
+                        <span slot="noResult">Keine Artikel gefunden</span>
+                    </multiselect>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn blue" @click="replaceTop()" :disabled="Object.keys(selectedArticle).length === 0">Ersetzen</button>
+                    <button type="button" class="btn red" @click="cancel()">Abbrechen</button>
+                </div>
+            </div>
+
+            <div class="col-md-4 sticky" v-if="showAddDropdown">
+                <h3>Artikel hinzufügen an Position {{ selectedIndex + 1 }}</h3>
+                <div class="form-group">
+                    <span class="control-label">Artikel</span>
+                    <multiselect
+                    v-model="selectedArticle"
+                    placeholder="Artikel Suchen"
+                    label="title"
+                    :max-height="500"
+                    :options="options"
+                    :loading="isLoading"
+                    :options-limit="20"
+                    :clear-on-select="true"
+                    :close-on-select="true"
+                    track-by="id"
+                    open-direction="bottom"
+                    :show-labels="false"
+                    :internal-search="false"
+                    @search-change="searchArticle">
                     <template slot="option" scope="props">
-                        <img class="option-image" width="140" height="70" :src="props.option.teaser.url + '?w=140&h70'" :alt="props.option.title">
+                        <img class="option-image" width="140" height="70" :src="props.option.image.url + '?w=140&h70'" :alt="props.option.title">
                         <div class="option-desc">
                             <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                         </div>
@@ -63,58 +91,56 @@
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @click="replaceTop()" :disabled="Object.keys(selectedArticle).length === 0">Ersetzen</button>
-                <button type="button" class="btn btn-danger" @click="cancel()">Abbrechen</button>
+                <button type="button" class="btn blue" @click="addTop()" :disabled="Object.keys(selectedArticle).length === 0">Hinzufügen</button>
+                <button type="button" class="btn red" @click="cancel()">Abbrechen</button>
             </div>
         </div>
 
-        <div class="col-md-4 sticky" v-if="showAddDropdown">
-            <h3>Artikel hinzufügen an Position {{ selectedIndex + 1 }}</h3>
-            <div class="form-group">
-                <span class="control-label">Artikel</span>
-                <multiselect
-                v-model="selectedArticle"
-                placeholder="Artikel Suchen"
-                label="title"
-                :max-height="500"
-                :options="options"
-                :loading="isLoading"
-                :options-limit="20"
-                :clear-on-select="true"
-                :close-on-select="true"
-                track-by="id"
-                open-direction="bottom"
-                :show-labels="false"
-                :internal-search="false"
-                @search-change="searchArticle">
-                <template slot="option" scope="props">
-                    <img class="option-image" width="140" height="70" :src="props.option.image.url + '?w=140&h70'" :alt="props.option.title">
-                    <div class="option-desc">
-                        <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
-                    </div>
-                </template>
-                <span slot="noResult">Keine Artikel gefunden</span>
-            </multiselect>
-        </div>
-
-        <div class="form-group">
-            <button type="button" class="btn btn-primary" @click="addTop()" :disabled="Object.keys(selectedArticle).length === 0">Hinzufügen</button>
-            <button type="button" class="btn btn-danger" @click="cancel()">Abbrechen</button>
         </div>
     </div>
-
-</div>
-</div>
 </template>
 
 <script>
-    import Article from '../../components/Article';
-    import draggable from 'vuedraggable';
+    import TopArticle from '../components/Article';
 
     export default {
         data() {
             return {
-                articles: [],
+                layouts: [{
+                    editable: true,
+                    class: ['teaser', 'col-md-8']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-6']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-6']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }],
+                topArticles: [],
                 options: [],
                 limit: 8,
                 selectedArticle: {},
@@ -122,12 +148,11 @@
                 showAddDropdown: false,
                 showReplaceDropdown: false,
                 selectedIndex: null,
-            }
+            };
         },
 
         components: {
-            'article-element': Article,
-            draggable,
+            TopArticle
         },
 
         methods: {
@@ -143,8 +168,9 @@
                     this.options = articles.filter((article) => {
                         var result = true;
 
-                        this.articles.forEach((topArticle) => {
-                            if(topArticle.id === article.id) {
+                        // Exclude already used articles
+                        this.topArticles.forEach((topArticle) => {
+                            if(topArticle.article.id === article.id) {
                                 result = false;
                             }
                         });
@@ -157,7 +183,11 @@
             }, 400),
 
             replaceTop() {
-                Vue.set(this.articles, this.selectedIndex, this.selectedArticle);
+                Vue.set(this.topArticles, this.selectedIndex, {
+                    id: this.topArticles[this.selectedIndex].id,
+                    order: this.selectedIndex,
+                    article: this.selectedArticle,
+                });
                 this.selectedIndex = null;
                 this.showReplaceDropdown = false;
                 this.selectedArticle = {};
@@ -176,15 +206,32 @@
             },
 
             addTop() {
-                this.articles.splice(this.selectedIndex, 0, this.selectedArticle);
+                this.topArticles.splice(this.selectedIndex, 0, {
+                    id: null,
+                    order: this.selectedIndex,
+                    article: this.selectedArticle,
+                });
                 this.selectedIndex = null;
                 this.showAddDropdown = false;
                 this.selectedArticle = {};
             },
 
+            cancel() {
+                this.showAddDropdown = false;
+                this.showReplaceDropdown = false;
+            },
+
             save() {
-                this.saveTopArticles(this.articles.slice(0, this.limit))
+                var topArticles = this.layouts.filter((layout) => {
+                    // Filter out layouts that can not be edited
+                    return layout.editable;
+                }).map((layout) => {
+                    return this.topArticles[layout.articleIndex];
+                })
+
+                this.saveTopArticles(topArticles)
                 .then(response => {
+                    this.topArticles = response.data;
                     Vue.toast('Top Artikel erfolgreich gespeichert.', {
                         className: ['nau_toast', 'nau_success'],
                     });
@@ -196,45 +243,25 @@
                 })
             },
 
-            cancel() {
-                this.showAddDropdown = false;
-                this.showReplaceDropdown = false;
-            },
-
-            moment(time) {
-                return moment(time);
+            getTopArticles() {
+                return Api.http.get(this.topArticlesUrl).then((response) => {
+                    return response.data;
+                });
             },
         },
 
         mounted() {
-            this.getTopArticles().then((articles) => {
-                this.articles = articles;
-            });
+
         },
     }
 </script>
 
 <style lang="scss" scoped>
-    .ranking-number {
-        display: inline;
-        margin: 0 .2em 0 0;
-        vertical-align: middle;
-    }
-
     .sticky {
         padding-top: 4em;
         top: 0;
         position: -webkit-sticky;
         position: sticky;
-    }
-
-    .row-text {
-        display: inline-block;
-        vertical-align: middle;
-
-        p {
-            margin: 0 0 .2em 0;
-        }
     }
 
     .multiselect {
