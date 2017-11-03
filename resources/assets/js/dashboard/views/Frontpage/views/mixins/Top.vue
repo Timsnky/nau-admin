@@ -142,6 +142,7 @@
                     class: ['col-md-4']
                 }],
                 topArticleIds: [],
+                notInLayoutArticles: [],
                 articles: [],
                 allArticles: [],
                 options: [],
@@ -178,16 +179,10 @@
                             }
                         });
 
-                        this.allArticles.filter((article, key) => {
-                            let result = false;
-
-                            this.layouts.forEach((layout) => {
-                                if(layout.articleIndex !== key) {
-                                    result = true;
-                                }
-                            });
-
-                            return result;
+                        this.notInLayoutArticles.forEach((notInLayoutArticle) => {
+                            if(notInLayoutArticle.id === article.id) {
+                                result = false;
+                            }
                         });
 
                         return result;
@@ -278,6 +273,18 @@
 
                     this.layouts.forEach((layout) => {
                         if(layout.articleIndex === key) {
+                            exists = true;
+                        }
+                    });
+
+                    return exists;
+                });
+
+                this.notInLayoutArticles = this.allArticles.filter((article, key) => {
+                    var exists = false;
+
+                    this.layouts.forEach((layout) => {
+                        if(layout.articleIndex !== key) {
                             exists = true;
                         }
                     });
