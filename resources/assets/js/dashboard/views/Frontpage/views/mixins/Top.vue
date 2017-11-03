@@ -7,12 +7,12 @@
 
                     <top-article
                         v-for="(layout, key) in layouts"
-                        v-if="topArticles[layout.articleIndex]"
+                        v-if="articles[key]"
                         :key="key"
                         :layout="layout"
-                        :article="topArticles[layout.articleIndex].article"
-                        @add="addAtIndex(layout.articleIndex)"
-                        @replace="replaceAtIndex(layout.articleIndex)"
+                        :article="articles[key]"
+                        @add="addAtIndex(key)"
+                        @replace="replaceAtIndex(key)"
                     />
 
                 </div>
@@ -27,7 +27,7 @@
             <div class="col-md-4 sticky" v-if="showReplaceDropdown">
                 <div class="form-group">
                     <h3>Artikel ersetzen</h3>
-                    <h5>{{ topArticles[selectedIndex].title }}</h5>
+                    <h5>{{ articles[selectedIndex].title }}</h5>
                     <span class="control-label">Artikel</span>
                     <multiselect
                     v-model="selectedArticle"
@@ -140,7 +140,9 @@
                     editable: true,
                     class: ['col-md-4']
                 }],
-                topArticles: [],
+                topArticleIds: [],
+                articles: [],
+                allArticles: [],
                 options: [],
                 limit: 8,
                 selectedArticle: {},
@@ -169,8 +171,8 @@
                         var result = true;
 
                         // Exclude already used articles
-                        this.topArticles.forEach((topArticle) => {
-                            if(topArticle.article.id === article.id) {
+                        this.articles.forEach((topArticle) => {
+                            if(topArticle.id === article.id) {
                                 result = false;
                             }
                         });
@@ -183,11 +185,7 @@
             }, 400),
 
             replaceTop() {
-                Vue.set(this.topArticles, this.selectedIndex, {
-                    id: this.topArticles[this.selectedIndex].id,
-                    order: this.selectedIndex,
-                    article: this.selectedArticle,
-                });
+                Vue.set(this.articles, this.selectedIndex, this.selectedArticle);
                 this.selectedIndex = null;
                 this.showReplaceDropdown = false;
                 this.selectedArticle = {};
@@ -206,11 +204,7 @@
             },
 
             addTop() {
-                this.topArticles.splice(this.selectedIndex, 0, {
-                    id: null,
-                    order: this.selectedIndex,
-                    article: this.selectedArticle,
-                });
+                this.articles.splice(this.selectedIndex, 0, this.selectedArticle);
                 this.selectedIndex = null;
                 this.showAddDropdown = false;
                 this.selectedArticle = {};
@@ -222,16 +216,23 @@
             },
 
             save() {
-                var topArticles = this.layouts.filter((layout) => {
+                var articles = {};
+                this.layouts.filter((layout) => {
                     // Filter out layouts that can not be edited
                     return layout.editable;
-                }).map((layout) => {
-                    return this.topArticles[layout.articleIndex];
+                }).forEach((layout, key) => {
+                    articles[this.topArticleIds[layout.articleIndex]] = {
+                        article_id: this.articles[key].id,
+                        order: layout.articleIndex,
+                    };
                 })
 
-                this.saveTopArticles(topArticles)
+                console.log(articles);
+
+                this.saveTopArticles(articles)
                 .then(response => {
-                    this.topArticles = response.data;
+                    let topArticles = response.data;
+                    this.mapTopArticles(topArticles);
                     Vue.toast('Top Artikel erfolgreich gespeichert.', {
                         className: ['nau_toast', 'nau_success'],
                     });
@@ -241,6 +242,37 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 })
+            },
+
+            saveTopArticles(articles) {
+                return Api.http.put('/top-articles', articles);
+            },
+
+            async loadTopArticles() {
+                var topArticles = await this.getTopArticles()
+                this.mapTopArticles(topArticles);
+            },
+
+            mapTopArticles(topArticles) {
+                this.topArticleIds = topArticles.map((topArticle) => {
+                    return topArticle.id;
+                });
+
+                this.allArticles = topArticles.map((topArticle) => {
+                    return topArticle.article;
+                });
+
+                this.articles = this.allArticles.filter((article, key) => {
+                    var exists = false;
+
+                    this.layouts.forEach((layout) => {
+                        if(layout.articleIndex === key) {
+                            exists = true;
+                        }
+                    });
+
+                    return exists;
+                });
             },
 
             getTopArticles() {

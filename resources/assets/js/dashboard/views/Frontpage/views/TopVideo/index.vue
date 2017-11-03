@@ -20,7 +20,7 @@
         },
 
         async mounted() {
-            this.topArticles = await this.getTopArticles();
+            this.loadTopArticles();
         },
 
         methods: {
@@ -28,20 +28,6 @@
                 var response = await Api.http.get(`/articles?search=${search}&community=0&teaser=1&status=published`);
                 return response.data.data;
             },
-
-            saveTopArticles(topArticles) {
-                let mapped = [];
-
-                topArticles.forEach((topArticle, key) => {
-                    mapped.push({
-                        id: topArticle.id,
-                        article_id: topArticle.article.id,
-                        order: this.layouts[key].articleIndex,
-                    });
-                });
-
-                return Api.http.put('/top-articles', mapped);
-            }
         }
     }
 </script>
