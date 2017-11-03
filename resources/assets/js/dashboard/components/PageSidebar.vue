@@ -154,11 +154,6 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
-                        <router-link :to="{name: 'frontpage.big' }" tag="li" exact>
-                            <a>
-                                <span class="title">Big</span>
-                            </a>
-                        </router-link>
                         <router-link :to="{name: 'frontpage.top.breaking'}" tag="li" exact>
                             <a>
                                 <span class="title">Top Breaking News</span>
