@@ -46,7 +46,7 @@
                     :internal-search="false"
                     @search-change="searchArticle">
                         <template slot="option" scope="props">
-                            <img class="option-image" width="140" height="70" :src="(this.layouts[0].indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                            <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                             <div class="option-desc">
                                 <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                             </div>
@@ -81,7 +81,7 @@
                     :internal-search="false"
                     @search-change="searchArticle">
                     <template slot="option" scope="props">
-                        <img class="option-image" width="140" height="70" :src="props.option.image.url + '?w=140&h70'" :alt="props.option.title">
+                        <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                         <div class="option-desc">
                             <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                         </div>
