@@ -172,10 +172,22 @@
                         var result = true;
 
                         // Exclude already used articles
-                        this.allArticles.forEach((topArticle) => {
+                        this.articles.forEach((topArticle) => {
                             if(topArticle.id === article.id) {
                                 result = false;
                             }
+                        });
+
+                        this.allArticles.filter((article, key) => {
+                            let result = false;
+
+                            this.layouts.forEach((layout) => {
+                                if(layout.articleIndex !== key) {
+                                    result = true;
+                                }
+                            });
+
+                            return result;
                         });
 
                         return result;
