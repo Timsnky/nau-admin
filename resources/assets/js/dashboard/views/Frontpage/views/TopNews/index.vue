@@ -7,6 +7,7 @@
         data() {
             return {
                 topArticlesUrl: '/top-articles',
+                equal: true,
                 layouts: [{
                     editable: true,
                     class: ['col-md-4'],

@@ -3,7 +3,7 @@
         <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
         <div class="row">
             <div class="col-md-6">
-                <div class="row  equal">
+                <div :class="{row: true, equal}">
 
                     <top-article
                         v-for="(layout, key) in layouts"
@@ -106,6 +106,7 @@
     export default {
         data() {
             return {
+                equal: false,
                 layouts: [{
                     editable: true,
                     class: ['teaser', 'col-md-8']
@@ -310,5 +311,11 @@
         .option-title {
             //
         }
+    }
+
+    .equal {
+        display: flex;
+        display: -webkit-flex;
+        flex-wrap: wrap;
     }
 </style>
