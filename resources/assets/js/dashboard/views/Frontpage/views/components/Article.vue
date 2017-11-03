@@ -8,7 +8,7 @@
                 </div>
             </div>
         </div>
-        <img class="article-image" :src="layout.teaser ? article.teaser.url : article.image.url">
+        <img class="article-image" :src="layout.class.indexOf('teaser') !== -1 ? article.teaser.url : article.image.url">
         <div class="article-card">
             <span class="article-dateline">{{ article.dateline }}</span>
             <span class="article-title">{{ article.title }}</span>
