@@ -10,15 +10,15 @@
                 equal: true,
                 layouts: [{
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 3,
                 }, {
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 4,
                 }, {
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 5,
                 },
                 // {
@@ -32,15 +32,15 @@
                 // },
                 {
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 8,
                 }, {
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 9,
                 }, {
                     editable: true,
-                    class: ['col-md-4'],
+                    class: ['item', 'item-4'],
                     articleIndex: 10,
                 }]
             };

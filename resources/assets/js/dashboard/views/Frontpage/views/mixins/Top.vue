@@ -3,8 +3,7 @@
         <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
         <div class="row">
             <div class="col-md-6">
-                <div :class="{row: true, equal}">
-
+                <draggable :class="{flex, articles: true}" v-model="articles">
                     <top-article
                         v-for="(layout, key) in layouts"
                         v-if="articles[key]"
@@ -14,8 +13,7 @@
                         @add="addAtIndex(key)"
                         @replace="replaceAtIndex(key)"
                     />
-
-                </div>
+                </draggable>
             </div>
             <div class="col-md-4 sticky" v-if="!showReplaceDropdown && !showAddDropdown">
                 <h3>Aktuelle Sortierung speichern</h3>
@@ -102,11 +100,12 @@
 
 <script>
     import TopArticle from '../components/Article';
+    import Draggable from 'vuedraggable';
 
     export default {
         data() {
             return {
-                equal: false,
+                flex: true,
                 layouts: [{
                     editable: true,
                     class: ['teaser', 'col-md-8']
@@ -156,7 +155,8 @@
         },
 
         components: {
-            TopArticle
+            TopArticle,
+            Draggable
         },
 
         methods: {
@@ -330,9 +330,22 @@
         }
     }
 
-    .equal {
+    .flex {
         display: flex;
-        display: -webkit-flex;
         flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .item-4 {
+        width: 33.333%;
+    }
+
+    .item-8 {
+        width: 66.666%;
+    }
+
+    .item {
+        padding: 10px;
     }
 </style>

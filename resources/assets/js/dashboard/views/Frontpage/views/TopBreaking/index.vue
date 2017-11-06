@@ -6,6 +6,7 @@
 
         data() {
             return {
+                flex: false,
                 topArticlesUrl: '/top-articles',
                 layouts: [{
                     editable: true,
