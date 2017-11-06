@@ -204,6 +204,7 @@ let routes = [{
         {
             path: '',
             name: 'users.list',
+            props: route => ({ search: route.query.search, page: parseInt(route.query.page) }),
             component: require('./views/Users/views/List'),
         }
     ],

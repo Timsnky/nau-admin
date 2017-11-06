@@ -47,7 +47,7 @@
                 Api.http
                     .get(`/users?search=${query}`)
                     .then(response => {
-                        this.users = response.data;
+                        this.users = response.data.data;
                     });
             }, 500),
         }

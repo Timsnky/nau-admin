@@ -66,11 +66,11 @@
 
             <div class="form-actions">
                 <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="submit">
                     Erstellen
                 </button>
-                <router-link class="btn btn-danger" :to="{name: 'users.list'}">Abbrechen</router-link>
+                <router-link class="btn red" :to="{name: 'users.list'}">Abbrechen</router-link>
             </div>
         </form>
     </div>

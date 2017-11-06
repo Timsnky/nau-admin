@@ -12,18 +12,22 @@ let publishMixin = {
             this.authorsIsLoading = true;
 
             if(this.article.community) {
-                var url = `/users?search=${query}`;
+                var promise = Api.http
+                    .get(`/users?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data.data;
+                    });
             } else {
-                var url = `/authors?search=${query}`;
+                var promise = Api.http
+                    .get(`/authors?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data;
+                    });
             }
 
-            Api.http
-                .get(url)
-                .then(response => {
-                    this.existingAuthors = response.data;
-                    this.searchedAuthor.promise = true;
-                    this.authorsIsLoading = false;
-                });
+            promise.then(() => {
+                this.authorsIsLoading = false;
+            });
         }, 200),
 
         //Save the settings for the article
@@ -110,7 +114,7 @@ let publishMixin = {
                     Api.http
                         .get(`/users?search=${this.searchedInformant.query}`)
                         .then(response => {
-                            this.existingInformants = response.data;
+                            this.existingInformants = response.data.data;
                             this.searchedInformant.promise = true;
                             this.informantsIsLoading = false;
                         });
