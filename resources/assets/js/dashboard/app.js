@@ -39,4 +39,4 @@ $('textbox,input').keyup(function() {
 
 // Check auth status
 store.dispatch('LOAD_AUTENTICATED_USER');
-store.dispatch('FETCH_FOLDERMASTER');
+store.dispatch('FETCH_MASTERS');

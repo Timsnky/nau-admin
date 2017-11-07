@@ -40,6 +40,8 @@ export const store = new Vuex.Store({
         notifications: [],
         unreadNotifications: 0,
         foldermaster: null,
+        liveDirector: null,
+        chameleon: null,
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -68,6 +70,32 @@ export const store = new Vuex.Store({
                 user_id: userId,
             });
             commit('SET_FOLDERMASTER', response.data.user);
+        },
+        FETCH_CHAMELEON: async ({commit}) => {
+            var response = await Api.http.get('/chameleon');
+            commit('SET_CHAMELEON', response.data.user);
+        },
+        SET_CHAMELEON: async ({commit}, userId) => {
+            var response = await Api.http.put('/chameleon', {
+                user_id: userId,
+            });
+            commit('SET_CHAMELEON', response.data.user);
+        },
+        FETCH_LIVE_DIRECTOR: async ({commit}) => {
+            var response = await Api.http.get('/live-director');
+            commit('SET_LIVE_DIRECTOR', response.data.user);
+        },
+        SET_LIVE_DIRECTOR: async ({commit}, userId) => {
+            var response = await Api.http.put('/live-director', {
+                user_id: userId,
+            });
+            commit('SET_LIVE_DIRECTOR', response.data.user);
+        },
+        FETCH_MASTERS: async ({commit}) => {
+            var response = await Api.http.get('/masters');
+            commit('SET_CHAMELEON', response.data.chameleon);
+            commit('SET_FOLDERMASTER', response.data.foldermaster);
+            commit('SET_LIVE_DIRECTOR', response.data.live_director);
         },
         SET_IMAGE_TYPES: ({commit}, types) => {
             commit('SET_IMAGE_TYPES', types);
@@ -128,6 +156,12 @@ export const store = new Vuex.Store({
         },
         SET_FOLDERMASTER: (state, foldermaster) => {
             state.foldermaster = foldermaster;
+        },
+        SET_CHAMELEON: (state, chameleon) => {
+            state.chameleon = chameleon;
+        },
+        SET_LIVE_DIRECTOR: (state, liveDirector) => {
+            state.liveDirector = liveDirector;
         },
         LOGOUT: (state) => {
             state.user = null;

@@ -75,9 +75,9 @@
                                 <span class="title">Freitage</span>
                             </a>
                         </router-link>
-                        <router-link :to="{name: 'resources.foldermaster'}" tag="li" exact>
+                        <router-link :to="{name: 'resources.master'}" tag="li" exact>
                             <a>
-                                <span class="title">Foldermaster</span>
+                                <span class="title">Masters</span>
                             </a>
                         </router-link>
                     </ul>

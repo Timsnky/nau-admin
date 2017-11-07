@@ -22,11 +22,21 @@
             </a>
             <!-- END RESPONSIVE MENU TOGGLER -->
             <!-- BEGIN TOP NAVIGATION MENU -->
+            <div class="hor-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <span v-if="$store.state.foldermaster" class="navbar-text hidden-xs"><i class="fa fa-files-o"></i> <b>Foldermaster:</b> {{ $store.state.foldermaster.name }}</span>
+                    </li>
+                    <li>
+                        <span v-if="$store.state.liveDirector" class="navbar-text hidden-xs"><i class="fa fa-bolt"></i> <b>Live Director:</b> {{ $store.state.liveDirector.name }}</span>
+                    </li>
+                    <li>
+                        <span v-if="$store.state.chameleon" class="navbar-text hidden-xs"><i class="fa fa-user"></i> <b>Chamäleon:</b> {{ $store.state.chameleon.name }}</span>
+                    </li>
+                </ul>
+            </div>
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
-                    <li>
-                        <span v-if="foldermaster" class="navbar-text hidden-xs">Foldermaster: {{ foldermaster.name }}</span>
-                    </li>
                     <notifications />
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
@@ -59,9 +69,6 @@
             user() {
                 return this.$store.state.user
             },
-            foldermaster() {
-                return this.$store.state.foldermaster;
-            }
         },
 
         components: {
