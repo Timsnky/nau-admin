@@ -1,35 +1,24 @@
 <template>
     <div>
-        <page-title title="Frontpage" sub="Top" />
-
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
         <div class="row">
-            <div class="col-md-8 scroll">
-                <h2>Sortierung</h2><p>Drag and Drop um die Position zu ändern</p>
-                <draggable v-model="articles">
-                    <div v-for="(article, key) in articles" :key="article.id">
-                        <hr>
-                        <button type="button" class="btn btn-block btn-success" @click="addAtIndex(key)"><i class="fa fa-plus"></i> Hinzufügen</button>
-                        <hr>
-                        <div :class="{'bg-danger': key > 7}">
-                            <h2 class="ranking-number">{{ key + 1 }}</h2>
-                            <img :src="article.teaser.url + '?w=140&h70'" height="50px" width="100px" alt="Artikel Bild"/>
-                            <div class="row-text">
-                                <p class="aritcle-title">{{ article.dateline }} - <b>{{ article.title }}</b></p>
-                                <p class="aritcle-publish-date">Publiziert am: {{ moment(article.published_at).format('DD.MM.YY HH:mm') }}</p>
-                            </div>
-
-                            <span class="form-group pull-right">
-                                <button type="button" class="btn btn-primary" @click="replaceAtIndex(key)">Ersetzen</button>
-                            </span>
-                        </div>
-                    </div>
+            <div class="col-md-6">
+                <draggable :class="{flex, articles: true}" v-model="articles">
+                    <top-article
+                        v-for="(layout, key) in layouts"
+                        v-if="articles[key]"
+                        :key="key"
+                        :layout="layout"
+                        :article="articles[key]"
+                        @add="addAtIndex(key)"
+                        @replace="replaceAtIndex(key)"
+                    />
                 </draggable>
             </div>
-
             <div class="col-md-4 sticky" v-if="!showReplaceDropdown && !showAddDropdown">
                 <h3>Aktuelle Sortierung speichern</h3>
                 <div class="form-group">
-                    <button type="button" class="btn btn-lg btn-primary btn-block" @click="save()">Speichern</button>
+                    <button type="button" class="btn btn-lg blue btn-block" @click="save()">Speichern</button>
                 </div>
             </div>
 
@@ -54,8 +43,43 @@
                     :show-labels="false"
                     :internal-search="false"
                     @search-change="searchArticle">
+                        <template slot="option" scope="props">
+                            <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                            <div class="option-desc">
+                                <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
+                            </div>
+                        </template>
+                        <span slot="noResult">Keine Artikel gefunden</span>
+                    </multiselect>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn blue" @click="replaceTop()" :disabled="Object.keys(selectedArticle).length === 0">Ersetzen</button>
+                    <button type="button" class="btn red" @click="cancel()">Abbrechen</button>
+                </div>
+            </div>
+
+            <div class="col-md-4 sticky" v-if="showAddDropdown">
+                <h3>Artikel hinzufügen an Position {{ selectedIndex + 1 }}</h3>
+                <div class="form-group">
+                    <span class="control-label">Artikel</span>
+                    <multiselect
+                    v-model="selectedArticle"
+                    placeholder="Artikel Suchen"
+                    label="title"
+                    :max-height="500"
+                    :options="options"
+                    :loading="isLoading"
+                    :options-limit="20"
+                    :clear-on-select="true"
+                    :close-on-select="true"
+                    track-by="id"
+                    open-direction="bottom"
+                    :show-labels="false"
+                    :internal-search="false"
+                    @search-change="searchArticle">
                     <template slot="option" scope="props">
-                        <img class="option-image" width="140" height="70" :src="props.option.teaser.url + '?w=140&h70'" :alt="props.option.title">
+                        <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                         <div class="option-desc">
                             <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                         </div>
@@ -65,70 +89,74 @@
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @click="replaceTop()" :disabled="Object.keys(selectedArticle).length === 0">Ersetzen</button>
-                <button type="button" class="btn btn-danger" @click="cancel()">Abbrechen</button>
+                <button type="button" class="btn blue" @click="addTop()" :disabled="Object.keys(selectedArticle).length === 0">Hinzufügen</button>
+                <button type="button" class="btn red" @click="cancel()">Abbrechen</button>
             </div>
         </div>
 
-        <div class="col-md-4 sticky" v-if="showAddDropdown">
-            <h3>Artikel hinzufügen an Position {{ selectedIndex + 1 }}</h3>
-            <div class="form-group">
-                <span class="control-label">Artikel</span>
-                <multiselect
-                v-model="selectedArticle"
-                placeholder="Artikel Suchen"
-                label="title"
-                :max-height="500"
-                :options="options"
-                :loading="isLoading"
-                :options-limit="20"
-                :clear-on-select="true"
-                :close-on-select="true"
-                track-by="id"
-                open-direction="bottom"
-                :show-labels="false"
-                :internal-search="false"
-                @search-change="searchArticle">
-                <template slot="option" scope="props">
-                    <img class="option-image" width="140" height="70" :src="props.option.image.url + '?w=140&h70'" :alt="props.option.title">
-                    <div class="option-desc">
-                        <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
-                    </div>
-                </template>
-                <span slot="noResult">Keine Artikel gefunden</span>
-            </multiselect>
-        </div>
-
-        <div class="form-group">
-            <button type="button" class="btn btn-primary" @click="addTop()" :disabled="Object.keys(selectedArticle).length === 0">Hinzufügen</button>
-            <button type="button" class="btn btn-danger" @click="cancel()">Abbrechen</button>
         </div>
     </div>
-
-</div>
-</div>
 </template>
 
 <script>
-    import Article from '../../components/Article';
-    import draggable from 'vuedraggable';
+    import TopArticle from '../components/Article';
+    import Draggable from 'vuedraggable';
 
     export default {
         data() {
             return {
+                flex: true,
+                layouts: [{
+                    editable: true,
+                    class: ['teaser', 'col-md-8']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: false,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-6']
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-6']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }, {
+                    editable: true,
+                    class: ['col-md-4']
+                }],
+                topArticleIds: [],
+                notInLayoutArticles: [],
                 articles: [],
+                allArticles: [],
                 options: [],
+                limit: 8,
                 selectedArticle: {},
                 isLoading: false,
                 showAddDropdown: false,
                 showReplaceDropdown: false,
                 selectedIndex: null,
-            }
+            };
         },
 
         components: {
-            'article-element': Article,
-            draggable,
+            TopArticle,
+            Draggable
         },
 
         methods: {
@@ -144,8 +172,15 @@
                     this.options = articles.filter((article) => {
                         var result = true;
 
+                        // Exclude already used articles
                         this.articles.forEach((topArticle) => {
                             if(topArticle.id === article.id) {
+                                result = false;
+                            }
+                        });
+
+                        this.notInLayoutArticles.forEach((notInLayoutArticle) => {
+                            if(notInLayoutArticle.id === article.id) {
                                 result = false;
                             }
                         });
@@ -183,9 +218,27 @@
                 this.selectedArticle = {};
             },
 
+            cancel() {
+                this.showAddDropdown = false;
+                this.showReplaceDropdown = false;
+            },
+
             save() {
-                this.saveTopArticles(this.articles.slice(0, 8))
+                var articles = [];
+                this.layouts.filter((layout) => {
+                    // Filter out layouts that can not be edited
+                    return layout.editable;
+                }).forEach((layout, key) => {
+                    articles.push({
+                        id: this.topArticleIds[layout.articleIndex],
+                        article_id: this.articles[key].id,
+                    });
+                })
+
+                this.saveTopArticles(articles)
                 .then(response => {
+                    let topArticles = response.data;
+                    this.mapTopArticles(topArticles);
                     Vue.toast('Top Artikel erfolgreich gespeichert.', {
                         className: ['nau_toast', 'nau_success'],
                     });
@@ -197,45 +250,68 @@
                 })
             },
 
-            cancel() {
-                this.showAddDropdown = false;
-                this.showReplaceDropdown = false;
+            saveTopArticles(articles) {
+                return Api.http.put('/top-articles', articles);
             },
 
-            moment(time) {
-                return moment(time);
+            async loadTopArticles() {
+                var topArticles = await this.getTopArticles()
+                this.mapTopArticles(topArticles);
+            },
+
+            mapTopArticles(topArticles) {
+                this.topArticleIds = topArticles.map((topArticle) => {
+                    return topArticle.id;
+                });
+
+                this.allArticles = topArticles.map((topArticle) => {
+                    return topArticle.article;
+                });
+
+                this.articles = this.allArticles.filter((article, key) => {
+                    var exists = false;
+
+                    this.layouts.forEach((layout) => {
+                        if(layout.articleIndex === key) {
+                            exists = true;
+                        }
+                    });
+
+                    return exists;
+                });
+
+                this.notInLayoutArticles = this.allArticles.filter((article, key) => {
+                    var exists = false;
+
+                    this.layouts.forEach((layout) => {
+                        if(layout.articleIndex !== key) {
+                            exists = true;
+                        }
+                    });
+
+                    return exists;
+                });
+            },
+
+            getTopArticles() {
+                return Api.http.get(this.topArticlesUrl).then((response) => {
+                    return response.data;
+                });
             },
         },
 
         mounted() {
-            this.getTopArticles().then((articles) => {
-                this.articles = articles;
-            });
+
         },
     }
 </script>
 
 <style lang="scss" scoped>
-    .ranking-number {
-        display: inline;
-        margin: 0 .2em 0 0;
-        vertical-align: middle;
-    }
-
     .sticky {
         padding-top: 4em;
         top: 0;
         position: -webkit-sticky;
         position: sticky;
-    }
-
-    .row-text {
-        display: inline-block;
-        vertical-align: middle;
-
-        p {
-            margin: 0 0 .2em 0;
-        }
     }
 
     .multiselect {
@@ -252,5 +328,24 @@
         .option-title {
             //
         }
+    }
+
+    .flex {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .item-4 {
+        width: 33.333%;
+    }
+
+    .item-8 {
+        width: 66.666%;
+    }
+
+    .item {
+        padding: 10px;
     }
 </style>

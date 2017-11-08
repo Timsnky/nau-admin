@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal_title_bar">
-                        <h4 class="modal-title" id="myModalLabel">Bilder</h4>
+                        <h4 class="modal-title" id="myModalLabel">Bilder <small>{{ imageTypeNames }}</small></h4>
                         <button type="button" class="btn btn-primary btn-sm add_btn" :disabled="addingImage" @click="showAddImage()"><i class="fa fa-plus"></i></button>
                         <button type="button" class="btn btn-danger btn-sm close_btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                     </div>
@@ -24,12 +24,24 @@
                                         class="form-control"
                                         type="file"
                                         name="image"
+                                        accept="image/*"
                                         id="image"
                                         @change="imageAdded"/>
-
                             </div>
+
+                            <div v-if="imageType.id == 1" class="col-md-6 form-group">
+                                <label>Aspect Ratio *</label>
+                                <select class="form-control helper_input" @change="aspectRatioSelected()" v-model="imageAspectRatio">
+                                    <option v-bind:value="ratio" v-for="ratio in aspectRatios">
+                                        {{ ratio.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Dateiname* </label>
+                                <label>Dateiname * </label>
                                 <input
                                         type="text"
                                         name="name"
@@ -37,9 +49,6 @@
                                         placeholder="Dateiname"
                                         class="form-control">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Bildunterschrift *</label>
                                 <input
@@ -50,6 +59,9 @@
                                         class="form-control">
                                 </input>
                             </div>
+                        </div>
+
+                        <div class="row">
 
                             <div class="col-md-6 form-group">
                                 <label>Quelle *</label>
@@ -145,7 +157,6 @@
 </template>
 
 <script>
-    import Pagination from 'dashboard/views/Images/views/List/components/Pagination';
     import ImageQuality from 'dashboard/components/ImageQuality';
 
     export default {
@@ -196,11 +207,46 @@
                         displayName: 'Zvg'
                     }
                 ],
-                submitting: false
+                submitting: false,
+                imageTypes: [],
+                imageType: {
+                    id: 1,
+                    name: 'Normal Image'
+                },
+                uploadPercentage: 0,
+                aspectRatios: [
+                    {
+                        value: NaN,
+                        name: 'Frei auswählbar'
+                    },
+                    {
+                        value: 2,
+                        name: '2:1'
+                    }
+                ],
+                imageAspectRatio: {
+                    value: NaN,
+                    name: 'Frei auswählbar'
+                }
+            }
+        },
+
+        created()
+        {
+            this.$parent.$on('imageTypeChange', this.changeImageType);
+        },
+
+        computed: {
+            imageTypeNames() {
+                return this.imageTypes.map((type) => {
+                    return type.name;
+                }).join(', ');
             }
         },
 
         mounted() {
+            this.changeImageType();
+
             this.getPaginatedData(this.currentPage)
                 .then(response => {
                     const { data, current_page, per_page, last_page } = response.data;
@@ -222,7 +268,6 @@
         },
 
         components: {
-            Pagination,
             ImageQuality
         },
 
@@ -230,12 +275,39 @@
             searchTerm() {
                 this.navigate(1);
             },
+
             userId() {
                 this.navigate(1);
-            }
+            },
         },
 
         methods: {
+            //Update the image type when it is changed
+            changeImageType()
+            {
+                let types = Api.getImageTypes();
+
+                if(types !== this.imageTypes) {
+                    this.imageTypes = types;
+                    this.imageType = types[0];
+                    this.navigate(1);
+                }
+
+                this.imageAspectRatio = this.imageType !== 1 ? this.aspectRatios[1] : this.aspectRatios[0];
+
+                this.reset();
+                this.closeAddImage();
+            },
+
+            //Change the aspect ratio of cropper
+            aspectRatioSelected()
+            {
+                if(this.imageCropper)
+                {
+                    this.imageCropper.setAspectRatio( this.imageAspectRatio.value);
+                }
+            },
+
             deleteImage(image) {
                 Api.http
                     .delete(`/images/${image.id}`)
@@ -262,19 +334,19 @@
             },
 
             getPaginatedData(page) {
-                var searchString = '';
-                var userString = '';
+                var params = {
+                    search: this.searchTerm,
+                    type: this.imageTypes.map((type) => {
+                        return type.id;
+                    }),
+                    page
+                };
 
-                if (this.searchTerm !== '') {
-                    searchString += `search=${this.searchTerm}&`;
+                if(this.userId != 0) {
+                    params.user_id = this.userId;
                 }
 
-                if(this.userId != 0)
-                {
-                    userString += `user_id=${this.userId}&`;
-                }
-
-                return Api.http.get(`/images?` + searchString + userString + `page=${page}`);
+                return Api.http.get('/images?' + $.param(params));
             },
 
             dispatchImageSelected(id) {
@@ -313,6 +385,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
             },
 
@@ -322,6 +395,7 @@
                 if(this.imageCropper)
                 {
                     this.imageCropper.destroy();
+                    this.imageCropper = null;
                 }
 
                 let fileElement = document.getElementById('image');
@@ -350,7 +424,7 @@
 
                 this.imageCropper = new Cropper(file, {
                     dragMode: 'move',
-                    aspectRatio: 2,
+                    aspectRatio: vm.imageAspectRatio.value,
                     autoCropArea: 1,
                     restore: true,
                     guides: true,
@@ -425,6 +499,7 @@
             uploadImage()
             {
                 this.submitting = true;
+                this.uploadPercentage = 0;
 
                 let errorString = this.validateImageSave();
 
@@ -444,20 +519,38 @@
                     formData.append('name', this.image.name);
                     formData.append('source', this.image.source);
                     formData.append('lead', this.image.lead);
+                    formData.append('type', this.imageType.id);
 
                     var vm = this;
 
                     Api.http
                         .post('/images', formData, {
                             onUploadProgress(e) {
-                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                                vm.uploadPercentage = Math.round(90 / e.total * e.loaded);
                             }
                         })
-                        .then(response => {
+                        .then(async (response) => {
                             if(response.status === 201)
                             {
-                                this.closeAddImage();
-                                this.navigate(1);
+                                // Wait for the image to be available
+                                var loaded = false;
+                                var interval = await setInterval(() => {
+                                    var img = new Image();
+                                    img.onload = () => {
+                                        this.uploadPercentage = 100;
+                                        clearInterval(interval);
+                                        setTimeout(() => {
+                                            this.closeAddImage();
+                                            this.navigate(1);
+                                        }, 200);
+                                    };
+                                    img.onerror = () => {
+                                        if(this.uploadPercentage < 99) {
+                                            this.uploadPercentage += 1;
+                                        }
+                                    }
+                                    img.src = response.data.url + '?' + Math.floor(Date.now() / 1000);
+                                }, 1000);
                             }
                             else
                             {
@@ -468,8 +561,9 @@
                         });
                 });
                 this.imageCropper.destroy();
+                this.imageCropper = null;
             },
-        }
+        },
     }
 </script>
 

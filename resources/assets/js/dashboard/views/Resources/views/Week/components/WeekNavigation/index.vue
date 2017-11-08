@@ -12,21 +12,23 @@
         </div>
 
         <div class="col-md-4 text-right">
-            <button
-                @click="handlePrevWeek"
-                class="btn btn-default">
-                <i class="fa fa-chevron-left"></i>
-            </button>
-            <button
-                @click="handleNextWeek"
-                class="btn btn-default">
-                <i class="fa fa-chevron-right"></i>
-            </button>
-            <button
-                @click="handleCurrentWeek"
-                class="btn btn-default">
-                Aktuelle Woche
-            </button>
+            <div class="btn-group">
+                <button
+                    @click="handlePrevWeek"
+                    class="btn default">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button
+                    @click="handleCurrentWeek"
+                    class="btn blue-madison">
+                    Aktuelle Woche
+                </button>
+                <button
+                    @click="handleNextWeek"
+                    class="btn default">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 </template>

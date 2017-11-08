@@ -2,7 +2,7 @@
     <div>
         <page-title title="Kommentare" />
         <div class="row">
-            <div class="col-lg-6 col-xs-12 col-sm-12">
+            <div class="col-lg-8 col-xs-12 col-sm-12">
                 <div v-if="isLoading">
                     <h3>Laden <i class="fa fa-spinner fa-spin"></i></h3>
                 </div>
@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-                        <label>Kommentare für folgenden Nutzer anzeigen.</label>
+                        <label>Nur Kommentare für folgenden Author anzeigen.</label>
                         <multiselect
                             v-model="selectedAuthor"
                             placeholder="Artikel Author suchen"
@@ -37,6 +37,7 @@
                                         <img class="item-pic rounded" :src="comment.author.avatar">
                                         <span class="item-name">{{ comment.author.name }}</span>
                                         <span class="item-label">{{ humanize(comment.created_at) }}</span>
+                                        <span class="item-label">– <a :href="comment.article.preview_url" target="_blank">{{ comment.article.title }}</a></span>
                                     </div>
                                     <div class="btn-group btn-group-circle item-status">
                                         <div class="btn btn-outline green btn-xs" @click="approve(comment)">Freischalten</div>
@@ -59,7 +60,7 @@
         data() {
             return {
                 comments: [],
-                selectedAuthor: Api.user(),
+                selectedAuthor: null,
                 authors: [],
                 isLoading: true,
             }

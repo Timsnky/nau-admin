@@ -1,5 +1,5 @@
 <script>
-    import Top from '../mixins/Top';
+    import Top from '../mixins/TopOld';
 
     export default {
         mixins: [Top],

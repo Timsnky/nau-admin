@@ -22,24 +22,16 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-6 text-right">
-                <router-link
-                    :to="{name: 'articles.create'}"
-                    class="btn btn-primary pull-right">
-                    <i class="fa fa-plus"></i>
-                    Neuen Artikel erstellen
-                </router-link>
-            </div>
         </div>
 
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>Titel</th>
-                <th>Author</th>
+                <th>Autor</th>
                 <th>Status</th>
                 <th>Publikationsdatum</th>
-                <th>Optionen</th>
+                <th class="text-right">Optionen</th>
             </tr>
             </thead>
             <tbody>
@@ -52,14 +44,18 @@
                     <status-display :status="article.article_status.name" />
                 </td>
                 <td>{{ publicationDate(article) }}</td>
-                <td><router-link
-                        :to="{name: 'articles.edit', params: {id: article.id}}"
-                        class="btn btn-warning">
-                    <i class="fa fa-edit"></i>
-                    Bearbeiten
-                </router-link>
-                <button v-if="article.article_status.name === 'review'" class="btn btn-primary" @click="publishArticle(article)"><i class="fa fa-check"></i> Publizieren</button>
-                <button v-if="article.article_status.name === 'review'" class="btn btn-danger" @click="declineArticle(article)"><i class="fa fa-ban"></i> Ablehnen</button>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button v-if="article.article_status.name === 'review'" class="btn blue-dark" @click="publishArticle(article)"><i class="fa fa-thumbs-up"></i> Freischalten</button>
+                        <button v-if="article.article_status.name === 'review'" class="btn red" @click="declineArticle(article)"><i class="fa fa-thumbs-down"></i> Ablehnen</button>
+                    </div>
+                    <button v-if="article.article_status.name === 'published'" class="btn blue-dark" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>
+                    <router-link
+                            :to="{name: 'articles.edit', params: {id: article.id}}"
+                            class="btn default">
+                        <i class="fa fa-edit"></i>
+                        Bearbeiten
+                    </router-link>
                 </td>
             </tr>
             </tbody>
@@ -77,8 +73,6 @@
     </div>
 </template>
 <script>
-    import Pagination from 'dashboard/components/Pagination/Pagination';
-
     export default {
         data() {
             return {
@@ -91,10 +85,6 @@
                 articles: []
             }
         },
-
-        components: [
-            Pagination
-        ],
 
         created() {
             this.getPaginatedData(this.currentPage)
@@ -164,11 +154,38 @@
                 return moment(article.published_at).format('HH:mm DD.MM.YY');
             },
 
+            unpublishArticle(article) {
+                swal({
+                    title: 'Artikel wirklich zurück auf Entwurf setzten?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ja, ich bin mir sicher'
+                }).then(() => {
+                    Api.http.put(`/articles/${article.id}`, {published_at: null})
+                        .then((response) => {
+                            swal({
+                                title: 'Artikel auf Entwurf gesetzt',
+                                type: 'success',
+                            });
+
+                            this.$set(this.articles, this.articles.indexOf(article), response.data);
+                        }).catch((error) => {
+                            console.error(error);
+                            swal({
+                                title: 'Fehler beim zurücksetzen',
+                                type: 'error',
+                            })
+                        })
+                });
+            },
+
             publishArticle(article)
             {
                 swal({
                     title: 'Publizieren',
-                    text: 'Nachricht an den Author',
+                    text: 'Nachricht an den Autor',
                     type: 'warning',
                     input: 'text',
                     showCancelButton: true,
@@ -200,7 +217,7 @@
             {
                 swal({
                     title: 'Ablehnen',
-                    text: `${article.title}`,
+                    text: `Nachricht an den Autor`,
                     input: 'text',
                     type: 'warning',
                     showCancelButton: true,

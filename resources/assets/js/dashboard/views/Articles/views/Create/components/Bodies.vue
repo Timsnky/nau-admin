@@ -4,13 +4,26 @@
             <label><b>Artikel-Text</b></label>
             <div v-for="(articleBody, index) in articleBodies" class="form-group wysihtmlBody">
 
-                <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar text-right">
-                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn btn-primary btn-sm">Fett</a>
-                    <a data-wysihtml5-command="createLink" class="btn btn-primary btn-sm">Link</a>
+                <div id="body-toolbar" style="display: none;" class="wysihtml_toolbar">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3 col-xs-4">
+                            <div class="btn-group">
+                                <a data-wysihtml5-command="bold" title="CTRL+B" class="btn blue btn-outline btn-sm"><i class="fa fa-bold"></i></a>
+                                <a data-wysihtml5-command="createLink" class="btn blue btn-outline btn-sm"><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
 
-                    <div data-wysihtml5-dialog="createLink" style="display: none;" class="toolbar_url">
-                        <input data-wysihtml5-dialog-field="href" class="form-control" value="http://">
-                        <a data-wysihtml5-dialog-action="save" class="btn btn-primary btn-sm">OK</a>&nbsp;&nbsp;&nbsp;<a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm">Cancel</a>
+                        <div data-wysihtml5-dialog="createLink" style="display: none;">
+                            <div class="col-md-6">
+                                <input data-wysihtml5-dialog-field="href" class="form-control input-sm" value="http://">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="btn-group">
+                                    <a data-wysihtml5-dialog-action="save" class="btn blue btn-sm">Hinzufügen</a>
+                                    <a data-wysihtml5-dialog-action="cancel" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <textarea
@@ -19,7 +32,7 @@
                         placeholder="Untertitel mit Fett setzen"
                         class="form-control articleEditor"
                         rows="5">
-                                </textarea>
+                </textarea>
                 <div class="form-actions">
                     <button
                             class="btn btn-danger remove_btn"
@@ -33,13 +46,13 @@
         <div class="form-actions item_add">
             <button
                     @click="addArticleBody()"
-                    class="btn btn-primary item_add_btn"
+                    class="btn blue item_add_btn"
                     type="button"> +
             </button>
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleBodies(articleId)"
                     :disabled="articleId == null">

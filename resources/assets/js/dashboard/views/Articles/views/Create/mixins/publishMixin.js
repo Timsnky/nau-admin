@@ -4,67 +4,64 @@ let publishMixin = {
          *  ARTICLE AUTHORS
          */
         //Search for an author
-        searchAuthors(query)
-        {
-            this.searchedAuthor.query = query;
+        searchAuthors: _.debounce(function(query) {
+            if(!query) {
+                return;
+            }
+
             this.authorsIsLoading = true;
 
-            if(this.searchedAuthor.promise)
-            {
-                this.searchedAuthor.promise = false;
-
-                setTimeout(() => {
-                    Api.http
-                        .get(`/authors?search=${this.searchedAuthor.query}`)
-                        .then(response => {
-                            this.existingAuthors = response.data;
-                            this.searchedAuthor.promise = true;
-                            this.authorsIsLoading = false;
-                        });
-                }, 400);
+            if(this.article.community) {
+                var promise = Api.http
+                    .get(`/users?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data.data;
+                    });
+            } else {
+                var promise = Api.http
+                    .get(`/authors?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data;
+                    });
             }
-        },
+
+            promise.then(() => {
+                this.authorsIsLoading = false;
+            });
+        }, 200),
 
         //Save the settings for the article
-        saveSettings(articleId)
-        {
+        saveSettings(articleId) {
             this.saveArticleAuthorsAndIdeas(articleId);
             this.linkAuthorToArticle(articleId);
-            this.updateArticle(articleId);
+            this.saveCheckboxes(articleId);
         },
 
         //Save authors and ideas
-        saveArticleAuthorsAndIdeas(articleId)
-        {
+        saveArticleAuthorsAndIdeas(articleId) {
             this.linkInformantToArticle(articleId);
             this.linkChannelToArticle(articleId);
             this.submitArticleNotificationRegions(articleId);
         },
 
         //Link author to article
-        linkAuthorToArticle(articleId)
-        {
+        linkAuthorToArticle(articleId) {
             let vm = this;
 
-            this.articleAuthors.forEach(function (value, key)
-            {
-                if(! (value.pivot && value.pivot.article_id === articleId))
-                {
+            this.articleAuthors.forEach(function(value, key) {
+                if (!(value.pivot && value.pivot.article_id === articleId)) {
                     Api.http
                         .put(`/articles/${articleId}/authors/${value.id}`)
                         .then(response => {
-                            if(response.status === 204)
-                            {
+                            if (response.status === 204) {
                                 vm.articleAuthors[key].pivot = {
-                                    article_id : articleId,
-                                    author_id : vm.articleAuthors[key].id
+                                    article_id: articleId,
+                                    author_id: vm.articleAuthors[key].id
                                 };
                                 Vue.toast('Article author linked successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
-                            }
-                            else
-                            {
+                            } else {
                                 Vue.toast('Error in linking the article author. Please retry again', {
                                     className: ['nau_toast', 'nau_warning'],
                                 });
@@ -74,20 +71,25 @@ let publishMixin = {
             });
         },
 
+        saveCheckboxes(articleId) {
+            Api.http.put(`/articles/${articleId}`, {
+                display: this.article.display,
+                display_while_big: this.article.display_while_big,
+                geo_switzerland_only: this.article.geo_switzerland_only,
+                authenticated_only: this.article.authenticated_only,
+            })
+        },
+
         //Delete any authors
-        deleteAuthors(author)
-        {
+        deleteAuthors(author) {
             let vm = this;
 
-            vm.articleAuthors.forEach(function (value, key)
-            {
-                if(value.id === author.id && value.pivot)
-                {
+            vm.articleAuthors.forEach(function(value, key) {
+                if (value.id === author.id && value.pivot) {
                     Api.http
                         .delete(`/articles/${vm.article.id}/authors/${vm.articleAuthors[key].id}`)
                         .then(response => {
-                            if(response.status === 204)
-                            {
+                            if (response.status === 204) {
                                 Vue.toast('Article author deleted successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
@@ -101,20 +103,18 @@ let publishMixin = {
          * ARTICLE INFORMANTS
          */
         //Search for an informant
-        searchInformants(query)
-        {
+        searchInformants(query) {
             this.searchedInformant.query = query;
             this.informantsIsLoading = true;
 
-            if(this.searchedInformant.promise)
-            {
+            if (this.searchedInformant.promise) {
                 this.searchedInformant.promise = false;
 
                 setTimeout(() => {
                     Api.http
                         .get(`/users?search=${this.searchedInformant.query}`)
                         .then(response => {
-                            this.existingInformants = response.data;
+                            this.existingInformants = response.data.data;
                             this.searchedInformant.promise = true;
                             this.informantsIsLoading = false;
                         });
@@ -123,29 +123,23 @@ let publishMixin = {
         },
 
         //Link informant to article
-        linkInformantToArticle(articleId)
-        {
+        linkInformantToArticle(articleId) {
             let vm = this;
 
-            this.articleInformants.forEach(function (value, key)
-            {
-                if(! (value.pivot && value.pivot.article_id === articleId))
-                {
+            this.articleInformants.forEach(function(value, key) {
+                if (!(value.pivot && value.pivot.article_id === articleId)) {
                     Api.http
                         .put(`/articles/${articleId}/informants/${value.id}`)
                         .then(response => {
-                            if(response.status === 204)
-                            {
+                            if (response.status === 204) {
                                 vm.articleInformants[key].pivot = {
-                                    article_id : articleId,
-                                    informant_id : vm.articleInformants[key].id
+                                    article_id: articleId,
+                                    informant_id: vm.articleInformants[key].id
                                 };
                                 Vue.toast('Article informant linked successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
-                            }
-                            else
-                            {
+                            } else {
                                 Vue.toast('Error in linking the article informant. Please retry again', {
                                     className: ['nau_toast', 'nau_warning'],
                                 });
@@ -156,19 +150,15 @@ let publishMixin = {
         },
 
         //Delete any informants
-        deleteInformants(informant)
-        {
+        deleteInformants(informant) {
             let vm = this;
 
-            vm.articleInformants.forEach(function (value, key)
-            {
-                if(value.id === informant.id && value.pivot)
-                {
+            vm.articleInformants.forEach(function(value, key) {
+                if (value.id === informant.id && value.pivot) {
                     Api.http
                         .delete(`/articles/${vm.article.id}/informants/${vm.articleInformants[key].id}`)
                         .then(response => {
-                            if(response.status === 204)
-                            {
+                            if (response.status === 204) {
                                 Vue.toast('Article informant deleted successfully', {
                                     className: ['nau_toast', 'nau_success'],
                                 });
@@ -181,18 +171,15 @@ let publishMixin = {
         /**
          * PLACES
          */
-        searchPlaces(query)
-        {
+        searchPlaces(query) {
             this.searchedPlace.query = query;
             this.placesIsLoading = true;
 
-            if(this.searchedPlace.promise)
-            {
+            if (this.searchedPlace.promise) {
                 this.searchedPlace.promise = false;
 
                 setTimeout(() => {
-                    if(this.searchedPlace.query !== '')
-                    {
+                    if (this.searchedPlace.query !== '') {
                         Api.http
                             .get(`/places?search=${this.searchedPlace.query}`)
                             .then(response => {
@@ -200,9 +187,7 @@ let publishMixin = {
                                 this.searchedPlace.promise = true;
                                 this.placesIsLoading = false;
                             });
-                    }
-                    else
-                    {
+                    } else {
                         this.searchedPlace.promise = true;
                         this.placesIsLoading = false;
                     }
@@ -213,19 +198,15 @@ let publishMixin = {
         /**
          * CHANNELS
          */
-        linkChannelToArticle(articleId)
-        {
+        linkChannelToArticle(articleId) {
             Api.http
                 .put(`/articles/${articleId}/channels/${this.articleChannel}`)
                 .then(response => {
-                    if(response.status === 204)
-                    {
+                    if (response.status === 204) {
                         Vue.toast('Article channel linked successfully', {
                             className: ['nau_toast', 'nau_success'],
                         });
-                    }
-                    else
-                    {
+                    } else {
                         Vue.toast('Error in linking the article channel. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
                         });
@@ -234,71 +215,43 @@ let publishMixin = {
         },
 
         /**
-         *  PUBLICATION DATE
-         */
-        changeDate(date)
-        {
-            this.article.published_at = date;
-        },
-
-        /**
-         *  ORDER DATE
-         */
-        changeOrderDate(date)
-        {
-            this.article.order_date = date;
-        },
-
-        /**
          *  NOTIFICATION REGIONS
          */
         //Reset the notification regions when one uncheck the push notification checkbox
-        resetArticleRegions()
-        {
+        resetArticleRegions() {
             let vm = this;
 
-            if(! this.article.push_notification)
-            {
-                this.regions.forEach(function (value, key)
-                {
+            if (!this.article.push_notification) {
+                this.regions.forEach(function(value, key) {
                     vm.regions[key].checked = false;
                 });
             }
         },
 
         //Submit the notification regions for an article
-        submitArticleNotificationRegions(articleId)
-        {
+        submitArticleNotificationRegions(articleId) {
             let vm = this;
 
-            this.regions.forEach(function (value, key)
-            {
-                if(value.checked === true && value.linked !== articleId)
-                {
+            this.regions.forEach(function(value, key) {
+                if (value.checked === true && value.linked !== articleId) {
                     vm.linkRegionsToArticle(articleId, key);
-                }
-                else if(value.linked === articleId && value.checked == false)
-                {
+                } else if (value.linked === articleId && value.checked == false) {
                     vm.deleteArticleRegions(articleId, key);
                 }
             });
         },
 
         //Link regions to article
-        linkRegionsToArticle(articleId, key)
-        {
+        linkRegionsToArticle(articleId, key) {
             Api.http
                 .put(`/articles/${articleId}/notification-regions/${this.regions[key].id}`)
                 .then(response => {
-                    if(response.status === 204)
-                    {
+                    if (response.status === 204) {
                         this.regions[key].linked = articleId;
                         Vue.toast('Article notification region linked successfully', {
                             className: ['nau_toast', 'nau_success'],
                         });
-                    }
-                    else
-                    {
+                    } else {
                         Vue.toast('Error in linking the article notification region. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
                         });
@@ -307,13 +260,11 @@ let publishMixin = {
         },
 
         //Delete any notification regions
-        deleteArticleRegions(articleId, key)
-        {
+        deleteArticleRegions(articleId, key) {
             Api.http
                 .delete(`/articles/${articleId}/notification-regions/${this.regions[key].id}`)
                 .then(response => {
-                    if(response.status === 204)
-                    {
+                    if (response.status === 204) {
                         this.regions[key].linked = null;
                         this.regions[key].checked = 0;
 

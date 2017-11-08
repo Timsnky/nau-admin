@@ -22,6 +22,19 @@
             </a>
             <!-- END RESPONSIVE MENU TOGGLER -->
             <!-- BEGIN TOP NAVIGATION MENU -->
+            <div class="hor-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <span v-if="$store.state.foldermaster" class="navbar-text hidden-xs"><i class="fa fa-files-o"></i> <b>Foldermaster:</b> {{ $store.state.foldermaster.name }}</span>
+                    </li>
+                    <li>
+                        <span v-if="$store.state.liveDirector" class="navbar-text hidden-xs"><i class="fa fa-bolt"></i> <b>Live Director:</b> {{ $store.state.liveDirector.name }}</span>
+                    </li>
+                    <li>
+                        <span v-if="$store.state.chameleon" class="navbar-text hidden-xs"><i class="fa fa-user"></i> <b>Chamäleon:</b> {{ $store.state.chameleon.name }}</span>
+                    </li>
+                </ul>
+            </div>
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
                     <notifications />
@@ -73,3 +86,9 @@
         }
     }
 </script>
+
+<style>
+    .navbar-text {
+        color: #c6cfda;
+    }
+</style>

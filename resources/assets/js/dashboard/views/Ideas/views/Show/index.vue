@@ -7,7 +7,7 @@
                 <form>
                     <div class="form-body">
                         <div class="form-group">
-                            <label for="title">Title</label>
+                            <label for="title">Titel</label>
                             <div id="title">
                                 <div class="form-control-static">{{ idea.title }}</div>
                             </div>
@@ -20,15 +20,20 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="body">Idea</label>
+                            <label for="body">Idee</label>
                             <div id="body">
                                 <div class="form-control-static">{{ idea.body }}</div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="body">Regionen</label>
+                            <div class="form-control-static">{{ idea.regions.map((region) => { return region.name }).join(', ') }}</div>
+                        </div>
                     </div>
                 </form>
                 <div class="row col-md-12">
-                    <label for="body">Images</label><br>
+                    <label for="body">Bilder</label><br>
                 </div>
                 <div class="row">
                     <div class="col-md-4 col-sm-12 idea_images_section" v-for="(image, index) in idea.images">
@@ -40,16 +45,16 @@
             <div class="col-md-4">
                 <router-link
                         :to="{name: 'ideas.articles.create', params: {id: idea.id}}"
-                        class="btn btn-lg btn-block btn-primary">
+                        class="btn btn-lg btn-block blue">
                     Artikel erstellen
                 </router-link>
                 <div v-if="hasArticles">
-                    <h2>Articles</h2>
+                    <h2>Artikel</h2>
                     <ul>
-                        <li
-                                v-for="article in idea.articles"
-                                :key="article.id">
-                            {{ article.title }}
+                        <li v-for="article in idea.articles" :key="article.id">
+                            <router-link :to="{name: 'articles.edit', params: {id: article.id}}">
+                                {{ article.title }}
+                            </router-link>
                         </li>
                     </ul>
                 </div>
@@ -63,7 +68,9 @@
     export default {
         data() {
             return {
-                idea: {},
+                idea: {
+                    regions: [],
+                },
             }
         },
 

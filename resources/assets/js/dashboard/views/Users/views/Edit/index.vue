@@ -7,7 +7,7 @@
                     <div class="form-group">
                         <label for="name">Avatar ändern</label><br>
                         <img width="100px" height="100px" class="rounded" :src="user.avatar" />
-                        <input type="file" @change="onFileChange">
+                        <input type="file" @change="onFileChange" accept="image/*">
                     </div>
                 </div>
 
@@ -74,11 +74,11 @@
 
                 <div class="form-actions">
                     <button
-                        class="btn btn-primary"
+                        class="btn blue"
                         type="submit">
                         Speichern
                     </button>
-                    <router-link class="btn btn-danger" :to="{name: 'users.list'}">Abbrechen</router-link>
+                    <router-link class="btn red" :to="{name: 'users.list'}">Abbrechen</router-link>
                 </div>
             </form>
         </div>
@@ -247,7 +247,7 @@
             handleSubmit() {
                 const { name, email, password, passwordRepeat, anonymous } = this.user;
 
-                if (name && email && (!password || (password && password === passwordRepeat))) {
+                if (name && (!password || (password && password === passwordRepeat))) {
                     let data = { name, email, password, anonymous };
                     if(this.avatarChanged) {
                         data.avatar = this.user.avatar;

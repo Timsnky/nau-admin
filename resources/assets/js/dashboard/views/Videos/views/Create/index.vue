@@ -3,72 +3,63 @@
         <page-title title="Videos" sub="Create"/>
 
         <form @submit.prevent="handleSubmit">
-            <div class="form-body">
-                <div class="video_dropbox">
-                    <input v-if="!file" class="input-file" @dragover.prevent @drop="onDrop"  type="file" name="file" @change="onChange">
-                    <p v-if="!file">
-                        Drag your video here to begin<br> or click to browse
-                    </p>
-                    <div class="video_hidden_section display-inline align-center" v-else v-bind:class="{ 'video': true }">
-                        <div class="video_hidden_section_video">
-                            <video controls>
-                                <!-- <source :src="file"> -->
-                            </video>
-                        </div>
-                        <div class="video_hidden_section_remove">
-                            <button class="btn btn-danger" @click="removeFile">Remove video</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="video_dropbox">
+                        <input v-if="!file" class="input-file" @dragover.prevent @drop="onDrop"  type="file" accept="video/*" name="file" @change="onChange">
+                        <p v-if="!file">
+                            Drag your video here to begin<br> or click to browse
+                        </p>
+                        <div class="video_hidden_section display-inline align-center" v-else v-bind:class="{ 'video': true }">
+                            <div class="video_hidden_section_remove">
+                                <button class="btn btn-danger" @click="removeFile">Remove video</button>
+                            </div>
                         </div>
                     </div>
-                    </label>
                 </div>
 
-                <div v-if="file" class="form-group">
-                    <label for="name">Name</label>
-                    <input
-                            id="name"
-                            type="text"
-                            name="name"
-                            v-model.trim="video.name"
-                            placeholder="Name"
-                            class="form-control">
-                </div>
+                <div class="col-md-6" v-if="file">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        v-model.trim="video.name"
+                        placeholder="Name"
+                        class="form-control">
+                    </div>
 
-                <div v-if="file" class="form-group">
-                    <label for="lead">Lead</label>
-                    <textarea
-                            id="lead"
-                            name="lead"
-                            v-model.trim="video.lead"
-                            placeholder="Lead"
-                            class="form-control"
-                            rows="3"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="lead">Lead</label>
+                        <textarea
+                        id="lead"
+                        name="lead"
+                        v-model.trim="video.lead"
+                        placeholder="Lead"
+                        class="form-control"
+                        rows="3"></textarea>
+                    </div>
 
-                <div v-if="file" class="form-group">
-                    <label for="name">Source</label>
-                    <input
-                            id="source"
-                            type="text"
-                            name="source"
-                            v-model.trim="video.source"
-                            placeholder="Source"
-                            class="form-control">
-                </div>
-            </div>
+                    <div class="form-group">
+                        <label for="name">Source</label>
+                        <input
+                        id="source"
+                        type="text"
+                        name="source"
+                        v-model.trim="video.source"
+                        placeholder="Source"
+                        class="form-control">
+                    </div>
 
-            <div v-if="file" class="form-actions">
-                <button
+                    <div class="form-actions">
+                        <button
                         class="btn btn-primary"
                         type="submit"
-                        :disabled="!video.name || !video.lead || !video.source">
-                    Submit
-                </button>
-                <button
-                        class="btn btn-default"
-                        type="button"
-                        @click="reset">
-                    Reset
-                </button>
+                        :disabled="!video.name || !video.lead || !video.source"
+                        >Video hochladen</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -94,11 +85,11 @@
 
                 if (name && lead && source) {
                     Api.http
-                        .post('/videos', {name, lead, source})
-                        .then(response => this.handleVideoUpload(response))
-                        .catch(err => Vue.toast('Error in saving the Video. Please retry', {
-                            className : ['nau_toast','nau_warning'],
-                        }));
+                    .post('/videos', {name, lead, source})
+                    .then(response => this.handleVideoUpload(response))
+                    .catch(err => Vue.toast('Error in saving the Video. Please retry', {
+                        className : ['nau_toast','nau_warning'],
+                    }));
                 } else {
                     Vue.toast('Please provide the name, lead and source for the video', {
                         className : ['nau_toast','nau_warning'],
@@ -111,11 +102,11 @@
                 var data = new FormData();
                 data.append('video', this.file);
                 Api.http
-                    .post(uploadUrl, data)
-                    .then(response => this.completeUpload(response))
-                    .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
-                        className : ['nau_toast','nau_warning'],
-                    }));
+                .post(uploadUrl, data)
+                .then(response => this.completeUpload(response))
+                .catch(err => Vue.toast('Error in uploading the Video. Please retry the upload', {
+                    className : ['nau_toast','nau_warning'],
+                }));
             },
 
             completeUpload(data) {
@@ -124,23 +115,11 @@
                 var tokenString = urlArray[urlArray.length - 1];
 
                 Api.http
-                    .post(tokenString)
-                    .then(response => this.$router.push('/videos'))
-                    .catch(err => Vue.toast('Error in completing the upload of the Video. Please retry the upload', {
-                        className : ['nau_toast','nau_warning'],
-                    }));
-            },
-
-            reset() {
-                this.video = {
-                    name: '',
-                    lead: '',
-                    source: '',
-                };
-                this.videoBlob = {
-                    video: ''
-                };
-                this.file = null;
+                .post(tokenString)
+                .then(response => this.$router.push('/videos'))
+                .catch(err => Vue.toast('Error in completing the upload of the Video. Please retry the upload', {
+                    className : ['nau_toast','nau_warning'],
+                }));
             },
 
             onDrop(e) {

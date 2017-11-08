@@ -45,6 +45,10 @@ class Api {
         return this.hasRole('admin');
     }
 
+    isChefJournalist() {
+        return this.hasRole('chef-journalist');
+    }
+
     //Images
     getImage() {
         return this.store.state.selected_image_id;
@@ -68,6 +72,28 @@ class Api {
 
     resetImageSelector() {
         return this.store.dispatch('RESET_IMAGE_SELECTOR');
+    }
+
+    getImageTypes() {
+        return this.store.state.imageTypes.map((type) => {
+            return this.store.state.availableImageTypes[type];
+        });
+    }
+
+    getAvailableImageTypes() {
+        return this.store.state.availableImageTypes;
+    }
+
+    setImageType(type) {
+        if(Number.isInteger(type)) {
+            type = [type];
+        }
+
+        return this.store.dispatch('SET_IMAGE_TYPES', type);
+    }
+
+    resetImageTypes() {
+        return this.store.dispatch('RESET_IMAGE_TYPES');
     }
 
     //Videos

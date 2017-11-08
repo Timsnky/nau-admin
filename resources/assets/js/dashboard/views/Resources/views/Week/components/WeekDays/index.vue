@@ -69,7 +69,7 @@
 
 <style lang="scss">
     .day {
-        border: 1px solid #dddddd;
+        border: 1px solid #e1e5ec;
         padding: 20px 10px;
         height: 100px;
 

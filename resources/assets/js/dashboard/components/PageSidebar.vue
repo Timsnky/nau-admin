@@ -61,7 +61,7 @@
                 <li class="nav-item">
                     <router-link :to="{name: 'resources.week'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-calendar"></i>
-                        <span class="title">Ressourcenmanagement</span>
+                        <span class="title">Tagesplanung</span>
                         <span class="arrow"></span>
                     </router-link>
                     <ul class="sub-menu">
@@ -73,6 +73,11 @@
                         <router-link :to="{name: 'holidays.list'}" tag="li" exact>
                             <a>
                                 <span class="title">Freitage</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'resources.master'}" tag="li" exact>
+                            <a>
+                                <span class="title">Masters</span>
                             </a>
                         </router-link>
                     </ul>
@@ -101,6 +106,14 @@
                     </a>
                 </router-link>
 
+                <!--Avatars -->
+                <router-link :to="{name: 'avatars.download'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-user-circle-o"></i>
+                        <span class="title">Avatars</span>
+                    </a>
+                </router-link>
+
                 <!--Users -->
                 <router-link v-if="Api.isAdmin()" :to="{name: 'users.list'}" tag="li" class="nav-item" exact>
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -125,6 +138,14 @@
                     </a>
                 </router-link>
 
+                <!--Surveys -->
+                <router-link :to="{name: 'sportticker.replacements'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-futbol-o"></i>
+                        <span class="title">Sport Ticker</span>
+                    </a>
+                </router-link>
+
                 <!--Frontpage -->
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -133,14 +154,19 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
-                        <router-link :to="{name: 'frontpage.big' }" tag="li" exact>
+                        <router-link :to="{name: 'frontpage.top.breaking'}" tag="li" exact>
                             <a>
-                                <span class="title">Big</span>
+                                <span class="title">Top Breaking News</span>
                             </a>
                         </router-link>
-                        <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
+                        <router-link :to="{name: 'frontpage.top.news'}" tag="li" exact>
                             <a>
-                                <span class="title">Top Artikel</span>
+                                <span class="title">Top News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.video'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Videos</span>
                             </a>
                         </router-link>
                         <router-link :to="{name: 'frontpage.top.community'}" tag="li" exact>

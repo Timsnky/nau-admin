@@ -2,9 +2,6 @@ import '../bootstrap';
 import { store } from '../store/Store';
 import router from './Router';
 
-// Check auth status
-store.dispatch('LOAD_AUTENTICATED_USER');
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -39,3 +36,7 @@ $('textbox,input').keyup(function() {
     if (updatedText != this.value)
         this.value = updatedText;
 });
+
+// Check auth status
+store.dispatch('LOAD_AUTENTICATED_USER');
+store.dispatch('FETCH_MASTERS');

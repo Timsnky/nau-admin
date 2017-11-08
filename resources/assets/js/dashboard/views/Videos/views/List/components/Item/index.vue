@@ -4,25 +4,26 @@
             <div class="video_section">
                 <div class="video_section_left">
                     <div class="video_section_video">
-                        <router-link
-                                :to="{name: 'videos.edit', params: {id: video.id}}">
+                        <router-link :to="{name: 'videos.edit', params: {id: video.id}}">
                             <img :src="video.thumbnail" alt="Video Thumbnail">
                         </router-link>
                     </div>
                     <div class="video_section_details">
-                        <p><strong>{{ video.name }}</strong></p>
+                        <router-link :to="{name: 'videos.edit', params: {id: video.id}}">
+                            <p><strong>{{ video.name }}</strong></p>
+                        </router-link>
                         <p>{{ video.lead }}</p>
                     </div>
                 </div>
                 <div class="video_section_right">
                     <span>
-                        {{ date }}
+                        {{ moment(video.created_at).format('DD.MM.YYYY HH:mm') }}
                     </span>
                     <button
-                            class="btn btn-danger"
+                            class="btn red"
                             type="button"
                             @click="handleDeleteVideo">
-                        Löschen
+                        <i class="fa fa-trash"></i> Löschen
                     </button>
                     <div v-if="!video.processed">
                         <span><i class="fa fa-spin fa-spinner"></i> Wird verarbeitet ...</span>
@@ -41,8 +42,8 @@
         },
 
         computed: {
-            date() {
-                return moment(this.video.created_at).format('DD.MM.YYYY');
+            moment() {
+                return moment;
             }
         },
 

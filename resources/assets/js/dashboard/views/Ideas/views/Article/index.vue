@@ -38,9 +38,7 @@
 
                 <div class="form-group">
                     <label for="lead">Publizierdatum</label>
-                    <date-time
-                    @changeDate="changeDate"
-                    :date="article.published_at" />
+                    <date-time v-model="article.published_at" format="DD.MM.YYYY HH:mm" />
                 </div>
 
             </div>
@@ -95,17 +93,14 @@
                             dateline: dateline,
                             lead: lead,
                             internal_title: title,
-                            internal_dateline: dateline
+                            internal_dateline: dateline,
+                            published_at: published_at.format('YYYY-MM-DD HH:mm:ss')
                         })
                         .then(response => this.$router.push(`/ideas/${this.idea.id}`))
                         .catch(err => console.log('Show some error message here'));
                 } else {
                     console.log('Show some error message here');
                 }
-            },
-
-            changeDate(date) {
-                this.article.published_at = date;
             },
         }
     }

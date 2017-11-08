@@ -17,8 +17,8 @@
             <div class="col-md-6 text-right">
                 <router-link
                     :to="{name: 'videos.create'}"
-                    class="btn btn-primary pull-right">
-                    Video hochladen
+                    class="btn blue pull-right">
+                    <i class="fa fa-upload"></i> Video hochladen
                 </router-link>
             </div>
             <video-select-modal></video-select-modal>
@@ -55,7 +55,6 @@
 </template>
 <script>
     import Item from './components/Item';
-    import Pagination from './components/Pagination';
     import VideoSelectModal from 'dashboard/components/VideoSelectModal';
 
     export default {
@@ -91,7 +90,6 @@
 
         components: {
             Item,
-            Pagination,
             VideoSelectModal
         },
 
@@ -103,12 +101,27 @@
 
         methods: {
             deleteVideo(video) {
-                Api.http
+                swal({
+                    title: 'Video wirklich löschen?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Abbrechen',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ja, löschen'
+                }).then(() => {
+                    Api.http
                     .delete(`/videos/${video.id}`)
-                    .then(response => this.videos = this.videos.filter(item => item.id !== video.id))
-                    .catch(err => Vue.toast('Error occured while deleting video. Please retry', {
-                        className : ['nau_toast','nau_warning'],
-                    }));
+                    .then(response => {
+                        this.videos.splice(this.videos.indexOf(video), 1);
+                    })
+                    .catch((error) => {
+                        swal({
+                            title: 'Fehler beim löschen',
+                            type: 'error',
+                        })
+                    })
+                });
+
             },
 
             navigate(page) {

@@ -2,7 +2,7 @@
     <div class="form-body">
         <div class="form-body">
             <div class="form-group">
-                <label>Tags (min. 4)</label>
+                <label>Tags</label>
                 <multiselect
                         id="tagsMultiSelect"
                         v-model="articleTags"
@@ -23,7 +23,7 @@
                         :loading="tagIsLoading"
                         @tag="addArticleTag"
                         @search-change="searchTags"
-                        @remove="deleteTags">
+                        @remove="deleteTag">
                 </multiselect>
             </div>
 
@@ -51,7 +51,7 @@
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleTagsAndRelatedStories(articleId)"
                     :disabled="articleId == null">
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-
     import Multiselect from 'vue-multiselect';
 
     export default {
@@ -72,10 +71,8 @@
                 ],
                 existingTags: [
                 ],
-                searchedTag: {
-                    query: '',
-                    promise: true
-                },
+                deletedTags: [],
+                originalTags: [],
                 tagIsLoading: false,
                 articleRelatedStories: [
                 ],
@@ -134,6 +131,7 @@
                     .then(response => {
                         if(response.status === 200)
                         {
+                            this.originalTags = response.data.map((tag) => { return tag.tag });
                             this.articleTags = response.data;
                         }
                         else
@@ -177,34 +175,22 @@
             {
                 const tag = {
                     tag: newTag,
-                    id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
-                    created_at: null
+                    id: null,
                 };
-                this.existingTags.push(tag);
                 this.articleTags.push(tag);
             },
 
             //Call the server to search for tags
-            searchTags(query)
+            searchTags: _.debounce(function(query)
             {
-                this.searchedTag.query = query;
                 this.tagIsLoading = true;
-
-                if(this.searchedTag.promise)
-                {
-                    this.searchedTag.promise = false;
-
-                    setTimeout(() => {
-                        Api.http
-                            .get(`/tags?search=${this.searchedTag.query}`)
-                            .then(response => {
-                                this.existingTags = response.data;
-                                this.searchedTag.promise = true;
-                                this.tagIsLoading = false;
-                            });
-                    }, 400);
-                }
-            },
+                Api.http
+                    .get(`/tags?search=${query}`)
+                    .then(response => {
+                        this.existingTags = response.data;
+                        this.tagIsLoading = false;
+                    });
+            }, 400),
 
             //Validate the article
             validateTagsAndRelatedStories(articleId)
@@ -216,17 +202,6 @@
                 {
                     return errorString;
                 }
-
-                // Temporary removed
-                // if(this.articleTags.length < 4)
-                // {
-                //     errorArray.push('at least 4 tags');
-                // }
-
-//                if(this.articleRelatedStories.length < 1)
-//                {
-//                    errorArray.push('at least 1 related story');
-//                }
 
                 if(errorArray.length === 1)
                 {
@@ -273,113 +248,57 @@
             },
 
             //Save the article tags
-            saveArticleTags(articleId)
+            async saveArticleTags(articleId)
             {
-                let vm = this;
-
-                this.articleTags.forEach(function (value, key)
-                {
-                    if(value.created_at)
-                    {
-                        Api.http
-                            .put(`/tags/${value.id}`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 200)
-                                {
-                                    let pivot = null;
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key, articleId);
-                                    Vue.toast('Article tags updated successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                    else
-                    {
-                        Api.http
-                            .post(`/tags`, {
-                                tag: value.tag,
-                            })
-                            .then(response => {
-                                if(response.status === 201)
-                                {
-                                    let pivot = null;
-
-                                    if(vm.articleTags[key].pivot)
-                                    {
-                                        pivot = vm.articleTags[key].pivot
-                                    }
-                                    vm.articleTags[key] = response.data;
-                                    vm.articleTags[key].pivot = pivot;
-                                    vm.linkTagToArticle(key, articleId);
-                                    Vue.toast('Article tags created successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
+                this.deletedTags.forEach(async (tag, key) => {
+                    if(this.deletedTags.indexOf(tag) !== -1) {
+                        await this.unlinkTagFromArticle(articleId, tag);
+                        this.deletedTags.splice(this.deletedTags.indexOf(tag), 1)
                     }
                 });
+
+                this.articleTags.forEach(async (tag, key) => {
+                    if(tag.id == null) {
+                        tag = await this.createNewTag(tag);
+                        await this.linkTagToArticle(articleId, tag);
+                    } else if(this.originalTags.indexOf(tag.tag) === -1) {
+                        await this.linkTagToArticle(articleId, tag);
+                    }
+                });
+
+                this.originalTags = this.articleTags.map((tag) => { return tag.tag });
+            },
+
+            createNewTag(tag) {
+                return Api.http.post('/tags', {tag: tag.tag})
+                    .then((response) => { return response.data });
             },
 
             //Link a tag to an article
-            linkTagToArticle(key, articleId)
+            linkTagToArticle(articleId, tag)
             {
-                if(! (this.articleTags[key].pivot && this.articleTags[key].pivot.article_id === articleId))
-                {
-                    Api.http
-                        .put(`/articles/${articleId}/tags/${this.articleTags[key].id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                this.articleTags[key].pivot = {
-                                    article_id : articleId,
-                                    tag_id : this.articleTags[key].id
-                                };
-                                Vue.toast('Article tag item linked successfully', {
-                                    className: ['nau_toast', 'nau_success'],
-                                });
-                            }
-                            else
-                            {
-                                Vue.toast('Error in linking the article tag item. Please retry again', {
-                                    className: ['nau_toast', 'nau_warning'],
-                                });
-                            }
-                        });
-                }
+                return Api.http
+                    .put(`/articles/${articleId}/tags/${tag.id}`)
+                    .then(response => {
+                        return response.data;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    })
+            },
+
+            unlinkTagFromArticle(articleId, tag) {
+                return Api.http.delete(`/articles/${articleId}/tags/${tag.id}`);
             },
 
             //Delete a tag
-            deleteTags(tag)
+            deleteTag(tag)
             {
-                let vm = this;
+                if(tag.id === null) {
+                    return;
+                }
 
-                vm.articleTags.forEach(function (value, key)
-                {
-                    if(value.id === tag.id && value.created_at)
-                    {
-
-                        Api.http
-                            .delete(`/articles/${vm.articleId}/tags/${vm.articleTags[key].id}`)
-                            .then(response => {
-                                if(response.status === 204)
-                                {
-                                    Vue.toast('Article tags deleted successfully', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                }
-                            });
-                    }
-                });
+                this.deletedTags.push(tag);
             },
 
             /**
@@ -468,7 +387,3 @@
         }
     }
 </script>
-
-<style>
-
-</style>

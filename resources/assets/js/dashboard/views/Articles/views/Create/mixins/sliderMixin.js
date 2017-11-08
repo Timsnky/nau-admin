@@ -52,17 +52,11 @@ let sliderMixin = {
         //Create or Update a slider
         uploadArticleSliders(articleId)
         {
-            let vm = this;
-
-            this.articleSliders.forEach(function (value, key)
-            {
-                if(value.id && value.pivot && value.pivot.article_id === articleId)
-                {
-                    vm.updateSliderDetails(value, key);
-                }
-                else
-                {
-                    vm.createSliderDetails(value, key, articleId)
+            this.articleSliders.forEach((value, key) => {
+                if(value.id) {
+                    this.updateSliderDetails(value, key);
+                } else {
+                    this.createSliderDetails(value, key, articleId)
                 }
             })
         },
@@ -70,24 +64,18 @@ let sliderMixin = {
         //Create a slider details
         createSliderDetails(slider, key, articleId)
         {
-            let vm = this;
             Api.http
                 .post(`/articles/${articleId}/sliders`, {
                     name: slider.name
                 })
-                .then(response => {
-                    if(response.status === 201)
-                    {
-                        let images = vm.articleSliders[key].images;
-                        vm.articleSliders[key] = response.data;
-                        vm.articleSliders[key]['images'] = images;
-                        vm.linkImagesToSlider(key);
+                .then(async (response) => {
+                    if(response.status === 201) {
+                        this.$set(this.articleSliders, key, $.extend(this.articleSliders[key], response.data));
+                        await this.linkImagesToSlider(key);
                         Vue.toast('Article slider added successfully', {
                             className: ['nau_toast', 'nau_success'],
                         });
-                    }
-                    else
-                    {
+                    } else {
                         Vue.toast('Error in creating the slider. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
                         });
@@ -98,18 +86,14 @@ let sliderMixin = {
         //Update a slider details
         updateSliderDetails(slider, key)
         {
-            let vm = this;
             Api.http
                 .put(`/articles/${this.article.id}/sliders/${slider.id}`, {
                     name: slider.name
                 })
-                .then(response => {
-                    if(response.status === 200)
-                    {
-                        let images = vm.articleSliders[key].images;
-                        vm.articleSliders[key] = response.data;
-                        vm.articleSliders[key]['images'] = images;
-                        vm.linkImagesToSlider(key);
+                .then(async (response) => {
+                    if(response.status === 200) {
+                        await this.linkImagesToSlider(key);
+                        this.$set(this.articleSliders, key, $.extend(this.articleSliders[key], response.data));
                         Vue.toast('Article slider updated successfully', {
                             className: ['nau_toast', 'nau_success'],
                         });
@@ -124,49 +108,54 @@ let sliderMixin = {
         },
 
         //Link images to the slider
-        linkImagesToSlider(sliderKey)
+        async linkImagesToSlider(sliderKey)
         {
-            let vm = this;
+            return new Promise((resolve, reject) => {
+                var promises = [];
+                this.articleSliders[sliderKey].images.forEach((value, key) => {
+                    if(value.pivot.slider_id !== this.articleSliders[sliderKey].id || value.pivot.slider_id == null) {
+                        promises.push(this.saveImageLinkToSlider(sliderKey, value.id, key));
+                    } else if(value.pivot.order === key) {
+                        // Nothing has changed in the ordering
+                        return;
+                    } else {
+                        promises.push(Api.http
+                            .delete(`/sliders/${this.articleSliders[sliderKey].id}/images/${value.id}`)
+                            .then(response => {
+                                if(response.status === 204)
+                                {
+                                    this.saveImageLinkToSlider(sliderKey, value.id, key);
+                                }
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            })
+                        )
+                    }
+                });
 
-            this.articleSliders[sliderKey].images.forEach(function (value, key)
-            {
-                if(! (value.pivot.slider_id === vm.articleSliders[sliderKey].id))
-                {
-                    vm.saveImageLinkToSlider(sliderKey, value.id, key);
-                }
-                else
-                {
-                    Api.http
-                        .delete(`/sliders/${vm.articleSliders[sliderKey].id}/images/${value.id}`)
-                        .then(response => {
-                            if(response.status === 204)
-                            {
-                                vm.saveImageLinkToSlider(sliderKey, value.id, key);
-                            }
-                        });
-                }
+                Promise.all(promises).then(() => {
+                    resolve(true);
+                });
             });
         },
 
         //Save image link to slider
         saveImageLinkToSlider(sliderKey, imageId, key)
         {
-            let vm = this;
-            Api.http
-                .put(`/sliders/${vm.articleSliders[sliderKey].id}/images/${imageId}`, {
+            return Api.http
+                .put(`/sliders/${this.articleSliders[sliderKey].id}/images/${imageId}`, {
                     'order' : key
                 })
                 .then(response => {
-                    if (response.status === 204)
-                    {
-                        vm.articleSliders[sliderKey].images[key].pivot.slider_id = vm.articleSliders[sliderKey].id;
+                    if (response.status === 204) {
+                        this.articleSliders[sliderKey].images[key].pivot.slider_id = this.articleSliders[sliderKey].id;
+                        this.articleSliders[sliderKey].images[key].pivot.order = key;
 
                         Vue.toast('Slider image added to article successfully', {
                             className: ['nau_toast', 'nau_success'],
                         });
-                    }
-                    else
-                    {
+                    } else {
                         Vue.toast('Error in linking the image. Please retry again', {
                             className: ['nau_toast', 'nau_warning'],
                         });

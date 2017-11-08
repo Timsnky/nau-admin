@@ -1,7 +1,5 @@
 <template>
     <div>
-        <page-title title="Resource Management" sub="Day View" />
-
         <h2
             v-if="!isLoaded"
             class="text-center">
@@ -9,138 +7,92 @@
         </h2>
 
         <div v-else class="row">
-            <div class="col-md-6">
-                <div class="portlet light bordered">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <span class="caption-subject bold uppercase">Schichten</span>
-                        </div>
-                    </div>
-                    <div class="portlet-body">
-                        <ul
-                            class="list-group"
-                            v-if="day.shifts.length > 0">
-                            <li
-                                class="list-group-item clearfix"
-                                v-for="(shift, index) in day.shifts"
-                                v-if="shift.assigned"
-                                :key="index">
-                                {{ shift.name }} : {{ shift.assigned.name }}
+            <div class="col-md-4">
+                <h3>Schichten</h3>
+
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Schicht</th>
+                            <th>Zuweisung</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="shift in day.shifts">
+                            <td>{{ shift.name }}</td>
+                            <td><span v-if="shift.assigned">{{ shift.assigned.name }}</span></td>
+                            <td>
                                 <router-link
                                     :to="{name: 'shifts.associate', params: { id: shift.id }}"
-                                    class="btn btn-xs btn-warning pull-right">
-                                    Bearbeiten
+                                    class="btn btn-xs default pull-right">
+                                    <span v-if="shift.assigned"><i class="fa fa-user"></i> Ändern</span>
+                                    <span v-else><i class="fa fa-user"></i> Zuweisen</span>
                                 </router-link>
-                            </li>
-                            <li
-                                class="list-group-item clearfix"
-                                v-for="(shift, index) in day.shifts"
-                                v-if="!shift.assigned"
-                                :key="index">
-                                {{ shift.name }}
-                                <router-link
-                                    :to="{name: 'shifts.associate', params: { date, id: shift.id }}"
-                                    class="btn btn-xs btn-info pull-right">
-                                    Zuweisen
-                                </router-link>
-                            </li>
-                        </ul>
-                        <h4
-                            v-else
-                            class="text-center">
-                            Keine Schichten gefunden
-                        </h4>
-                    </div>
-                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
-            <div class="col-md-6">
-                <div class="portlet light bordered">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <span class="caption-subject bold uppercase">Themen am {{ moment(date).format('DD.MM.YYYY') }}</span>
-                        </div>
-                        <div class="tools">
-                            <a href="javascript:;" class="fullscreen" data-original-title="" title="" @click="toggleFullscreen()"> </a>
-                        </div>
-                    </div>
-                    <div class="portlet-body">
-                        <div
-                            v-if="day.topics.length > 0"
-                            v-for="(topic, index) in day.topics"
-                            class="panel panel-default">
-                            <div class="panel-heading clearfix">
-                                <h3 class="panel-title">{{ topic.name }} <router-link class="pull-right" :to="{name: 'topics.edit', params: {id: topic.id}}"><span class="fa fa-edit"></span> Bearbeiten</router-link></h3>
-
-                            </div>
-                            <div class="panel-body">
-                                <div v-if="topic.articles.length > 0">
-                                    <div
-                                        class="panel panel-default"
-                                        v-for="(article, index) in topic.articles">
-                                        <div class="panel-body">
-                                            <h4 class="clearfix">{{ article.title }}
-                                                <router-link
-                                                    :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
-                                                    class="btn btn-xs btn-warning pull-right">
-                                                    Bearbeiten
-                                                </router-link>
-                                            </h4>
-                                            <h5>
-                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.pivot.time, 'HH:mm:ss').format('HH:mm') }}
-                                            </h5>
-
-                                            <ul
-                                                class="list-group"
-                                                v-if="article.authors.length > 0">
-                                                <li
-                                                    class="list-group-item"
-                                                    v-for="author in article.authors">
-                                                    {{ author.name }}
-                                                </li>
-                                            </ul>
-
-                                            <h5
-                                                v-else
-                                                class="text-center">
-                                                Keine Authoren gefunden
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h4
-                                    v-else
-                                    class="text-center">
-                                    Keine Artikel gefunden
-                                </h4>
-
-                                <router-link
-                                    :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
-                                    class="btn btn-primary">
-                                    Artikel hinzufügen
-                                </router-link>
-                            </div>
-                        </div>
-
-                        <h4
-                            v-else
-                            class="text-center">
-                            Keine Themen gefunden
-                        </h4>
-
+            <div class="col-md-8">
+                <h3 class="title">
+                    Themen am {{ moment(date).format('DD.MM.YYYY') }}
+                    <div class="pull-right">
+                        <small class="" v-if="foldermaster">Foldermaster: {{ foldermaster.name }}</small>
                         <router-link
                             :to="{name: 'topics.create', query: { date }}"
-                            class="btn btn-primary">
-                            Thema hinzufügen
+                            class="btn btn-sm blue">
+                            <i class="fa fa-plus"></i> Thema erstellen
                         </router-link>
                     </div>
+                </h3>
+
+                <div v-for="(topic, index) in day.topics" class="topic">
+                    <h4>
+                        <router-link class="topic-title-wrapper" :to="{name: 'topics.edit', params: {id: topic.id}}">
+                            <span class="topic-title">{{ topic.name }}</span> <i class="fa fa-edit"></i>
+                        </router-link>
+
+                        <div class="pull-right actions">
+                            <router-link
+                                :to="{name: 'topics.articles.create', params: { topicID: topic.id }, query: { date }}"
+                                class="btn btn-xs blue">
+                                <i class="fa fa-plus"></i> Neuen Artikel erstellen
+                            </router-link>
+
+                            <router-link
+                                :to="{name: 'topics.articles.link', params: { topicID: topic.id }, query: { date }}"
+                                class="btn btn-xs blue">
+                                <i class="fa fa-newspaper-o"></i> Bestehenden Artikel hinzufügen
+                            </router-link>
+                        </div>
+
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(article, index) in topic.articles">
+                                    <td>
+                                        <article-item :article="article" :topic="topic" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </h4>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import ArticleItem from './components/ArticleItem';
+
     export default {
         data() {
             return {
@@ -152,6 +104,19 @@
                 },
                 isLoaded: false,
             };
+        },
+
+        components: {
+            ArticleItem
+        },
+
+        computed: {
+            Api() {
+                return Api;
+            },
+            foldermaster() {
+                return this.$store.state.foldermaster;
+            }
         },
 
         created() {
@@ -184,19 +149,30 @@
             toggleFullscreen() {
                 this.fullscreen = !this.fullscreen;
                 this.$router.push({ query: { fullscreen: this.fullscreen }})
-            }
+            },
         }
     }
 </script>
 
-<style lang="scss">
-    .portlet-fullscreen {
-        * {
-            font-size: 3rem;
-        }
+<style lang="scss" scoped>
+    .title {
+        margin-bottom: 2em;
+    }
 
-        .btn {
-            display: none;
+    .topic {
+        .topic-title-wrapper {
+            .fa {
+                display: none;
+            }
+
+            &:hover .fa {
+                display: inline;
+            }
+
+            .topic-title {
+                font-weight: bold;
+                color: #4B77BE;
+            }
         }
     }
 </style>

@@ -1,42 +1,74 @@
 <template>
     <div>
-        <page-title title="Artikel" sub="Erfassen" />
-
         <div class="note note-danger" v-for="error in errors">
             <h4 class="block">{{ error.title }}</h4>
             <p>{{ error.message }}</p>
         </div>
 
 
-        <div class="row">
+        <div class="row actions">
             <div class="col-md-6">
+                <a
+                    v-if="article.id !== null"
+                    :href="article.preview_url"
+                    target="_blank"
+                    class="btn default blue-stripe">
+                    <i class="fa fa-desktop" aria-hidden="true"></i> Vorschau
+                </a>
+                <router-link
+                    :to="{name: 'articles.livetickers', params: {article: article.id}}"
+                    class="btn default blue-stripe">
+                    <i class="fa fa-paper-plane"></i> Liveticker
+                </router-link>
+                <button
+                    type="button"
+                    v-if="editingArticle"
+                    class="btn default blue-stripe"
+                    @click="duplicateArticle()">
+                    <i class="fa fa-copy"></i> Artikel kopieren
+                </button>
             </div>
             <div class="col-md-6 text-right">
                 <button
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndExit()">
-                    Speichern & Schliessen
+                    v-if="article.article_status && article.article_status.name == 'draft' && !article.community"
+                    type="button"
+                    class="btn blue-dark margin_left_5"
+                    @click="handleSaveAndReady()">
+                    Speichern & Ready
                 </button>
                 <button
-                        v-if="article.article_status && article.article_status.name !== 'published'"
-                        type="button"
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSaveAndPublish()">
-                    Speichern & Veröffentlichen
+                    v-if="article.article_status && article.article_status.name == 'ready' && !article.community"
+                    type="button"
+                    class="btn blue-dark margin_left_5"
+                    @click="handleSaveAndVerified()">
+                    Speichern & Verifizieren
                 </button>
+                <div class="btn-group" v-if="article.community">
+                    <button v-if="article.article_status.name === 'review'" class="btn blue-dark" @click="communityPublishArticle(article)"><i class="fa fa-thumbs-up"></i> Freischalten</button>
+                    <button v-if="article.article_status.name === 'review'" class="btn red" @click="communityDeclineArticle(article)"><i class="fa fa-thumbs-down"></i> Ablehnen</button>
+                </div>
                 <button
-                        class="btn btn-primary pull-right margin_left_5"
-                        @click="handleSubmit()">
+                    v-if="article.article_status && (article.article_status.name == 'verified')"
+                    type="button"
+                    class="btn blue-dark margin_left_5"
+                    @click="handleSaveAndPublish()">
+                    <i class="fa fa-paper-plane-o"></i> Speichern & Publizieren
+                </button>
+
+                <button
+                    class="btn blue margin_left_5"
+                    @click="handleSubmit()">
+                    <i class="fa fa-floppy-o"></i>
                     Speichern
                 </button>
-                <a
-                        v-if="article.id !== null"
-                        :href="article.preview_url"
-                        target="_blank"
-                        class="btn btn-primary pull-right margin_left_5">
-                    <i class="fa fa-desktop" aria-hidden="true"></i> Vorschau
-                </a>
+
+                <button
+                    type="button"
+                    class="btn blue margin_left_5"
+                    @click="handleSaveAndExit()">
+                    Speichern & Schliessen
+                </button>
+
             </div>
         </div>
         <form @submit.prevent="handleSubmit">
@@ -126,19 +158,24 @@
                                         class="form-control">
                                 <character-counter :limit="100" :itemString="article.seo_title"></character-counter>
                             </div>
+
+                            <div class="form-group" style="margin-top: 4em">
+                                <label for="notes">Notizen</label>
+
+                                <div ref="notes-toolbar" style="display: none;">
+                                    <a data-wysihtml5-command="bold" title="CTRL+B" class="btn blue btn-outline btn-sm"><i class="fa fa-bold"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea id="notes" ref="notes" v-model="article.notes" class="form-control" placeholder="Notizen zum Artikel" rows="8"></textarea>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
-                            </button>
-                            <button
-                                    type="button"
-                                    v-if="editingArticle"
-                                    class="btn btn-primary"
-                                    @click="duplicateArticle()">
-                                Artikel kopieren
                             </button>
                         </div>
                     </div>
@@ -189,7 +226,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
@@ -208,7 +245,7 @@
                                         <img id="mainImage" v-if="articleMainImage.url" :src="articleMainImage.url" alt="">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(1,null)">
+                                <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(1,null)">
                                     Teaser hochladen
                                 </button>
                             </div>
@@ -220,17 +257,17 @@
                                         <img v-if="articleTeaserImage.url" :src="articleTeaserImage.url" alt="">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(4,null)">
+                                <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(4,null)">
                                     Top Teaser hochladen
                                 </button>
-                                <!--<button type="button" class="btn btn-danger image_selection_btn" @click="deleteTeaserImage(article.id)">-->
+                                <!--<button type="button" class="btn red image_selection_btn" @click="deleteTeaserImage(article.id)">-->
                                     <!--Löschen-->
                                 <!--</button>-->
                             </div>
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="submit">
                                 Artikel speichern <i v-if="submitting_main" class="fa fa-spinner fa-spin"></i>
                             </button>
@@ -262,13 +299,13 @@
                                                 <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                 <button
-                                                        class="btn btn-danger btn-sm remove_btn"
+                                                        class="btn red btn-sm remove_btn"
                                                         type="button"
                                                         @click="confirmArticleImageDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                                 <button
-                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        class="btn blue btn-sm remove_btn"
                                                         type="button"
                                                         @click="updateImage(index)">
                                                     Update
@@ -278,13 +315,13 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(2, null)">
+                                    <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(2, null)">
                                         Bilder Hochladen
                                     </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
+                                    <!--<input type="file" class="btn blue" name="article_images" id="article_images" @change="articleImagesChange" multiple/>-->
                                 </div>
                             </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>-->
+                            <!--<button class="btn blue" type="button" :disabled="articleImages.length == 0 || disableArticleImagesSubmit" @click="uploadArticleImages(article.id)">Save images</button>-->
                         </div>
 
                         <!--Sliders-->
@@ -305,13 +342,13 @@
                                                     <input class="form-control margin_top_5" type="text" v-model="image.source" placeholder="Enter source for image (required)"/>
                                                     <input class="form-control margin_top_5" type="text" v-model="image.lead" placeholder="Enter lead for image"/>
                                                     <button
-                                                            class="btn btn-danger btn-sm remove_btn"
+                                                            class="btn red btn-sm remove_btn"
                                                             type="button"
                                                             @click="confirmSliderImageDelete(sliderIndex, index)">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                     <button
-                                                            class="btn btn-primary btn-sm remove_btn"
+                                                            class="btn blue btn-sm remove_btn"
                                                             type="button"
                                                             @click="updateSliderImage(sliderIndex, index)">
                                                         Update
@@ -321,18 +358,18 @@
                                         </draggable>
                                     </div>
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-primary image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
+                                        <button type="button" class="btn blue image_selection_btn" @click="showImageSelectionModal(3, sliderIndex)">
                                             Bilder Hochladen
                                         </button>
-                                        <button type="button" class="btn btn-danger image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
+                                        <button type="button" class="btn red image_selection_btn" @click="confirmSliderDelete(sliderIndex)">
                                             Löschen
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" @click="addArticleSlider()">Diashow hinzufügen
+                            <button type="button" class="btn blue" @click="addArticleSlider()">Diashow hinzufügen
                             </button>
-                            <!--<button class="btn btn-primary" type="button"-->
+                            <!--<button class="btn blue" type="button"-->
                                     <!--:disabled="articleSliders.length == 0 || article.id == null"-->
                                     <!--@click="uploadArticleSliders(article.id)">Save sliders-->
                             <!--</button>-->
@@ -357,13 +394,13 @@
                                                 <input class="form-control" type="text" v-model="video.source" placeholder="Enter source for video (required)"/>
                                                 <input class="form-control margin_top_5" type="text" v-model="video.lead" placeholder="Enter lead for video"/>
                                                 <button
-                                                        class="btn btn-danger btn-sm remove_btn"
+                                                        class="btn red btn-sm remove_btn"
                                                         type="button"
                                                         @click="confirmVideoDelete(index)">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                                 <button
-                                                        class="btn btn-primary btn-sm remove_btn"
+                                                        class="btn blue btn-sm remove_btn"
                                                         type="button"
                                                         @click="updateVideo(index)">
                                                     Update
@@ -373,17 +410,17 @@
                                     </div>
                                 </div>
                                 <div class="form-actions selection_sections">
-                                    <button type="button" class="btn btn-primary image_selection_btn" @click="showVideoSelectionModal()">
+                                    <button type="button" class="btn blue image_selection_btn" @click="showVideoSelectionModal()">
                                         Videos Hochladen
                                     </button>
-                                    <!--<input type="file" class="btn btn-primary" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
+                                    <!--<input type="file" class="btn blue" name="article_videos" id="article_videos" @change="articleVideosChange" multiple/>-->
                                 </div>
 
                             </div>
-                            <!--<button class="btn btn-primary" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>-->
+                            <!--<button class="btn blue" type="button" :disabled="articleVideos.length == 0 || disableArticleVideosSubmit" @click="uploadArticleVideos(article.id)">Save videos</button>-->
                         </div>
                         <div class="form-actions">
-                            <button type="button" class="btn btn-primary image_selection_btn" @click="saveArticleMedia(article.id)">
+                            <button type="button" class="btn blue image_selection_btn" @click="saveArticleMedia(article.id)">
                                 Save Media
                             </button>
                         </div>
@@ -404,7 +441,7 @@
                     <!--DOOH Videos-->
                     <div class="tab-pane" id="articleDoohVideos">
                         <div class="form-body">
-                            <dooh-video :article-id="article.id" :dooh-video-id="article.dooh_video_id"></dooh-video>
+                            <dooh-video v-if="article.dooh" :dooh-timeout="article.dooh.timeout" :article-id="article.id" :dooh-video-id="article.dooh ? article.dooh.video_id : null"></dooh-video>
                         </div>
                     </div>
 
@@ -503,19 +540,21 @@
                             </div>
                             <div class="form-group">
                                 <label>Publikationsdatum</label>
-                                <date-and-time
-                                        @changeDate="changeDate"
-                                        :date="article.published_at ? publicationDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.published_at"
+                                />
                             </div>
                             <div class="form-group">
                                 <label>Order Date</label>
-                                <date-and-time
-                                        @changeDate="changeOrderDate"
-                                        :date="article.order_date ? orderDate : '' "/>
+                                <date-time
+                                    format="DD.MM.YYYY HH:mm"
+                                    v-model="article.order_date"
+                                />
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Notification
+                                    <input type="checkbox" v-model="article.push_notification" @change="resetArticleRegions()" value="true"> Push Nachricht
                                     <span></span>
                                 </label>
                             </div>
@@ -536,13 +575,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display" value="true">Übersicht anzeigen
+                                    <input type="checkbox" v-model="article.display" value="true">In Übersicht anzeigen
                                     <span></span>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label class="mt-checkbox no_margin_bottom">
-                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in Liste anzeigen wenn Big
+                                    <input type="checkbox" v-model="article.display_while_big" value="true">Auch in der Liste anzeigen wenn Big
                                     <span></span>
                                 </label>
                             </div>
@@ -561,7 +600,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="button"
                                     @click="saveSettings(article.id)"
                                     :disabled="articleAuthors.length < 1 || article.id == null">
@@ -753,7 +792,7 @@
                         </div>
                         <div class="form-actions">
                             <button
-                                    class="btn btn-primary"
+                                    class="btn blue"
                                     type="button"
                                     @click="saveSortedElements(article.id)"
                                     :disabled="article.id == null">
@@ -764,6 +803,7 @@
                 </div>
                 <image-select-modal></image-select-modal>
                 <video-select-modal></video-select-modal>
+                <verification-modal ref="verification-modal"></verification-modal>
             </div>
         </form>
     </div>
@@ -771,7 +811,7 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import TwitterElement from 'dashboard/components/TwitterTweet';
-    import DateAndTime from 'dashboard/components/DateAndTime';
+    import DateTime from 'dashboard/components/DateTime';
     import draggable from 'vuedraggable';
     import Surveys from './components/Surveys';
     import ExternalVideos from './components/ExternalVideos';
@@ -780,6 +820,7 @@
     import Tags from './components/Tags';
     import Learnings from './components/Learnings';
     import SocialMedia from './components/SocialMedia';
+    import VerificationModal from './components/VerificationModal';
     import Bodies from './components/Bodies';
     import CharacterCounter from 'dashboard/components/CharacterCounter';
     import ArticleSorting from './components/ArticleSorting';
@@ -787,6 +828,7 @@
     import ExternalVideoElement from '../Liveticker/views/Show/components/Elements/ExternalVideoElement';
     import DoohVideo from './components/DoohVideos';
 //    import InfoBoxes from './components/InfoBoxes';
+    import communityMixin from './mixins/communityMixin';
     import videoMixin from './mixins/videoMixin';
     import imageMixin from './mixins/imageMixin';
     import sliderMixin from './mixins/sliderMixin';
@@ -806,6 +848,7 @@
                     internal_dateline: '',
                     internal_title: '',
                     lead: '',
+                    notes: '',
                     id: null,
                     published_at: null,
                     order_date: null,
@@ -886,13 +929,14 @@
             initializationMixin,
             publishMixin,
             articleSaveMixin,
-            mainArticleImageMixin
+            mainArticleImageMixin,
+            communityMixin,
         ],
 
         components: {
             Multiselect,
             TwitterElement,
-            DateAndTime,
+            DateTime,
             draggable,
             Surveys,
             ExternalVideos,
@@ -906,7 +950,8 @@
             ArticleSorting,
             TimelineItem,
             ExternalVideoElement,
-            DoohVideo
+            DoohVideo,
+            VerificationModal
 //            InfoBoxes
         },
 
@@ -959,12 +1004,6 @@
                 }
 
                 return false;
-            },
-
-            //Compute the publication date
-            publicationDate()
-            {
-                return moment(this.article.published_at).format('YYYY-MM-DD HH:mm');
             },
 
             //Compute the order date
@@ -1183,6 +1222,7 @@
         beforeDestroy: function ()
         {
             this.leadEditor.destroy();
+            this.notesEditor.destroy();
         }
     }
 </script>
@@ -1410,4 +1450,8 @@
  /*   img {
         max-width: 100%;
     }*/
+
+    .actions {
+        margin-bottom: 1em;
+    }
 </style>

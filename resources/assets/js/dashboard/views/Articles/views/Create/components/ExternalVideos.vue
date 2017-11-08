@@ -26,7 +26,7 @@
             </div>
             <div class="form-actions">
                 <button
-                        class="btn btn-primary"
+                        class="btn blue"
                         type="button"
                         @click="saveExternalVideo()"
                         :disabled="articleId == null || !(externalVideo.url)">
