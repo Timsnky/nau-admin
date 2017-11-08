@@ -29,6 +29,7 @@
                             <socialmedia-input v-if="type.value === 'socialmedia'" @new-post="fetchLivetickers" />
                             <body-input v-if="type.value === 'body'" @new-post="fetchLivetickers" />
                             <external-video-input v-if="type.value === 'external-video'" @new-post="fetchLivetickers" />
+                            <image-input v-if="type.value === 'image'" @new-post="fetchLivetickers" />
                             <sport-ticker-input v-if="type.value === 'sport-ticker'" @new-post="fetchLivetickers" />
                             <comment-input v-if="type.value === 'comment'" @new-post="fetchLivetickers" />
                         </span>
@@ -41,6 +42,7 @@
                 <socialmedia-element v-if="liveticker.type === 'socialmedia'" :element="liveticker" />
                 <external-video-element v-if="liveticker.type === 'externalvideo'" :element="liveticker" />
                 <body-element v-if="liveticker.type === 'body'"><span v-html="liveticker.content"></span></body-element>
+                <image-element v-if="liveticker.type === 'image'" :element="liveticker"></image-element>
                 <comment-element v-if="liveticker.type === 'comment'" :comment="liveticker" />
                 <sport-ticker-element v-if="liveticker.type === 'sportticker'" :element="liveticker" />
 
@@ -60,6 +62,8 @@
     import CommentElement from './components/Elements/CommentElement'
     import SportTickerInput from './components/Inputs/SportTickerInput'
     import SportTickerElement from './components/Elements/SportTickerElement'
+    import ImageInput from './components/Inputs/ImageInput'
+    import ImageElement from './components/Elements/ImageElement'
 
     export default {
         data() {
@@ -70,6 +74,7 @@
                 content: '',
                 options: [
                     {name: 'Text', value: 'body'},
+                    {name: 'Bild', value: 'image'},
                     {name: 'Socialmedia', value: 'socialmedia'},
                     {name: 'Externes Video', value: 'external-video'},
                     {name: 'Kommentar', value: 'comment'},
@@ -90,6 +95,8 @@
             'external-video-element': ExternalVideoElement,
             'comment-input': CommentInput,
             'comment-element': CommentElement,
+            ImageInput,
+            ImageElement,
         },
 
         methods: {
