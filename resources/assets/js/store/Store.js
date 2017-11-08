@@ -42,6 +42,8 @@ export const store = new Vuex.Store({
         foldermaster: null,
         liveDirector: null,
         chameleon: null,
+        regions: [],
+        regionsLoadedAt: 0,
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -60,6 +62,15 @@ export const store = new Vuex.Store({
                     reject(error);
                 })
             })
+        },
+        FETCH_REGIONS: async (store) => {
+            let time = Math.round(new Date().getTime()/1000.0);
+            if(time < store.state.regionsLoadedAt + (60 * 30)) {
+                return;
+            }
+
+            var response = await Api.http.get('/regions');
+            store.commit('SET_REGIONS', response.data);
         },
         FETCH_FOLDERMASTER: async ({commit}) => {
             var response = await Api.http.get('/foldermaster');
@@ -150,6 +161,10 @@ export const store = new Vuex.Store({
         },
         CLEAR_NOTIFICATIONS: (state) => {
             state.notifications = [];
+        },
+        SET_REGIONS: (state, regions) => {
+            state.regions = regions;
+            state.regionsLoadedAt = Math.round(new Date().getTime()/1000.0);
         },
         SET_USER: (state, { user }) => {
             state.user = user;

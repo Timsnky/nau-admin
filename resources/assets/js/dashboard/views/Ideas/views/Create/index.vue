@@ -1,7 +1,5 @@
 <template>
     <div id="ideaCreateSection">
-        <page-title title="Ideas" sub="Create" />
-
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
@@ -33,6 +31,23 @@
                             {{ channel.display_name }}
                         </option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Regionen</label>
+                    <div class="form-group">
+                        <div class="row">
+
+                            <div class="col-md-3 col-sm-12"
+                                 v-for="(region, index) in regions">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="idea.regions" :value="region">{{ region.name }}
+                                    <span></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -70,12 +85,6 @@
                     :disabled="!idea.title || !idea.body">
                     Submit
                 </button>
-                <button
-                    class="btn btn-default"
-                    type="button"
-                    @click="reset">
-                    Reset
-                </button>
             </div>
             <image-select-modal></image-select-modal>
         </form>
@@ -92,7 +101,8 @@
                 idea: {
                     title: '',
                     body: '',
-                    channel: 0
+                    channel: 0,
+                    regions: [],
                 },
                 ideaImages: [],
                 channels: [],
@@ -106,6 +116,9 @@
             {
                 return Api.getImage();
             },
+            regions() {
+                return this.$store.state.regions;
+            }
         },
 
         watch: {
@@ -130,7 +143,14 @@
 
                 if (title && body) {
                     Api.http
-                        .post('/ideas', { title, body })
+                        .post('/ideas', {
+                            title: this.idea.title,
+                            body: this.idea.body,
+                            channel: this.idea.channel,
+                            regions: this.idea.regions.map((region) => {
+                                return region.id;
+                            }),
+                        })
                         .then(response =>
                         {
                             this.idea = response.data;
@@ -145,14 +165,6 @@
                     Vue.toast('Please provide the idea title and body in order to save', {
                         className: ['nau_toast', 'nau_warning'],
                     });
-                }
-            },
-
-            reset() {
-                this.idea = {
-                    title: '',
-                    body: '',
-                    channel_id: 0
                 }
             },
 
@@ -263,10 +275,17 @@
                     });
 
             },
+
+            //Get the regions for the checkboxes
+            initializeRegions()
+            {
+                this.$store.dispatch('FETCH_REGIONS');
+            },
         },
         mounted: function ()
         {
             this.initializeChannels();
+            this.initializeRegions();
         }
     }
 </script>
