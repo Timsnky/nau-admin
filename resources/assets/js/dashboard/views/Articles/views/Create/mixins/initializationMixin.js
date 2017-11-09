@@ -23,7 +23,6 @@ let initializationMixin = {
 
                         this.articleChannel = this.article.channel.id;
 
-                        this.initializeLeadEditor(this);
                         if (this.article.teaser_id) {
                             this.initializeArticleTeaserImage(this.article.teaser_id);
                         }
