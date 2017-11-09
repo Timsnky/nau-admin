@@ -5,7 +5,7 @@
             type="text"
             name="date"
             :value="formattedDate"
-            :placeholder="formattedToday"
+            :placeholder="placeholder || formattedToday"
             class="form-control">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>
@@ -19,7 +19,8 @@
                 type: String,
                 default: 'YYYY-MM-DD'
             },
-            minDate: String
+            minDate: String,
+            placeholder: String,
         },
 
         computed: {

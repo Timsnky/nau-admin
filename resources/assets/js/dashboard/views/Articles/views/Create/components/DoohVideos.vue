@@ -21,7 +21,7 @@
 
             <div v-if="doohVideo.id" class="form-group">
                 <label>Letzte Ausstrahlung</label>
-                <date-time format="DD.MM.YYYY HH:mm" v-model="timeout" />
+                <date-time format="DD.MM.YYYY HH:mm" v-model="timeout" placeholder="Kein Datum gesetzt" />
             </div>
         </div>
         <div v-if="doohVideo.url || doohVideo.id" class="form-group">
