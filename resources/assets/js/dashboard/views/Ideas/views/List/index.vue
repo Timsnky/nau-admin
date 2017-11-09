@@ -157,7 +157,7 @@
             },
 
             getPaginatedData(page) {
-                let params = {};
+                let params = { page };
 
                 if (this.searchTerm !== '') {
                     params.search = this.searchTerm;
