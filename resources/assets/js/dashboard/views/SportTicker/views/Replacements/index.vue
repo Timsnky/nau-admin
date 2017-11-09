@@ -58,6 +58,10 @@
 
 <script>
     export default {
+        props: [
+            'match'
+        ],
+
         data() {
             return {
                 items: [],
@@ -96,6 +100,15 @@
 
                 if (this.searchTerm !== '') {
                     params.search = this.searchTerm;
+                }
+
+                if (this.match) {
+                    if(!Array.isArray(this.match)) {
+                        var match = [this.match];
+                    } else {
+                        var match = [this.match];
+                    }
+                    params.match = match;
                 }
 
                 return Api.http.get(`/sport-ticker-replacements?${$.param(params)}`);

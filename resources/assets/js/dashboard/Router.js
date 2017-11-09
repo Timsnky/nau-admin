@@ -285,6 +285,7 @@ let routes = [{
             path: '/replacements',
             name: 'sportticker.replacements',
             component: require('./views/SportTicker/views/Replacements'),
+            props: route => ({ match: route.query.match }),
         },
         {
             path: '/replacements/:id/edit',
