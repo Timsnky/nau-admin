@@ -44,6 +44,11 @@
 					<i class="fa fa-file-pdf-o"></i> Juristische Guidelines
 				</a>
 			</div>
+			<div class="col-md-3">
+				<a href="/documents/screen_teaser_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
+					<i class="fa fa-file-pdf-o"></i> Screen Teaser Guidelines
+				</a>
+			</div>
 		</div>
 
 		<hr>
