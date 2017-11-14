@@ -27,7 +27,7 @@
 
 <style lang="scss" scoped>
     article {
-        margin-bottom: 16px;
+        margin-bottom: 17px;
         position: relative;
 
         .overlay {
@@ -68,6 +68,7 @@
         }
 
         .article-card {
+            height: 90px;
             font-family: Lato;
             font-weight: 100;
             font-size: 1.25em;

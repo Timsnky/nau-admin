@@ -254,6 +254,10 @@ let routes = [{
             name: 'frontpage.top.breaking',
             component: require('./views/Frontpage/views/TopBreaking'),
         }, {
+            path: '/top',
+            name: 'frontpage.top',
+            component: require('./views/Frontpage/views/Top'),
+        }, {
             path: '/top-videos',
             name: 'frontpage.top.video',
             component: require('./views/Frontpage/views/TopVideo'),

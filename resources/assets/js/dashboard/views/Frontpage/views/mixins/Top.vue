@@ -3,15 +3,15 @@
         <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
         <div class="row">
             <div class="col-md-6">
-                <draggable :class="{flex, articles: true}" v-model="articles">
+                <draggable :class="{flex, articles: true}" v-model="articles" :move="onMove">
                     <top-article
                         v-for="(layout, key) in layouts"
                         v-if="articles[key]"
                         :key="key"
                         :layout="layout"
                         :article="articles[key]"
-                        @add="addAtIndex(key)"
-                        @replace="replaceAtIndex(key)"
+                        @add="addAtIndex(key, layout.class.indexOf('teaser') !== -1)"
+                        @replace="replaceAtIndex(key, layout.class.indexOf('teaser') !== -1)"
                     />
                 </draggable>
             </div>
@@ -44,7 +44,7 @@
                     :internal-search="false"
                     @search-change="searchArticle">
                         <template slot="option" scope="props">
-                            <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                            <img class="option-image" width="140" height="70" :src="(needsTeaser !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                             <div class="option-desc">
                                 <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                             </div>
@@ -79,7 +79,7 @@
                     :internal-search="false"
                     @search-change="searchArticle">
                     <template slot="option" scope="props">
-                        <img class="option-image" width="140" height="70" :src="(layouts[0].class.indexOf('teaser') !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                        <img class="option-image" width="140" height="70" :src="(needsTeaser ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                         <div class="option-desc">
                             <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                         </div>
@@ -151,6 +151,7 @@
                 showAddDropdown: false,
                 showReplaceDropdown: false,
                 selectedIndex: null,
+                needsTeaser: false,
             };
         },
 
@@ -199,13 +200,15 @@
                 this.selectedArticle = {};
             },
 
-            replaceAtIndex(index) {
+            replaceAtIndex(index, teaser) {
+                this.needsTeaser = teaser;
                 this.selectedIndex = index;
                 this.showAddDropdown = false;
                 this.showReplaceDropdown = true;
             },
 
-            addAtIndex(index) {
+            addAtIndex(index, teaser) {
+                this.needsTeaser = teaser;
                 this.selectedIndex = index;
                 this.showReplaceDropdown = false;
                 this.showAddDropdown = true;
@@ -298,6 +301,10 @@
                     return response.data;
                 });
             },
+
+            onMove ({relatedContext, draggedContext}) {
+                return this.layouts[relatedContext.index].editable && this.layouts[draggedContext.index].editable
+            }
         },
 
         mounted() {
