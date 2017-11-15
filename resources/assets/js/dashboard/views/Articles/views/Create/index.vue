@@ -1221,7 +1221,8 @@
 
         beforeDestroy: function ()
         {
-            this.leadEditor.destroy();
+            // Lead editor no longer loaded
+            // this.leadEditor.destroy();
             this.notesEditor.destroy();
         }
     }
