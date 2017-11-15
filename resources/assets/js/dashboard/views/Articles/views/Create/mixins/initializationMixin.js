@@ -15,6 +15,10 @@ let initializationMixin = {
                         this.articleTitle = this.article.title;
                         delete this.article['image'];
 
+                        if(this.article.push_notification) {
+                            this.wasPushedBefore = true;
+                        }
+
                         this.articlePlaces = {
                             name: this.article.location,
                             latitude: this.article.latitude,

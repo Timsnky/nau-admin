@@ -64,3 +64,12 @@ request.interceptors.request.use(config => {
 
     return config;
 }, error => { return Promise.reject(error); });
+
+
+swal.setDefaults({
+    confirmButtonColor: '',
+    cancelButtonColor: '',
+    cancelButtonText: 'Abbrechen',
+    confirmButtonClass: 'btn blue btn-lg',
+    cancelButtonClass: 'btn red btn-lg',
+});

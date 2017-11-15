@@ -27,6 +27,13 @@
                     @click="duplicateArticle()">
                     <i class="fa fa-copy"></i> Artikel kopieren
                 </button>
+                <button
+                    type="button"
+                    v-if="wasPushedBefore"
+                    class="btn default red-stripe"
+                    @click="resetPushNotification()">
+                    <i class="fa fa-copy"></i> Push Benachrichtigung zurücksetzen.
+                </button>
             </div>
             <div class="col-md-6 text-right">
                 <button
@@ -859,6 +866,7 @@
                     geo_switzerland_only: false,
                     authenticated_only: false
                 },
+                wasPushedBefore: false,
                 duplicateArticleId: null,
                 editingArticle: false,
                 articleTitle: '',
@@ -1049,6 +1057,22 @@
         },
 
         methods: {
+            async resetPushNotification() {
+                await swal({
+                    title: 'Push Benachrichtigung zurücksetzen?',
+                    html: '<p>Das zurücksetzen der Push Benachrichtigung erlaubt es Ihnen eine weitere Push Benachrichtigung für den selben Artikel zu erstellen.</p>'
+                     + '<p>Verwenden Sie diese Funktion nur wenn Sie wissen was Sie tun.</p>',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ja, zurücksetzen'
+                });
+
+                await Api.http.post(`/articles/${this.article.id}/push/reset`);
+                this.article.push_notification = false;
+                this.wasPushedBefore = false;
+                swal('Push Benachrichtigung zurücksetzen', 'Um eine neue Push Benachrichtigung zu senden muss dies im Publish Tab wieder ausgewählt werden.', 'success')
+            },
+
             /**
              * DUPLICATION
              */
