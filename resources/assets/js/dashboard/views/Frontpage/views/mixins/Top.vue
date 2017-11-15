@@ -44,7 +44,7 @@
                     :internal-search="false"
                     @search-change="searchArticle">
                         <template slot="option" scope="props">
-                            <img class="option-image" width="140" height="70" :src="(needsTeaser !== -1 ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
+                            <img class="option-image" width="140" height="70" :src="(needsTeaser ? props.option.teaser.url : props.option.image.url) + '?w=140&h70'" :alt="props.option.title">
                             <div class="option-desc">
                                 <span class="option-title">{{ props.option.dateline }} - <b>{{ props.option.title }}</b></span>
                             </div>
