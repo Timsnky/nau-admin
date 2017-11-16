@@ -5,6 +5,11 @@
                 <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
             </span>
             <dooh-video-status :dooh="article.dooh" />
+            <i
+                v-if="article.should_include_livestream"
+                :class="{fa: true, 'fa-bolt': true, 'font-yellow-gold': true}"
+                title="Livestream Artikel"
+            ></i>
             <status-display class="pull-right" :status="article.article_status.name" />
         </div>
         <div class="flex-item article">

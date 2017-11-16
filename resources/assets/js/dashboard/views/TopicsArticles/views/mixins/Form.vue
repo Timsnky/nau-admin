@@ -69,6 +69,13 @@
                     </label>
                 </div>
 
+                <div class="form-group">
+                    <label class="mt-checkbox no_margin_bottom">
+                        <input type="checkbox" v-model="article.should_include_livestream" @change="resetArticleRegions()" value="true"> Sollte einen Livestream beinhalten
+                        <span></span>
+                    </label>
+                </div>
+
                 <div class="form-actions">
                     <button
                         class="btn blue"
