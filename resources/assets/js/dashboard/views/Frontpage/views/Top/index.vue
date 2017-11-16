@@ -64,7 +64,17 @@
 
         methods: {
             async getArticles(search) {
-                var response = await Api.http.get(`/articles?search=${search}&community=0&teaser=${this.needsTeaser}&status=published`);
+                var params = {
+                    search,
+                    community: 0,
+                    status: 'published',
+                };
+
+                if(this.needsTeaser) {
+                    params.teaser = true;
+                }
+
+                var response = await Api.http.get(`/articles?${$.param(params)}`);
                 return response.data.data;
             },
         }
