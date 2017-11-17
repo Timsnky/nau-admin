@@ -25,14 +25,14 @@
         <div class="form-actions item_add">
             <button
                     @click="addArticleInfoBox()"
-                    class="btn btn-primary item_add_btn"
+                    class="btn blue item_add_btn"
                     :disabled="articleInfoBoxes.length >= 5"
                     type="button"> +
             </button>
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleInfoBoxes()"
                     :disabled="articleId == null">

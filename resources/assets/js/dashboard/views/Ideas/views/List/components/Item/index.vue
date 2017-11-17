@@ -1,26 +1,37 @@
 <template>
     <tr>
         <td>{{ idea.id }}</td>
-        <td>{{ date }}</td>
-        <td>{{ idea.title }}</td>
-        <td>{{ idea.author.name }}</td>
         <td>
+            <router-link :to="{name: 'ideas.show', params: {id: idea.id}}">
+                {{ idea.title }}
+            </router-link>
+        </td>
+        <td>{{ idea.author.name }}</td>
+        <td>{{ idea.channel.display_name }}</td>
+        <td>{{ date }}</td>
+        <td class="text-right">
             <router-link
                 :to="{name: 'ideas.show', params: {id: idea.id}}"
-                class="btn btn-success">
-                Show
+                class="btn blue">
+                Anzeigen
             </router-link>
-            <router-link
-                :to="{name: 'ideas.edit', params: {id: idea.id}}"
-                class="btn btn-warning">
-                Edit
-            </router-link>
-            <button
-                class="btn btn-danger"
-                type="button"
-                @click="handleDeleteIdea">
-                Delete
-            </button>
+            <div class="btn-group">
+                <router-link
+                    :to="{name: 'ideas.edit', params: {id: idea.id}}"
+                    class="btn default">
+                    <i class="fa fa-edit"></i> Bearbeiten
+                </router-link>
+                <button
+                    class="btn red"
+                    type="button"
+                    @click="handleDeleteIdea">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+
+
+
+
         </td>
     </tr>
 </template>

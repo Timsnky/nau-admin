@@ -1,27 +1,27 @@
 <template>
     <div id="ideaCreateSection">
-        <page-title title="Ideas" sub="Edit" />
+        <page-title title="Idee" sub="Bearbeiten" />
 
         <form @submit.prevent="handleSubmit">
             <div class="form-body">
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title">Titel</label>
                     <input
                         id="title"
                         type="text"
                         name="title"
                         v-model.trim="newIdea.title"
-                        placeholder="Add title"
+                        placeholder="Titel"
                         class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="body">Idea</label>
+                    <label for="body">Idee</label>
                     <textarea
                         id="body"
                         name="body"
                         v-model.trim="newIdea.body"
-                        placeholder="Edit idea"
+                        placeholder="Idee Text"
                         class="form-control"
                         rows="5"></textarea>
                 </div>
@@ -33,17 +33,33 @@
                         </option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Regionen</label>
+                    <div class="form-group">
+                        <div class="row">
+
+                            <div class="col-md-3 col-sm-12"
+                                 v-for="(region, index) in regions">
+                                <label class="mt-checkbox no_margin_bottom">
+                                    <input type="checkbox" v-model="idea.regions" :value="region">{{ region.name }}
+                                    <span></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div>
-                    <h4>Images</h4>
+                    <h4>Bilder</h4>
                     <div class="row media_overflow">
                         <div class="media_images">
                             <div class="col-md-3 media_image image_section_height" v-for="(image, index) in ideaImages">
                                 <img :src="image.url" alt="">
                                 <div class="form-group">
                                     <button
-                                            class="btn btn-danger btn-sm remove_btn"
-                                            type="button"
-                                            @click="confirmIdeaImageDelete(index)">
+                                        class="btn btn-danger btn-sm remove_btn"
+                                        type="button"
+                                        @click="confirmIdeaImageDelete(index)">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </div>
@@ -66,13 +82,7 @@
                     class="btn btn-primary"
                     type="submit"
                     :disabled="!newIdea.title || !newIdea.body || !newIdea.channel_id">
-                    Submit
-                </button>
-                <button
-                    class="btn btn-default"
-                    type="button"
-                    @click="reset">
-                    Reset
+                    <i class="fa fa-floppy-o"></i> Speichern
                 </button>
             </div>
             <image-select-modal></image-select-modal>
@@ -101,6 +111,9 @@
             {
                 return Api.getImage();
             },
+            regions() {
+                return this.$store.state.regions;
+            },
         },
 
         watch: {
@@ -122,6 +135,7 @@
         mounted()
         {
             this.initializeChannels();
+            this.initializeRegions();
             Api.http
                 .get(`/ideas/${this.$route.params.id}`)
                 .then(response => {
@@ -138,7 +152,10 @@
                     .put(`/ideas/${this.idea.id}`, {
                         'title': this.newIdea.title,
                         'body': this.newIdea.body,
-                        'channel': this.newIdea.channel_id
+                        'channel': this.newIdea.channel_id,
+                        regions: this.idea.regions.map((region) => {
+                            return region.id;
+                        }),
                     })
                     .then(response =>
                     {
@@ -149,10 +166,6 @@
                         });
                         this.$router.push('/ideas')
                     }).catch(err => console.log('Show some error message here'));
-            },
-
-            reset() {
-                this.newIdea = _pick(this.idea, ['title', 'body', 'channel_id']);
             },
 
             //Show the image selection modal
@@ -280,6 +293,12 @@
                         }
                     });
 
+            },
+
+            //Get the regions for the checkboxes
+            initializeRegions()
+            {
+                this.$store.dispatch('FETCH_REGIONS');
             },
         }
     }

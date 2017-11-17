@@ -32,16 +32,10 @@
 
             <div class="form-actions">
                 <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="submit"
                     :disabled="!topic.name || !topic.date">
                     Erstellen
-                </button>
-                <button
-                    class="btn btn-default"
-                    type="button"
-                    @click="reset">
-                    Reset
                 </button>
             </div>
         </form>
@@ -84,13 +78,6 @@
                     this.$router.push({name: 'resources.day', params: { date: date.format('YYYY-MM-DD') }});
                 } else {
                     console.log('Show some error message here');
-                }
-            },
-
-            reset() {
-                this.topic = {
-                    name: '',
-                    date: this.$route.query.date
                 }
             },
         }

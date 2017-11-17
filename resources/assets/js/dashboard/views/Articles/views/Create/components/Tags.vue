@@ -51,7 +51,7 @@
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleTagsAndRelatedStories(articleId)"
                     :disabled="articleId == null">

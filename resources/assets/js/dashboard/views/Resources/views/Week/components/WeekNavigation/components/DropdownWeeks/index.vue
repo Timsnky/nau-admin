@@ -1,11 +1,10 @@
 <template>
     <div class="input-group input-medium">
-        <select class="form-control selectpicker">
+        <select class="form-control" v-model="selected">
             <option
                 v-for="(option, index) in options"
                 :key="index"
-                :value="index"
-                :selected="option.selected">
+                :value="option">
                 {{ option.date }}
             </option>
         </select>
@@ -20,16 +19,16 @@
             year: [String, Number],
         },
 
-        mounted() {
-            const $selectpicker = $(this.$el).find('.selectpicker');
-
-            $selectpicker
-                .selectpicker()
-                .on('changed.bs.select', () => this.$emit('changeWeek', this.options[$selectpicker.val()]));
+        data() {
+            return {
+                selected: null,
+            }
         },
 
-        updated () {
-            $(this.$el).find('.selectpicker').selectpicker('refresh');
+        watch: {
+            selected(value) {
+                this.$emit('changeWeek', value);
+            }
         },
 
         computed: {
@@ -37,13 +36,18 @@
                 const options = [];
                 let date = moment(`${this.week}-${this.year}`, 'WW-YYYY').subtract(2, 'week');
 
-                for (let i = -2; i <= 15; i++) {
-                    options.push({
+                for (let i = -2; i <= 8; i++) {
+                    let option = {
                         date: date.format('[KW.] WW | DD.MM. - [' + date.clone().endOf('week').format('DD.MM.') + ']'),
                         year: date.year(),
                         week: date.week(),
-                        selected: i === 0
-                    });
+                    };
+
+                    options.push(option);
+
+                    if(i === 0) {
+                        this.selected = option;
+                    }
 
                     date = date.add(1, 'week');
                 }
@@ -51,17 +55,5 @@
                 return options;
             }
         },
-
-        destroyed() {
-            $(this.$el).find('.selectpicker')
-                .off()
-                .selectpicker('destroy');
-        }
     }
 </script>
-
-<style scoped>
-    .selectpicker {
-        z-index: 0 !important;
-    }
-</style>

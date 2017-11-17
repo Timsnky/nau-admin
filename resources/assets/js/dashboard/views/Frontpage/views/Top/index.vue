@@ -4,26 +4,79 @@
     export default {
         mixins: [Top],
 
+        data() {
+            return {
+                flex: false,
+                topArticlesUrl: '/top-articles',
+                layouts: [{
+                    editable: true,
+                    class: ['teaser', 'col-md-8'],
+                    articleIndex: 0,
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4'],
+                    articleIndex: 1,
+                }, {
+                    editable: true,
+                    class: ['teaser', 'col-md-4'],
+                    articleIndex: 2,
+                }, {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 3,
+                }, {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 4,
+                }, {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 5,
+                },
+                // {
+                //     editable: true,
+                //     class: ['teaser', 'col-md-6'],
+                //     articleIndex: 6,
+                // }, {
+                //     editable: true,
+                //     class: ['teaser', 'col-md-6'],
+                //     articleIndex: 7,
+                // },
+                {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 8,
+                }, {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 9,
+                }, {
+                    editable: true,
+                    class: ['col-md-4'],
+                    articleIndex: 10,
+                }],
+            };
+        },
+
+        async mounted() {
+            this.loadTopArticles();
+        },
+
         methods: {
             async getArticles(search) {
-                var response = await Api.http.get(`/articles?search=${search}&community=0&teaser=1&status=published`);
+                var params = {
+                    search,
+                    community: 0,
+                    status: 'published',
+                };
+
+                if(this.needsTeaser) {
+                    params.teaser = true;
+                }
+
+                var response = await Api.http.get(`/articles?${$.param(params)}`);
                 return response.data.data;
             },
-
-            async getTopArticles() {
-                let response = await Api.http.get(`/top-articles`);
-                return response.data.map(function(value) {
-                    return value.article;
-                });
-            },
-
-            async saveTopArticles(articles) {
-                let mapped = articles.map(function(article) {
-                    return article.id;
-                });
-
-                await Api.http.put('/top-articles', mapped);
-            }
         }
     }
 </script>

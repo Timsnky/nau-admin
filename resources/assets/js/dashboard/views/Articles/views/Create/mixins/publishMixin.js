@@ -4,24 +4,31 @@ let publishMixin = {
          *  ARTICLE AUTHORS
          */
         //Search for an author
-        searchAuthors(query) {
-            this.searchedAuthor.query = query;
+        searchAuthors: _.debounce(function(query) {
+            if(!query) {
+                return;
+            }
+
             this.authorsIsLoading = true;
 
-            if (this.searchedAuthor.promise) {
-                this.searchedAuthor.promise = false;
-
-                setTimeout(() => {
-                    Api.http
-                        .get(`/authors?search=${this.searchedAuthor.query}`)
-                        .then(response => {
-                            this.existingAuthors = response.data;
-                            this.searchedAuthor.promise = true;
-                            this.authorsIsLoading = false;
-                        });
-                }, 400);
+            if(this.article.community) {
+                var promise = Api.http
+                    .get(`/users?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data.data;
+                    });
+            } else {
+                var promise = Api.http
+                    .get(`/authors?search=${query}`)
+                    .then(response => {
+                        this.existingAuthors = response.data;
+                    });
             }
-        },
+
+            promise.then(() => {
+                this.authorsIsLoading = false;
+            });
+        }, 200),
 
         //Save the settings for the article
         saveSettings(articleId) {
@@ -107,7 +114,7 @@ let publishMixin = {
                     Api.http
                         .get(`/users?search=${this.searchedInformant.query}`)
                         .then(response => {
-                            this.existingInformants = response.data;
+                            this.existingInformants = response.data.data;
                             this.searchedInformant.promise = true;
                             this.informantsIsLoading = false;
                         });
@@ -205,20 +212,6 @@ let publishMixin = {
                         });
                     }
                 });
-        },
-
-        /**
-         *  PUBLICATION DATE
-         */
-        changeDate(date) {
-            this.article.published_at = date;
-        },
-
-        /**
-         *  ORDER DATE
-         */
-        changeOrderDate(date) {
-            this.article.order_date = date;
         },
 
         /**

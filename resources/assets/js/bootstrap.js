@@ -11,6 +11,12 @@ import swal from 'sweetalert2';
 import Multiselect from 'vue-multiselect';
 import Cropper from 'cropperjs';
 
+if(Promise === null) {
+    window.Promise = require('promise-polyfill');
+    var setAsap = require('setasap');
+    Promise._immediateFn = setAsap;
+}
+
 const request = axios.create({
     withCredentials: true,
     baseURL: env.API_DOMAIN,
@@ -58,3 +64,12 @@ request.interceptors.request.use(config => {
 
     return config;
 }, error => { return Promise.reject(error); });
+
+
+swal.setDefaults({
+    confirmButtonColor: '',
+    cancelButtonColor: '',
+    cancelButtonText: 'Abbrechen',
+    confirmButtonClass: 'btn blue btn-lg',
+    cancelButtonClass: 'btn red btn-lg',
+});

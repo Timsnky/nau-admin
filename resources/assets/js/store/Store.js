@@ -9,7 +9,7 @@ export const store = new Vuex.Store({
             "avatar": "https://media.nau.ch/default_avatar.png",
             "roles": []
         },
-        'imageTypes': [
+        'availableImageTypes': [
             {
                 id: 1,
                 name: 'Normal Image'
@@ -40,6 +40,10 @@ export const store = new Vuex.Store({
         notifications: [],
         unreadNotifications: 0,
         foldermaster: null,
+        liveDirector: null,
+        chameleon: null,
+        regions: [],
+        regionsLoadedAt: 0,
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {
@@ -59,6 +63,15 @@ export const store = new Vuex.Store({
                 })
             })
         },
+        FETCH_REGIONS: async (store) => {
+            let time = Math.round(new Date().getTime()/1000.0);
+            if(time < store.state.regionsLoadedAt + (60 * 30)) {
+                return;
+            }
+
+            var response = await Api.http.get('/regions');
+            store.commit('SET_REGIONS', response.data);
+        },
         FETCH_FOLDERMASTER: async ({commit}) => {
             var response = await Api.http.get('/foldermaster');
             commit('SET_FOLDERMASTER', response.data.user);
@@ -69,11 +82,37 @@ export const store = new Vuex.Store({
             });
             commit('SET_FOLDERMASTER', response.data.user);
         },
-        SET_IMAGE_TYPE: ({commit}, image_type) => {
-            commit('SET_IMAGE_TYPE', image_type);
+        FETCH_CHAMELEON: async ({commit}) => {
+            var response = await Api.http.get('/chameleon');
+            commit('SET_CHAMELEON', response.data.user);
         },
-        RESET_IMAGE_TYPE: ({commit}) => {
-            commit('RESET_IMAGE_TYPE');
+        SET_CHAMELEON: async ({commit}, userId) => {
+            var response = await Api.http.put('/chameleon', {
+                user_id: userId,
+            });
+            commit('SET_CHAMELEON', response.data.user);
+        },
+        FETCH_LIVE_DIRECTOR: async ({commit}) => {
+            var response = await Api.http.get('/live-director');
+            commit('SET_LIVE_DIRECTOR', response.data.user);
+        },
+        SET_LIVE_DIRECTOR: async ({commit}, userId) => {
+            var response = await Api.http.put('/live-director', {
+                user_id: userId,
+            });
+            commit('SET_LIVE_DIRECTOR', response.data.user);
+        },
+        FETCH_MASTERS: async ({commit}) => {
+            var response = await Api.http.get('/masters');
+            commit('SET_CHAMELEON', response.data.chameleon);
+            commit('SET_FOLDERMASTER', response.data.foldermaster);
+            commit('SET_LIVE_DIRECTOR', response.data.live_director);
+        },
+        SET_IMAGE_TYPES: ({commit}, types) => {
+            commit('SET_IMAGE_TYPES', types);
+        },
+        RESET_IMAGE_TYPES: ({commit}) => {
+            commit('RESET_IMAGE_TYPES');
         },
         SET_IMAGE: ({commit}, image_id) => {
             commit('SET_IMAGE', image_id);
@@ -123,11 +162,21 @@ export const store = new Vuex.Store({
         CLEAR_NOTIFICATIONS: (state) => {
             state.notifications = [];
         },
+        SET_REGIONS: (state, regions) => {
+            state.regions = regions;
+            state.regionsLoadedAt = Math.round(new Date().getTime()/1000.0);
+        },
         SET_USER: (state, { user }) => {
             state.user = user;
         },
         SET_FOLDERMASTER: (state, foldermaster) => {
             state.foldermaster = foldermaster;
+        },
+        SET_CHAMELEON: (state, chameleon) => {
+            state.chameleon = chameleon;
+        },
+        SET_LIVE_DIRECTOR: (state, liveDirector) => {
+            state.liveDirector = liveDirector;
         },
         LOGOUT: (state) => {
             state.user = null;
@@ -162,14 +211,11 @@ export const store = new Vuex.Store({
         RESET_SURVEY: (state) => {
             state.selected_survey_id = null;
         },
-        SET_IMAGE_TYPE: (state, image_type) => {
-            state.imageType = state.imageTypes[image_type];
+        SET_IMAGE_TYPES: (state, types) => {
+            state.imageTypes = types;
         },
-        RESET_IMAGE_TYPE: (state) => {
-            state.imageType = {
-                id: 1,
-                name: 'Normal Image'
-            }
+        RESET_IMAGE_TYPES: (state) => {
+            state.imageTypes = [];
         }
     }
 });

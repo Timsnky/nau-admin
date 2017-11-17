@@ -75,9 +75,9 @@
                                 <span class="title">Freitage</span>
                             </a>
                         </router-link>
-                        <router-link :to="{name: 'resources.foldermaster'}" tag="li" exact>
+                        <router-link :to="{name: 'resources.master'}" tag="li" exact>
                             <a>
-                                <span class="title">Foldermaster</span>
+                                <span class="title">Masters</span>
                             </a>
                         </router-link>
                     </ul>
@@ -138,6 +138,14 @@
                     </a>
                 </router-link>
 
+                <!--Surveys -->
+                <router-link :to="{name: 'sportticker.replacements'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-futbol-o"></i>
+                        <span class="title">Sport Ticker</span>
+                    </a>
+                </router-link>
+
                 <!--Frontpage -->
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -146,14 +154,24 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
-                        <router-link :to="{name: 'frontpage.big' }" tag="li" exact>
-                            <a>
-                                <span class="title">Big</span>
-                            </a>
-                        </router-link>
                         <router-link :to="{name: 'frontpage.top'}" tag="li" exact>
                             <a>
-                                <span class="title">Top Artikel</span>
+                                <span class="title">Top</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.breaking'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Breaking News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.news'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top News</span>
+                            </a>
+                        </router-link>
+                        <router-link :to="{name: 'frontpage.top.video'}" tag="li" exact>
+                            <a>
+                                <span class="title">Top Videos</span>
                             </a>
                         </router-link>
                         <router-link :to="{name: 'frontpage.top.community'}" tag="li" exact>

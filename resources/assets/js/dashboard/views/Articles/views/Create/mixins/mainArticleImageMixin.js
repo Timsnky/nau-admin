@@ -28,7 +28,7 @@ let mainArticleImageMixin = {
         },
 
         //Trigger the image selection modal
-        showImageSelectionModal(type, key)
+        showImageSelectionModal(type, key) // 2, null
         {
             if(key !== null)
             {
@@ -38,14 +38,13 @@ let mainArticleImageMixin = {
             this.type = type;
 
             Api.setImageSelector(this.type);
-            this.saveImageType(type);
-
+            this.saveImageType(this.type);
 
             $('#imageSelectionModal').modal('show');
         },
 
         //Save the image type in store
-        saveImageType(type)
+        saveImageType(type) // 2
         {
             let imageType = 0;
 
@@ -55,7 +54,7 @@ let mainArticleImageMixin = {
             }
             else if(type === 2 || type === 3)
             {
-                imageType = 0;
+                imageType = [0, 1];
             }
             else if(type === 4)
             {

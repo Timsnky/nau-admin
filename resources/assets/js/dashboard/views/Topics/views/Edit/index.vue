@@ -43,7 +43,6 @@
 <script>
     import _pick from 'lodash/pick';
     import DateTime from 'dashboard/components/DateTime';
-    import DateAndTime from 'dashboard/components/DateAndTime';
 
     export default {
         data() {
@@ -54,8 +53,7 @@
         },
 
         components: {
-            dateTime: DateTime,
-            dateAndTime: DateAndTime,
+            DateTime,
         },
 
         created() {

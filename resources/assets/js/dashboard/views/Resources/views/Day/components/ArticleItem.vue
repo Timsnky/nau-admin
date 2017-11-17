@@ -1,33 +1,43 @@
 <template>
-    <div class="flex">
+    <div class="flex article-row">
         <div class="flex-item time">
             <span v-if="moment(article.published_at).isValid()">
                 <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
             </span>
-            <i v-if="article.dooh.should_include_video && article.dooh.video_id === null" title="Dooh Video fehlt" class="text-danger fa fa-film"></i>
+            <dooh-video-status :dooh="article.dooh" />
+            <i
+                v-if="article.should_include_livestream"
+                :class="{fa: true, 'fa-bolt': true, 'font-yellow-gold': true}"
+                title="Livestream Artikel"
+            ></i>
             <status-display class="pull-right" :status="article.article_status.name" />
         </div>
         <div class="flex-item article">
-            <h4>
+            <div>
                 <router-link :to="{name: 'articles.edit', params: { id: article.id }}">{{ article.title }}</router-link>
                 <small v-if="article.authors.length > 0">
                     – {{ article.authors.map((author) => {return author.name}).join(', ') }}
+
+                    <span class="informants" v-if="article.informants.length">
+                        / {{ article.informants.map((author) => {return author.name}).join(', ') }}
+                    </span>
                 </small>
-            </h4>
+            </div>
         </div>
-        <div class="flex-item options text-right">
+        <div class="flex-item options text-right btn-group">
             <router-link
             :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
-            class="btn btn-xs btn-warning">
+            class="btn btn-sm default">
                 <span class="fa fa-edit"></span> Bearbeiten
             </router-link>
-            <button v-if="Api.isChefJournalist() || Api.isAdmin()" @click="unlinkArticle(topic, article)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Entfernen</button>
+            <button v-if="Api.isChefJournalist() || Api.isAdmin()" @click="unlinkArticle(topic, article)" class="btn red btn-sm"><i class="fa fa-trash"></i></button>
         </div>
     </div>
 </template>
 
 <script>
     import ArticleStatus from 'dashboard/components/StatusDisplay';
+    import DoohVideoStatus from 'dashboard/components/DoohVideoStatus';
 
     export default {
         data() {
@@ -42,7 +52,8 @@
         ],
 
         components: {
-            ArticleStatus
+            ArticleStatus,
+            DoohVideoStatus
         },
 
         computed: {
@@ -83,6 +94,10 @@
     .flex {
         display: flex;
         align-items: center;
+    }
+
+    .article-row {
+        // font-size: .8em;
     }
 
     .flex-item {

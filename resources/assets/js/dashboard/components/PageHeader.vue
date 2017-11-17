@@ -22,17 +22,39 @@
             </a>
             <!-- END RESPONSIVE MENU TOGGLER -->
             <!-- BEGIN TOP NAVIGATION MENU -->
+            <div class="hor-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <span title="Foldermaster" v-if="$store.state.foldermaster" class="navbar-text hidden-xs">
+                            <i class="fa fa-folder"></i>
+                            <b class="hidden-md hidden-sm hidden-xs">Foldermaster:</b>
+                            {{ $store.state.foldermaster.name }}
+                        </span>
+                    </li>
+                    <li>
+                        <span title="Live Director" v-if="$store.state.liveDirector" class="navbar-text hidden-xs">
+                            <i class="fa fa-bolt"></i>
+                            <b class="hidden-md hidden-sm hidden-xs">Live Director:</b>
+                            {{ $store.state.liveDirector.name }}
+                        </span>
+                    </li>
+                    <li>
+                        <span title="Chamäleon" v-if="$store.state.chameleon" class="navbar-text hidden-xs">
+                            <i class="fa fa-user"></i>
+                            <b class="hidden-md hidden-sm hidden-xs">Chamäleon:</b>
+                            {{ $store.state.chameleon.name }}
+                        </span>
+                    </li>
+                </ul>
+            </div>
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
-                    <li>
-                        <span v-if="foldermaster" class="navbar-text hidden-xs">Foldermaster: {{ foldermaster.name }}</span>
-                    </li>
                     <notifications />
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
                             <img alt="" class="img-circle" :src="user.avatar"/>
-                            <span class="username username-hide-on-mobile">{{ user.email }} - {{ user.name }}</span>
+                            <span class="username hidden-md hidden-sm hidden-xs">{{ user.email }} - {{ user.name }}</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
@@ -59,9 +81,6 @@
             user() {
                 return this.$store.state.user
             },
-            foldermaster() {
-                return this.$store.state.foldermaster;
-            }
         },
 
         components: {
@@ -83,5 +102,7 @@
 <style>
     .navbar-text {
         color: #c6cfda;
+        margin-left: 8px;
+        margin-right: 8px;
     }
 </style>

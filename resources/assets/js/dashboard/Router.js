@@ -95,6 +95,10 @@ let routes = [{
         path: ':articleID/edit',
         name: 'topics.articles.edit',
         component: require('./views/TopicsArticles/views/Edit'),
+    }, {
+        path: 'link',
+        name: 'topics.articles.link',
+        component: require('./views/TopicsArticles/views/Link'),
     }],
 }, {
     path: '/resource-management',
@@ -108,9 +112,9 @@ let routes = [{
         name: 'resources.day',
         component: require('./views/Resources/views/Day'),
     }, {
-        path: 'foldermaster',
-        name: 'resources.foldermaster',
-        component: require('./views/Resources/views/Foldermaster'),
+        path: 'master',
+        name: 'resources.master',
+        component: require('./views/Resources/views/Master'),
     }],
 }, {
     path: '/resource-management/day/:date/shifts',
@@ -200,6 +204,7 @@ let routes = [{
         {
             path: '',
             name: 'users.list',
+            props: route => ({ search: route.query.search, page: parseInt(route.query.page) ? parseInt(route.query.page) : 1 }),
             component: require('./views/Users/views/List'),
         }
     ],
@@ -244,13 +249,23 @@ let routes = [{
             path: '/big',
             name: 'frontpage.big',
             component: require('./views/Frontpage/views/Big'),
-        },
-        {
+        }, {
+            path: '/top-breaking',
+            name: 'frontpage.top.breaking',
+            component: require('./views/Frontpage/views/TopBreaking'),
+        }, {
             path: '/top',
             name: 'frontpage.top',
             component: require('./views/Frontpage/views/Top'),
-        },
-        {
+        }, {
+            path: '/top-videos',
+            name: 'frontpage.top.video',
+            component: require('./views/Frontpage/views/TopVideo'),
+        }, {
+            path: '/top-news',
+            name: 'frontpage.top.news',
+            component: require('./views/Frontpage/views/TopNews'),
+        }, {
             path: '/top/community',
             name: 'frontpage.top.community',
             component: require('./views/Frontpage/views/TopCommunity'),
@@ -265,6 +280,23 @@ let routes = [{
         name: 'avatars.download',
         component: require('./views/Avatars/views/Download'),
     }],
+},
+{
+    path: '/sport-tickers',
+    component: require('./views/SportTicker'),
+    children: [
+        {
+            path: '/replacements',
+            name: 'sportticker.replacements',
+            component: require('./views/SportTicker/views/Replacements'),
+            props: route => ({ match: route.query.match }),
+        },
+        {
+            path: '/replacements/:id/edit',
+            name: 'sportticker.replacements.edit',
+            component: require('./views/SportTicker/views/Replacements/views/Edit'),
+        },
+    ],
 },
 {
     path: "*",

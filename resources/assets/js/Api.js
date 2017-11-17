@@ -74,20 +74,26 @@ class Api {
         return this.store.dispatch('RESET_IMAGE_SELECTOR');
     }
 
-    getImageType() {
-        return this.store.state.imageType;
+    getImageTypes() {
+        return this.store.state.imageTypes.map((type) => {
+            return this.store.state.availableImageTypes[type];
+        });
     }
 
-    getImageTypes() {
-        return this.store.state.imageTypes;
+    getAvailableImageTypes() {
+        return this.store.state.availableImageTypes;
     }
 
     setImageType(type) {
-        return this.store.dispatch('SET_IMAGE_TYPE', type);
+        if(Number.isInteger(type)) {
+            type = [type];
+        }
+
+        return this.store.dispatch('SET_IMAGE_TYPES', type);
     }
 
-    resetImageType() {
-        return this.store.dispatch('RESET_IMAGE_TYPE');
+    resetImageTypes() {
+        return this.store.dispatch('RESET_IMAGE_TYPES');
     }
 
     //Videos

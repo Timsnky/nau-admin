@@ -7,32 +7,32 @@
                 <div class="input-group">
                     <input
                         type="text"
-                        maxlength="100"
+                        maxlength="190"
                         v-model.trim="articleLearnings[index]"
-                        placeholder="Key Fact hinzufügen (max 100 Zeichen)"
+                        placeholder="Key Fact hinzufügen (max 190 Zeichen)"
                         class="form-control">
                     <span class="input-group-btn">
                         <button
                         @click="confirmDelete(index)"
-                        class="btn btn-danger btn-sm"
+                        class="btn red btn-sm"
                         type="button"><i class="fa fa-times"></i></button>
                     </span>
                 </div>
-                <character-counter :limit="100" :itemString="articleLearning"></character-counter>
+                <character-counter :limit="190" :itemString="articleLearning"></character-counter>
 
             </div>
         </div>
         <div class="form-actions item_add">
             <button
                     @click="addArticleLearning()"
-                    class="btn btn-primary item_add_btn"
+                    class="btn blue item_add_btn"
                     :disabled="articleLearnings.length >= 5"
                     type="button"> +
             </button>
         </div>
         <div class="form-actions">
             <button
-                    class="btn btn-primary"
+                    class="btn blue"
                     type="button"
                     @click="saveArticleLearnings(articleId)">
                 Key Facts speichern

@@ -17,13 +17,13 @@
                 </div>
                 <div class="video_section_right">
                     <span>
-                        {{ date }}
+                        {{ moment(video.created_at).format('DD.MM.YYYY HH:mm') }}
                     </span>
                     <button
-                            class="btn btn-danger"
+                            class="btn red"
                             type="button"
                             @click="handleDeleteVideo">
-                        Löschen
+                        <i class="fa fa-trash"></i> Löschen
                     </button>
                     <div v-if="!video.processed">
                         <span><i class="fa fa-spin fa-spinner"></i> Wird verarbeitet ...</span>
@@ -42,8 +42,8 @@
         },
 
         computed: {
-            date() {
-                return moment(this.video.created_at).format('DD.MM.YYYY');
+            moment() {
+                return moment;
             }
         },
 

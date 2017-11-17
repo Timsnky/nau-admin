@@ -4,7 +4,10 @@
 
         <div class="row">
             <div class="col-md-6">
-                <div v-if="!video.processed" class="video-processing"><i class="fa fa-spin fa-spinner"></i> Video wird verarbeitet ...</div>
+                <div v-if="!video.processed" class="video-processing">
+                    <i class="fa fa-spin fa-spinner"></i> Video wird verarbeitet ...
+                    <img :src="video.thumbnail" class="img-responsive"/>
+                </div>
                 <div v-else class="edit_video_section" >
                     <video controls :poster="video.thumbnail">
                         <source :src="video.urls[0]" type="video/mp4" />
@@ -47,11 +50,21 @@
                             placeholder="Source"
                             class="form-control">
                         </div>
+
+                        <div class="note note-info">
+                            <h4 class="block">Wichtig!</h4>
+                            <p>Das ändern des Thumbnails kann mehrere Minuten dauern.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Thumbnail ändern</label>
+                            <input type="file" @change="onFileChange" accept="image/*">
+                        </div>
                     </div>
 
                     <div class="form-actions">
                         <button
-                        class="btn btn-primary"
+                        class="btn blue"
                         type="submit"
                         :disabled="!video.name || !video.lead || !video.source"
                         >Speichern</button>
@@ -68,7 +81,8 @@
     export default {
         data() {
             return {
-                video: {}
+                video: {},
+                thumbnailChanged: false,
             }
         },
 
@@ -88,8 +102,12 @@
                 const { name, lead, source } = this.video;
 
                 if (name && lead && source) {
+                    let data = { name, lead, source };
+                    if(this.thumbnailChanged) {
+                        data.thumbnail = this.video.thumbnail;
+                    }
                     Api.http
-                    .put(`/videos/${this.video.id}`, { name, lead, source })
+                    .put(`/videos/${this.video.id}`, data)
                     .then(response => this.$router.push('/videos'))
                     .catch(err => Vue.toast('Error in updating the Video. Please retry', {
                         className : ['nau_toast','nau_warning'],
@@ -99,7 +117,26 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 }
-            }
+            },
+
+            onFileChange(e) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length)
+                    return;
+                this.createImage(files[0]);
+            },
+
+            createImage(file) {
+                var image = new Image();
+                var reader = new FileReader();
+                var vm = this;
+
+                reader.onload = (e) => {
+                    vm.video.thumbnail = e.target.result;
+                    vm.thumbnailChanged = true;
+                };
+                reader.readAsDataURL(file);
+            },
         }
     }
 </script>
