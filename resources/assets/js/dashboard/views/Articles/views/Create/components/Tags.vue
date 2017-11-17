@@ -7,23 +7,20 @@
                         id="tagsMultiSelect"
                         v-model="articleTags"
                         :options="existingTags"
-                        tag-placeholder="Add this as new tag"
+                        tag-placeholder="Neuen Tag hinzufügen"
                         placeholder="Tags hinzufügen"
-                        label="tag"
                         :max-height="500"
-                        :options-limit="100"
+                        :options-limit="10"
                         :clear-on-select="false"
                         :close-on-select="false"
                         :hide-selected="true"
-                        track-by="id"
                         :multiple="true"
                         :taggable="true"
                         open-direction="bottom"
                         :internal-search="false"
                         :loading="tagIsLoading"
-                        @tag="addArticleTag"
                         @search-change="searchTags"
-                        @remove="deleteTag">
+                        @tag="addTag">
                 </multiselect>
             </div>
 
@@ -131,8 +128,7 @@
                     .then(response => {
                         if(response.status === 200)
                         {
-                            this.originalTags = response.data.map((tag) => { return tag.tag });
-                            this.articleTags = response.data;
+                            this.articleTags = response.data.map((tag) => { return tag.tag });
                         }
                         else
                         {
@@ -170,16 +166,6 @@
             /**
              * ARTICLE TAGS
              */
-            //Add a new tag to an article
-            addArticleTag(newTag)
-            {
-                const tag = {
-                    tag: newTag,
-                    id: null,
-                };
-                this.articleTags.push(tag);
-            },
-
             //Call the server to search for tags
             searchTags: _.debounce(function(query)
             {
@@ -187,10 +173,16 @@
                 Api.http
                     .get(`/tags?search=${query}`)
                     .then(response => {
-                        this.existingTags = response.data;
+                        this.existingTags = response.data.map((tag) => {
+                            return tag.tag
+                        });
                         this.tagIsLoading = false;
                     });
-            }, 400),
+            }, 0),
+
+            addTag(newTag) {
+                this.articleTags.push(newTag);
+            },
 
             //Validate the article
             validateTagsAndRelatedStories(articleId)
@@ -250,55 +242,7 @@
             //Save the article tags
             async saveArticleTags(articleId)
             {
-                this.deletedTags.forEach(async (tag, key) => {
-                    if(this.deletedTags.indexOf(tag) !== -1) {
-                        await this.unlinkTagFromArticle(articleId, tag);
-                        this.deletedTags.splice(this.deletedTags.indexOf(tag), 1)
-                    }
-                });
-
-                this.articleTags.forEach(async (tag, key) => {
-                    if(tag.id == null) {
-                        tag = await this.createNewTag(tag);
-                        await this.linkTagToArticle(articleId, tag);
-                    } else if(this.originalTags.indexOf(tag.tag) === -1) {
-                        await this.linkTagToArticle(articleId, tag);
-                    }
-                });
-
-                this.originalTags = this.articleTags.map((tag) => { return tag.tag });
-            },
-
-            createNewTag(tag) {
-                return Api.http.post('/tags', {tag: tag.tag})
-                    .then((response) => { return response.data });
-            },
-
-            //Link a tag to an article
-            linkTagToArticle(articleId, tag)
-            {
-                return Api.http
-                    .put(`/articles/${articleId}/tags/${tag.id}`)
-                    .then(response => {
-                        return response.data;
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    })
-            },
-
-            unlinkTagFromArticle(articleId, tag) {
-                return Api.http.delete(`/articles/${articleId}/tags/${tag.id}`);
-            },
-
-            //Delete a tag
-            deleteTag(tag)
-            {
-                if(tag.id === null) {
-                    return;
-                }
-
-                this.deletedTags.push(tag);
+                Api.http.put(`/articles/${articleId}/tags`, {tags: this.articleTags});
             },
 
             /**
