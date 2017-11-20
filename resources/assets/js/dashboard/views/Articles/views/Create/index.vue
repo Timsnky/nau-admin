@@ -552,7 +552,7 @@
                                     v-model="article.published_at"
                                 />
                             </div>
-                            <div class="form-group" v-if="!article.community">
+                            <div class="form-group">
                                 <label>Order Date</label>
                                 <date-time
                                     format="DD.MM.YYYY HH:mm"
