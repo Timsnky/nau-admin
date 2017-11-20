@@ -28,7 +28,7 @@
                         <p v-if="!imageupload">
                             Drag your image here to begin<br> or click to browse
                         </p>
-                        <div class="image_hidden_section display-inline align-center no_width" v-else v-bind:class="{ 'image': true }">
+                        <div class="image_hidden_section display-inline align-center" v-else v-bind:class="{ 'image': true }">
                             <div class="image_crop_section">
                                 <div class="image_hidden_section_image">
                                     <img id="croppedImage"  :src="imageupload" alt="" class="img"/>
@@ -92,7 +92,7 @@
                         type="submit"
                         :disabled="!image.name || !image.lead || !image.source">
                             <span v-if="uploadPercentage !== 0">
-                                Hochladen {{ this.uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
+                                Hochladen {{ uploadPercentage }}% <i class="fa fa-spinner fa-spin"></i>
                             </span>
                             <span v-else>Bild hinzufügen</span>
                         </button>
@@ -214,13 +214,15 @@
                     Api.http
                         .post('/images', formData, {
                             onUploadProgress(e) {
-                                vm.uploadPercentage = Math.round(100 / e.total * e.loaded);
+                                vm.uploadPercentage = Math.round(90 / e.total * e.loaded);
                             }
                         })
                         .then(response => {
                             if(response.status === 201)
                             {
-                                this.$router.push('/images');
+                                this.pollImage(response).then(() => {
+                                    this.$router.push('/images');
+                                });
                             }
                             else
                             {
@@ -232,6 +234,30 @@
                 });
                 this.imageCropper.destroy();
                 this.imageCropper = null;
+            },
+
+            pollImage(response) {
+                return new Promise(async (resolve, reject) => {
+                    // Wait for the image to be available
+                    var loaded = false;
+                    var interval = await setInterval(() => {
+                        var img = new Image();
+                        img.onload = () => {
+                            this.uploadPercentage = 100;
+                            clearInterval(interval);
+                            setTimeout(() => {
+                                resolve();
+                            }, 200);
+                        };
+                        img.onerror = () => {
+                            if(this.uploadPercentage < 99) {
+                                this.uploadPercentage += 1;
+                            }
+                        }
+                        img.src = response.data.url + '?' + Math.floor(Date.now() / 1000);
+                    }, 1000);
+
+                });
             },
 
             reset() {
@@ -423,10 +449,6 @@
 
     .center_text {
         text-align: center;
-    }
-
-    .no_width {
-        width: auto !important;
     }
 
     .source_div {
