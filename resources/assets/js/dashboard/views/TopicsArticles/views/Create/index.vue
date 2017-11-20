@@ -22,7 +22,7 @@
                 const { title } = this.article;
 
                 try {
-                    var response = await Api.http.post(`/topics/${this.$route.params.topicID}/articles`, {
+                    var response = await Api.http.post(`/articles`, {
                         title,
                         internal_title: title,
                         lead: 'Bitte ausfüllen',
@@ -35,6 +35,9 @@
                     });
                     var article = response.data;
 
+                    // Remove myself as author
+                    Api.http.delete(`/articles/${article.id}/authors/${this.$store.state.user.id}`)
+
                     this.authors.removed.forEach((author) => {
                         Api.http.delete(`/articles/${article.id}/authors/${author.id}`)
                     });
@@ -42,14 +45,21 @@
                     this.authors.new.forEach((author) => {
                         Api.http.put(`/articles/${article.id}/authors/${author.id}`)
                     });
+
+                    await Api.http.post(`/article-topics`, {
+                        article_id: article.id,
+                        topic_id: this.$route.params.topicID,
+                        planned_at: this.plannedDate ? this.plannedDate.format() : null,
+                    });
                 } catch (error) {
+                    console.error(error);
                     Vue.toast('Ein Fehler ist aufgetreten.', {
                         className : ['nau_toast','nau_warning'],
                     });
                     return false;
                 }
 
-                this.$router.push({name: 'resources.day', params: { date: this.date }})
+                this.$router.push({name: 'resources.day', params: { date: this.date.format('YYYY-MM-DD') }})
             },
         },
     }

@@ -38,13 +38,15 @@
 
         methods: {
             link() {
-                Api.http.put(`/topics/${this.$route.params.topicID}/articles/${this.article.id}`)
-                    .then((response) => {
-                        this.$router.push({name: 'resources.day', params: { date: this.$route.query.date }})
-                        Vue.toast('Artikel verlinkt.', {
-                            className : ['nau_toast','nau_success'],
-                        });
-                    })
+                Api.http.post(`/article-topics`, {
+                    article_id: this.article.id,
+                    topic_id: this.$route.params.topicID,
+                }).then((response) => {
+                    this.$router.push({name: 'resources.day', params: { date: this.$route.query.date }})
+                    Vue.toast('Artikel verlinkt.', {
+                        className : ['nau_toast','nau_success'],
+                    });
+                })
             }
         }
     }

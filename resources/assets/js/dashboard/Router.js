@@ -92,13 +92,17 @@ let routes = [{
         name: 'topics.articles.create',
         component: require('./views/TopicsArticles/views/Create'),
     }, {
-        path: ':articleID/edit',
-        name: 'topics.articles.edit',
-        component: require('./views/TopicsArticles/views/Edit'),
-    }, {
         path: 'link',
         name: 'topics.articles.link',
         component: require('./views/TopicsArticles/views/Link'),
+    }],
+}, {
+    path: '/aritcle-topics/:articleTopic',
+    component: require('./views/TopicsArticles'),
+    children: [{
+        path: 'edit',
+        name: 'topics.articles.edit',
+        component: require('./views/TopicsArticles/views/Edit'),
     }],
 }, {
     path: '/resource-management',
