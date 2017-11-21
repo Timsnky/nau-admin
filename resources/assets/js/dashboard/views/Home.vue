@@ -34,20 +34,26 @@
 			<div class="col-md-12">
 				<h3>Downloads</h3>
 			</div>
-			<div class="col-md-3">
-				<a href="/documents/nau_redaktionelle_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
-					<i class="fa fa-file-pdf-o"></i> Unsere redaktionellen Richtlinien
-				</a>
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<a href="/documents/nau_redaktionelle_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
+						<i class="fa fa-file-pdf-o"></i> Redaktionelle Richtlinien
+					</a>
+				</div>
 			</div>
-			<div class="col-md-3">
-				<a href="/documents/rechtliche_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
-					<i class="fa fa-file-pdf-o"></i> Juristische Guidelines
-				</a>
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<a href="/documents/rechtliche_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
+						<i class="fa fa-file-pdf-o"></i> Juristische Guidelines
+					</a>
+				</div>
 			</div>
-			<div class="col-md-3">
-				<a href="/documents/screen_teaser_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
-					<i class="fa fa-file-pdf-o"></i> Screen Teaser Guidelines
-				</a>
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<a href="/documents/screen_teaser_guidelines.pdf" target="_blank" class="btn btn-block btn-default blue-hoki btn-lg">
+						<i class="fa fa-file-pdf-o"></i> Screen Teaser Guidelines
+					</a>
+				</div>
 			</div>
 		</div>
 

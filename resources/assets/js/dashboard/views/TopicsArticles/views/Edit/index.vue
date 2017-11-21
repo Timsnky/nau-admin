@@ -13,13 +13,10 @@
 
         created() {
             this.initializeChannels();
-            Api.http.get(`/articles/${this.$route.params.articleID}`)
+            Api.http.get(`/article-topics/${this.$route.params.articleTopic}`)
                 .then((response) => {
-                    this.article = response.data;
-                    var date = moment(this.article.published_at);
-                    if(date.isValid()) {
-                        this.time = date.format('HH:mm');
-                    }
+                    this.articleTopic = response.data;
+                    this.plannedDateValue = moment(response.data.planned_at);
                 });
         },
 
@@ -46,6 +43,10 @@
                     this.authors.new.forEach((author) => {
                         Api.http.put(`/articles/${article.id}/authors/${author.id}`)
                     });
+
+                    var response = await Api.http.put(`/article-topics/${this.articleTopic.id}`, {
+                        planned_at: this.plannedDate ? this.plannedDate.format() : null,
+                    });
                 } catch (error) {
                     console.error(error);
                     Vue.toast('Ein Fehler ist aufgetreten.', {
@@ -54,7 +55,7 @@
                     return false;
                 }
 
-                this.$router.push({name: 'resources.day', params: { date: this.date }})
+                this.$router.push({name: 'resources.day', params: { date: this.date.format('YYYY-MM-DD') }})
             },
 
             reset() {

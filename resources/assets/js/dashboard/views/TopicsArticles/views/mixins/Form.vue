@@ -42,14 +42,15 @@
 
                 <div class="form-body">
                     <div class="form-group">
-                        <label for="time">Uhrzeit</label>
-                        <input
-                        id="time"
-                        type="text"
-                        name="time"
-                        v-model.trim="time"
-                        placeholder="10:50"
-                        class="form-control">
+                        <label for="time">Geplante Uhrzeit</label>
+                        <date-time format="HH:mm" placeholder="Uhrzeit" v-model="plannedDate"></date-time>
+                    </div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-group">
+                        <label for="time">Publikationsdatum</label>
+                        <date-time format="DD.MM.YYYY HH:mm" placeholder="Publikationsdatum" v-model="article.published_at"></date-time>
                     </div>
                 </div>
 
@@ -64,14 +65,14 @@
 
                 <div class="form-group">
                     <label class="mt-checkbox no_margin_bottom">
-                        <input type="checkbox" v-model="article.dooh.should_include_video" @change="resetArticleRegions()" value="true"> Sollte ein Dooh Video enthalten
+                        <input type="checkbox" v-model="article.dooh.should_include_video" value="true"> Sollte ein Dooh Video enthalten
                         <span></span>
                     </label>
                 </div>
 
                 <div class="form-group">
                     <label class="mt-checkbox no_margin_bottom">
-                        <input type="checkbox" v-model="article.should_include_livestream" @change="resetArticleRegions()" value="true"> Sollte einen Livestream beinhalten
+                        <input type="checkbox" v-model="article.should_include_livestream" value="true"> Sollte einen Livestream beinhalten
                         <span></span>
                     </label>
                 </div>
@@ -101,47 +102,70 @@
 
 <script>
     import Mover from '../components/ArticleMover';
+    import DateTime from 'dashboard/components/DateTime';
 
     export default {
         data() {
             return {
+                plannedDateValue: null,
                 pageTitle: '',
                 submitLabel: '',
                 channels: [],
+                date: moment(this.$route.query.date),
                 newTopic: null,
                 authors: {
                     list: [],
                     removed: [],
                     new: [],
                 },
-                time: '',
-                date: this.$route.query.date,
-                article: {
-                    title: '',
-                    channel: {
-                        id: null
-                    },
-                    published_at: null,
-                    dooh: {
-                        should_include_video: false,
+                articleTopic: {
+                    article: {
+                        title: '',
+                        channel: {
+                            id: null
+                        },
+                        published_at: null,
+                        dooh: {
+                            should_include_video: false,
+                        }
                     }
-                }
+                },
             };
-        },
-
-        watch: {
-            time(value) {
-                var publishedAt = moment(this.date);
-                publishedAt.hour(value.split(':')[0]);
-                publishedAt.minute(value.split(':')[1]);
-
-                this.article.published_at = publishedAt;
-            }
         },
 
         computed: {
             topicId() {
                 return this.$route.params.topicID;
+            },
+
+            plannedDate: {
+                get() {
+                    if(!this.plannedDateValue || !this.plannedDateValue.isValid()) {
+                        return false;
+                    }
+
+                    return this.plannedDateValue;
+                },
+                set(value) {
+                    if(value && value.isValid()) {
+                        console.log(value);
+                        value = value.clone();
+                        value.date(this.date.date());
+                        value.month(this.date.month());
+                        value.year(this.date.year());
+                    }
+
+                    this.plannedDateValue = value;
+                }
+            },
+
+            article: {
+                get() {
+                    return this.articleTopic.article;
+                },
+                set(value) {
+                    this.articleTopic.article = value;
+                }
             }
         },
 
@@ -173,8 +197,9 @@
                 }
 
                 let promises = [
-                    Api.http.delete(`/topics/${this.topicId}/articles/${this.article.id}`),
-                    Api.http.put(`/topics/${this.newTopic.id}/articles/${this.article.id}`),
+                    Api.http.put(`/article-topics/${this.articleTopic.id}`, {
+                        topic_id: this.newTopic.id,
+                    }),
                 ];
 
                 if(this.article.published_at) {
@@ -191,7 +216,7 @@
                     Vue.toast('Artikel verschoben.', {
                         className : ['nau_toast','nau_success'],
                     });
-                    this.$router.push({name: 'resources.day', params: { date: this.date }})
+                    this.$router.push({name: 'resources.day', params: { date: this.date.format('YYYY-MM-DD') }})
                 }).catch((error) => {
                     console.error(error);
                     Vue.toast('Artikel konnte nicht verschoben werden.', {
@@ -210,11 +235,12 @@
                     .then(response => {
                         this.authors.list = response.data;
                     });
-            }, 500),
+            }, 200),
         },
 
         components: {
             Mover,
+            DateTime,
         }
     }
 </script>

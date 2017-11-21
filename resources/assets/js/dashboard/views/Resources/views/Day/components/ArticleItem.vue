@@ -1,8 +1,8 @@
 <template>
     <div class="flex article-row">
         <div class="flex-item time">
-            <span v-if="moment(article.published_at).isValid()">
-                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.published_at).format('HH:mm') }}
+            <span v-if="moment(article.pivot.planned_at).isValid()">
+                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ moment(article.pivot.planned_at).format('HH:mm') }}
             </span>
             <dooh-video-status :dooh="article.dooh" />
             <i
@@ -26,7 +26,7 @@
         </div>
         <div class="flex-item options text-right btn-group">
             <router-link
-            :to="{name: 'topics.articles.edit', params: { topicID: topic.id, articleID: article.id }, query: { date }}"
+            :to="{name: 'topics.articles.edit', params: { articleTopic: article.pivot.id }, query: { date }}"
             class="btn btn-sm default">
                 <span class="fa fa-edit"></span> Bearbeiten
             </router-link>
@@ -74,13 +74,12 @@
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonText: 'Abbrechen',
-                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Ja, entfernen.'
                 });
 
                 topic.articles.splice(topic.articles.indexOf(article), 1)
 
-                var response = await Api.http.delete(`/topics/${topic.id}/articles/${article.id}`)
+                var response = await Api.http.delete(`/article-topics/${article.pivot.id}`);
 
                 Vue.toast('Artikel wurde entfernt', {
                     className : ['nau_toast','nau_success'],

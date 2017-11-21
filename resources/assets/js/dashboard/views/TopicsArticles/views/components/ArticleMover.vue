@@ -42,7 +42,7 @@
 
         async created() {
             let params = {
-                start: moment().subtract(3, 'days').format('YYYY-MM-DD'),
+                start: moment(this.$route.query.date).subtract(3, 'days').format('YYYY-MM-DD'),
             };
             let response = await Api.http.get(`/topics?${$.param(params)}`);
 
