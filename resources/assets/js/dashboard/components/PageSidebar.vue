@@ -58,6 +58,13 @@
                     </ul>
                 </li>
 
+                <router-link :to="{name: 'agencies.list'}" tag="li" class="nav-item" exact>
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-newspaper-o"></i>
+                        <span class="title">Agencies</span>
+                    </a>
+                </router-link>
+
                 <li class="nav-item">
                     <router-link :to="{name: 'resources.week'}" class="nav-link nav-toggle" exact>
                         <i class="fa fa-calendar"></i>

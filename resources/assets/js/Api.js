@@ -134,6 +134,11 @@ class Api {
         return this.store.dispatch('RESET_SURVEY');
     }
 
+    //Agencies
+    getAgencies() {
+        return this.store.state.systemAgencies;
+    }
+
 }
 
 export default Api;

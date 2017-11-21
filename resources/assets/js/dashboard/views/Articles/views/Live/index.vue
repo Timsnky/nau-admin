@@ -21,7 +21,7 @@
                         :show-labels="false"
                         :internal-search="false"
                         @search-change="searchArticle">
-                        <template slot="clear" scope="props">
+                        <template slot="clear" slot-scope="props">
                             <div class="multiselect__clear" v-if="options.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
                         </template><span slot="noResult">Keine Artikel gefunden</span>
                     </multiselect>

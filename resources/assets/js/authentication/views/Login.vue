@@ -139,6 +139,7 @@
             }
         },
         mounted() {
+            console.log(Api.getToken(), Api.user().id);
             if (Api.getToken() && Api.user().id) {
                 location.href = '/';
             }

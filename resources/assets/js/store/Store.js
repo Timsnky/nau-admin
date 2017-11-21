@@ -44,6 +44,20 @@ export const store = new Vuex.Store({
         chameleon: null,
         regions: [],
         regionsLoadedAt: 0,
+        'systemAgencies' : [
+            {
+                name: 'DPA',
+                id: 'dpa'
+            },
+            {
+                name: 'SDA',
+                id: 'sda'
+            },
+            {
+                name: 'AFP',
+                id: 'afp'
+            }
+        ]
     },
     actions: {
         LOAD_AUTENTICATED_USER: function ({ commit }) {

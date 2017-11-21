@@ -48,7 +48,17 @@ let routes = [{
         name: 'articles.livetickers.edit',
         component: require('./views/Articles/views/Liveticker/views/Edit'),
     }],
-}, {
+},{
+    path: '/agencies',
+    component: require('./views/Agencies'),
+    children: [{
+        path: '',
+        name: 'agencies.list',
+        component: require('./views/Agencies/views/List'),
+    }],
+
+},
+    {
     path: '/ideas',
     component: require('./views/Ideas'),
     children: [{
