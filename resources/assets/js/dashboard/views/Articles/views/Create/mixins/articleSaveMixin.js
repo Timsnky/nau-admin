@@ -115,12 +115,38 @@ export default {
                 });
         },
 
-        save() {
+        async save() {
+            await this.askToUpdatePublishedAt();
+
             if (this.article.id) {
                 return this.updateArticle();
             } else {
                 return this.createArticle();
             }
+        },
+
+        async askToUpdatePublishedAt() {
+            return new Promise(async (resolve, reject) => {
+                if(this.article.article_status.name !== 'published') {
+                    resolve();
+                }
+
+                try {
+                    await swal({
+                        title: 'Publikationsdatum aktualisieren?',
+                        text: 'Sie haben einen publizierten Artikel bearbeitet. Möchten Sie das Publizierdatum auf das aktuelle Datum setzen?',
+                        type: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ja',
+                        cancelButtonText: 'Nein',
+                    });
+                    this.article.published_at = moment();
+                    resolve();
+                } catch (error) {
+                    // Do nothing
+                    resolve();
+                }
+            });
         },
 
         //Validate the save and publish process
