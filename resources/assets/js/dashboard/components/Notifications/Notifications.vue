@@ -7,7 +7,7 @@
         <ul class="dropdown-menu">
             <li class="external">
                 <h3><span class="bold">Mitteilungen</span></h3>
-                <a v-show="notifications.length > 0" @click.prevent="clear()" href="#">Alle Mitteilungen löschen</a>
+                <a v-show="notifications.length > 0" @click.prevent="clear()" href="#">Alle Mitteilungen löschen <i class="fa fa-times-circle"></i></a>
             </li>
             <li>
                 <ul class="dropdown-menu-list" data-handle-color="#637283" data-initialized="1">
@@ -68,6 +68,11 @@
         },
 
         mounted() {
+            // Backwards compability. Clear out old unread messages
+            if(Number.isInteger(this.$store.unread)) {
+                this.clear();
+            }
+
             Echo.private('notifications.' + Api.user().id)
             .listen('Notification', (notification) => {
                 console.log(notification);
