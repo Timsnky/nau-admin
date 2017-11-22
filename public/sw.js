@@ -55,7 +55,7 @@
           break;
 
         default:
-          self.clients.openWindow('/')
+          self.clients.openWindow(event.notification.data.link || '/')
       }
 
       event.notification.close();
