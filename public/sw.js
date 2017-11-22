@@ -3,6 +3,9 @@
 
   const WebPush = {
     init () {
+      self.importScripts('/js/libs/idb-keyval-min.js')
+
+      idbKeyval.get('environement').then(val => this.env = val);
       self.addEventListener('push', this.notificationPush.bind(this))
       self.addEventListener('notificationclick', this.notificationClick.bind(this))
       self.addEventListener('notificationclose', this.notificationClose.bind(this))
@@ -36,13 +39,26 @@
      * @param {NotificationEvent} event
      */
     notificationClick (event) {
-      // console.log(event.notification)
+      switch(event.action) {
+        case 'comment-decline':
+          fetch(`${this.env.API_DOMAIN}/comments/${event.notification.data['comment-id']}/decline`, {
+            method: 'PUT',
+            credentials: 'include',
+          })
+          break;
 
-      if (event.action === 'some_action') {
-        // Do something...
-      } else {
-        self.clients.openWindow('/')
+        case 'comment-publish':
+          fetch(`${this.env.API_DOMAIN}/comments/${event.notification.data['comment-id']}/publish`, {
+            method: 'PUT',
+            credentials: 'include',
+          })
+          break;
+
+        default:
+          self.clients.openWindow('/')
       }
+
+      event.notification.close();
     },
 
     /**
@@ -87,8 +103,9 @@
       data.append('endpoint', endpoint)
 
       // Send a request to the server to mark the notification as read.
-      fetch(`/notifications/${notification.data.id}/dismiss`, {
+      fetch(`${this.env.API_DOMAIN}/notifications/${notification.data.id}/dismiss`, {
         method: 'POST',
+        credentials: 'include',
         body: data
       })
     }

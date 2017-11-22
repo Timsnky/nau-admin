@@ -38,7 +38,7 @@ export const store = new Vuex.Store({
         'video_selector_id': null,
         'image_selector_id': null,
         notifications: [],
-        unreadNotifications: 0,
+        unreadNotifications: [],
         foldermaster: null,
         liveDirector: null,
         chameleon: null,
@@ -146,15 +146,31 @@ export const store = new Vuex.Store({
         },
         ADD_NOTIFICATION: ({commit}, notification) => {
             commit('ADD_NOTIFICATION', notification);
-            commit('INCREMENT_UNREAD_NOTIFICATIONS', notification);
+            commit('NEW_UNREAD_NOTIFICATION', notification);
+        },
+        CLEAR_NOTIFICATIONS: ({commit}, notification) => {
+            commit('READ_ALL_NOTIFICATIONS', notification);
+            commit('CLEAR_NOTIFICATIONS', notification);
+        },
+        READ_NEW_NOTIFICATION: (store, notificationId) => {
+            var index = store.state.unreadNotifications.map((n) => {
+                return n.id;
+            }).indexOf(notificationId);
+
+            if(index !== -1) {
+                store.commit('READ_NEW_NOTIFICATION', index);
+            }
         },
     },
     mutations: {
-        READ_NEW_NOTIFICATIONS: (state) => {
-            state.unreadNotifications = 0;
+        READ_ALL_NOTIFICATIONS: (state) => {
+            state.unreadNotifications = [];
         },
-        INCREMENT_UNREAD_NOTIFICATIONS: (state) => {
-            state.unreadNotifications += 1;
+        READ_NEW_NOTIFICATION: (state, index) => {
+            state.unreadNotifications.splice(index, 1);
+        },
+        NEW_UNREAD_NOTIFICATION: (state, notification) => {
+            state.unreadNotifications.push(notification);
         },
         ADD_NOTIFICATION: (state, notification) => {
             state.notifications.unshift(notification);
