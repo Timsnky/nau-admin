@@ -72,6 +72,14 @@
                     </label>
                 </div>
 
+                <div class="form-body">
+                    <label class="mt-checkbox">
+                        Kann Community Banner hochladen
+                        <input v-model="user.community_banner" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+
                 <div class="form-actions">
                     <button
                         class="btn blue"
@@ -158,6 +166,7 @@
                     password: '',
                     passwordRepeat: '',
                     anonymous: false,
+                    community_banner: false,
                     roles: [],
                     channel: {},
                 }
@@ -245,10 +254,10 @@
             },
 
             handleSubmit() {
-                const { name, email, password, passwordRepeat, anonymous } = this.user;
+                const { name, email, password, passwordRepeat, anonymous, community_banner } = this.user;
 
                 if (name && (!password || (password && password === passwordRepeat))) {
-                    let data = { name, email, password, anonymous };
+                    let data = { name, email, password, anonymous, community_banner };
                     if(this.avatarChanged) {
                         data.avatar = this.user.avatar;
                     }

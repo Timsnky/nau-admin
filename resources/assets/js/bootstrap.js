@@ -10,7 +10,9 @@ import Toast from 'vue-easy-toast';
 import swal from 'sweetalert2';
 import Multiselect from 'vue-multiselect';
 import Cropper from 'cropperjs';
+import IdbKeyval from 'idb-keyval';
 
+window.idbKeyval = IdbKeyval;
 if(Promise === null) {
     window.Promise = require('promise-polyfill');
     var setAsap = require('setasap');
@@ -44,6 +46,8 @@ window.io = require('socket.io-client');
 
 window.Api = new Api(env.API_DOMAIN, request, require('./store/Store').store);
 window.Echo = require('./Echo').default;
+
+require('./Notifications');
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
