@@ -23,6 +23,7 @@ class HomeController extends Controller
         $token = Cookie::get('token');
         try {
             $result = $this->api->getClient()->get('/me', [
+                'verify' => false,
                 'headers' => [
                     'Authorization' => "Bearer $token",
                 ],
