@@ -69,7 +69,7 @@
 
         mounted() {
             // Backwards compability. Clear out old unread messages
-            if(Number.isInteger(this.$store.unread)) {
+            if(Number.isInteger(this.unread)) {
                 this.clear();
             }
 
