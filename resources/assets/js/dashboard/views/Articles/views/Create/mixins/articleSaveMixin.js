@@ -127,7 +127,7 @@ export default {
 
         async askToUpdatePublishedAt() {
             return new Promise(async (resolve, reject) => {
-                if(this.article.article_status.name !== 'published') {
+                if(!this.article.article_status || this.article.article_status.name !== 'published') {
                     resolve();
                     return;
                 }
