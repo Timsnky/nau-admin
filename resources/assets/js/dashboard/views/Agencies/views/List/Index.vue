@@ -83,17 +83,6 @@
                 </tbody>
             </table>
         </div>
-
-
-        <!--<div class="clearfix">-->
-            <!--<pagination-->
-                    <!--class="pull-right"-->
-                    <!--:items="agencyArticles"-->
-                    <!--:currentPage="currentPage"-->
-                    <!--:pagesCount="pagesCount"-->
-                    <!--:itemsPerPage="itemsPerPage"-->
-                    <!--@navigate="navigate"/>-->
-        <!--</div>-->
     </div>
 </template>
 <script>
