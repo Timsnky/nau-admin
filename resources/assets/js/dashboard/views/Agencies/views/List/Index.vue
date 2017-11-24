@@ -33,62 +33,67 @@
             </div>
         </div>
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Urgency</th>
-                <th>Headline</th>
-                <th>Dateline</th>
-                <th>Assigned</th>
-                <th>Category</th>
-                <th>Country</th>
-                <th>Agency</th>
-                <th>Update</th>
-                <th class="text-right">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!--<tr-->
-                    <!--:class="{danger: article.publish_failed, info: article.article_status.name === 'queued'}"-->
-                    <!--v-for="article in articles"-->
-                    <!--:key="article.id">-->
-                <!--<td>-->
-                    <!--<i v-if="article.publish_failed" class="fa fa-exclamation-triangle"></i>-->
-                    <!--{{ article.title }}-->
-                    <!--<dooh-video-status :dooh="article.dooh" />-->
-                <!--</td>-->
-                <!--<td>{{ article.authors.map(function(a) {return a.name}).join(', ') }}</td>-->
-                <!--<td>-->
-                    <!--<status-display :status="article.article_status.name" />-->
-                <!--</td>-->
-                <!--<td>{{ moment(article.published_at).isValid() ? moment(article.published_at).format('DD.MM.YY HH:mm') : '' }}</td>-->
-                <!--<td class="text-right">-->
-                    <!--<button v-if="article.article_status.name === 'published'" class="btn blue-dark" @click="unpublishArticle(article)"><i class="fa fa-undo"></i> Unpublish</button>-->
-                    <!--<div class="btn-group">-->
-                        <!--<router-link-->
-                                <!--:to="{name: 'articles.edit', params: {id: article.id}}"-->
-                                <!--class="btn default">-->
-                            <!--<i class="fa fa-edit"></i>-->
-                            <!--Bearbeiten-->
-                        <!--</router-link>-->
-                        <!--<button v-if="Api.isChefJournalist() || Api.isAdmin()" class="btn red" @click="deleteArticle(article)"><i class="fa fa-trash"></i></button>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash; <button v-if="article.published_at === null" class="btn btn-primary" @click="publishArticle(article)">Publish</button> &ndash;&gt;-->
-                <!--</td>-->
-            <!--</tr>-->
-            </tbody>
-        </table>
-
-        <div class="clearfix">
-            <pagination
-                    class="pull-right"
-                    :items="agencyArticles"
-                    :currentPage="currentPage"
-                    :pagesCount="pagesCount"
-                    :itemsPerPage="itemsPerPage"
-                    @navigate="navigate"/>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Urgency</th>
+                    <th>Headline</th>
+                    <th>Dateline</th>
+                    <th>Assigned</th>
+                    <th>Category</th>
+                    <th>Country</th>
+                    <th>Agency</th>
+                    <th>Update</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="article in agencyArticles"
+                    :class="assignColorClass(article)"
+                    :key="article.id">
+                    <td>{{ formatDate(article.created_at) }}</td>
+                    <td>{{ article.urgency }}</td>
+                    <td>
+                        <router-link
+                                :to="{name: 'agencies.show', params: {agency: article.agency, id: article.id}}">
+                            {{ article.headline }}
+                        </router-link>
+                    </td>
+                    <td>{{ article.dateline }}</td>
+                    <td></td>
+                    <td>
+                        {{ article.category }}
+                    </td>
+                    <td>{{ article.country }}</td>
+                    <td>{{ article.agency }}</td>
+                    <td></td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <router-link
+                                    :to="{name: 'agencies.show', params: {agency: article.agency, id: article.id}}"
+                                    class="btn blue">
+                                <i class="fa fa-eye"></i>
+                                Sehen
+                            </router-link>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
+
+
+        <!--<div class="clearfix">-->
+            <!--<pagination-->
+                    <!--class="pull-right"-->
+                    <!--:items="agencyArticles"-->
+                    <!--:currentPage="currentPage"-->
+                    <!--:pagesCount="pagesCount"-->
+                    <!--:itemsPerPage="itemsPerPage"-->
+                    <!--@navigate="navigate"/>-->
+        <!--</div>-->
     </div>
 </template>
 <script>
@@ -103,19 +108,15 @@
                 pagesCount: 1,
                 itemsPerPage: 15,
                 searchTerm: '',
-                agencies: [],
                 agencyFilter: null,
                 agencyArticles: [],
                 myUserId : 0,
                 userId: 0,
-
             }
         },
 
         components: {
             Pagination,
-//            ArticleStatus,
-//            DoohVideoStatus
         },
 
         created() {
@@ -126,10 +127,7 @@
                 .then(response => {
                     const { data, current_page, per_page, last_page } = response.data;
 
-                    this.articles = data;
-                    this.currentPage = current_page;
-                    this.itemsPerPage = per_page;
-                    this.pagesCount = last_page;
+                    this.agencyArticles = response.data;
                     this.myUserId = Api.user().id;
                     this.userId = this.myUserId;
                 })
@@ -138,24 +136,20 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 });
-
-            Api.http.get('/article-states').then(response => {
-                this.states = response.data;
-            });
         },
 
         watch: {
-            stateFilter() {
-                this.navigate(1);
-            },
-
-            doohFilter() {
-                this.navigate(1);
-            },
-
             searchTerm: _.debounce(function () {
                 this.navigate(1);
             }, 400),
+
+            userId() {
+                this.navigate(1);
+            },
+
+            agencyFilter() {
+                this.navigate(1);
+            }
         },
 
         computed: {
@@ -163,25 +157,18 @@
                 return Api;
             },
 
-            moment() {
-                return moment;
-            },
-
             systemAgencies()
             {
                 return this.Api.getAgencies();
-            }
+            },
         },
 
         methods: {
             navigate(page) {
                 this.getPaginatedData(page)
                     .then(response => {
-                        const { data, current_page, last_page, from } = response.data;
 
-                        this.articles = data;
-                        this.currentPage = current_page;
-                        this.pagesCount = last_page;
+                        this.articles = response.data;
 
                         this.buildQuery();
                     })
@@ -204,114 +191,88 @@
 
             getPaginatedData(page) {
                 var params = {
-                    agencies: ['dpa']
+                    agencies: this.getAgencyParams()
                 };
 
-                if (this.searchTerm !== '') {
+                if (this.searchTerm !== '')
+                {
                     params.search = this.searchTerm;
                 }
-//
-//                if (this.stateFilter !== null) {
-//                    params.status_id = this.stateFilter;
-//                }
-//
-//                if (this.doohFilter) {
-//                    params.dooh_missing = this.doohFilter;
-//                }
+
+                if(this.userId != 0)
+                {
+                    params.user_id = this.userId;
+                }
 
                 return Api.http.get(`/agencies?${$.param(params)}`);
             },
 
-            communityPublishArticle(article)
+            //Get the agency param
+            getAgencyParams()
             {
-                swal({
-                    title: 'Publizieren',
-                    text: 'Nachricht an den Autor',
-                    type: 'warning',
-                    input: 'text',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abbrechen',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Publizieren'
-                }).then((text) => {
-                    Api.http
-                        .put(`/articles/${article.id}/publish`, {
-                            message: text,
-                        })
-                        .then(response => {
-                                if(response.status === 200) {
-                                    this.$set(this.articles, this.articles.indexOf(article), response.data);
-                                    Vue.toast('Artikel erfolgreich publiziert.', {
-                                        className: ['nau_toast', 'nau_success'],
-                                    });
-                                } else {
-                                    Vue.toast('Beim publizieren ist ein Fehler aufgetreten.', {
-                                        className: ['nau_toast', 'nau_warning'],
-                                    });
-                                }
-                            }
-                        );
-                });
-            },
+                let paramsArray = [];
 
-            unpublishArticle(article) {
-                swal({
-                    title: 'Artikel wirklich zurück auf Entwurf setzten?',
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abbrechen',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ja, ich bin mir sicher'
-                }).then(() => {
-                    Api.http.put(`/articles/${article.id}`, {published_at: null})
-                        .then((response) => {
-                            swal({
-                                title: 'Artikel auf Entwurf gesetzt',
-                                type: 'success',
-                            });
-
-                            this.$set(this.articles, this.articles.indexOf(article), response.data);
-                        }).catch((error) => {
-                        console.error(error);
-                        swal({
-                            title: 'Fehler beim zurücksetzen',
-                            type: 'error',
-                        })
+                if(this.agencyFilter == null)
+                {
+                    this.systemAgencies.forEach(function (value, key)
+                    {
+                        paramsArray.push(value.id);
                     })
-                });
+                }
+                else
+                {
+                    paramsArray.push(this.agencyFilter);
+                }
+
+                return paramsArray;
             },
 
-            deleteArticle(article) {
-                swal({
-                    title: 'Artikel wirklich löschen?',
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonText: 'Abbrechen',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ja, löschen'
-                }).then(() => {
-                    Api.http.delete(`/articles/${article.id}`)
-                        .then((response) => {
-                            swal({
-                                title: 'Artikel gelöscht',
-                                type: 'success',
-                            });
-
-                            this.articles.splice(this.articles.indexOf(article), 1);
-                        }).catch((error) => {
-                        swal({
-                            title: 'Fehler beim löschen',
-                            type: 'error',
-                        })
-                    })
-                });
+            //Format the date for presentation
+            formatDate(date)
+            {
+                return moment(date).isValid() ? moment(date).format('DD.MM.YY HH:mm:ss') : '';
             },
+
+            //Check if the article is recent
+            isTenMinutesOld(date)
+            {
+                return moment().diff(date, 'minutes') < 10;
+            },
+
+            //Assign a color class to the row
+            assignColorClass(article)
+            {
+                if(article.reserved_by)
+                {
+                    return 'grey_row';
+                }
+                else if(this.isTenMinutesOld(article.created_at))
+                {
+                    return 'yellow_row';
+                }
+                else
+                {
+                    return '';
+                }
+            }
         }
     }
 </script>
 
 <style lang="scss">
-    .label {
-        font-size: .9em;
+    .yellow_row {
+        background-color: lightyellow;
+    }
+
+    .yellow_row:hover {
+        background-color: #e6e6cb !important;
+    }
+
+    .grey_row {
+        background-color: lightgrey;
+    }
+
+    .grey_row:hover {
+        background-color: darkgrey !important;
     }
 </style>

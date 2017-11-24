@@ -51,12 +51,18 @@ let routes = [{
 },{
     path: '/agencies',
     component: require('./views/Agencies'),
-    children: [{
-        path: '',
-        name: 'agencies.list',
-        component: require('./views/Agencies/views/List'),
-    }],
-
+    children: [
+        {
+            path: '',
+            name: 'agencies.list',
+            component: require('./views/Agencies/views/List'),
+        },
+        {
+            path: ':agency/:id',
+            name: 'agencies.show',
+            component: require('./views/Agencies/views/Show'),
+        },
+    ],
 },
     {
     path: '/ideas',
