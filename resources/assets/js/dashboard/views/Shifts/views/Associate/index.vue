@@ -51,7 +51,7 @@
             let response = await Api.http.get(`/work-shifts/${this.$route.params.id}`);
             this.shift = response.data;
 
-            response = await Api.http.get(`/work-types/${this.shift.work_type_id}/users`);
+            response = await Api.http.get(`/authors`);
             this.users = response.data;
 
             this.user = this.users.find(user => (

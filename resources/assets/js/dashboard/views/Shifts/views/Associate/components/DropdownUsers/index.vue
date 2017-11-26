@@ -1,10 +1,12 @@
 <template>
-    <select class="form-control" v-model="selected">
-        <option disabled :value="null">Benutzer wählen</option>
-        <option v-for="user in users" :value="user">
-            {{ user.name }}
-        </option>
-    </select>
+    <div>
+        <multiselect
+            v-model="selected"
+            placeholder="Benutzer wählen"
+            :options="users"
+            label="name"
+        />
+    </div>
 </template>
 
 <script>
