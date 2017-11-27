@@ -80,6 +80,14 @@
                     </label>
                 </div>
 
+                <div class="form-body">
+                    <label class="mt-checkbox">
+                        Aktiv (Kann sich anmelden)
+                        <input v-model="user.active" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+
                 <div class="form-actions">
                     <button
                         class="btn blue"
@@ -90,6 +98,7 @@
                         @click="impersonate"
                         class="btn blue"
                         type="button">
+                        <i class="fa fa-user"></i>
                         Impersonate
                     </button>
                     <router-link class="btn red" :to="{name: 'users.list'}">Abbrechen</router-link>
