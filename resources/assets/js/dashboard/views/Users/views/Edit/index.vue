@@ -86,6 +86,12 @@
                         type="submit">
                         Speichern
                     </button>
+                    <button
+                        @click="impersonate"
+                        class="btn blue"
+                        type="button">
+                        Impersonate
+                    </button>
                     <router-link class="btn red" :to="{name: 'users.list'}">Abbrechen</router-link>
                 </div>
             </form>
@@ -275,6 +281,11 @@
                 } else {
                     console.log('Show some error message here');
                 }
+            },
+
+            async impersonate() {
+                var response = await Api.http.post(`/impersonate/${this.user.id}`)
+                window.location.href = '/';
             },
         }
     }
