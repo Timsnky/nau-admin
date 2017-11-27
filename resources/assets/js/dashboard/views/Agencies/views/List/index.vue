@@ -63,7 +63,7 @@
                     </td>
                     <td>{{ article.dateline }}</td>
                     <td></td>
-                    
+
                     <td>
                         {{ article.category }}
                     </td>

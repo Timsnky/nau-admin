@@ -52,22 +52,57 @@
                     <label>Public ID</label><br>
                     <span>{{ article.public_id  }}</span>
                 </div>
+                <div class="form-group">
+                    <label>Assign to</label>
+                    <div class="assign_section">
+                        <div class="assign_multiselect">
+                            <multiselect
+                                    id="authorMultiSelect"
+                                    v-model="author"
+                                    :options="authors"
+                                    placeholder="Assign to"
+                                    label="name"
+                                    :close-on-select="true"
+                                    :internal-search="false"
+                                    open-direction="bottom"
+                                    :options-limit="100"
+                                    :max-height="500"
+                                    :loading="authorIsLoading"
+                                    @search-change="searchAuthor">
+                            </multiselect>
+                        </div>
+                        <div class="assign_button">
+                            <button @click="assignArticleAuthor()" class="btn default blue">Assign</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
         data() {
             return {
                 articleId: null,
                 agency: null,
-                article: {}
+                article: {},
+                author : {},
+                authors: [
+                ],
+                authorIsLoading: false,
+                searchedAuthor: {
+                    query: '',
+                    promise: true
+                },
             }
         },
 
         components: {
+            Multiselect,
         },
 
         created()
@@ -104,7 +139,6 @@
                     .get(`/agencies/` + this.agency + `/` + this.articleId)
                     .then(response => {
                         this.article = response.data;
-                        console.log(this.article);
                     })
                     .catch(err => Vue.toast('Error in retrieving the article. Please refresh the page', {
                         className : ['nau_toast','nau_warning'],
@@ -117,11 +151,69 @@
                 return moment(date).isValid() ? moment(date).format('DD.MM.YY HH:mm:ss') : '';
             },
 
-        }
-    }
+            /**
+             * AUTHOR
+             */
+            searchAuthor(query) {
+                this.searchedAuthor.query = query;
+                this.authorIsLoading = true;
+                this.authors = [];
 
+                if (this.searchedAuthor.promise) {
+                    this.searchedAuthor.promise = false;
+
+                    setTimeout(() => {
+                        if (this.searchedAuthor.query !== '')
+                        {
+                            Api.http
+                                .get(`/authors?search=${this.searchedAuthor.query}`)
+                                .then(response => {
+                                    this.authors = this.authors.concat(response.data);
+                                    this.searchedAuthor.promise = true;
+                                    this.authorIsLoading = false;
+                                });
+                        } else {
+                            this.searchedAuthor.promise = true;
+                            this.authorIsLoading = false;
+                        }
+                    }, 400);
+                }
+            },
+
+            //Assign the article author
+            assignArticleAuthor()
+            {
+                if(this.author.id)
+                {
+                    Api.http
+                        .put(`/agencies/${this.article.agency}/${this.article.id}/reserve/${this.author.id}`)
+                        .then(response => {
+                            this.article = response.data;
+                        });
+                }
+                else
+                {
+                    Vue.toast('Please select an author first inorder to assign', {
+                        className: ['nau_toast', 'nau_warning'],
+                    });
+                };
+            }
+        }
+    };
 </script>
 
 <style lang="scss" scoped>
+    .assign_section {
+        display: block;
+    }
 
+    .assign_multiselect  {
+        width: 80%;
+        display: inline-flex;
+    }
+
+    .assign_button {
+        width: 10%;
+        display: inline-flex;
+    }
 </style>
