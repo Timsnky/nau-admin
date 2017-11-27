@@ -181,6 +181,7 @@
                     password: '',
                     passwordRepeat: '',
                     anonymous: false,
+                    active: true,
                     community_banner: false,
                     roles: [],
                     channel: {},
@@ -269,10 +270,10 @@
             },
 
             handleSubmit() {
-                const { name, email, password, passwordRepeat, anonymous, community_banner } = this.user;
+                const { name, email, password, passwordRepeat, anonymous, community_banner, active } = this.user;
 
                 if (name && (!password || (password && password === passwordRepeat))) {
-                    let data = { name, email, password, anonymous, community_banner };
+                    let data = { name, email, password, anonymous, community_banner, active };
                     if(this.avatarChanged) {
                         data.avatar = this.user.avatar;
                     }
