@@ -57,7 +57,7 @@
                     <td>{{ article.urgency }}</td>
                     <td>
                         <router-link
-                                :to="{name: 'agencies.show', params: {agency: article.agency, id: article.id}}">
+                                :to="{name: 'agencies.show', params: {agency: article.agency, id: article.id, agencyfilter: agencyFilter}}">
                             {{ article.headline }}
                         </router-link>
                     </td>
@@ -109,9 +109,12 @@
             Pagination,
         },
 
-        created() {
+        created()
+        {
             this.currentPage = parseInt(this.$route.query.page || 1);
             this.searchTerm = this.$route.query.search || '';
+            this.agencyFilter = this.$route.query.agencies || null;
+            this.userId = this.$route.query.user_id || 0;
 
             this.getPaginatedData(this.currentPage)
                 .then(response => {
@@ -126,6 +129,7 @@
                         className : ['nau_toast','nau_warning'],
                     });
                 });
+            this.initializeEcho();
         },
 
         watch: {
@@ -154,6 +158,16 @@
         },
 
         methods: {
+            //Initialize echo to listen
+            initializeEcho()
+            {
+                console.log("Init Echo");
+                Echo.channel('agencies')
+                    .listen('.App.Events', (e) => {
+                        console.log(e, "Listening");
+                    });
+            },
+
             navigate(page) {
                 this.getPaginatedData(page)
                     .then(response => {
@@ -174,6 +188,16 @@
 
                 if(this.searchTerm != '') {
                     query.search = this.searchTerm;
+                }
+
+                if(this.userId != 0)
+                {
+                    query.user_id = this.userId;
+                }
+
+                if(this.agencyFilter != null)
+                {
+                    query.agencies = this.agencyFilter;
                 }
 
                 this.$router.push({ query });

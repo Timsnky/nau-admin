@@ -14,11 +14,12 @@
                 </router-link>
             </div>
             <div class="col-md-6 text-right">
-                <router-link
-                        :to="{name: 'agencies.list'}"
+                <button
+                        type="button"
+                        @click="redirectBack()"
                         class="btn default blue">
                     Back
-                </router-link>
+                </button>
             </div>
         </div>
 
@@ -212,6 +213,12 @@
                             className: ['nau_toast', 'nau_success'],
                         });
                     });
+            },
+
+            //Redirect back
+            redirectBack()
+            {
+                window.history.back();
             }
         }
     };
