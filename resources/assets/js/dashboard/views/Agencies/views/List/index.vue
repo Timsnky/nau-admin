@@ -122,7 +122,6 @@
 
                     this.agencyArticles = response.data;
                     this.myUserId = Api.user().id;
-                    this.userId = this.myUserId;
                 })
                 .catch(err => {
                     Vue.toast('Ein Fehler ist aufgetreten', {
@@ -165,6 +164,7 @@
                 Echo.channel('agencies')
                     .listen('NewAgencyArticle', (e) => {
                         console.log(e, "Listening");
+                        this.agencyArticles.unshift(e);
                     });
             },
 
