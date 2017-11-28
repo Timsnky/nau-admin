@@ -102,6 +102,8 @@
                 agencyArticles: [],
                 myUserId : 0,
                 userId: 0,
+                lastRefreshTime: null,
+                refreshInterval: 60000
             }
         },
 
@@ -118,17 +120,21 @@
 
             this.getPaginatedData(this.currentPage)
                 .then(response => {
-                    const { data, current_page, per_page, last_page } = response.data;
 
                     this.agencyArticles = response.data;
                     this.myUserId = Api.user().id;
+                    this.lastRefreshTime = moment().format('X');
                 })
                 .catch(err => {
                     Vue.toast('Ein Fehler ist aufgetreten', {
                         className : ['nau_toast','nau_warning'],
                     });
                 });
-            this.initializeEcho();
+        },
+
+        mounted()
+        {
+            this.initializePolling();
         },
 
         watch: {
@@ -157,15 +163,47 @@
         },
 
         methods: {
-            //Initialize echo to listen
-            initializeEcho()
+            //Initialize polling function
+            initializePolling()
             {
-                console.log("Init Echo");
-                Echo.channel('agencies')
-                    .listen('NewAgencyArticle', (e) => {
-                        console.log(e, "Listening");
-                        this.agencyArticles.unshift(e);
+                let vm = this;
+                this.interval = setInterval(function ()
+                {
+                    vm.refreshData();
+                }, this.refreshInterval);
+            },
+
+            //Load new data from the backend
+            refreshData()
+            {
+                let refreshTime = this.lastRefreshTime;
+                this.lastRefreshTime = moment().format('X');
+                this.getPaginatedData(this.currentPage, refreshTime)
+                    .then(response => {
+                        console.log(response.data);
+                        this.processNewData(response.data, refreshTime);
                     });
+            },
+
+            //Process the new articles received
+            processNewData(newArticles, refreshTime)
+            {
+                let vm = this;
+                newArticles.reverse();
+                newArticles.forEach(function (newArticle, newKey)
+                {
+                    if(moment(newArticle.created_at) < refreshTime)
+                    {
+                        for (let [oldKey, oldArticle] of vm.agencyArticles.entries())
+                        {
+                            if(oldArticle.id == newArticle.id)
+                            {
+                                vm.agencyArticles.splice(oldKey, 1);
+                            }
+                        }
+                    }
+                    vm.agencyArticles.unshift(newArticle);
+                });
             },
 
             navigate(page) {
@@ -173,6 +211,7 @@
                     .then(response => {
 
                         this.agencyArticles = response.data;
+                        this.lastRefreshTime = moment().format('X');
 
                         this.buildQuery();
                     })
@@ -203,7 +242,7 @@
                 this.$router.push({ query });
             },
 
-            getPaginatedData(page) {
+            getPaginatedData(page, refreshTime = null) {
                 var params = {
                     agencies: this.getAgencyParams()
                 };
@@ -217,6 +256,13 @@
                 {
                     params.user_id = this.userId;
                 }
+
+                if(refreshTime)
+                {
+                    params.newer = refreshTime;
+                }
+
+                console.log(params);
 
                 return Api.http.get(`/agencies?${$.param(params)}`);
             },
@@ -244,7 +290,7 @@
             //Format the date for presentation
             formatDate(date)
             {
-                return moment(date).isValid() ? moment(date).format('DD.MM.YY HH:mm:ss') : '';
+                return moment(date).isValid() ? moment(date).format('X') : '';
             },
 
             //Check if the article is recent
