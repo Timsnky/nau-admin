@@ -163,7 +163,7 @@
             {
                 console.log("Init Echo");
                 Echo.channel('agencies')
-                    .listen('.App.Events', (e) => {
+                    .listen('NewAgencyArticle', (e) => {
                         console.log(e, "Listening");
                     });
             },

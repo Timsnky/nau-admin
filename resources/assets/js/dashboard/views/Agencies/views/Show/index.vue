@@ -206,13 +206,23 @@
             //Send a request to create an article
             createArticle()
             {
-                Api.http
-                    .post(`/agencies/${this.article.agency}/${this.article.id}/article`)
-                    .then(response => {
-                        Vue.toast('Agency article created successfully', {
-                            className: ['nau_toast', 'nau_success'],
+                if(! this.article.article_id)
+                {
+                    Api.http
+                        .post(`/agencies/${this.article.agency}/${this.article.id}/article`)
+                        .then(response => {
+                            Vue.toast('Agency article created successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         });
+                }
+                else
+                {
+                    Vue.toast('Agency article already created', {
+                        className: ['nau_toast', 'nau_warning'],
                     });
+
+                }
             },
 
             //Redirect back
