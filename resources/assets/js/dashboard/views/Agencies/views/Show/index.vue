@@ -2,11 +2,11 @@
     <div>
         <div class="row actions">
             <div class="col-md-6">
-                <router-link
-                        :to="{name: 'articles.create'}"
+                <button type="button"
+                        @click="createArticle()"
                         class="btn default blue">
                      Create Article
-                </router-link>
+                </button>
                 <router-link
                         :to="{name: 'agencies.list'}"
                         class="btn default blue">
@@ -58,7 +58,7 @@
                         <div class="assign_multiselect">
                             <multiselect
                                     id="authorMultiSelect"
-                                    v-model="author"
+                                    v-model="article.reserved_by"
                                     :options="authors"
                                     placeholder="Assign to"
                                     label="name"
@@ -90,7 +90,6 @@
                 articleId: null,
                 agency: null,
                 article: {},
-                author : {},
                 authors: [
                 ],
                 authorIsLoading: false,
@@ -183,12 +182,16 @@
             //Assign the article author
             assignArticleAuthor()
             {
-                if(this.author.id)
+                if(this.article.reserved_by)
                 {
                     Api.http
-                        .put(`/agencies/${this.article.agency}/${this.article.id}/reserve/${this.author.id}`)
+                        .put(`/agencies/${this.article.agency}/${this.article.id}/reserve/${this.article.reserved_by.id}`)
                         .then(response => {
                             this.article = response.data;
+
+                            Vue.toast('Author assigned to article successfully', {
+                                className: ['nau_toast', 'nau_success'],
+                            });
                         });
                 }
                 else
@@ -197,6 +200,18 @@
                         className: ['nau_toast', 'nau_warning'],
                     });
                 };
+            },
+
+            //Send a request to create an article
+            createArticle()
+            {
+                Api.http
+                    .post(`/agencies/${this.article.agency}/${this.article.id}/article`)
+                    .then(response => {
+                        Vue.toast('Agency article created successfully', {
+                            className: ['nau_toast', 'nau_success'],
+                        });
+                    });
             }
         }
     };
