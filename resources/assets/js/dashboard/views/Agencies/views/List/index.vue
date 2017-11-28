@@ -103,7 +103,7 @@
                 myUserId : 0,
                 userId: 0,
                 lastRefreshTime: null,
-                refreshInterval: 60000
+                refreshInterval: 20000
             }
         },
 
