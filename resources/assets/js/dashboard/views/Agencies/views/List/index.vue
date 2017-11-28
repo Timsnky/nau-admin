@@ -180,7 +180,6 @@
                 this.lastRefreshTime = moment().format('X');
                 this.getPaginatedData(this.currentPage, refreshTime)
                     .then(response => {
-                        console.log(response.data);
                         this.processNewData(response.data, refreshTime);
                     });
             },
@@ -261,9 +260,7 @@
                 {
                     params.newer = refreshTime;
                 }
-
-                console.log(params);
-
+                
                 return Api.http.get(`/agencies?${$.param(params)}`);
             },
 
