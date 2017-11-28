@@ -80,11 +80,26 @@
                     </label>
                 </div>
 
+                <div class="form-body">
+                    <label class="mt-checkbox">
+                        Aktiv (Kann sich anmelden)
+                        <input v-model="user.active" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+
                 <div class="form-actions">
                     <button
                         class="btn blue"
                         type="submit">
                         Speichern
+                    </button>
+                    <button
+                        @click="impersonate"
+                        class="btn blue"
+                        type="button">
+                        <i class="fa fa-user"></i>
+                        Impersonate
                     </button>
                     <router-link class="btn red" :to="{name: 'users.list'}">Abbrechen</router-link>
                 </div>
@@ -166,6 +181,7 @@
                     password: '',
                     passwordRepeat: '',
                     anonymous: false,
+                    active: true,
                     community_banner: false,
                     roles: [],
                     channel: {},
@@ -254,10 +270,10 @@
             },
 
             handleSubmit() {
-                const { name, email, password, passwordRepeat, anonymous, community_banner } = this.user;
+                const { name, email, password, passwordRepeat, anonymous, community_banner, active } = this.user;
 
                 if (name && (!password || (password && password === passwordRepeat))) {
-                    let data = { name, email, password, anonymous, community_banner };
+                    let data = { name, email, password, anonymous, community_banner, active };
                     if(this.avatarChanged) {
                         data.avatar = this.user.avatar;
                     }
@@ -275,6 +291,11 @@
                 } else {
                     console.log('Show some error message here');
                 }
+            },
+
+            async impersonate() {
+                var response = await Api.http.post(`/impersonate/${this.user.id}`)
+                window.location.href = '/';
             },
         }
     }

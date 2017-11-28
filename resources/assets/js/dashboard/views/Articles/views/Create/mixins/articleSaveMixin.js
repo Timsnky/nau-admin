@@ -78,12 +78,21 @@ export default {
         },
 
         updateArticle() {
-            return Api.http
-                .put(`/articles/${this.article.id}`, {
+
+            if(this.article.community) {
+                var data = {
+                    ...this.article,
+                    order_date: this.article.order_date ? this.article.order_date.format() : null,
+                };
+            } else {
+                var data = {
                     ...this.article,
                     published_at: this.article.published_at ? this.article.published_at.format() : null,
                     order_date: this.article.order_date ? this.article.order_date.format() : null,
-                })
+                };
+            }
+            return Api.http
+                .put(`/articles/${this.article.id}`, data)
                 .then(response => {
                     this.article = response.data;
                     if (!(response.data.image && response.data.image.id === this.articleMainImage.id)) {
