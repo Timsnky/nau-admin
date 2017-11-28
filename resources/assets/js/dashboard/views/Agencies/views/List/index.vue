@@ -158,7 +158,7 @@
                 this.getPaginatedData(page)
                     .then(response => {
 
-                        this.articles = response.data;
+                        this.agencyArticles = response.data;
 
                         this.buildQuery();
                     })
